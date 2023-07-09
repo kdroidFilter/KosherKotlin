@@ -497,9 +497,9 @@ class HebrewDateFormatter constructor() {
      * @see .isHebrewFormat
      */
     fun formatYomTov(jewishCalendar: JewishCalendar): String {
-        val index: Int = jewishCalendar.yomTovIndex
+        val index = jewishCalendar.yomTovIndex
         if (index == JewishCalendar.CHANUKAH) {
-            val dayOfChanukah: Int = jewishCalendar.dayOfChanukah
+            val dayOfChanukah = jewishCalendar.dayOfChanukah
             return if (isHebrewFormat) (formatHebrewNumber(dayOfChanukah) + " " + hebrewHolidays.get(index)) else (transliteratedHolidayList.get(
                 index
             ) + " " + dayOfChanukah)
@@ -524,7 +524,7 @@ class HebrewDateFormatter constructor() {
             return ""
         }
         var formattedRoshChodesh: String = ""
-        var month: Int = jewishCalendar.getJewishMonth()
+        var month = jewishCalendar.jewishMonth
         if (jewishCalendar.jewishDayOfMonth == 30) {
             if (month < JewishDate.ADAR || (month == JewishDate.ADAR && jewishCalendar.isJewishLeapYear)) {
                 month++
@@ -671,10 +671,10 @@ class HebrewDateFormatter constructor() {
     fun format(jewishDate: JewishDate): String {
         if (isHebrewFormat) {
             return (formatHebrewNumber(jewishDate.jewishDayOfMonth) + " " + formatMonth(jewishDate) + " "
-                    + formatHebrewNumber(jewishDate.getJewishYear()))
+                    + formatHebrewNumber(jewishDate.jewishYear))
         } else {
             return jewishDate.jewishDayOfMonth
-                .toString() + " " + formatMonth(jewishDate) + ", " + jewishDate.getJewishYear()
+                .toString() + " " + formatMonth(jewishDate) + ", " + jewishDate.jewishYear
         }
     }
 
@@ -691,7 +691,7 @@ class HebrewDateFormatter constructor() {
      * @see .setTransliteratedMonthList
      */
     fun formatMonth(jewishDate: JewishDate): String {
-        val month: Int = jewishDate.getJewishMonth()
+        val month = jewishDate.jewishMonth
         if (isHebrewFormat) {
             if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR) {
                 return hebrewMonths.get(13) + (if (isUseGershGershayim) GERESH else "") // return Adar I, not Adar in a leap year
@@ -725,7 +725,7 @@ class HebrewDateFormatter constructor() {
      * @see .setHebrewOmerPrefix
      */
     fun formatOmer(jewishCalendar: JewishCalendar): String {
-        val omer: Int = jewishCalendar.dayOfOmer
+        val omer = jewishCalendar.dayOfOmer
         if (omer == -1) {
             return ""
         }
@@ -754,12 +754,12 @@ class HebrewDateFormatter constructor() {
      */
     fun getFormattedKviah(jewishYear: Int): String {
         val jewishDate: JewishDate = JewishDate(jewishYear, JewishDate.TISHREI, 1) // set date to Rosh Hashana
-        val kviah: Int = jewishDate.cheshvanKislevKviah
-        val roshHashanaDayOfweek: Int = jewishDate.dayOfWeek
+        val kviah = jewishDate.cheshvanKislevKviah
+        val roshHashanaDayOfweek = jewishDate.dayOfWeek
         var returnValue: String = formatHebrewNumber(roshHashanaDayOfweek)
         returnValue += (if (kviah == JewishDate.CHASERIM) "\u05D7" else if (kviah == JewishDate.SHELAIMIM) "\u05E9" else "\u05DB")
         jewishDate.setJewishDate(jewishYear, JewishDate.NISSAN, 15) // set to Pesach of the given year
-        val pesachDayOfweek: Int = jewishDate.dayOfWeek
+        val pesachDayOfweek = jewishDate.dayOfWeek
         returnValue += formatHebrewNumber(pesachDayOfweek)
         returnValue = returnValue.replace(GERESH.toRegex(), "") // geresh is never used in the kviah format
         // boolean isLeapYear = JewishDate.isJewishLeapYear(jewishYear);
@@ -819,7 +819,7 @@ class HebrewDateFormatter constructor() {
      * @see .isHebrewFormat
      */
     fun formatHebrewNumber(number: Int): String {
-        var number: Int = number
+        var number = number
         if (number < 0) {
             throw IllegalArgumentException("negative numbers can't be formatted")
         } else if (number > 9999) {
@@ -847,11 +847,11 @@ class HebrewDateFormatter constructor() {
         if (number == 0) { // do we really need this? Should it be applicable to a date?
             return EFES
         }
-        val shortNumber: Int = number % 1000 // discard thousands
+        val shortNumber = number % 1000 // discard thousands
         // next check for all possible single Hebrew digit years
         val singleDigitNumber: Boolean =
             ((shortNumber < 11) || (shortNumber < 100 && shortNumber % 10 == 0) || (shortNumber <= 400 && shortNumber % 100 == 0))
-        val thousands: Int = number / 1000 // get # thousands
+        val thousands = number / 1000 // get # thousands
         val sb: StringBuilder = StringBuilder()
         // append thousands to String
         if (number % 1000 == 0) { // in year is 5000, 4000 etc
@@ -870,7 +870,7 @@ class HebrewDateFormatter constructor() {
             sb.append(" ")
         }
         number = number % 1000 // remove 1000s
-        val hundreds: Int = number / 100 // # of hundreds
+        val hundreds = number / 100 // # of hundreds
         sb.append(jHundreds.get(hundreds)) // add hundreds to String
         number = number % 100 // remove 100s
         if (number == 15) { // special case 15
@@ -878,7 +878,7 @@ class HebrewDateFormatter constructor() {
         } else if (number == 16) { // special case 16
             sb.append(tavTaz.get(1))
         } else {
-            val tens: Int = number / 10
+            val tens = number / 10
             if (number % 10 == 0) { // if evenly divisable by 10
                 if (!singleDigitNumber) {
                     if (isUseFinalFormLetters) {
@@ -991,7 +991,7 @@ class HebrewDateFormatter constructor() {
 
         const val MINUTE_CHALAKIM = 18
         const val HOUR_CHALAKIM = 1080
-        const val DAY_CHALAKIM: Int = 24 * HOUR_CHALAKIM
+        const val DAY_CHALAKIM = 24 * HOUR_CHALAKIM
 
         /**
          * Formats a molad.
@@ -1004,12 +1004,12 @@ class HebrewDateFormatter constructor() {
             var adjustedChalakim: Long = moladChalakim
             var days: Long = adjustedChalakim / DAY_CHALAKIM
             adjustedChalakim -= (days * DAY_CHALAKIM)
-            val hours: Int = ((adjustedChalakim / HOUR_CHALAKIM)).toInt()
+            val hours = ((adjustedChalakim / HOUR_CHALAKIM)).toInt()
             if (hours >= 6) {
                 days += 1
             }
             adjustedChalakim -= (hours * HOUR_CHALAKIM.toLong())
-            val minutes: Int = (adjustedChalakim / MINUTE_CHALAKIM).toInt()
+            val minutes = (adjustedChalakim / MINUTE_CHALAKIM).toInt()
             adjustedChalakim -= minutes * MINUTE_CHALAKIM.toLong()
             return "Day: " + (days % 7) + " hours: " + hours + ", minutes " + minutes + ", chalakim: " + adjustedChalakim
         }

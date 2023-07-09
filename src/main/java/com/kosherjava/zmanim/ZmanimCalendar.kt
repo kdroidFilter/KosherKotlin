@@ -37,8 +37,8 @@ import java.util.*
  * *zmanim* calculations besides sunrise and sunset), unless the setting is changed to true in [ ][.setUseElevation]. This will impact sunrise and sunset-based *zmanim* such as [.getSunrise],
  * [.getSunset], [.getSofZmanShmaGRA], *alos*-based *zmanim* such as [.getSofZmanShmaMGA]
  * that are based on a fixed offset of sunrise or sunset and *zmanim* based on a percentage of the day such as
- * [ComplexZmanimCalendar.getSofZmanShmaMGA90MinutesZmanis] that are based on sunrise and sunset. Even when set to
- * true it will not impact *zmanim* that are a degree-based offset of sunrise and sunset, such as [ ][ComplexZmanimCalendar.getSofZmanShmaMGA16Point1Degrees] or [ComplexZmanimCalendar.getSofZmanShmaBaalHatanya] since
+ * [ComplexZmanimCalendar.sofZmanShmaMGA90MinutesZmanis] that are based on sunrise and sunset. Even when set to
+ * true it will not impact *zmanim* that are a degree-based offset of sunrise and sunset, such as [ ][ComplexZmanimCalendar.sofZmanShmaMGA16Point1Degrees] or [ComplexZmanimCalendar.getSofZmanShmaBaalHatanya] since
  * these *zmanim* are not linked to sunrise or sunset times (the calculations are based on the astronomical definition of
  * sunrise and sunset calculated in a vacuum with the solar radius above the horizon), and are therefore not impacted by the use
  * of elevation.
@@ -52,7 +52,7 @@ import java.util.*
  *
  *
  *
- * **Note:** It is important to read the technical notes on top of the [AstronomicalCalculator] documentation
+ * **Note:** It is important to read the technical notes on top of the [AstronomicalCalendar] documentation
  * before using this code.
  *
  * I would like to thank [Rabbi Yaakov Shakow](https://www.worldcat.org/search?q=au%3AShakow%2C+Yaakov), the
@@ -64,11 +64,11 @@ import java.util.*
  *
  * @author  Eliyahu Hershfeld 2004 - 2022
  */
-open class ZmanimCalendar : com.kosherjava.zmanim.AstronomicalCalendar {
+open class ZmanimCalendar : AstronomicalCalendar {
     /**
      * Is elevation above sea level calculated for times besides sunrise and sunset. According to Rabbi Dovid Yehuda
      * Bursztyn in his [Zmanim Kehilchasam (second edition published
- * in 2007)](https://www.worldcat.org/oclc/659793988) chapter 2 (pages 186-187) no *zmanim* besides sunrise and sunset should use elevation. However
+     * in 2007)](https://www.worldcat.org/oclc/659793988) chapter 2 (pages 186-187) no *zmanim* besides sunrise and sunset should use elevation. However
      * Rabbi Yechiel Avrahom Zilber in the [Birur Halacha Vol. 6](https://hebrewbooks.org/51654) Ch. 58 Pages
      * [&amp;34](https://hebrewbooks.org/pdfpager.aspx?req=51654&amp;pgnum=42) and [&amp;42](https://hebrewbooks.org/pdfpager.aspx?req=51654&amp;pgnum=50) is of the opinion that elevation should be
      * accounted for in *zmanim* calculations. Related to this, Rabbi Yaakov Karp in [Shimush Zekeinim](https://www.worldcat.org/oclc/919472094), Ch. 1, page 17 states that obstructing horizons

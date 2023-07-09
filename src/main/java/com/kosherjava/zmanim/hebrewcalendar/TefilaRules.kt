@@ -349,9 +349,9 @@ class TefilaRules constructor() {
      * @see .isTachanunRecitedMincha
      */
     fun isTachanunRecitedShacharis(jewishCalendar: JewishCalendar): Boolean {
-        val holidayIndex: Int = jewishCalendar.yomTovIndex
-        val day: Int = jewishCalendar.jewishDayOfMonth
-        val month: Int = jewishCalendar.getJewishMonth()
+        val holidayIndex = jewishCalendar.yomTovIndex
+        val day = jewishCalendar.jewishDayOfMonth
+        val month = jewishCalendar.jewishMonth
         if (((jewishCalendar.dayOfWeek == Calendar.SATURDAY
                     ) || (!isTachanunRecitedSundays && jewishCalendar.dayOfWeek == Calendar.SUNDAY)
                     || (!isTachanunRecitedFridays && jewishCalendar.dayOfWeek == Calendar.FRIDAY)
@@ -365,7 +365,7 @@ class TefilaRules constructor() {
                     || (jewishCalendar.isYomTov && ((!jewishCalendar.isTaanis
                     || (!isTachanunRecitedPesachSheni && holidayIndex == JewishCalendar.PESACH_SHENI)))) // Erev YT is included in isYomTov()
                     || ((!jewishCalendar.inIsrael && !isTachanunRecitedPesachSheni && !isTachanunRecited15IyarOutOfIsrael
-                    && (jewishCalendar.getJewishMonth() == JewishDate.IYAR) && (day == 15)))
+                    && (jewishCalendar.jewishMonth == JewishDate.IYAR) && (day == 15)))
                     || (holidayIndex == JewishCalendar.TISHA_BEAV) || jewishCalendar.isIsruChag
                     || jewishCalendar.isRoshChodesh
                     || ((!isTachanunRecitedShivasYemeiHamiluim &&
@@ -428,7 +428,7 @@ class TefilaRules constructor() {
     fun isVeseinTalUmatarStartDate(jewishCalendar: JewishCalendar): Boolean {
         if (jewishCalendar.inIsrael) {
             // The 7th Cheshvan can't occur on Shabbos, so always return true for 7 Cheshvan
-            if (jewishCalendar.getJewishMonth() == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 7) {
+            if (jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 7) {
                 return true
             }
         } else {
@@ -463,7 +463,7 @@ class TefilaRules constructor() {
     fun isVeseinTalUmatarStartingTonight(jewishCalendar: JewishCalendar): Boolean {
         if (jewishCalendar.inIsrael) {
             // The 7th Cheshvan can't occur on Shabbos, so always return true for 6 Cheshvan
-            if (jewishCalendar.getJewishMonth() == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 6) {
+            if (jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 6) {
                 return true
             }
         } else {
@@ -491,14 +491,14 @@ class TefilaRules constructor() {
      * @see .isVeseinTalUmatarStartingTonight
      */
     fun isVeseinTalUmatarRecited(jewishCalendar: JewishCalendar): Boolean {
-        if (jewishCalendar.getJewishMonth() == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth < 15) {
+        if (jewishCalendar.jewishMonth == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth < 15) {
             return true
         }
-        if (jewishCalendar.getJewishMonth() < JewishDate.CHESHVAN) {
+        if (jewishCalendar.jewishMonth < JewishDate.CHESHVAN) {
             return false
         }
         if (jewishCalendar.inIsrael) {
-            return jewishCalendar.getJewishMonth() != JewishDate.CHESHVAN || jewishCalendar.jewishDayOfMonth >= 7
+            return jewishCalendar.jewishMonth != JewishDate.CHESHVAN || jewishCalendar.jewishDayOfMonth >= 7
         } else {
             return jewishCalendar.tekufasTishreiElapsedDays >= 47
         }
@@ -526,7 +526,7 @@ class TefilaRules constructor() {
      * @see .isMashivHaruachRecited
      */
     fun isMashivHaruachStartDate(jewishCalendar: JewishCalendar): Boolean {
-        return jewishCalendar.getJewishMonth() == JewishDate.TISHREI && jewishCalendar.jewishDayOfMonth == 22
+        return jewishCalendar.jewishMonth == JewishDate.TISHREI && jewishCalendar.jewishDayOfMonth == 22
     }
 
     /**
@@ -539,7 +539,7 @@ class TefilaRules constructor() {
      * @see .isMashivHaruachRecited
      */
     fun isMashivHaruachEndDate(jewishCalendar: JewishCalendar): Boolean {
-        return jewishCalendar.getJewishMonth() == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth == 15
+        return jewishCalendar.jewishMonth == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth == 15
     }
 
     /**
@@ -551,8 +551,8 @@ class TefilaRules constructor() {
      * @see .isMashivHaruachEndDate
      */
     fun isMashivHaruachRecited(jewishCalendar: JewishCalendar): Boolean {
-        val startDate: JewishDate = JewishDate(jewishCalendar.getJewishYear(), JewishDate.TISHREI, 22)
-        val endDate: JewishDate = JewishDate(jewishCalendar.getJewishYear(), JewishDate.NISSAN, 15)
+        val startDate: JewishDate = JewishDate(jewishCalendar.jewishYear, JewishDate.TISHREI, 22)
+        val endDate: JewishDate = JewishDate(jewishCalendar.jewishYear, JewishDate.NISSAN, 15)
         return jewishCalendar.compareTo(startDate) > 0 && jewishCalendar.compareTo(endDate) < 0
     }
 
@@ -580,9 +580,9 @@ class TefilaRules constructor() {
      * @see .isHallelShalemRecited
      */
     fun isHallelRecited(jewishCalendar: JewishCalendar): Boolean {
-        val day: Int = jewishCalendar.jewishDayOfMonth
-        val month: Int = jewishCalendar.getJewishMonth()
-        val holidayIndex: Int = jewishCalendar.yomTovIndex
+        val day = jewishCalendar.jewishDayOfMonth
+        val month = jewishCalendar.jewishMonth
+        val holidayIndex = jewishCalendar.yomTovIndex
         val inIsrael: Boolean = jewishCalendar.inIsrael
         if (jewishCalendar.isRoshChodesh) { //RH returns false for RC
             return true
@@ -617,8 +617,8 @@ class TefilaRules constructor() {
      * @see .isHallelRecited
      */
     fun isHallelShalemRecited(jewishCalendar: JewishCalendar): Boolean {
-        val day: Int = jewishCalendar.jewishDayOfMonth
-        val month: Int = jewishCalendar.getJewishMonth()
+        val day = jewishCalendar.jewishDayOfMonth
+        val month = jewishCalendar.jewishMonth
         val inIsrael: Boolean = jewishCalendar.inIsrael
         return isHallelRecited(jewishCalendar)
                 &&

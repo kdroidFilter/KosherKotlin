@@ -168,15 +168,15 @@ class NOAACalculator constructor() : AstronomicalCalculator() {
          * should be added later.
          */
         private fun getJulianDay(calendar: Calendar): Double {
-            var year: Int = calendar.get(Calendar.YEAR)
-            var month: Int = calendar.get(Calendar.MONTH) + 1
-            val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
+            var year = calendar.get(Calendar.YEAR)
+            var month = calendar.get(Calendar.MONTH) + 1
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
             if (month <= 2) {
                 year -= 1
                 month += 12
             }
-            val a: Int = year / 100
-            val b: Int = 2 - a + a / 4
+            val a = year / 100
+            val b = 2 - a + a / 4
             return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5
         }
 

@@ -54,7 +54,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
  * @author  Bob Newell (original C code)
  * @author  Eliyahu Hershfeld 2011 - 2020
  */
-object YomiCalculator {
+public object YomiCalculator {
     /**
      * The start date of the first Daf Yomi Bavli cycle of September 11, 1923 / Rosh Hashana 5684.
      */
@@ -107,7 +107,7 @@ object YomiCalculator {
         )
         val calendar: Calendar = jewishCalendar.gregorianCalendar
         var dafYomi: Daf? = null
-        val julianDay: Int = getJulianDay(calendar)
+        val julianDay = getJulianDay(calendar)
         val cycleNo: Int
         val dafNo: Int
         if (calendar.before(dafYomiStartDay)) {
@@ -124,9 +124,9 @@ object YomiCalculator {
             cycleNo = 1 + ((julianDay - dafYomiJulianStartDay) / 2702)
             dafNo = ((julianDay - dafYomiJulianStartDay) % 2702)
         }
-        var total: Int = 0
-        var masechta: Int = -1
-        var blatt: Int = 0
+        var total = 0
+        var masechta = -1
+        var blatt = 0
 
         // Fix Shekalim for old cycles.
         if (cycleNo <= 7) {
@@ -161,15 +161,15 @@ object YomiCalculator {
      * @return the Julian day number corresponding to the date
      */
     private fun getJulianDay(calendar: Calendar?): Int {
-        var year: Int = calendar!!.get(Calendar.YEAR)
-        var month: Int = calendar.get(Calendar.MONTH) + 1
-        val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
+        var year = calendar!!.get(Calendar.YEAR)
+        var month = calendar.get(Calendar.MONTH) + 1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
         if (month <= 2) {
             year -= 1
             month += 12
         }
-        val a: Int = year / 100
-        val b: Int = 2 - a + a / 4
+        val a = year / 100
+        val b = 2 - a + a / 4
         return (Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5).toInt()
     }
 }

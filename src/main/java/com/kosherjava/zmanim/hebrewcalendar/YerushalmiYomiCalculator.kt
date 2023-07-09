@@ -98,19 +98,14 @@ object YerushalmiYomiCalculator {
         ) {
             return null
         }
-        if (requested.before(DAF_YOMI_START_DAY)) {
-            throw IllegalArgumentException(
-                (requested.toString() + " is prior to organized Daf Yomi Yerushalmi cycles that started on "
-                        + DAF_YOMI_START_DAY)
-            )
-        }
+        require(!requested.before(DAF_YOMI_START_DAY)) { "$requested is prior to organized Daf Yomi Yerushalmi cycles that started on $DAF_YOMI_START_DAY" }
 
         // Start to calculate current cycle. init the start day
-        nextCycle.setTime(DAF_YOMI_START_DAY.getTime())
+        nextCycle.time = DAF_YOMI_START_DAY.time
 
         // Go cycle by cycle, until we get the next cycle
         while (requested.after(nextCycle)) {
-            prevCycle.setTime(nextCycle.getTime())
+            prevCycle.time = nextCycle.time
 
             // Adds the number of whole shas dafs. and the number of days that not have daf.
             nextCycle.add(Calendar.DAY_OF_MONTH, WHOLE_SHAS_DAFS)
@@ -118,19 +113,19 @@ object YerushalmiYomiCalculator {
         }
 
         // Get the number of days from cycle start until request.
-        val dafNo: Int = (getDiffBetweenDays(prevCycle, requested)).toInt()
+        val dafNo = getDiffBetweenDays(prevCycle, requested).toInt()
 
         // Get the number of special day to subtract
-        val specialDays: Int = getNumOfSpecialDays(prevCycle, requested)
-        var total: Int = dafNo - specialDays
+        val specialDays = getNumOfSpecialDays(prevCycle, requested)
+        var total = dafNo - specialDays
 
         // Finally find the daf.
         for (j in BLATT_PER_MASECHTA.indices) {
-            if (total < BLATT_PER_MASECHTA.get(j)) {
+            if (total < BLATT_PER_MASECHTA[j]) {
                 dafYomi = Daf(masechta, total + 1)
                 break
             }
-            total -= BLATT_PER_MASECHTA.get(j)
+            total -= BLATT_PER_MASECHTA[j]
             masechta++
         }
         return dafYomi
@@ -147,8 +142,8 @@ object YerushalmiYomiCalculator {
     private fun getNumOfSpecialDays(start: Calendar, end: Calendar): Int {
 
         // Find the start and end Jewish years
-        val startYear: Int = JewishCalendar(start).getJewishYear()
-        val endYear: Int = JewishCalendar(end).getJewishYear()
+        val startYear = JewishCalendar(start).jewishYear
+        val endYear = JewishCalendar(end).jewishYear
 
         // Value to return
         var specialDays = 0

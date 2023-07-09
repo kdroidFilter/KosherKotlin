@@ -3352,7 +3352,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .ZENITH_1_POINT_583
      */
     private fun getSunriseBaalHatanya(): Date? {
-        return getSunriseOffsetByDegrees(ComplexZmanimCalendar.Companion.ZENITH_1_POINT_583)
+        return getSunriseOffsetByDegrees(ZENITH_1_POINT_583)
     }
 
     /**
