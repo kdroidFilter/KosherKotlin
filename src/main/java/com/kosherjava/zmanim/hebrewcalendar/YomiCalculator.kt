@@ -54,7 +54,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
  * @author  Bob Newell (original C code)
  * @author  Eliyahu Hershfeld 2011 - 2020
  */
-public object YomiCalculator {
+object YomiCalculator {
     /**
      * The start date of the first Daf Yomi Bavli cycle of September 11, 1923 / Rosh Hashana 5684.
      */
