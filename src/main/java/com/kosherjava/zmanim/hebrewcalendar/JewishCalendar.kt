@@ -1364,9 +1364,9 @@ class JewishCalendar : JewishDate {
         get() {
             val molad: Date = moladAsDate
             val cal: Calendar = Calendar.getInstance()
-            cal.setTime(molad)
+            cal.time = molad
             cal.add(Calendar.HOUR, 168) // 7 days after the molad
-            return cal.getTime()
+            return cal.time
         }// add half the time between molad and molad (half of 29 days, 12 hours and 793 chalakim (44 minutes, 3.3
     // seconds), or 14 days, 18 hours, 22 minutes and 666 milliseconds). Add it as hours, not days, to avoid
     // DST/ST crossover issues.
@@ -1388,7 +1388,7 @@ class JewishCalendar : JewishDate {
         get() {
             val molad: Date = moladAsDate
             val cal: Calendar = Calendar.getInstance()
-            cal.setTime(molad)
+            cal.time = molad
             // add half the time between molad and molad (half of 29 days, 12 hours and 793 chalakim (44 minutes, 3.3
             // seconds), or 14 days, 18 hours, 22 minutes and 666 milliseconds). Add it as hours, not days, to avoid
             // DST/ST crossover issues.
@@ -1396,7 +1396,7 @@ class JewishCalendar : JewishDate {
             cal.add(Calendar.MINUTE, 22)
             cal.add(Calendar.SECOND, 1)
             cal.add(Calendar.MILLISECOND, 666)
-            return cal.getTime()
+            return cal.time
         }//15 days after the molad. Add it as hours, not days, to avoid DST/ST crossover issues.
 
     /**
@@ -1418,12 +1418,12 @@ class JewishCalendar : JewishDate {
         get() {
             val molad: Date = moladAsDate
             val cal: Calendar = Calendar.getInstance()
-            cal.setTime(molad)
+            cal.time = molad
             cal.add(
                 Calendar.HOUR,
                 24 * 15
             ) //15 days after the molad. Add it as hours, not days, to avoid DST/ST crossover issues.
-            return cal.getTime()
+            return cal.time
         }
 
     /**
