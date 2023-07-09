@@ -22,7 +22,7 @@ class UT_JewishDateNavigation {
     fun jewishForwardMonthToMonth() {
         jewishDate.setJewishDate(5771, 1, 1)
         Assert.assertEquals(5, jewishDate.gregorianDayOfMonth)
-        Assert.assertEquals(3, jewishDate.gregorianMonth)
+        Assert.assertEquals(3, jewishDate.gregorianMonthZeroBased)
         Assert.assertEquals(2011, jewishDate.gregorianYear)
     }
 
@@ -32,7 +32,7 @@ class UT_JewishDateNavigation {
         // At one point, this test was failing as the JewishDate class spun through a never-ending loop...
         jewishDate.setJewishDate(5771, 7, 1)
         Assert.assertEquals(9, jewishDate.gregorianDayOfMonth)
-        Assert.assertEquals(8, jewishDate.gregorianMonth)
+        Assert.assertEquals(8, jewishDate.gregorianMonthZeroBased)
         Assert.assertEquals(2010, jewishDate.gregorianYear)
     }
 } // End of UT_JewishDateNavigation class
