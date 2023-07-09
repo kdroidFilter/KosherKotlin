@@ -86,7 +86,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
  *  1. ...
  *
  */
-class TefilaRules constructor() {
+class TefilaRules {
     /**
      * Is *tachanun* recited at the end Of [&lt;em&gt;Tishrei&lt;/em&gt;][JewishDate.TISHREI].The Magen Avraham 669:1 and the Pri
      * Chadash 131:7 state that some places to not recite *tachanun* during this period. The Sh"UT Chasam Sofer on Choshen
