@@ -162,9 +162,7 @@ data class GeoLocation(
         }
         if (direction == "S") {
             tempLat *= -1.0
-        } else if (direction != "N") {
-            throw IllegalArgumentException("Latitude direction must be N or S")
-        }
+        } else require(direction == "N") { "Latitude direction must be N or S" }
         latitude = tempLat
     }
 
@@ -190,9 +188,7 @@ data class GeoLocation(
         }
         if (direction == "W") {
             longTemp *= -1.0
-        } else if (direction != "E") {
-            throw IllegalArgumentException("Longitude direction must be E or W")
-        }
+        } else require(direction == "E") { "Longitude direction must be E or W" }
         longitude = longTemp
     }
 

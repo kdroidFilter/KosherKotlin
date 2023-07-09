@@ -635,7 +635,7 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * @param location
      * the location
      */
-    constructor(location: GeoLocation) : super(location) {}
+    constructor(location: GeoLocation) : super(location)
 
     /**
      * This is a utility method to determine if the current Date (date-time) passed in has a *melacha* (work) prohibition.
