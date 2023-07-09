@@ -16,11 +16,6 @@ class UT_DaysInJewishMonth {
 
     lateinit var jewishDate: JewishDate
 
-    @Before
-    fun setupProps() {
-        jewishDate = JewishDate()
-    }
-
     @Test
     fun daysInMonthsInHaserYear() {
         assertHaser(5773)
@@ -60,36 +55,43 @@ class UT_DaysInJewishMonth {
     }
 
     private fun assertHaser(year: Int) {
+        jewishDate = JewishDate()
         jewishDate.setJewishYear(year)
         assertFalse(jewishDate.isCheshvanLong)
         assertTrue(jewishDate.isKislevShort)
     }
 
     private fun assertHaserLeap(year: Int) {
+        jewishDate = JewishDate()
         jewishDate.setJewishYear(year)
         assertHaser(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }
 
     private fun assertQesidrah(year: Int) {
+        jewishDate = JewishDate()
         jewishDate.setJewishYear(year)
         assertFalse(jewishDate.isCheshvanLong)
         assertFalse(jewishDate.isKislevShort)
     }
 
     private fun assertQesidrahLeap(year: Int) {
+        jewishDate = JewishDate()
+
         jewishDate.setJewishYear(year)
         assertQesidrah(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }
 
     private fun assertShalem(year: Int) {
+        jewishDate = JewishDate()
         jewishDate.setJewishYear(year)
         assertTrue(jewishDate.isCheshvanLong)
         assertFalse(jewishDate.isKislevShort)
     }
 
     private fun assertShalemLeap(year: Int) {
+        jewishDate = JewishDate()
         jewishDate.setJewishYear(year)
         assertShalem(year)
         assertTrue(jewishDate.isJewishLeapYear)
