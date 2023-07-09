@@ -5,6 +5,7 @@ package com.kosherjava.zmanim.hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Test
+import java.time.ZoneId
 import java.util.*
 
 /**
@@ -34,7 +35,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             null,
             null,
-            1 to { gregorianMonth },
+            1 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             11 to { jewishMonth },
             27 to { jewishDayOfMonth },
@@ -44,7 +45,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.FEBRUARY,
             28,
-            1 to { gregorianMonth },
+            1 to { gregorianMonthZeroBased },
             28 to { gregorianDayOfMonth },
             12 to { jewishMonth },
             24 to { jewishDayOfMonth },
@@ -53,7 +54,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             null,
             null,
-            2 to { gregorianMonth },
+            2 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             12 to { jewishMonth },
             25 to { jewishDayOfMonth },
@@ -63,7 +64,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.MARCH,
             31,
-            3 to { gregorianMonth },
+            3 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             13 to { jewishMonth },
             26 to { jewishDayOfMonth },
@@ -71,7 +72,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.APRIL,
             30,
-            4 to { gregorianMonth },
+            4 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             1 to { jewishMonth },
             27 to { jewishDayOfMonth },
@@ -79,7 +80,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.MAY,
             31,
-            5 to { gregorianMonth },
+            5 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             2 to { jewishMonth },
             28 to { jewishDayOfMonth },
@@ -87,7 +88,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.JUNE,
             30,
-            6 to { gregorianMonth },
+            6 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             3 to { jewishMonth },
             29 to { jewishDayOfMonth },
@@ -95,7 +96,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.JULY,
             31,
-            7 to { gregorianMonth },
+            7 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             5 to { jewishMonth },
             1 to { jewishDayOfMonth },
@@ -103,7 +104,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.AUGUST,
             31,
-            8 to { gregorianMonth },
+            8 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             6 to { jewishMonth },
             2 to { jewishDayOfMonth },
@@ -111,7 +112,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.SEPTEMBER,
             30,
-            9 to { gregorianMonth },
+            9 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             7 to { jewishMonth },
             3 to { jewishDayOfMonth }
@@ -120,7 +121,7 @@ class UT_GregorianDateNavigation {
             Calendar.OCTOBER,
             31,
             5772 to { jewishYear },
-            10 to { gregorianMonth },
+            10 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             8 to { jewishMonth },
             4 to { jewishDayOfMonth }
@@ -128,7 +129,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.NOVEMBER,
             30,
-            11 to { gregorianMonth },
+            11 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             9 to { jewishMonth },
             5 to { jewishDayOfMonth }
@@ -137,7 +138,7 @@ class UT_GregorianDateNavigation {
             Calendar.DECEMBER,
             31,
             2012 to { gregorianYear },
-            0 to { gregorianMonth },
+            0 to { gregorianMonthZeroBased },
             1 to { gregorianDayOfMonth },
             10 to { jewishMonth },
             6 to { jewishDayOfMonth }
@@ -146,17 +147,17 @@ class UT_GregorianDateNavigation {
 
     @Test
     fun gregorianBackwardMonthToMonth() {
-        cal = Calendar.getInstance()
+        cal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("America/New_York")))
         cal[Calendar.YEAR] = 2011
         cal[Calendar.MONTH] = Calendar.JANUARY
         cal[Calendar.DATE] = 1
         hebrewDate = JewishDate(cal)
-
+        println("Hebrew date before mod and assert: $hebrewDate")
         assertProperties(
             null,
             null,
             2010 to { gregorianYear },
-            11 to { gregorianMonth },
+            11 to { gregorianMonthZeroBased },
             31 to { gregorianDayOfMonth },
             10 to { jewishMonth },
             24 to { jewishDayOfMonth },
@@ -168,7 +169,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.DECEMBER,
             1,
-            10 to { gregorianMonth },
+            10 to { gregorianMonthZeroBased },
             30 to { gregorianDayOfMonth },
             9 to { jewishMonth },
             23 to { jewishDayOfMonth },
@@ -178,7 +179,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.NOVEMBER,
             1,
-            9 to { gregorianMonth },
+            9 to { gregorianMonthZeroBased },
             31 to { gregorianDayOfMonth },
             8 to { jewishMonth },
             23 to { jewishDayOfMonth },
@@ -188,7 +189,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.OCTOBER,
             1,
-            8 to { gregorianMonth },
+            8 to { gregorianMonthZeroBased },
             30 to { gregorianDayOfMonth },
             7 to { jewishMonth },
             22 to { jewishDayOfMonth },
@@ -198,7 +199,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.SEPTEMBER,
             1,
-            7 to { gregorianMonth },
+            7 to { gregorianMonthZeroBased },
             31 to { gregorianDayOfMonth },
             5770 to { jewishYear },
             6 to { jewishMonth },
@@ -208,7 +209,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.AUGUST,
             1,
-            6 to { gregorianMonth },
+            6 to { gregorianMonthZeroBased },
             31 to { gregorianDayOfMonth },
             5 to { jewishMonth },
             20 to { jewishDayOfMonth },
@@ -218,7 +219,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.JULY,
             1,
-            5 to { gregorianMonth },
+            5 to { gregorianMonthZeroBased },
             30 to { gregorianDayOfMonth },
             4 to { jewishMonth },
             18 to { jewishDayOfMonth },
@@ -228,7 +229,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.JUNE,
             1,
-            4 to { gregorianMonth },
+            4 to { gregorianMonthZeroBased },
             31 to { gregorianDayOfMonth },
             3 to { jewishMonth },
             18 to { jewishDayOfMonth },
@@ -239,7 +240,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.MAY,
             1,
-            3 to { gregorianMonth },
+            3 to { gregorianMonthZeroBased },
             30 to { gregorianDayOfMonth },
             2 to { jewishMonth },
             16 to { jewishDayOfMonth },
@@ -250,7 +251,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.APRIL,
             1,
-            2 to { gregorianMonth },
+            2 to { gregorianMonthZeroBased },
             31 to { gregorianDayOfMonth },
             1 to { jewishMonth },
             16 to { jewishDayOfMonth },
@@ -260,7 +261,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.MARCH,
             1,
-            1 to { gregorianMonth },
+            1 to { gregorianMonthZeroBased },
             28 to { gregorianDayOfMonth },
             12 to { jewishMonth },
             14 to { jewishDayOfMonth },
@@ -270,7 +271,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.FEBRUARY,
             1,
-            0 to { gregorianMonth },
+            0 to { gregorianMonthZeroBased },
             31 to { gregorianDayOfMonth },
             11 to { jewishMonth },
             16 to { jewishDayOfMonth },
@@ -288,6 +289,7 @@ class UT_GregorianDateNavigation {
         moveDateForwardAfterAssert: Boolean = false,
         moveDateBackwardBeforeAssert: Boolean = false
     ) {
+        println("Hebrew date before mod: $hebrewDate, ${hebrewDate.localDate}")
         if (month != null) cal[Calendar.MONTH] = month
         if (day != null) cal[Calendar.DATE] = day
         if(setDateBeforeAssert) hebrewDate.setDate(cal)

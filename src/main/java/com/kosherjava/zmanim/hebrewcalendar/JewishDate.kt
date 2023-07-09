@@ -138,11 +138,14 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * The month, where 1 == January, 2 == February, etc... Note that this is different than the Java's Calendar class
      * where January ==0
      */
-    var gregorianMonth = 0
-        /**
-         * The Gregorian month (between 0-11). Like the java.util.Calendar, months are 0 based.
-         * */
-        get() = field - 1
+    var gregorianMonth
+        get() = gregorianMonthZeroBased + 1
+        set(value) { gregorianMonthZeroBased = value - 1 }
+
+    /**
+     * The Gregorian month (between 0-11). Like the java.util.Calendar, months are 0 based.
+     * */
+    var gregorianMonthZeroBased = 0
         private set
 
     /** The day of the Gregorian month  */
@@ -570,7 +573,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @return The [Calendar]
      */
     val gregorianCalendar: Calendar
-        get() = Calendar.getInstance().apply { set(gregorianYear, gregorianMonth, gregorianDayOfMonth) }
+        get() = Calendar.getInstance().apply { set(gregorianYear, gregorianMonthZeroBased, gregorianDayOfMonth) }
 
     /**
      * Returns this object's date as a [LocalDate] object.
@@ -578,7 +581,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @return The [LocalDate]
      */
     val localDate: LocalDate
-        get() = LocalDate.of(gregorianYear, gregorianMonth + 1, gregorianDayOfMonth)
+        get() = LocalDate.of(gregorianYear, gregorianMonth, gregorianDayOfMonth)
 
     /**
      * Resets this date to the current system date.
@@ -794,6 +797,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if a month &lt; 0 or &gt; 11 is passed in
      */
+    @JvmName("setGregorianMonthExternal")
     fun setGregorianMonth(month: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         validateGregorianMonth(month)
         setInternalGregorianDate(gregorianYear, month + 1, gregorianDayOfMonth)
