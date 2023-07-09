@@ -414,12 +414,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * if the [Calendar.ERA] is [GregorianCalendar.BC]
      */
     fun setDate(calendar: Calendar) {
-        if (calendar.get(Calendar.ERA) == GregorianCalendar.BC) {
-            throw IllegalArgumentException(
-                ("Calendars with a BC era are not supported. The year "
-                        + calendar.get(Calendar.YEAR) + " BC is invalid.")
-            )
-        }
+        require(calendar.get(Calendar.ERA) != GregorianCalendar.BC) { ("Calendars with a BC era are not supported. The year ${calendar.get(Calendar.YEAR)} BC is invalid.") }
         gregorianMonth = calendar.get(Calendar.MONTH) + 1
         gregorianDayOfMonth = calendar.get(Calendar.DATE)
         gregorianYear = calendar.get(Calendar.YEAR)
@@ -597,7 +592,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @return the Jewish date in the form "day Month, year" e.g. "21 Shevat, 5729"
      * @see HebrewDateFormatter.format
      */
-    public override fun toString() = HebrewDateFormatter().format(this)
+    override fun toString() = HebrewDateFormatter().format(this)
 
     /**
      * Rolls the date, month or year forward by the amount passed in. It modifies both the Gregorian and Jewish dates accordingly.
