@@ -1,53 +1,51 @@
-package com.kosherjava.zmanim.hebrewcalendar;
+package com.kosherjava.zmanim.hebrewcalendar
 
-import java.util.Calendar;
+import org.junit.Assert
+import org.junit.Test
 
-import org.junit.*;
+class UT_YerushalmiTest {
+    @Test
+    fun testCorrectDaf1() {
+        val jewishCalendar = JewishCalendar(5777, JewishDate.ELUL, 10)
+        Assert.assertEquals(8, jewishCalendar.dafYomiYerushalmi!!.daf.toLong())
+        Assert.assertEquals(29, jewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong())
+        println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
+    }
 
-import junit.framework.TestCase;
-public class UT_YerushalmiTest {
-	private static HebrewDateFormatter hdf = new HebrewDateFormatter();
-	static {
-		hdf.setHebrewFormat(true);		
-	}
-	 
-	@Test
-	public void testCorrectDaf1() {
-		JewishCalendar jewishCalendar = new JewishCalendar(5777,JewishCalendar.ELUL,10);
-		Assert.assertEquals(8, jewishCalendar.getDafYomiYerushalmi().getDaf());
-		Assert.assertEquals(29, jewishCalendar.getDafYomiYerushalmi().getMasechtaNumber());
-		System.out.println(hdf.formatDafYomiYerushalmi(jewishCalendar.getDafYomiYerushalmi()));
-	}
+    @Test
+    fun testCorrectDaf2() {
+        val jewishCalendar = JewishCalendar(5744, JewishDate.KISLEV, 1)
+        Assert.assertEquals(26, jewishCalendar.dafYomiYerushalmi!!.daf.toLong())
+        Assert.assertEquals(32, jewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong())
+        println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
+    }
 
-	@Test
-	public void testCorrectDaf2() {
-		JewishCalendar jewishCalendar = new JewishCalendar(5744,JewishCalendar.KISLEV,1);
-		Assert.assertEquals(26, jewishCalendar.getDafYomiYerushalmi().getDaf());
-		Assert.assertEquals(32, jewishCalendar.getDafYomiYerushalmi().getMasechtaNumber());
-		System.out.println(hdf.formatDafYomiYerushalmi(jewishCalendar.getDafYomiYerushalmi()));
-	}
-	
-	@Test
-	public void testCorrectDaf3() {
-		JewishCalendar jewishCalendar = new JewishCalendar(5782,JewishCalendar.SIVAN,1);
-		Assert.assertEquals(15, jewishCalendar.getDafYomiYerushalmi().getDaf());
-		Assert.assertEquals(33, jewishCalendar.getDafYomiYerushalmi().getMasechtaNumber());
-		System.out.println(hdf.formatDafYomiYerushalmi(jewishCalendar.getDafYomiYerushalmi()));
-	}
+    @Test
+    fun testCorrectDaf3() {
+        val jewishCalendar = JewishCalendar(5782, JewishDate.SIVAN, 1)
+        Assert.assertEquals(15, jewishCalendar.dafYomiYerushalmi!!.daf.toLong())
+        Assert.assertEquals(33, jewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong())
+        println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
+    }
 
-	@Test
-	public void testCorrectSpecialDate() {
-		JewishCalendar jewishCalendar = new JewishCalendar(5775,JewishCalendar.TISHREI,10);
-		Assert.assertNull(jewishCalendar.getDafYomiYerushalmi());
-		System.out.println(hdf.formatDafYomiYerushalmi(jewishCalendar.getDafYomiYerushalmi()));
-		
-		jewishCalendar = new JewishCalendar(5783,JewishCalendar.AV,9);
-		Assert.assertNull(jewishCalendar.getDafYomiYerushalmi());
-		System.out.println(hdf.formatDafYomiYerushalmi(jewishCalendar.getDafYomiYerushalmi()));
-		
-		jewishCalendar = new JewishCalendar(5775,JewishCalendar.AV,10);// 9 Av delayed to Sunday 10 Av
-		Assert.assertNull(jewishCalendar.getDafYomiYerushalmi());
-		System.out.println(hdf.formatDafYomiYerushalmi(jewishCalendar.getDafYomiYerushalmi()));
-	}
+    @Test
+    fun testCorrectSpecialDate() {
+        var jewishCalendar = JewishCalendar(5775, JewishDate.TISHREI, 10)
+        Assert.assertNull(jewishCalendar.dafYomiYerushalmi)
+        println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
+        jewishCalendar = JewishCalendar(5783, JewishDate.AV, 9)
+        Assert.assertNull(jewishCalendar.dafYomiYerushalmi)
+        println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
+        jewishCalendar = JewishCalendar(5775, JewishDate.AV, 10) // 9 Av delayed to Sunday 10 Av
+        Assert.assertNull(jewishCalendar.dafYomiYerushalmi)
+        println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
+    }
 
+    companion object {
+        private val hdf = HebrewDateFormatter()
+
+        init {
+            hdf.isHebrewFormat = true
+        }
+    }
 }
