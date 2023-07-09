@@ -15,7 +15,6 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import java.lang.IllegalArgumentException
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
@@ -44,7 +43,7 @@ import java.util.EnumMap
  *
  * @author  Eliyahu Hershfeld 2011 - 2023
  */
-class HebrewDateFormatter constructor() {
+class HebrewDateFormatter {
     /**
      * Returns if the formatter is set to use Hebrew formatting in the various formatting methods.
      *
@@ -819,12 +818,9 @@ class HebrewDateFormatter constructor() {
      * @see .isHebrewFormat
      */
     fun formatHebrewNumber(number: Int): String {
-        var number = number
-        if (number < 0) {
-            throw IllegalArgumentException("negative numbers can't be formatted")
-        } else if (number > 9999) {
-            throw IllegalArgumentException("numbers > 9999 can't be formatted")
-        }
+        var num = number
+        val range = 0..9999
+        require(num in range) { "${if(num < range.first) "negative numbers" else "numbers > ${range.last}"} can't be formatted" }
         val ALAFIM: String = "\u05D0\u05DC\u05E4\u05D9\u05DD"
         val EFES: String = "\u05D0\u05E4\u05E1"
         val jHundreds: Array<String> = arrayOf(
@@ -844,17 +840,17 @@ class HebrewDateFormatter constructor() {
             "", "\u05D0", "\u05D1", "\u05D2", "\u05D3", "\u05D4", "\u05D5", "\u05D6",
             "\u05D7", "\u05D8"
         )
-        if (number == 0) { // do we really need this? Should it be applicable to a date?
+        if (num == 0) { // do we really need this? Should it be applicable to a date?
             return EFES
         }
-        val shortNumber = number % 1000 // discard thousands
+        val shortNumber = num % 1000 // discard thousands
         // next check for all possible single Hebrew digit years
         val singleDigitNumber: Boolean =
             ((shortNumber < 11) || (shortNumber < 100 && shortNumber % 10 == 0) || (shortNumber <= 400 && shortNumber % 100 == 0))
-        val thousands = number / 1000 // get # thousands
-        val sb: StringBuilder = StringBuilder()
+        val thousands = num / 1000 // get # thousands
+        val sb = StringBuilder()
         // append thousands to String
-        if (number % 1000 == 0) { // in year is 5000, 4000 etc
+        if (num % 1000 == 0) { // in year is 5000, 4000 etc
             sb.append(jOnes.get(thousands))
             if (isUseGershGershayim) {
                 sb.append(GERESH)
@@ -862,24 +858,24 @@ class HebrewDateFormatter constructor() {
             sb.append(" ")
             sb.append(ALAFIM) // add # of thousands plus word thousand (overide alafim boolean)
             return sb.toString()
-        } else if (isUseLongHebrewYears && number >= 1000) { // if alafim boolean display thousands
+        } else if (isUseLongHebrewYears && num >= 1000) { // if alafim boolean display thousands
             sb.append(jOnes.get(thousands))
             if (isUseGershGershayim) {
                 sb.append(GERESH) // append thousands quote
             }
             sb.append(" ")
         }
-        number = number % 1000 // remove 1000s
-        val hundreds = number / 100 // # of hundreds
+        num = num % 1000 // remove 1000s
+        val hundreds = num / 100 // # of hundreds
         sb.append(jHundreds.get(hundreds)) // add hundreds to String
-        number = number % 100 // remove 100s
-        if (number == 15) { // special case 15
+        num = num % 100 // remove 100s
+        if (num == 15) { // special case 15
             sb.append(tavTaz.get(0))
-        } else if (number == 16) { // special case 16
+        } else if (num == 16) { // special case 16
             sb.append(tavTaz.get(1))
         } else {
-            val tens = number / 10
-            if (number % 10 == 0) { // if evenly divisable by 10
+            val tens = num / 10
+            if (num % 10 == 0) { // if evenly divisable by 10
                 if (!singleDigitNumber) {
                     if (isUseFinalFormLetters) {
                         sb.append(jTenEnds.get(tens)) // years like 5780 will end with a final form &#x05E3;
@@ -891,8 +887,8 @@ class HebrewDateFormatter constructor() {
                 }
             } else {
                 sb.append(jTens.get(tens))
-                number = number % 10
-                sb.append(jOnes.get(number))
+                num = num % 10
+                sb.append(jOnes.get(num))
             }
         }
         if (isUseGershGershayim) {
