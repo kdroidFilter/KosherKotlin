@@ -1,114 +1,97 @@
 /*
  * Copyright (c) 2011. Jay R. Gindin
  */
+package com.kosherjava.zmanim.hebrewcalendar
 
-package com.kosherjava.zmanim.hebrewcalendar;
-
-import org.junit.*;
+import org.junit.Assert
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
 
 /**
  * Validate the days in a Hebrew month (in various types of years) are correct.
  */
-@SuppressWarnings({ "MagicNumber" })
-public class UT_DaysInJewishMonth {
+class UT_DaysInJewishMonth {
 
-	@Test
-	public void daysInMonthsInHaserYear() {
+    lateinit var jewishDate: JewishDate
 
-		assertHaser(5773);
-		assertHaser(5777);
-		assertHaser(5781);
-		assertHaserLeap(5784);
-		assertHaserLeap(5790);
-		assertHaserLeap(5793);
-	}
+    @Before
+    fun setupProps() {
+        jewishDate = JewishDate()
+    }
 
+    @Test
+    fun daysInMonthsInHaserYear() {
+        assertHaser(5773)
+        assertHaser(5777)
+        assertHaser(5781)
+        assertHaserLeap(5784)
+        assertHaserLeap(5790)
+        assertHaserLeap(5793)
+    }
 
-	@Test
-	public void daysInMonthsInQesidrahYear() {
+    @Test
+    fun daysInMonthsInQesidrahYear() {
+        assertQesidrah(5769)
+        assertQesidrah(5772)
+        assertQesidrah(5778)
+        assertQesidrah(5786)
+        assertQesidrah(5789)
+        assertQesidrah(5792)
+        assertQesidrahLeap(5782)
+    }
 
-		assertQesidrah(5769);
-		assertQesidrah(5772);
-		assertQesidrah(5778);
-		assertQesidrah(5786);
-		assertQesidrah(5789);
-		assertQesidrah(5792);
+    @Test
+    fun daysInMonthsInShalemYear() {
+        assertShalem(5770)
+        assertShalem(5780)
+        assertShalem(5783)
+        assertShalem(5785)
+        assertShalem(5788)
+        assertShalem(5791)
+        assertShalem(5794)
+        assertShalemLeap(5771)
+        assertShalemLeap(5774)
+        assertShalemLeap(5776)
+        assertShalemLeap(5779)
+        assertShalemLeap(5787)
+        assertShalemLeap(5795)
+    }
 
-		assertQesidrahLeap(5782);
-	}
+    private fun assertHaser(year: Int) {
+        jewishDate.setJewishYear(year)
+        assertFalse(jewishDate.isCheshvanLong)
+        assertTrue(jewishDate.isKislevShort)
+    }
 
+    private fun assertHaserLeap(year: Int) {
+        jewishDate.setJewishYear(year)
+        assertHaser(year)
+        assertTrue(jewishDate.isJewishLeapYear)
+    }
 
-	@Test
-	public void daysInMonthsInShalemYear() {
+    private fun assertQesidrah(year: Int) {
+        jewishDate.setJewishYear(year)
+        assertFalse(jewishDate.isCheshvanLong)
+        assertFalse(jewishDate.isKislevShort)
+    }
 
-		assertShalem(5770);
-		assertShalem(5780);
-		assertShalem(5783);
-		assertShalem(5785);
-		assertShalem(5788);
-		assertShalem(5791);
-		assertShalem(5794);
+    private fun assertQesidrahLeap(year: Int) {
+        jewishDate.setJewishYear(year)
+        assertQesidrah(year)
+        assertTrue(jewishDate.isJewishLeapYear)
+    }
 
-		assertShalemLeap(5771);
-		assertShalemLeap(5774);
-		assertShalemLeap(5776);
-		assertShalemLeap(5779);
-		assertShalemLeap(5787);
-		assertShalemLeap(5795);
-	}
+    private fun assertShalem(year: Int) {
+        jewishDate.setJewishYear(year)
+        assertTrue(jewishDate.isCheshvanLong)
+        assertFalse(jewishDate.isKislevShort)
+    }
 
-
-	private void assertHaser(int year) {
-		JewishDate jewishDate = new JewishDate();
-		jewishDate.setJewishYear(year);
-
-		Assert.assertFalse(jewishDate.isCheshvanLong());
-		Assert.assertTrue(jewishDate.isKislevShort());
-	}
-
-
-	private void assertHaserLeap(int year) {
-		JewishDate jewishDate = new JewishDate();
-		jewishDate.setJewishYear(year);
-
-		assertHaser(year);
-		Assert.assertTrue(jewishDate.isJewishLeapYear());
-	}
-
-
-	private void assertQesidrah(int year) {
-		JewishDate jewishDate = new JewishDate();
-		jewishDate.setJewishYear(year);
-
-		Assert.assertFalse(jewishDate.isCheshvanLong(  ));
-		Assert.assertFalse(jewishDate.isKislevShort(  ));
-	}
-
-
-	private void assertQesidrahLeap(int year) {
-		JewishDate jewishDate = new JewishDate();
-		jewishDate.setJewishYear(year);
-
-		assertQesidrah(year);
-		Assert.assertTrue(jewishDate.isJewishLeapYear(  ));
-	}
-
-
-	private void assertShalem(int year) {
-		JewishDate jewishDate = new JewishDate();
-		jewishDate.setJewishYear(year);
-
-		Assert.assertTrue(jewishDate.isCheshvanLong(  ));
-		Assert.assertFalse(jewishDate.isKislevShort(  ));
-	}
-
-
-	private void assertShalemLeap(int year) {
-		JewishDate jewishDate = new JewishDate();
-		jewishDate.setJewishYear(year);
-
-		assertShalem(year);
-		Assert.assertTrue(jewishDate.isJewishLeapYear(  ));
-	}
-
+    private fun assertShalemLeap(year: Int) {
+        jewishDate.setJewishYear(year)
+        assertShalem(year)
+        assertTrue(jewishDate.isJewishLeapYear)
+    }
 } // End of UT_DaysInJewishMonth class
