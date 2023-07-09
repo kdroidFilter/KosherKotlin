@@ -152,7 +152,6 @@ class UT_GregorianDateNavigation {
         cal[Calendar.MONTH] = Calendar.JANUARY
         cal[Calendar.DATE] = 1
         hebrewDate = JewishDate(cal)
-        println("Hebrew date before mod and assert: $hebrewDate")
         assertProperties(
             null,
             null,
@@ -289,13 +288,12 @@ class UT_GregorianDateNavigation {
         moveDateForwardAfterAssert: Boolean = false,
         moveDateBackwardBeforeAssert: Boolean = false
     ) {
-        println("Hebrew date before mod: $hebrewDate, ${hebrewDate.localDate}")
         if (month != null) cal[Calendar.MONTH] = month
         if (day != null) cal[Calendar.DATE] = day
-        if(setDateBeforeAssert) hebrewDate.setDate(cal)
-        if(moveDateForwardBeforeAssert) hebrewDate.forward(Calendar.DATE, 1)
-        if(moveDateBackwardBeforeAssert) hebrewDate.back()
-        for((expected, actual) in expectedToActual) Assert.assertEquals(expected, hebrewDate.actual())
-        if(moveDateForwardAfterAssert) hebrewDate.forward(Calendar.DATE, 1)
+        if (setDateBeforeAssert) hebrewDate.setDate(cal)
+        if (moveDateForwardBeforeAssert) hebrewDate.forward(Calendar.DATE, 1)
+        if (moveDateBackwardBeforeAssert) hebrewDate.back()
+        for ((expected, actual) in expectedToActual) Assert.assertEquals(expected, hebrewDate.actual())
+        if (moveDateForwardAfterAssert) hebrewDate.forward(Calendar.DATE, 1)
     }
 } // End of UT_GregorianDateNavigation class
