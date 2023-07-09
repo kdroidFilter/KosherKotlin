@@ -297,7 +297,7 @@ class SunTimesCalculator constructor() : AstronomicalCalculator() {
             zenith: Double,
             isSunrise: Boolean
         ): Double {
-            val dayOfYear: Int = calendar.get(Calendar.DAY_OF_YEAR)
+            val dayOfYear = calendar.get(Calendar.DAY_OF_YEAR)
             val sunMeanAnomaly: Double = getMeanAnomaly(dayOfYear, geoLocation.longitude, isSunrise)
             val sunTrueLong: Double = getSunTrueLongitude(sunMeanAnomaly)
             val sunRightAscensionHours: Double = getSunRightAscensionHours(sunTrueLong)

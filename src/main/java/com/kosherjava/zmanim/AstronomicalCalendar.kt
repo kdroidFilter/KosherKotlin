@@ -517,17 +517,17 @@ open class AstronomicalCalendar @JvmOverloads constructor(geoLocation: GeoLocati
         cal.set(Calendar.YEAR, adjustedCalendar.get(Calendar.YEAR))
         cal.set(Calendar.MONTH, adjustedCalendar.get(Calendar.MONTH))
         cal.set(Calendar.DAY_OF_MONTH, adjustedCalendar.get(Calendar.DAY_OF_MONTH))
-        val hours: Int = calculatedTime.toInt() // retain only the hours
+        val hours = calculatedTime.toInt() // retain only the hours
         calculatedTime -= hours.toDouble()
 
         // retain only the minutes
         calculatedTime *= 60
-        val minutes: Int = calculatedTime.toInt()
+        val minutes = calculatedTime.toInt()
         calculatedTime -= minutes.toDouble()
 
         // retain only the seconds
         calculatedTime *= 60
-        val seconds: Int = calculatedTime.toInt()
+        val seconds = calculatedTime.toInt()
         calculatedTime -= seconds.toDouble() // remaining milliseconds
 
         // Check if a date transition has occurred, or is about to occur - this indicates the date of the event is

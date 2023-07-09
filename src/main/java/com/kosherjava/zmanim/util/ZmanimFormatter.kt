@@ -210,14 +210,14 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
         dateFormat.setTimeZone(timeZone)
         val sb: StringBuilder = StringBuilder(dateFormat.format(dateTime))
         // Must also include offset from UTF.
-        val offset: Int =
+        val offset =
             calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET) // Get the offset (in milliseconds)
         // If there is no offset, we have "Coordinated Universal Time"
         if (offset == 0) sb.append("Z") else {
             // Convert milliseconds to hours and minutes
-            val hrs: Int = offset / (60 * 60 * 1000)
+            val hrs = offset / (60 * 60 * 1000)
             // In a few cases, the time zone may be +/-hh:30.
-            val min: Int = offset % (60 * 60 * 1000)
+            val min = offset % (60 * 60 * 1000)
             val posneg: Char = if (hrs < 0) '-' else '+'
             sb.append(posneg.toString() + formatDigits(hrs) + ':' + formatDigits(min))
         }
@@ -275,21 +275,21 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
          * Format using hours, minutes, seconds and milliseconds using the xsd:time format. This format will return
          * 00.00.00.0 when formatting 0.
          */
-        val SEXAGESIMAL_XSD_FORMAT: Int = 0
+        val SEXAGESIMAL_XSD_FORMAT = 0
 
         /**
          * Format using standard decimal format with 5 positions after the decimal.
          */
-        val DECIMAL_FORMAT: Int = 1
+        val DECIMAL_FORMAT = 1
 
         /** Format using hours and minutes.  */
-        val SEXAGESIMAL_FORMAT: Int = 2
+        val SEXAGESIMAL_FORMAT = 2
 
         /** Format using hours, minutes and seconds.  */
-        val SEXAGESIMAL_SECONDS_FORMAT: Int = 3
+        val SEXAGESIMAL_SECONDS_FORMAT = 3
 
         /** Format using hours, minutes, seconds and milliseconds.  */
-        val SEXAGESIMAL_MILLIS_FORMAT: Int = 4
+        val SEXAGESIMAL_MILLIS_FORMAT = 4
 
         /** constant for milliseconds in a minute (60,000)  */
         val MINUTE_MILLIS: Long = (60 * 1000).toLong()
@@ -301,7 +301,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
          * Format using the XSD Duration format. This is in the format of PT1H6M7.869S (P for period (duration), T for time,
          * H, M and S indicate hours, minutes and seconds.
          */
-        val XSD_DURATION_FORMAT: Int = 5
+        val XSD_DURATION_FORMAT = 5
 
         /**
          * Represent the hours and minutes with two-digit strings.
