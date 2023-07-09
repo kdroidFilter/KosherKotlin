@@ -339,7 +339,7 @@ class JewishCalendar : JewishDate {
     /**
      * Default constructor will set a default date to the current system date.
      */
-    constructor() : super() {}
+    constructor() : super()
 
     /**
      * A constructor that initializes the date to the [Date] parameter.
@@ -347,7 +347,7 @@ class JewishCalendar : JewishDate {
      * @param date
      * the `Date` to set the calendar to
      */
-    constructor(date: Date?) : super(date) {}
+    constructor(date: Date?) : super(date)
 
     /**
      * A constructor that initializes the date to the [Calendar] parameter.
