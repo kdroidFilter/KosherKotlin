@@ -144,6 +144,141 @@ class UT_GregorianDateNavigation {
         )
     }
 
+    @Test
+    fun gregorianBackwardMonthToMonth() {
+        cal = Calendar.getInstance()
+        cal[Calendar.YEAR] = 2011
+        cal[Calendar.MONTH] = Calendar.JANUARY
+        cal[Calendar.DATE] = 1
+        hebrewDate = JewishDate(cal)
+
+        assertProperties(
+            null,
+            null,
+            2010 to { gregorianYear },
+            11 to { gregorianMonth },
+            31 to { gregorianDayOfMonth },
+            10 to { jewishMonth },
+            24 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+
+        cal[Calendar.YEAR] = 2010
+        assertProperties(
+            Calendar.DECEMBER,
+            1,
+            10 to { gregorianMonth },
+            30 to { gregorianDayOfMonth },
+            9 to { jewishMonth },
+            23 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.NOVEMBER,
+            1,
+            9 to { gregorianMonth },
+            31 to { gregorianDayOfMonth },
+            8 to { jewishMonth },
+            23 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.OCTOBER,
+            1,
+            8 to { gregorianMonth },
+            30 to { gregorianDayOfMonth },
+            7 to { jewishMonth },
+            22 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.SEPTEMBER,
+            1,
+            7 to { gregorianMonth },
+            31 to { gregorianDayOfMonth },
+            5770 to { jewishYear },
+            6 to { jewishMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.AUGUST,
+            1,
+            6 to { gregorianMonth },
+            31 to { gregorianDayOfMonth },
+            5 to { jewishMonth },
+            20 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.JULY,
+            1,
+            5 to { gregorianMonth },
+            30 to { gregorianDayOfMonth },
+            4 to { jewishMonth },
+            18 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.JUNE,
+            1,
+            4 to { gregorianMonth },
+            31 to { gregorianDayOfMonth },
+            3 to { jewishMonth },
+            18 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+
+        assertProperties(
+            Calendar.MAY,
+            1,
+            3 to { gregorianMonth },
+            30 to { gregorianDayOfMonth },
+            2 to { jewishMonth },
+            16 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+
+        assertProperties(
+            Calendar.APRIL,
+            1,
+            2 to { gregorianMonth },
+            31 to { gregorianDayOfMonth },
+            1 to { jewishMonth },
+            16 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.MARCH,
+            1,
+            1 to { gregorianMonth },
+            28 to { gregorianDayOfMonth },
+            12 to { jewishMonth },
+            14 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+        assertProperties(
+            Calendar.FEBRUARY,
+            1,
+            0 to { gregorianMonth },
+            31 to { gregorianDayOfMonth },
+            11 to { jewishMonth },
+            16 to { jewishDayOfMonth },
+            moveDateForwardBeforeAssert = false,
+            moveDateBackwardBeforeAssert = true
+        )
+    }
+
     private fun assertProperties(
         month: Int? = null,
         day: Int? = null,
@@ -151,117 +286,14 @@ class UT_GregorianDateNavigation {
         moveDateForwardBeforeAssert: Boolean = true,
         setDateBeforeAssert: Boolean = true,
         moveDateForwardAfterAssert: Boolean = false,
+        moveDateBackwardBeforeAssert: Boolean = false
     ) {
         if (month != null) cal[Calendar.MONTH] = month
         if (day != null) cal[Calendar.DATE] = day
         if(setDateBeforeAssert) hebrewDate.setDate(cal)
         if(moveDateForwardBeforeAssert) hebrewDate.forward(Calendar.DATE, 1)
+        if(moveDateBackwardBeforeAssert) hebrewDate.back()
         for((expected, actual) in expectedToActual) Assert.assertEquals(expected, hebrewDate.actual())
         if(moveDateForwardAfterAssert) hebrewDate.forward(Calendar.DATE, 1)
-    }
-
-    @Test
-    fun gregorianBackwardMonthToMonth() {
-        val cal = Calendar.getInstance()
-        cal[Calendar.YEAR] = 2011
-        cal[Calendar.MONTH] = Calendar.JANUARY
-        cal[Calendar.DATE] = 1
-        val hebrewDate = JewishDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(2010, hebrewDate.gregorianYear)
-        Assert.assertEquals(11, hebrewDate.gregorianMonth)
-        Assert.assertEquals(31, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(10, hebrewDate.jewishMonth)
-        Assert.assertEquals(24, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.DECEMBER
-        cal[Calendar.YEAR] = 2010
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(10, hebrewDate.gregorianMonth)
-        Assert.assertEquals(30, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(9, hebrewDate.jewishMonth)
-        Assert.assertEquals(23, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.NOVEMBER
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(9, hebrewDate.gregorianMonth)
-        Assert.assertEquals(31, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(8, hebrewDate.jewishMonth)
-        Assert.assertEquals(23, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.OCTOBER
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(8, hebrewDate.gregorianMonth)
-        Assert.assertEquals(30, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(7, hebrewDate.jewishMonth)
-        Assert.assertEquals(22, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.SEPTEMBER
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(7, hebrewDate.gregorianMonth)
-        Assert.assertEquals(31, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(5770, hebrewDate.jewishYear)
-        Assert.assertEquals(6, hebrewDate.jewishMonth)
-        Assert.assertEquals(21, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.AUGUST
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(6, hebrewDate.gregorianMonth)
-        Assert.assertEquals(31, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(5, hebrewDate.jewishMonth)
-        Assert.assertEquals(20, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.JULY
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(5, hebrewDate.gregorianMonth)
-        Assert.assertEquals(30, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(4, hebrewDate.jewishMonth)
-        Assert.assertEquals(18, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.JUNE
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(4, hebrewDate.gregorianMonth)
-        Assert.assertEquals(31, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(3, hebrewDate.jewishMonth)
-        Assert.assertEquals(18, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.MAY
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(3, hebrewDate.gregorianMonth)
-        Assert.assertEquals(30, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(2, hebrewDate.jewishMonth)
-        Assert.assertEquals(16, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.APRIL
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(2, hebrewDate.gregorianMonth)
-        Assert.assertEquals(31, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(1, hebrewDate.jewishMonth)
-        Assert.assertEquals(16, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.MARCH
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(1, hebrewDate.gregorianMonth)
-        Assert.assertEquals(28, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(12, hebrewDate.jewishMonth)
-        Assert.assertEquals(14, hebrewDate.jewishDayOfMonth)
-        cal[Calendar.DATE] = 1
-        cal[Calendar.MONTH] = Calendar.FEBRUARY
-        hebrewDate.setDate(cal)
-        hebrewDate.back()
-        Assert.assertEquals(0, hebrewDate.gregorianMonth)
-        Assert.assertEquals(31, hebrewDate.gregorianDayOfMonth)
-        Assert.assertEquals(11, hebrewDate.jewishMonth)
-        Assert.assertEquals(16, hebrewDate.jewishDayOfMonth)
     }
 } // End of UT_GregorianDateNavigation class
