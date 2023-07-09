@@ -449,7 +449,7 @@ open class AstronomicalCalendar @JvmOverloads constructor(geoLocation: GeoLocati
         if (startOfday == null || endOfDay == null) {
             return Long.MIN_VALUE
         }
-        return (endOfDay.getTime() - startOfday.getTime()) / 12
+        return (endOfDay.time - startOfday.time) / 12
     }
 
     /**
@@ -594,8 +594,8 @@ open class AstronomicalCalendar @JvmOverloads constructor(geoLocation: GeoLocati
         )
         var degrees: BigDecimal = BigDecimal(0)
         val incrementor: BigDecimal = BigDecimal("0.001")
-        while (offsetByDegrees == null || ((minutes > 0.0 && offsetByDegrees.getTime() < offsetByTime!!.getTime()) ||
-                    (minutes < 0.0 && offsetByDegrees.getTime() > offsetByTime!!.getTime()))
+        while (offsetByDegrees == null || ((minutes > 0.0 && offsetByDegrees.time < offsetByTime!!.time) ||
+                    (minutes < 0.0 && offsetByDegrees.time > offsetByTime!!.time))
         ) {
             if (minutes > 0.0) {
                 degrees = degrees.add(incrementor)
@@ -620,7 +620,7 @@ open class AstronomicalCalendar @JvmOverloads constructor(geoLocation: GeoLocati
             if (offset == null /*TODO null check: should this return null or [calendar] if geoLocation is null?*/ || offset == 0) {
                 return calendar
             }
-            val adjustedCalendar: Calendar = calendar?.clone() as Calendar
+            val adjustedCalendar: Calendar = calendar.clone() as Calendar
             adjustedCalendar.add(Calendar.DAY_OF_MONTH, offset)
             return adjustedCalendar
         }

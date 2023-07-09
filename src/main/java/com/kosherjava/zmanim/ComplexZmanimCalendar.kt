@@ -149,7 +149,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      *
      * @see ZmanimCalendar.ZmanimCalendar
      */
-    constructor(location: GeoLocation) : super(location) {}
+    constructor(location: GeoLocation) : super(location)
 
     /**
      * Default constructor will set a default [GeoLocation.GeoLocation], a default
@@ -157,7 +157,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      *
      * @see AstronomicalCalendar.AstronomicalCalendar
      */
-    constructor() : super() {}
+    constructor() : super()
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) calculated using a 19.8 dip. This calculation
@@ -1933,7 +1933,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
         }
         return getTimeOffset(
             elevationAdjustedSunset,
-            (sunrise.getTime() - alos19Point8.getTime()) * (5 / 18.0)
+            (sunrise.time - alos19Point8.time) * (5 / 18.0)
         )
     }
 
@@ -3126,7 +3126,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
         midnight.set(Calendar.MINUTE, 0)
         midnight.set(Calendar.SECOND, 0)
         midnight.set(Calendar.MILLISECOND, 0)
-        return midnight.getTime()
+        return midnight.time
     }
 
     /**
@@ -3141,7 +3141,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
         midnight.set(Calendar.MINUTE, 0)
         midnight.set(Calendar.SECOND, 0)
         midnight.set(Calendar.MILLISECOND, 0)
-        return midnight.getTime()
+        return midnight.time
     }
 
     /**
@@ -3609,8 +3609,8 @@ class ComplexZmanimCalendar : ZmanimCalendar {
         if (startOfHalfDay == null || endOfHalfDay == null) {
             return null
         }
-        val shaahZmanis: Long = (endOfHalfDay.getTime() - startOfHalfDay.getTime()) / 6
-        return Date((startOfHalfDay.getTime() + shaahZmanis * hours).toLong())
+        val shaahZmanis: Long = (endOfHalfDay.time - startOfHalfDay.time) / 6
+        return Date((startOfHalfDay.time + shaahZmanis * hours).toLong())
     }
 
     /**

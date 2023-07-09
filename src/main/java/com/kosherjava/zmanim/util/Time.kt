@@ -104,7 +104,7 @@ class Time {
      * calls [.Time]
      * @param millis the milliseconds to set the object with.
      */
-    constructor(millis: Double) : this(millis.toInt()) {}
+    constructor(millis: Double) : this(millis.toInt())
 
     /**
      * A constructor that sets the time by milliseconds. The milliseconds are converted to hours, minutes, seconds

@@ -58,7 +58,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
  * @author  Eliyahu Hershfeld 2004 - 2023
  * @author  Kevin Boone 2000
  */
-class SunTimesCalculator constructor() : AstronomicalCalculator() {
+class SunTimesCalculator : AstronomicalCalculator() {
     /**
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getCalculatorName
      */
@@ -86,7 +86,7 @@ class SunTimesCalculator constructor() : AstronomicalCalculator() {
     /**
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunset
      */
-    public override fun getUTCSunset(
+    override fun getUTCSunset(
         calendar: Calendar,
         geoLocation: GeoLocation,
         zenith: Double,
@@ -115,7 +115,7 @@ class SunTimesCalculator constructor() : AstronomicalCalculator() {
      * The location information used for astronomical calculating sun times.
      * @return the time in minutes from zero UTC
      */
-    public override fun getUTCNoon(calendar: Calendar, geoLocation: GeoLocation): Double {
+    override fun getUTCNoon(calendar: Calendar, geoLocation: GeoLocation): Double {
         val sunrise: Double = getUTCSunrise(calendar, geoLocation, 90.0, true)
         val sunset: Double = getUTCSunset(calendar, geoLocation, 90.0, true)
         return (sunrise + ((sunset - sunrise) / 2))

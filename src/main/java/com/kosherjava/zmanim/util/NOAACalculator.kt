@@ -53,7 +53,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
  *
  * @author  Eliyahu Hershfeld 2011 - 2023
  */
-class NOAACalculator constructor() : AstronomicalCalculator() {
+class NOAACalculator : AstronomicalCalculator() {
     /**
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getCalculatorName
      */
@@ -65,7 +65,7 @@ class NOAACalculator constructor() : AstronomicalCalculator() {
     /**
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunrise
      */
-    public override fun getUTCSunrise(
+    override fun getUTCSunrise(
         calendar: Calendar,
         geoLocation: GeoLocation,
         zenith: Double,
@@ -92,7 +92,7 @@ class NOAACalculator constructor() : AstronomicalCalculator() {
     /**
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunset
      */
-    public override fun getUTCSunset(
+    override fun getUTCSunset(
         calendar: Calendar,
         geoLocation: GeoLocation,
         zenith: Double,
@@ -131,7 +131,7 @@ class NOAACalculator constructor() : AstronomicalCalculator() {
      * the longitude for calculating noon since it is the same time anywhere along the longitude line.
      * @return the time in minutes from zero UTC
      */
-    public override fun getUTCNoon(calendar: Calendar, geoLocation: GeoLocation): Double {
+    override fun getUTCNoon(calendar: Calendar, geoLocation: GeoLocation): Double {
         val julianDay: Double = getJulianDay(calendar)
         val julianCenturies: Double = getJulianCenturiesFromJulianDay(julianDay)
         var noon: Double = getSolarNoonUTC(julianCenturies, -geoLocation.longitude)

@@ -75,7 +75,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
      * constructor that defaults to this will use the format "h:mm:ss" for dates and 00.00.00.0 for [Time].
      * @param timeZone the TimeZone Object
      */
-    constructor(timeZone: TimeZone?) : this(0, SimpleDateFormat("h:mm:ss"), timeZone) {}
+    constructor(timeZone: TimeZone?) : this(0, SimpleDateFormat("h:mm:ss"), timeZone)
     // public ZmanimFormatter() {
     // this(0, new SimpleDateFormat("h:mm:ss"), TimeZone.getTimeZone("UTC"));
     // }
@@ -207,7 +207,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
 		 * if (xmlDateFormat == null || xmlDateFormat.trim().equals("")) { xmlDateFormat = xsdDateTimeFormat; }
 		 */
         val dateFormat: SimpleDateFormat = SimpleDateFormat(xsdDateTimeFormat)
-        dateFormat.setTimeZone(timeZone)
+        dateFormat.timeZone = timeZone
         val sb: StringBuilder = StringBuilder(dateFormat.format(dateTime))
         // Must also include offset from UTF.
         val offset =
@@ -391,9 +391,9 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
             sb.append(" longitude=\"").append(geoLocation.longitude).append("\"")
             sb.append(" elevation=\"").append(geoLocation.elevation).append("\"")
             sb.append(" timeZoneName=\"").append(tz.getDisplayName(daylight, TimeZone.LONG)).append("\"")
-            sb.append(" timeZoneID=\"").append(tz.getID()).append("\"")
+            sb.append(" timeZoneID=\"").append(tz.id).append("\"")
             sb.append(" timeZoneOffset=\"")
-                .append((tz.getOffset(astronomicalCalendar.calendar.getTimeInMillis()) / (HOUR_MILLIS.toDouble())))
+                .append((tz.getOffset(astronomicalCalendar.calendar.timeInMillis) / (HOUR_MILLIS.toDouble())))
                 .append("\"")
             sb.append(">\n")
             val theMethods: Array<Method> = clazz.methods
@@ -540,9 +540,9 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
             sb.append("\t\"longitude\":\"").append(geoLocation.longitude).append("\",\n")
             sb.append("\t\"elevation\":\"").append(geoLocation.elevation).append("\",\n")
             sb.append("\t\"timeZoneName\":\"").append(tz.getDisplayName(daylight, TimeZone.LONG)).append("\",\n")
-            sb.append("\t\"timeZoneID\":\"").append(tz.getID()).append("\",\n")
+            sb.append("\t\"timeZoneID\":\"").append(tz.id).append("\",\n")
             sb.append("\t\"timeZoneOffset\":\"")
-                .append((tz.getOffset(astronomicalCalendar.calendar.getTimeInMillis()) / (HOUR_MILLIS.toDouble())))
+                .append((tz.getOffset(astronomicalCalendar.calendar.timeInMillis) / (HOUR_MILLIS.toDouble())))
                 .append("\"")
             sb.append("},\n\"")
             when (className) {
