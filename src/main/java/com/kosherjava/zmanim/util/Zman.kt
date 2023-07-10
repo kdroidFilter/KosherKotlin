@@ -15,33 +15,8 @@
  */
 package com.kosherjava.zmanim.util
 
-import com.kosherjava.zmanim.util.ZmanimFormatter
-import java.lang.StringBuffer
-import com.kosherjava.zmanim.util.Zman
-import java.lang.IllegalArgumentException
-import com.kosherjava.zmanim.util.GeoLocation
-import java.lang.StringBuilder
-import java.lang.CloneNotSupportedException
-import com.kosherjava.zmanim.util.AstronomicalCalculator
-import com.kosherjava.zmanim.util.NOAACalculator
-import java.text.SimpleDateFormat
-import java.text.DecimalFormat
-import java.text.DateFormat
-import com.kosherjava.zmanim.util.GeoLocationUtils
-import com.kosherjava.zmanim.util.SunTimesCalculator
-import com.kosherjava.zmanim.hebrewcalendar.Daf
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate
-import java.time.LocalDate
-import com.kosherjava.zmanim.hebrewcalendar.HebrewDateFormatter
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
-import com.kosherjava.zmanim.hebrewcalendar.YomiCalculator
-import com.kosherjava.zmanim.hebrewcalendar.YerushalmiYomiCalculator
-import com.kosherjava.zmanim.AstronomicalCalendar
-import com.kosherjava.zmanim.ZmanimCalendar
-import java.math.BigDecimal
-import com.kosherjava.zmanim.ComplexZmanimCalendar
 import java.util.*
+import kotlin.Comparator
 
 /**
  * A wrapper class for a astronomical times / *zmanim* that is mostly intended to allow sorting collections of astronomical times.
@@ -87,9 +62,10 @@ import java.util.*
  */
 class Zman {
     /**
-     * The name / label of the *zman*.
+     * The name / label of the *zman*, such as "*Sof Zman Krias Shema GRA*". 
+     * There are no automatically set labels.
      */
-    private var label: String
+    var label: String
     /**
      * Returns the `Date` based *zman*.
      * @return the *zman*.
@@ -167,25 +143,6 @@ class Zman {
     }
 
     /**
-     * Returns the name / label of the *zman* such as "*Sof Zman Krias Shema GRA*". There are no automatically set labels
-     * and you must set them using [.setLabel].
-     * @return the name/label of the *zman*.
-     * @see .setLabel
-     */
-    fun getLabel(): String? {
-        return label
-    }
-
-    /**
-     * Sets the the name / label of the *zman* such as "*Sof Zman Krias Shema GRA*".
-     * @param label the name / label to set for the *zman*.
-     * @see .getLabel
-     */
-    fun setLabel(label: String) {
-        this.label = label
-    }
-
-    /**
      * @see Object.toString
      */
     override fun toString(): String {
@@ -204,11 +161,7 @@ class Zman {
          * than the second.
          * Please note that this class will handle cases where either the `Zman` is a null or [.getZman] returns a null.
          */
-        val DATE_ORDER: Comparator<Zman> = Comparator { zman1, zman2 ->
-            val firstTime = if (zman1 == null || zman1.zman == null) Long.MAX_VALUE else zman1.zman!!.time
-            val secondTime = if (zman2 == null || zman2.zman == null) Long.MAX_VALUE else zman2.zman!!.time
-            java.lang.Long.valueOf(firstTime).compareTo(java.lang.Long.valueOf(secondTime))
-        }
+        val DATE_ORDER: Comparator<Zman> = compareBy { it.zman?.time ?: Long.MAX_VALUE }
 
         /**
          * A [Comparator] that will compare and sort zmanim by zmanim label order. Compares its two arguments by the zmanim label
@@ -217,11 +170,7 @@ class Zman {
          * Please note that this class will will sort cases where either the `Zman` is a null or [.label] returns a null
          * as empty `String`s.
          */
-        val NAME_ORDER: Comparator<Zman> = Comparator { zman1, zman2 ->
-            val firstLabel = if (zman1 == null || zman1.getLabel() == null) "" else zman1.getLabel()!!
-            val secondLabel = if (zman2 == null || zman2.getLabel() == null) "" else zman2.getLabel()!!
-            firstLabel.compareTo(secondLabel)
-        }
+        val NAME_ORDER: Comparator<Zman> = compareBy { it.label ?: "" }
 
         /**
          * A [Comparator] that will compare and sort duration based *zmanim*  such as
@@ -231,10 +180,6 @@ class Zman {
          * integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
          * Please note that this class will will sort cases where `Zman` is a null.
          */
-        val DURATION_ORDER: Comparator<Zman> = Comparator { zman1, zman2 ->
-            val firstDuration = zman1?.duration ?: Long.MAX_VALUE
-            val secondDuration = zman2?.duration ?: Long.MAX_VALUE
-            if (firstDuration == secondDuration) 0 else if (firstDuration > secondDuration) 1 else -1
-        }
+        val DURATION_ORDER: Comparator<Zman> = compareBy { it.duration ?: Long.MAX_VALUE }
     }
 }

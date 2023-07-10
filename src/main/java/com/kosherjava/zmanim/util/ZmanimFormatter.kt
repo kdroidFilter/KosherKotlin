@@ -434,15 +434,15 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
             Collections.sort(dateList, Zman.DATE_ORDER)
             for (i in dateList.indices) {
                 zman = dateList[i]
-                sb.append("\t<").append(zman.getLabel()).append(">")
+                sb.append("\t<").append(zman.label).append(">")
                 sb.append(formatter.formatDateTime(zman.zman, astronomicalCalendar.calendar))
-                sb.append("</").append(zman.getLabel()).append(">\n")
+                sb.append("</").append(zman.label).append(">\n")
             }
             Collections.sort(durationList, Zman.DURATION_ORDER)
             for (i in durationList.indices) {
                 zman = durationList.get(i)
-                sb.append("\t<" + zman.getLabel()).append(">")
-                sb.append(formatter.format(zman.duration.toInt())).append("</").append(zman.getLabel())
+                sb.append("\t<" + zman.label).append(">")
+                sb.append(formatter.format(zman.duration.toInt())).append("</").append(zman.label)
                     .append(">\n")
             }
             for (i in otherList.indices) { // will probably never enter this block
@@ -591,14 +591,14 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
             Collections.sort(dateList, Zman.DATE_ORDER)
             for (i in dateList.indices) {
                 zman = dateList.get(i)
-                sb.append("\t\"").append(zman.getLabel()).append("\":\"")
+                sb.append("\t\"").append(zman.label).append("\":\"")
                 sb.append(formatter.formatDateTime(zman.zman, astronomicalCalendar.calendar))
                 sb.append("\",\n")
             }
             Collections.sort(durationList, Zman.DURATION_ORDER)
             for (i in durationList.indices) {
                 zman = durationList[i]
-                sb.append("\t\"" + zman.getLabel()).append("\":\"")
+                sb.append("\t\"" + zman.label).append("\":\"")
                 sb.append(formatter.format(zman.duration.toInt())).append("\",\n")
             }
             for (i in otherList.indices) { // will probably never enter this block
