@@ -146,8 +146,8 @@ class Zman {
      * @see Object.toString
      */
     override fun toString(): String {
-        val sb = StringBuffer()
-        sb.append("\nLabel:\t\t\t").append(getLabel())
+        val sb = StringBuilder()
+        sb.append("\nLabel:\t\t\t").append(label)
         sb.append("\nZman:\t\t\t").append(zman)
         sb.append("\nDuration:\t\t\t").append(duration)
         sb.append("\nDescription:\t\t\t").append(description)
