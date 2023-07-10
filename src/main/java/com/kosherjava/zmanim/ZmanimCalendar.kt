@@ -132,7 +132,7 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * @see com.kosherjava.zmanim.AstronomicalCalendar.getSunrise
      */
     protected val elevationAdjustedSunrise: Date?
-        protected get() {
+        get() {
             if (isUseElevation) {
                 return super.sunrise
             }
@@ -173,9 +173,7 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * ComplexZmanimCalendar.getTzaisGeonim8Point5Degrees
      */
     val tzais: Date?
-        get() {
-            return getSunsetOffsetByDegrees(ZENITH_8_POINT_5)
-        }
+        get() = getSunsetOffsetByDegrees(ZENITH_8_POINT_5)
 
     /**
      * Returns *alos* (dawn) based on the time when the sun is [16.1&amp;deg;][.ZENITH_16_POINT_1] below the
@@ -194,9 +192,7 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * top of the [AstronomicalCalendar] documentation.
      */
     val alosHashachar: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_16_POINT_1)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_16_POINT_1)
 
     /**
      * Method to return *alos* (dawn) calculated using 72 minutes before [sunrise][.getSunrise] or
@@ -212,12 +208,10 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * documentation.
      */
     val alos72: Date?
-        get() {
-            return com.kosherjava.zmanim.AstronomicalCalendar.Companion.getTimeOffset(
-                elevationAdjustedSunrise,
-                -72 * com.kosherjava.zmanim.AstronomicalCalendar.Companion.MINUTE_MILLIS
-            )
-        }
+        get() = getTimeOffset(
+            elevationAdjustedSunrise,
+            -72 * MINUTE_MILLIS
+        )
 
     /**
      * This method returns *chatzos* (midday) following most opinions that *chatzos* is the midpoint
@@ -232,9 +226,7 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * be returned. See detailed explanation on top of the [AstronomicalCalendar] documentation.
      */
     val chatzos: Date?
-        get() {
-            return sunTransit
-        }
+        get() = sunTransit
 
     /**
      * A generic method for calculating the latest *zman krias shema* (time to recite shema in the morning)
@@ -597,7 +589,7 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * @see .getTemporalHour
      * @see .getSeaLevelSunrise
      * @see .getSeaLevelSunset
-     * @see ComplexZmanimCalendar.getShaahZmanisBaalHatanya
+     * @see ComplexZmanimCalendar.shaahZmanisBaalHatanya
      */
     val shaahZmanisGra: Long
         get() {

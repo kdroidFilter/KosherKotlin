@@ -110,12 +110,12 @@ class JewishCalendar : JewishDate {
     var isUseModernHolidays: Boolean = false
 
     /**
-     * List of *parshiyos* or special *Shabasos*. [.NONE] indicates a week without a *parsha*, while the enum for
+     * List of *parshiyos* or special *Shabasos*. [NONE] indicates a week without a *parsha*, while the enum for
      * the *parsha* of [.VZOS_HABERACHA] exists for consistency, but is not currently used. The special *Shabasos* of
      * Shekalim, Zachor, Para, Hachodesh, as well as Shabbos Shuva, Shira, Hagadol, Chazon and Nachamu are also represented in this collection
      * of *parshiyos*.
-     * @see .getSpecialShabbos
-     * @see .getParshah
+     * @see specialShabbos
+     * @see parshah
      */
     enum class Parsha {
         /**NONE A week without any *parsha* such as *Shabbos Chol Hamoed*  */
@@ -657,162 +657,282 @@ class JewishCalendar : JewishDate {
         get() {
             val day = jewishDayOfMonth
             val dayOfWeek = dayOfWeek
+            val NO_HOLIDAY = -1
             when (jewishMonth) {
                 NISSAN -> {
-                    if (day == 14) {
-                        return EREV_PESACH
+                    return when {
+                        day == 14 -> EREV_PESACH
+                        day == 15 || day == 21 || !inIsrael && (day == 16 || day == 22) -> PESACH
+                        day in (16.takeIf { inIsrael } ?: 17)..20 -> CHOL_HAMOED_PESACH
+                        (day == 22 && inIsrael) || (day == 23 && !inIsrael) -> ISRU_CHAG
+                        isUseModernHolidays && (
+                                (
+                                        (day == 26 && dayOfWeek == Calendar.THURSDAY) ||
+                                                (day == 28 && dayOfWeek == Calendar.MONDAY) ||
+                                                (day == 27 && dayOfWeek != Calendar.SUNDAY && dayOfWeek != Calendar.FRIDAY)
+                                        )
+                                ) -> YOM_HASHOAH
+                        else -> NO_HOLIDAY
                     }
-                    if ((day == 15) || (day == 21
-                                ) || (!inIsrael && (day == 16 || day == 22))
-                    ) {
-                        return PESACH
-                    }
-                    if ((day >= 17 && day <= 20
-                                || (day == 16 && inIsrael))
-                    ) {
-                        return CHOL_HAMOED_PESACH
-                    }
-                    if ((day == 22 && inIsrael) || (day == 23 && !inIsrael)) {
-                        return ISRU_CHAG
-                    }
-                    if ((isUseModernHolidays
-                                && (((day == 26 && dayOfWeek == Calendar.THURSDAY)
-                                || (day == 28 && dayOfWeek == Calendar.MONDAY)
-                                || ((day == 27) && (dayOfWeek != Calendar.SUNDAY) && (dayOfWeek != Calendar.FRIDAY)))))
-                    ) {
-                        return YOM_HASHOAH
-                    }
+
                 }
                 IYAR -> {
-                    if ((isUseModernHolidays
-                                && (((day == 4 && dayOfWeek == Calendar.TUESDAY)
-                                || ((day == 3 || day == 2) && dayOfWeek == Calendar.WEDNESDAY) || (day == 5 && dayOfWeek == Calendar.MONDAY))))
-                    ) {
-                        return YOM_HAZIKARON
-                    }
-                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
-                    // Thursday. If it falls on Monday it is moved to Tuesday
-                    if ((isUseModernHolidays
-                                && (((day == 5 && dayOfWeek == Calendar.WEDNESDAY)
-                                || ((day == 4 || day == 3) && dayOfWeek == Calendar.THURSDAY) || (day == 6 && dayOfWeek == Calendar.TUESDAY))))
-                    ) {
-                        return YOM_HAATZMAUT
-                    }
-                    if (day == 14) {
-                        return PESACH_SHENI
-                    }
-                    if (day == 18) {
-                        return LAG_BAOMER
-                    }
-                    if (isUseModernHolidays && day == 28) {
-                        return YOM_YERUSHALAYIM
+                    return when {
+                        isUseModernHolidays &&
+                                (
+                                        (day in 2..3 && dayOfWeek == Calendar.WEDNESDAY) ||
+                                                (day == 4 && dayOfWeek == Calendar.TUESDAY) ||
+                                                (day == 5 && dayOfWeek == Calendar.MONDAY)
+
+                                        ) -> YOM_HAZIKARON
+                        isUseModernHolidays &&
+                                (
+                                        (day in 3..4 && dayOfWeek == Calendar.THURSDAY) ||
+                                                (day == 5 && dayOfWeek == Calendar.WEDNESDAY) ||
+                                                (day == 6 && dayOfWeek == Calendar.TUESDAY)
+                                        ) -> YOM_HAATZMAUT
+                        day == 14 -> PESACH_SHENI
+                        day == 18 -> LAG_BAOMER
+                        isUseModernHolidays && day == 28 -> YOM_YERUSHALAYIM
+                        else -> NO_HOLIDAY
                     }
                 }
                 SIVAN -> {
-                    if (day == 5) {
-                        return EREV_SHAVUOS
-                    }
-                    if (day == 6 || (day == 7 && !inIsrael)) {
-                        return SHAVUOS
-                    }
-                    if ((day == 7 && inIsrael) || (day == 8 && !inIsrael)) {
-                        return ISRU_CHAG
+                    return when {
+                        day == 5 -> EREV_SHAVUOS
+                        day == 6 || day == 7 && !inIsrael -> SHAVUOS
+                        day == 7 && inIsrael || day == 8 && !inIsrael -> ISRU_CHAG
+                        else -> NO_HOLIDAY
                     }
                 }
-                TAMMUZ ->            // push off the fast day if it falls on Shabbos
-                    if (((day == 17 && dayOfWeek != Calendar.SATURDAY)
-                                || (day == 18 && dayOfWeek == Calendar.SUNDAY))
-                    ) {
-                        return SEVENTEEN_OF_TAMMUZ
-                    }
+                TAMMUZ ->            // push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                {
+                    // push off the fast day if it falls on Shabbos
+                    if (
+                        (day == 17 && dayOfWeek != Calendar.SATURDAY) ||
+                        (day == 18 && dayOfWeek == Calendar.SUNDAY)
+                    ) return SEVENTEEN_OF_TAMMUZ
+                }
                 AV -> {
                     // if Tisha B'av falls on Shabbos, push off until Sunday
-                    if (((dayOfWeek == Calendar.SUNDAY && day == 10)
-                                || (dayOfWeek != Calendar.SATURDAY && day == 9))
-                    ) {
-                        return TISHA_BEAV
-                    }
-                    if (day == 15) {
-                        return TU_BEAV
+                    return when {
+                        day == 10 && dayOfWeek == Calendar.SUNDAY || day == 9 && dayOfWeek != Calendar.SATURDAY -> TISHA_BEAV
+                        day == 15 -> TU_BEAV
+                        else -> NO_HOLIDAY
                     }
                 }
-                ELUL -> if (day == 29) {
-                    return EREV_ROSH_HASHANA
+                ELUL ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                {
+                    if (day == 29) return EREV_ROSH_HASHANA
                 }
                 TISHREI -> {
-                    if (day == 1 || day == 2) {
-                        return ROSH_HASHANA
-                    }
-                    if ((day == 3 && dayOfWeek != Calendar.SATURDAY) || (day == 4 && dayOfWeek == Calendar.SUNDAY)) {
-                        // push off Tzom Gedalia if it falls on Shabbos
-                        return FAST_OF_GEDALYAH
-                    }
-                    if (day == 9) {
-                        return EREV_YOM_KIPPUR
-                    }
-                    if (day == 10) {
-                        return YOM_KIPPUR
-                    }
-                    if (day == 14) {
-                        return EREV_SUCCOS
-                    }
-                    if (day == 15 || (day == 16 && !inIsrael)) {
-                        return SUCCOS
-                    }
-                    if (day >= 17 && day <= 20 || (day == 16 && inIsrael)) {
-                        return CHOL_HAMOED_SUCCOS
-                    }
-                    if (day == 21) {
-                        return HOSHANA_RABBA
-                    }
-                    if (day == 22) {
-                        return SHEMINI_ATZERES
-                    }
-                    if (day == 23 && !inIsrael) {
-                        return SIMCHAS_TORAH
-                    }
-                    if ((day == 23 && inIsrael) || (day == 24 && !inIsrael)) {
-                        return ISRU_CHAG
+                    return when {
+                        day == 1 || day == 2 -> ROSH_HASHANA
+                        day == 3 && dayOfWeek != Calendar.SATURDAY || day == 4 && dayOfWeek == Calendar.SUNDAY -> FAST_OF_GEDALYAH // push off Tzom Gedalia if it falls on Shabbos
+                        day == 9 -> EREV_YOM_KIPPUR
+                        day == 10 -> YOM_KIPPUR
+                        day == 14 -> EREV_SUCCOS
+                        day == 15 || day == 16 && !inIsrael -> SUCCOS
+                        day in 17..20 || day == 16 && inIsrael -> CHOL_HAMOED_SUCCOS
+                        day == 21 -> HOSHANA_RABBA
+                        day == 22 -> SHEMINI_ATZERES
+                        day == 23 && !inIsrael -> SIMCHAS_TORAH
+                        day == 23 && inIsrael || day == 24 && !inIsrael -> ISRU_CHAG
+                        else -> NO_HOLIDAY
                     }
                 }
                 KISLEV ->            // if (day == 24) {
                     // return EREV_CHANUKAH;
+                    // } else// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
                     // } else
-                    if (day >= 25) {
-                        return CHANUKAH
-                    }
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                {
+                    // if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+                    if (day >= 25) return CHANUKAH
+                }
                 TEVES -> {
-                    if ((day == 1) || (day == 2
-                                ) || (day == 3 && isKislevShort)
-                    ) {
-                        return CHANUKAH
-                    }
-                    if (day == 10) {
-                        return TENTH_OF_TEVES
-                    }
+                    if (day in 1..(if (isKislevShort) 3 else 2)) return CHANUKAH
+                    if (day == 10) return TENTH_OF_TEVES
                 }
-                SHEVAT -> if (day == 15) {
-                    return TU_BESHVAT
+                SHEVAT ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                {
+                    if (day == 15) return TU_BESHVAT
                 }
-                ADAR -> if (!isJewishLeapYear) {
-                    // if 13th Adar falls on Friday or Shabbos, push back to Thursday
-                    if ((((day == 11 || day == 12) && dayOfWeek == Calendar.THURSDAY)
-                                || (day == 13 && !(dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY)))
-                    ) {
-                        return FAST_OF_ESTHER
-                    }
-                    if (day == 14) {
-                        return PURIM
-                    }
-                    if (day == 15) {
-                        return SHUSHAN_PURIM
-                    }
-                } else { // else if a leap year
-                    if (day == 14) {
-                        return PURIM_KATAN
-                    }
-                    if (day == 15) {
-                        return SHUSHAN_PURIM_KATAN
+                ADAR ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                    // return EREV_CHANUKAH;
+                    // } else
+// push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                    // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
+                    // Thursday. If it falls on Monday it is moved to Tuesday
+                {
+                    if (!isJewishLeapYear) {
+                        // if 13th Adar falls on Friday or Shabbos, push back to Thursday
+                        when {
+
+                            day in 11..12 && dayOfWeek == Calendar.THURSDAY ||
+                                    day == 13 && dayOfWeek !in Calendar.FRIDAY..Calendar.SATURDAY
+                            -> return FAST_OF_ESTHER
+                            day == 14 -> return PURIM
+                            day == 15 -> return SHUSHAN_PURIM
+                        }
+                    } else { // else if a leap year
+                        if (day == 14) return PURIM_KATAN
+                        if (day == 15) return SHUSHAN_PURIM_KATAN
                     }
                 }
                 ADAR_II -> {
@@ -831,7 +951,7 @@ class JewishCalendar : JewishDate {
                 }
             }
             // if we get to this stage, then there are no holidays for the given date return -1
-            return -1
+            return NO_HOLIDAY
         }
 
     /**

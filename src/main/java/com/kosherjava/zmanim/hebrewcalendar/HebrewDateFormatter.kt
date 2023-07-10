@@ -29,11 +29,11 @@ import java.util.EnumMap
  * Sample full date output includes (using various options):
  *
  *  * 21 Shevat, 5729
- *  * &#x5DB;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DB;&#x5D8;
- *  * &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5D4;&#x5F3;&#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;
- *  * &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5F4;&#x05E4; or
- * &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5F4;&#x05E3;
- *  * &#x05DB;&#x05F3; &#x05E9;&#x05D1;&#x05D8; &#x05D5;&#x05F3; &#x05D0;&#x05DC;&#x05E4;&#x05D9;&#x05DD;
+ *  * כא שבט תשכט
+ *  * כ״א שבט ה׳תשכ״ט
+ *  * כ״א שבט תש״פ or
+ * כ״א שבט תש״ף
+ *  * כ׳ שבט ו׳ אלפים
  *
  *
  * @see JewishDate
@@ -48,127 +48,88 @@ class HebrewDateFormatter {
      * Returns if the formatter is set to use Hebrew formatting in the various formatting methods.
      *
      * @return the hebrewFormat
-     * @see .setHebrewFormat
-     * @see .format
-     * @see .formatDayOfWeek
-     * @see .formatMonth
-     * @see .formatOmer
-     * @see .formatYomTov
-     */
-    /**
-     * Sets the formatter to format in Hebrew in the various formatting methods.
-     *
-     * @param hebrewFormat
-     * the hebrewFormat to set
-     * @see .isHebrewFormat
-     * @see .format
-     * @see .formatDayOfWeek
-     * @see .formatMonth
-     * @see .formatOmer
-     * @see .formatYomTov
-     */
-    /**
-     * See [.isHebrewFormat] and [.setHebrewFormat].
+     * @see format
+     * @see formatDayOfWeek
+     * @see formatMonth
+     * @see formatOmer
+     * @see formatYomTov
      */
     var isHebrewFormat: Boolean = false
+
     /**
-     * Returns whether the class is set to use the thousands digit when formatting. When formatting a Hebrew Year,
-     * traditionally the thousands digit is omitted and output for a year such as 5729 (1969 Gregorian) would be
-     * calculated for 729 and format as &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;. When set to true the long format year such
-     * as &#x5D4;&#x5F3; &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8; for 5729/1969 is returned.
+     * Returns whether the class is set to use the thousand's digit when formatting: true if set to use the thousand's
+     * digit when formatting Hebrew dates and numbers.
      *
-     * @return true if set to use the thousands digit when formatting Hebrew dates and numbers.
-     */
-    /**
      * When formatting a Hebrew Year, traditionally the thousands digit is omitted and output for a year such as 5729
-     * (1969 Gregorian) would be calculated for 729 and format as &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;. This method
-     * allows setting this to true to return the long format year such as &#x5D4;&#x5F3;
-     * &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8; for 5729/1969.
-     *
-     * @param useLongHebrewYears
-     * Set this to true to use the long formatting
-     */
-    /**
-     * See [.isUseLongHebrewYears] and [.setUseLongHebrewYears].
+     * (1969 Gregorian) would be calculated for 729 and format as &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;.
+     * When set to true the long format year such as &#x5D4;&#x5F3; &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8; for 5729/1969 is returned.
      */
     var isUseLongHebrewYears: Boolean = false
+
     /**
-     * Returns whether the class is set to use the Geresh &#x5F3; and Gershayim &#x5F4; in formatting Hebrew dates and
-     * numbers. When true and output would look like &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5F4;&#x5DB;
-     * (or &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5F4;&#x5DA;). When set to false, this output
-     * would display as &#x5DB;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DB;.
+     * Returns whether the class is set to use the Geresh ׳ and Gershayim ״ in formatting Hebrew dates and
+     * numbers. When true and output would look like כ״א שבט תש״כ
+     * (or כ״א שבט תש״ך). When set to false, this output
+     * would display as כא שבט תשכ.
      *
-     * @return true if set to use the Geresh &#x5F3; and Gershayim &#x5F4; in formatting Hebrew dates and numbers.
+     * @return true if set to use the Geresh ׳ and Gershayim ״ in formatting Hebrew dates and numbers.
      */
     /**
-     * Sets whether to use the Geresh &#x5F3; and Gershayim &#x5F4; in formatting Hebrew dates and numbers. The default
-     * value is true and output would look like &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5F4;&#x5DB;
-     * (or &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5F4;&#x5DA;). When set to false, this output would
-     * display as &#x5DB;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DB; (or
-     * &#x5DB;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DA;). Single digit days or month or years such as &#x05DB;&#x05F3;
-     * &#x05E9;&#x05D1;&#x05D8; &#x05D5;&#x05F3; &#x05D0;&#x05DC;&#x05E4;&#x05D9;&#x05DD; show the use of the Geresh.
+     * Sets whether to use the Geresh ׳ and Gershayim ״ in formatting Hebrew dates and numbers. The default
+     * value is true and output would look like כ״א שבט תש״כ
+     * (or כ״א שבט תש״ך). When set to false, this output would
+     * display as כא שבט תשכ (or
+     * כא שבט תשך). Single digit days or month or years such as כ׳
+     * שבט ו׳ אלפים show the use of the Geresh.
      *
      * @param useGershGershayim
-     * set to false to omit the Geresh &#x5F3; and Gershayim &#x5F4; in formatting
-     */
-    /**
-     * See [.isUseGershGershayim] and [.setUseGershGershayim].
+     * set to false to omit the Geresh ׳ and Gershayim ״ in formatting
      */
     var isUseGershGershayim: Boolean = true
     /**
-     * Returns if the [.formatDayOfWeek] will use the long format such as
-     * &#x05E8;&#x05D0;&#x05E9;&#x05D5;&#x05DF; or short such as &#x05D0; when formatting the day of week in
-     * [Hebrew][.isHebrewFormat].
+     * Returns if the [formatDayOfWeek] will use the long format such as
+     * ראשון or short such as א when formatting the day of week in
+     * [Hebrew][isHebrewFormat].
      *
      * @return the longWeekFormat
      * @see .setLongWeekFormat
      * @see .formatDayOfWeek
      */
     /**
-     * Setting to control if the [.formatDayOfWeek] will use the long format such as
-     * &#x05E8;&#x05D0;&#x05E9;&#x05D5;&#x05DF; or short such as &#x05D0; when formatting the day of week in
-     * [Hebrew][.isHebrewFormat].
+     * Setting to control if the [formatDayOfWeek] will use the long format such as
+     * ראשון or short such as א when formatting the day of week in
+     * [Hebrew][isHebrewFormat].
      *
      * @param longWeekFormat
      * the longWeekFormat to set
      */
-    /**
-     * See [.isLongWeekFormat] and [.setLongWeekFormat].
-     */
     var isLongWeekFormat: Boolean = true
         set(longWeekFormat) {
             field = longWeekFormat
-            if (longWeekFormat) {
-                weekFormat = SimpleDateFormat("EEEE")
-            } else {
-                weekFormat = SimpleDateFormat("EEE")
-            }
+            weekFormat = SimpleDateFormat(if (longWeekFormat) "EEEE" else "EEE")
         }
     /**
-     * Returns whether the class is set to use the &#x05DE;&#x05E0;&#x05E6;&#x05E4;&#x05F4;&#x05DA; letters when
-     * formatting years ending in 20, 40, 50, 80 and 90 to produce &#x05EA;&#x05E9;&#x05F4;&#x05E4; if false or
-     * or &#x05EA;&#x05E9;&#x05F4;&#x05E3; if true. Traditionally non-final form letters are used, so the year
-     * 5780 would be formatted as &#x05EA;&#x05E9;&#x05F4;&#x05E4; if the default false is used here. If this returns
-     * true, the format &#x05EA;&#x05E9;&#x05F4;&#x05E3; would be used.
+     * Returns whether the class is set to use the מנצפ״ך letters when
+     * formatting years ending in 20, 40, 50, 80 and 90 to produce תש״פ if false or
+     * or תש״ף if true. Traditionally non-final form letters are used, so the year
+     * 5780 would be formatted as תש״פ if the default false is used here. If this returns
+     * true, the format תש״ף would be used.
      *
      * @return true if set to use final form letters when formatting Hebrew years. The default value is false.
      */
     /**
      * When formatting a Hebrew Year, traditionally years ending in 20, 40, 50, 80 and 90 are formatted using non-final
-     * form letters for example &#x05EA;&#x05E9;&#x05F4;&#x05E4; for the year 5780. Setting this to true (the default
-     * is false) will use the final form letters for &#x05DE;&#x05E0;&#x05E6;&#x05E4;&#x05F4;&#x05DA; and will format
-     * the year 5780 as &#x05EA;&#x05E9;&#x05F4;&#x05E3;.
+     * form letters for example תש״פ for the year 5780. Setting this to true (the default
+     * is false) will use the final form letters for מנצפ״ך and will format
+     * the year 5780 as תש״ף.
      *
-     * @param useFinalFormLetters
      * Set this to true to use final form letters when formatting Hebrew years.
-     */
-    /**
-     * See [.isUseFinalFormLetters] and [.setUseFinalFormLetters].
      */
     var isUseFinalFormLetters: Boolean = false
 
     /**
-     * The internal DateFormat.&nbsp; See [.isLongWeekFormat] and [.setLongWeekFormat].
+     * The internal DateFormat.
+     * See [isLongWeekFormat].
      */
     private var weekFormat: SimpleDateFormat? = null
     /**
@@ -177,12 +138,8 @@ class HebrewDateFormatter {
      * @return the list of transliterated Parshios
      */
     /**
-     * Setter method to allow overriding of the default list of parshiyos transliterated into into Latin chars. The
+     * Setter method to allow overriding of the default list of parshiyos transliterated into Latin chars. The
      * default uses Ashkenazi American English transliteration.
-     *
-     * @param transliteratedParshaMap
-     * the transliterated Parshios as an EnumMap to set
-     * @see .getTransliteratedParshiosList
      */
     /**
      * List of transliterated parshiyos using the default *Ashkenazi* pronunciation.&nbsp; The formatParsha method
@@ -198,39 +155,113 @@ class HebrewDateFormatter {
      *
      * @see .formatParsha
      */
-    var transliteratedParshiosList = EnumMap<Parsha, String>(Parsha::class.java)
+    var transliteratedParshiosList = EnumMap(
+        mapOf(
+            Parsha.NONE to "",
+            Parsha.BERESHIS to "Bereshis",
+            Parsha.NOACH to "Noach",
+            Parsha.LECH_LECHA to "Lech Lecha",
+            Parsha.VAYERA to "Vayera",
+            Parsha.CHAYEI_SARA to "Chayei Sara",
+            Parsha.TOLDOS to "Toldos",
+            Parsha.VAYETZEI to "Vayetzei",
+            Parsha.VAYISHLACH to "Vayishlach",
+            Parsha.VAYESHEV to "Vayeshev",
+            Parsha.MIKETZ to "Miketz",
+            Parsha.VAYIGASH to "Vayigash",
+            Parsha.VAYECHI to "Vayechi",
+            Parsha.SHEMOS to "Shemos",
+            Parsha.VAERA to "Vaera",
+            Parsha.BO to "Bo",
+            Parsha.BESHALACH to "Beshalach",
+            Parsha.YISRO to "Yisro",
+            Parsha.MISHPATIM to "Mishpatim",
+            Parsha.TERUMAH to "Terumah",
+            Parsha.TETZAVEH to "Tetzaveh",
+            Parsha.KI_SISA to "Ki Sisa",
+            Parsha.VAYAKHEL to "Vayakhel",
+            Parsha.PEKUDEI to "Pekudei",
+            Parsha.VAYIKRA to "Vayikra",
+            Parsha.TZAV to "Tzav",
+            Parsha.SHMINI to "Shmini",
+            Parsha.TAZRIA to "Tazria",
+            Parsha.METZORA to "Metzora",
+            Parsha.ACHREI_MOS to "Achrei Mos",
+            Parsha.KEDOSHIM to "Kedoshim",
+            Parsha.EMOR to "Emor",
+            Parsha.BEHAR to "Behar",
+            Parsha.BECHUKOSAI to "Bechukosai",
+            Parsha.BAMIDBAR to "Bamidbar",
+            Parsha.NASSO to "Nasso",
+            Parsha.BEHAALOSCHA to "Beha'aloscha",
+            Parsha.SHLACH to "Sh'lach",
+            Parsha.KORACH to "Korach",
+            Parsha.CHUKAS to "Chukas",
+            Parsha.BALAK to "Balak",
+            Parsha.PINCHAS to "Pinchas",
+            Parsha.MATOS to "Matos",
+            Parsha.MASEI to "Masei",
+            Parsha.DEVARIM to "Devarim",
+            Parsha.VAESCHANAN to "Vaeschanan",
+            Parsha.EIKEV to "Eikev",
+            Parsha.REEH to "Re'eh",
+            Parsha.SHOFTIM to "Shoftim",
+            Parsha.KI_SEITZEI to "Ki Seitzei",
+            Parsha.KI_SAVO to "Ki Savo",
+            Parsha.NITZAVIM to "Nitzavim",
+            Parsha.VAYEILECH to "Vayeilech",
+            Parsha.HAAZINU to "Ha'Azinu",
+            Parsha.VZOS_HABERACHA to "Vezos Habracha",
+            Parsha.VAYAKHEL_PEKUDEI to "Vayakhel Pekudei",
+            Parsha.TAZRIA_METZORA to "Tazria Metzora",
+            Parsha.ACHREI_MOS_KEDOSHIM to "Achrei Mos Kedoshim",
+            Parsha.BEHAR_BECHUKOSAI to "Behar Bechukosai",
+            Parsha.CHUKAS_BALAK to "Chukas Balak",
+            Parsha.MATOS_MASEI to "Matos Masei",
+            Parsha.NITZAVIM_VAYEILECH to "Nitzavim Vayeilech",
+            Parsha.SHKALIM to "Shekalim",
+            Parsha.ZACHOR to "Zachor",
+            Parsha.PARA to "Parah",
+            Parsha.HACHODESH to "Hachodesh",
+            Parsha.SHUVA to "Shuva",
+            Parsha.SHIRA to "Shira",
+            Parsha.HAGADOL to "Hagadol",
+            Parsha.CHAZON to "Chazon",
+            Parsha.NACHAMU to "Nachamu"
+        )
+    )
 
     /**
-     * Unicode [EnumMap] of Hebrew *parshiyos*.&nbsp; The list includes double and special *parshiyos* and
-     * contains `"&#x05D1;&#x05E8;&#x05D0;&#x05E9;&#x05D9;&#x05EA;, &#x05E0;&#x05D7;, &#x05DC;&#x05DA; &#x05DC;&#x05DA;,
-     * &#x05D5;&#x05D9;&#x05E8;&#x05D0;, &#x05D7;&#x05D9;&#x05D9; &#x05E9;&#x05E8;&#x05D4;,
-     * &#x05EA;&#x05D5;&#x05DC;&#x05D3;&#x05D5;&#x05EA;, &#x05D5;&#x05D9;&#x05E6;&#x05D0;, &#x05D5;&#x05D9;&#x05E9;&#x05DC;&#x05D7;,
-     * &#x05D5;&#x05D9;&#x05E9;&#x05D1;, &#x05DE;&#x05E7;&#x05E5;, &#x05D5;&#x05D9;&#x05D2;&#x05E9;, &#x05D5;&#x05D9;&#x05D7;&#x05D9;,
-     * &#x05E9;&#x05DE;&#x05D5;&#x05EA;, &#x05D5;&#x05D0;&#x05E8;&#x05D0;, &#x05D1;&#x05D0;, &#x05D1;&#x05E9;&#x05DC;&#x05D7;,
-     * &#x05D9;&#x05EA;&#x05E8;&#x05D5;, &#x05DE;&#x05E9;&#x05E4;&#x05D8;&#x05D9;&#x05DD;, &#x05EA;&#x05E8;&#x05D5;&#x05DE;&#x05D4;,
-     * &#x05EA;&#x05E6;&#x05D5;&#x05D4;, &#x05DB;&#x05D9; &#x05EA;&#x05E9;&#x05D0;, &#x05D5;&#x05D9;&#x05E7;&#x05D4;&#x05DC;,
-     * &#x05E4;&#x05E7;&#x05D5;&#x05D3;&#x05D9;, &#x05D5;&#x05D9;&#x05E7;&#x05E8;&#x05D0;, &#x05E6;&#x05D5;,
-     * &#x05E9;&#x05DE;&#x05D9;&#x05E0;&#x05D9;, &#x05EA;&#x05D6;&#x05E8;&#x05D9;&#x05E2;, &#x05DE;&#x05E6;&#x05E8;&#x05E2;,
-     * &#x05D0;&#x05D7;&#x05E8;&#x05D9; &#x05DE;&#x05D5;&#x05EA;, &#x05E7;&#x05D3;&#x05D5;&#x05E9;&#x05D9;&#x05DD;,
-     * &#x05D0;&#x05DE;&#x05D5;&#x05E8;, &#x05D1;&#x05D4;&#x05E8;, &#x05D1;&#x05D7;&#x05E7;&#x05EA;&#x05D9;,
-     * &#x05D1;&#x05DE;&#x05D3;&#x05D1;&#x05E8;, &#x05E0;&#x05E9;&#x05D0;, &#x05D1;&#x05D4;&#x05E2;&#x05DC;&#x05EA;&#x05DA;,
-     * &#x05E9;&#x05DC;&#x05D7; &#x05DC;&#x05DA;, &#x05E7;&#x05E8;&#x05D7;, &#x05D7;&#x05D5;&#x05E7;&#x05EA;, &#x05D1;&#x05DC;&#x05E7;,
-     * &#x05E4;&#x05D9;&#x05E0;&#x05D7;&#x05E1;, &#x05DE;&#x05D8;&#x05D5;&#x05EA;, &#x05DE;&#x05E1;&#x05E2;&#x05D9;,
-     * &#x05D3;&#x05D1;&#x05E8;&#x05D9;&#x05DD;, &#x05D5;&#x05D0;&#x05EA;&#x05D7;&#x05E0;&#x05DF;, &#x05E2;&#x05E7;&#x05D1;,
-     * &#x05E8;&#x05D0;&#x05D4;, &#x05E9;&#x05D5;&#x05E4;&#x05D8;&#x05D9;&#x05DD;, &#x05DB;&#x05D9; &#x05EA;&#x05E6;&#x05D0;,
-     * &#x05DB;&#x05D9; &#x05EA;&#x05D1;&#x05D5;&#x05D0;, &#x05E0;&#x05E6;&#x05D1;&#x05D9;&#x05DD;, &#x05D5;&#x05D9;&#x05DC;&#x05DA;,
-     * &#x05D4;&#x05D0;&#x05D6;&#x05D9;&#x05E0;&#x05D5;, &#x05D5;&#x05D6;&#x05D0;&#x05EA; &#x05D4;&#x05D1;&#x05E8;&#x05DB;&#x05D4;,
-     * &#x05D5;&#x05D9;&#x05E7;&#x05D4;&#x05DC; &#x05E4;&#x05E7;&#x05D5;&#x05D3;&#x05D9;, &#x05EA;&#x05D6;&#x05E8;&#x05D9;&#x05E2;
-     * &#x05DE;&#x05E6;&#x05E8;&#x05E2;, &#x05D0;&#x05D7;&#x05E8;&#x05D9; &#x05DE;&#x05D5;&#x05EA;
-     * &#x05E7;&#x05D3;&#x05D5;&#x05E9;&#x05D9;&#x05DD;, &#x05D1;&#x05D4;&#x05E8; &#x05D1;&#x05D7;&#x05E7;&#x05EA;&#x05D9;,
-     * &#x05D7;&#x05D5;&#x05E7;&#x05EA; &#x05D1;&#x05DC;&#x05E7;, &#x05DE;&#x05D8;&#x05D5;&#x05EA; &#x05DE;&#x05E1;&#x05E2;&#x05D9;,
-     * &#x05E0;&#x05E6;&#x05D1;&#x05D9;&#x05DD; &#x05D5;&#x05D9;&#x05DC;&#x05DA;, &#x05E9;&#x05E7;&#x05DC;&#x05D9;&#x05DD;,
-     * &#x05D6;&#x05DB;&#x05D5;&#x05E8;, &#x05E4;&#x05E8;&#x05D4;, &#x05D4;&#x05D7;&#x05D3;&#x05E9;,
-     * &#x05E9;&#x05D5;&#x05D1;&#x05D4;,&#x05E9;&#x05D9;&#x05E8;&#x05D4;,&#x05D4;&#x05D2;&#x05D3;&#x05D5;&#x05DC;,
-     * &#x05D7;&#x05D6;&#x05D5;&#x05DF;,&#x05E0;&#x05D7;&#x05DE;&#x05D5;"`
+     * Unicode [EnumMap] of Hebrew *parshiyos*.  The list includes double and special *parshiyos* and
+     * contains `"בראשית, נח, לך לך,
+     * וירא, חיי שרה,
+     * תולדות, ויצא, וישלח,
+     * וישב, מקץ, ויגש, ויחי,
+     * שמות, וארא, בא, בשלח,
+     * יתרו, משפטים, תרומה,
+     * תצוה, כי תשא, ויקהל,
+     * פקודי, ויקרא, צו,
+     * שמיני, תזריע, מצרע,
+     * אחרי מות, קדושים,
+     * אמור, בהר, בחקתי,
+     * במדבר, נשא, בהעלתך,
+     * שלח לך, קרח, חוקת, בלק,
+     * פינחס, מטות, מסעי,
+     * דברים, ואתחנן, עקב,
+     * ראה, שופטים, כי תצא,
+     * כי תבוא, נצבים, וילך,
+     * האזינו, וזאת הברכה,
+     * ויקהל פקודי, תזריע
+     * מצרע, אחרי מות
+     * קדושים, בהר בחקתי,
+     * חוקת בלק, מטות מסעי,
+     * נצבים וילך, שקלים,
+     * זכור, פרה, החדש,
+     * שובה,שירה,הגדול,
+     * חזון,נחמו"`
      */
     private val hebrewParshaMap = EnumMap(
-        mutableMapOf(
+        mapOf(
             Parsha.NONE to "",
             Parsha.BERESHIS to "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
             Parsha.NOACH to "\u05E0\u05D7",
@@ -499,13 +530,12 @@ class HebrewDateFormatter {
         val index = jewishCalendar.yomTovIndex
         if (index == JewishCalendar.CHANUKAH) {
             val dayOfChanukah = jewishCalendar.dayOfChanukah
-            return if (isHebrewFormat) (formatHebrewNumber(dayOfChanukah) + " " + hebrewHolidays.get(index)) else (transliteratedHolidayList.get(
-                index
-            ) + " " + dayOfChanukah)
+            return if (isHebrewFormat) "${formatHebrewNumber(dayOfChanukah)} ${hebrewHolidays[index]}"
+            else "${transliteratedHolidayList[index]} $dayOfChanukah"
         }
-        return if (index == -1) "" else if (isHebrewFormat) hebrewHolidays.get(index) else transliteratedHolidayList.get(
-            index
-        )
+        return if (index == -1) ""
+        else if (isHebrewFormat) hebrewHolidays[index]
+        else transliteratedHolidayList[index]
     }
 
     /**
@@ -522,7 +552,6 @@ class HebrewDateFormatter {
         if (!jewishCalendar.isRoshChodesh) {
             return ""
         }
-        var formattedRoshChodesh: String = ""
         var month = jewishCalendar.jewishMonth
         if (jewishCalendar.jewishDayOfMonth == 30) {
             if (month < JewishDate.ADAR || (month == JewishDate.ADAR && jewishCalendar.isJewishLeapYear)) {
@@ -535,91 +564,10 @@ class HebrewDateFormatter {
         // This method is only about formatting, so we shouldn't make any changes to the params passed in...
         jewishCalendar = jewishCalendar.clone() as JewishCalendar
         jewishCalendar.setJewishMonth(month)
-        formattedRoshChodesh =
-            if (isHebrewFormat) hebrewHolidays.get(JewishCalendar.ROSH_CHODESH) else transliteratedHolidayList.get(
-                JewishCalendar.ROSH_CHODESH
-            )
-        formattedRoshChodesh += " " + formatMonth(jewishCalendar)
-        return formattedRoshChodesh
-    }
-
-    /**
-     * Default constructor sets the [EnumMap]s of Hebrew and default transliterated parshiyos.
-     */
-    init {
-        transliteratedParshiosList.put(Parsha.NONE, "")
-        transliteratedParshiosList.put(Parsha.BERESHIS, "Bereshis")
-        transliteratedParshiosList.put(Parsha.NOACH, "Noach")
-        transliteratedParshiosList.put(Parsha.LECH_LECHA, "Lech Lecha")
-        transliteratedParshiosList.put(Parsha.VAYERA, "Vayera")
-        transliteratedParshiosList.put(Parsha.CHAYEI_SARA, "Chayei Sara")
-        transliteratedParshiosList.put(Parsha.TOLDOS, "Toldos")
-        transliteratedParshiosList.put(Parsha.VAYETZEI, "Vayetzei")
-        transliteratedParshiosList.put(Parsha.VAYISHLACH, "Vayishlach")
-        transliteratedParshiosList.put(Parsha.VAYESHEV, "Vayeshev")
-        transliteratedParshiosList.put(Parsha.MIKETZ, "Miketz")
-        transliteratedParshiosList.put(Parsha.VAYIGASH, "Vayigash")
-        transliteratedParshiosList.put(Parsha.VAYECHI, "Vayechi")
-        transliteratedParshiosList.put(Parsha.SHEMOS, "Shemos")
-        transliteratedParshiosList.put(Parsha.VAERA, "Vaera")
-        transliteratedParshiosList.put(Parsha.BO, "Bo")
-        transliteratedParshiosList.put(Parsha.BESHALACH, "Beshalach")
-        transliteratedParshiosList.put(Parsha.YISRO, "Yisro")
-        transliteratedParshiosList.put(Parsha.MISHPATIM, "Mishpatim")
-        transliteratedParshiosList.put(Parsha.TERUMAH, "Terumah")
-        transliteratedParshiosList.put(Parsha.TETZAVEH, "Tetzaveh")
-        transliteratedParshiosList.put(Parsha.KI_SISA, "Ki Sisa")
-        transliteratedParshiosList.put(Parsha.VAYAKHEL, "Vayakhel")
-        transliteratedParshiosList.put(Parsha.PEKUDEI, "Pekudei")
-        transliteratedParshiosList.put(Parsha.VAYIKRA, "Vayikra")
-        transliteratedParshiosList.put(Parsha.TZAV, "Tzav")
-        transliteratedParshiosList.put(Parsha.SHMINI, "Shmini")
-        transliteratedParshiosList.put(Parsha.TAZRIA, "Tazria")
-        transliteratedParshiosList.put(Parsha.METZORA, "Metzora")
-        transliteratedParshiosList.put(Parsha.ACHREI_MOS, "Achrei Mos")
-        transliteratedParshiosList.put(Parsha.KEDOSHIM, "Kedoshim")
-        transliteratedParshiosList.put(Parsha.EMOR, "Emor")
-        transliteratedParshiosList.put(Parsha.BEHAR, "Behar")
-        transliteratedParshiosList.put(Parsha.BECHUKOSAI, "Bechukosai")
-        transliteratedParshiosList.put(Parsha.BAMIDBAR, "Bamidbar")
-        transliteratedParshiosList.put(Parsha.NASSO, "Nasso")
-        transliteratedParshiosList.put(Parsha.BEHAALOSCHA, "Beha'aloscha")
-        transliteratedParshiosList.put(Parsha.SHLACH, "Sh'lach")
-        transliteratedParshiosList.put(Parsha.KORACH, "Korach")
-        transliteratedParshiosList.put(Parsha.CHUKAS, "Chukas")
-        transliteratedParshiosList.put(Parsha.BALAK, "Balak")
-        transliteratedParshiosList.put(Parsha.PINCHAS, "Pinchas")
-        transliteratedParshiosList.put(Parsha.MATOS, "Matos")
-        transliteratedParshiosList.put(Parsha.MASEI, "Masei")
-        transliteratedParshiosList.put(Parsha.DEVARIM, "Devarim")
-        transliteratedParshiosList.put(Parsha.VAESCHANAN, "Vaeschanan")
-        transliteratedParshiosList.put(Parsha.EIKEV, "Eikev")
-        transliteratedParshiosList.put(Parsha.REEH, "Re'eh")
-        transliteratedParshiosList.put(Parsha.SHOFTIM, "Shoftim")
-        transliteratedParshiosList.put(Parsha.KI_SEITZEI, "Ki Seitzei")
-        transliteratedParshiosList.put(Parsha.KI_SAVO, "Ki Savo")
-        transliteratedParshiosList.put(Parsha.NITZAVIM, "Nitzavim")
-        transliteratedParshiosList.put(Parsha.VAYEILECH, "Vayeilech")
-        transliteratedParshiosList.put(Parsha.HAAZINU, "Ha'Azinu")
-        transliteratedParshiosList.put(Parsha.VZOS_HABERACHA, "Vezos Habracha")
-        transliteratedParshiosList.put(Parsha.VAYAKHEL_PEKUDEI, "Vayakhel Pekudei")
-        transliteratedParshiosList.put(Parsha.TAZRIA_METZORA, "Tazria Metzora")
-        transliteratedParshiosList.put(Parsha.ACHREI_MOS_KEDOSHIM, "Achrei Mos Kedoshim")
-        transliteratedParshiosList.put(Parsha.BEHAR_BECHUKOSAI, "Behar Bechukosai")
-        transliteratedParshiosList.put(Parsha.CHUKAS_BALAK, "Chukas Balak")
-        transliteratedParshiosList.put(Parsha.MATOS_MASEI, "Matos Masei")
-        transliteratedParshiosList.put(Parsha.NITZAVIM_VAYEILECH, "Nitzavim Vayeilech")
-        transliteratedParshiosList.put(Parsha.SHKALIM, "Shekalim")
-        transliteratedParshiosList.put(Parsha.ZACHOR, "Zachor")
-        transliteratedParshiosList.put(Parsha.PARA, "Parah")
-        transliteratedParshiosList.put(Parsha.HACHODESH, "Hachodesh")
-        transliteratedParshiosList.put(Parsha.SHUVA, "Shuva")
-        transliteratedParshiosList.put(Parsha.SHIRA, "Shira")
-        transliteratedParshiosList.put(Parsha.HAGADOL, "Hagadol")
-        transliteratedParshiosList.put(Parsha.CHAZON, "Chazon")
-        transliteratedParshiosList.put(Parsha.NACHAMU, "Nachamu")
-
-        hebrewParshaMap
+        return "${
+            if (isHebrewFormat) hebrewHolidays[JewishCalendar.ROSH_CHODESH]
+            else transliteratedHolidayList[JewishCalendar.ROSH_CHODESH]
+        } ${formatMonth(jewishCalendar)}"
     }
 
     /**
@@ -820,7 +768,7 @@ class HebrewDateFormatter {
     fun formatHebrewNumber(number: Int): String {
         var num = number
         val range = 0..9999
-        require(num in range) { "${if(num < range.first) "negative numbers" else "numbers > ${range.last}"} can't be formatted" }
+        require(num in range) { "${if (num < range.first) "negative numbers" else "numbers > ${range.last}"} can't be formatted" }
         val ALAFIM: String = "\u05D0\u05DC\u05E4\u05D9\u05DD"
         val EFES: String = "\u05D0\u05E4\u05E1"
         val jHundreds: Array<String> = arrayOf(
