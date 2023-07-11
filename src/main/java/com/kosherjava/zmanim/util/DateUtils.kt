@@ -1,4 +1,4 @@
-package com.kosherjava.zmanim.hebrewcalendar
+package com.kosherjava.zmanim.util
 
 import java.util.*
 
