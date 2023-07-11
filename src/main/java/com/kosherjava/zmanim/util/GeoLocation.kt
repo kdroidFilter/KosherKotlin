@@ -18,7 +18,6 @@ package com.kosherjava.zmanim.util
 import java.util.TimeZone
 import java.lang.IllegalArgumentException
 import java.lang.StringBuilder
-import com.kosherjava.zmanim.AstronomicalCalendar
 import kotlin.math.*
 
 /**
@@ -136,7 +135,7 @@ data class GeoLocation(
      * Default GeoLocation constructor will set location to the Prime Meridian at Greenwich, England and a TimeZone of
      * GMT. The longitude will be set to 0 and the latitude will be 51.4772 to match the location of the [Royal Observatory, Greenwich](https://www.rmg.co.uk/royal-observatory). No daylight savings time will be used.
      */
-    constructor(): this(TimeZone.getTimeZone("GMT"), "Greenwich, England") {
+    constructor() : this(TimeZone.getTimeZone("GMT"), "Greenwich, England") {
         longitude = 0.0 // added for clarity
         latitude = 51.4772
     }
@@ -452,11 +451,11 @@ data class GeoLocation(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is GeoLocation) return false
-        val geo = other
-        return (java.lang.Double.doubleToLongBits(latitude) == java.lang.Double.doubleToLongBits(geo.latitude) && java.lang.Double.doubleToLongBits(
-            longitude
-        ) == java.lang.Double.doubleToLongBits(geo.longitude) && elevation == geo.elevation && (if (locationName == null) geo.locationName == null else locationName == geo.locationName)
-                && if (timeZone == null) geo.timeZone == null else timeZone == geo.timeZone)
+        return latitude.toBits() == other.latitude.toBits() &&
+                longitude.toBits() == other.longitude.toBits() &&
+                elevation == other.elevation &&
+                locationName == other.locationName &&
+                timeZone == other.timeZone
     }
 
     /**
@@ -464,9 +463,9 @@ data class GeoLocation(
      */
     override fun hashCode(): Int {
         var result = 17
-        val latLong = java.lang.Double.doubleToLongBits(latitude)
-        val lonLong = java.lang.Double.doubleToLongBits(longitude)
-        val elevLong = java.lang.Double.doubleToLongBits(elevation)
+        val latLong = latitude.toBits()
+        val lonLong = longitude.toBits()
+        val elevLong = elevation.toBits()
         val latInt = (latLong xor (latLong ushr 32)).toInt()
         val lonInt = (lonLong xor (lonLong ushr 32)).toInt()
         val elevInt = (elevLong xor (elevLong ushr 32)).toInt()
@@ -474,8 +473,8 @@ data class GeoLocation(
         result += 37 * result + latInt
         result += 37 * result + lonInt
         result += 37 * result + elevInt
-        result += 37 * result + if (locationName == null) 0 else locationName.hashCode()
-        result += 37 * result + if (timeZone == null) 0 else timeZone.hashCode()
+        result += 37 * result + (locationName?.hashCode() ?: 0)
+        result += 37 * result + (timeZone?.hashCode() ?: 0)
         return result
     }
 
@@ -541,6 +540,6 @@ data class GeoLocation(
         private const val MINUTE_MILLIS = (60 * 1000).toLong()
 
         /** constant for milliseconds in an hour (3,600,000)  */
-        private val HOUR_MILLIS = MINUTE_MILLIS * 60
+        private const val HOUR_MILLIS = MINUTE_MILLIS * 60
     }
 }
