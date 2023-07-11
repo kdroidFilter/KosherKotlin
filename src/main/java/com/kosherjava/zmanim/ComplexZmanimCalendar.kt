@@ -113,7 +113,7 @@ import java.util.*
  *
  * @author  Eliyahu Hershfeld 2004 - 2023
  */
-class ComplexZmanimCalendar : ZmanimCalendar {
+class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalendar(location) {
     /**
      * Returns the offset in minutes after sunset used to calculate *tzais* based on the calculations of
      * *Chacham* Yosef Harari-Raful of Yeshivat Ateret Torah calculations. The default value is 40 minutes.
@@ -140,24 +140,6 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .setAteretTorahSunsetOffset
      */
     var ateretTorahSunsetOffset: Double = 40.0
-
-    /**
-     * A constructor that takes a [GeoLocation] as a parameter.
-     *
-     * @param location
-     * the location
-     *
-     * @see ZmanimCalendar.ZmanimCalendar
-     */
-    constructor(location: GeoLocation) : super(location)
-
-    /**
-     * Default constructor will set a default [GeoLocation.GeoLocation], a default
-     * [AstronomicalCalculator][AstronomicalCalculator.getDefault] and default the calendar to the current date.
-     *
-     * @see AstronomicalCalendar.AstronomicalCalendar
-     */
-    constructor() : super()
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) calculated using a 19.8 dip. This calculation
@@ -281,9 +263,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getTzais72Zmanis
      */
     val shaahZmanis72MinutesZmanis: Long
-        get() {
-            return getTemporalHour(alos72Zmanis, tzais72Zmanis)
-        }
+        get() = getTemporalHour(alos72Zmanis, tzais72Zmanis)
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) calculated using a dip of 90 minutes. This calculation
@@ -315,9 +295,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getTzais90Zmanis
      */
     val shaahZmanis90MinutesZmanis: Long
-        get() {
-            return getTemporalHour(alos90Zmanis, tzais90Zmanis)
-        }
+        get() = getTemporalHour(alos90Zmanis, tzais90Zmanis)
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) according to the opinion of the [Magen Avraham (MGA)](https://en.wikipedia.org/wiki/Avraham_Gombinern) based on *alos* being [alos96Zmanis] minutes *zmaniyos* before [sunrise]. This calculation divides the
@@ -353,9 +331,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .setAteretTorahSunsetOffset
      */
     val shaahZmanisAteretTorah: Long
-        get() {
-            return getTemporalHour(alos72Zmanis, tzaisAteretTorah)
-        }
+        get() = getTemporalHour(alos72Zmanis, tzaisAteretTorah)
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) used by some *zmanim* according to the opinion of
@@ -397,9 +373,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getMinchaGedolaAhavatShalom
      */
     val shaahZmanisAlos16Point1ToTzais3Point7: Long
-        get() {
-            return getTemporalHour(alos16Point1Degrees, tzaisGeonim3Point7Degrees)
-        }
+        get() = getTemporalHour(alos16Point1Degrees, tzaisGeonim3Point7Degrees)
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) calculated using a dip of 96 minutes. This calculation
@@ -432,9 +406,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getShaahZmanis26Degrees
      */
     val shaahZmanis120Minutes: Long
-        get() {
-            return getTemporalHour(alos120, tzais120)
-        }
+        get() = getTemporalHour(alos120, tzais120)
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) according to the opinion of the [Magen Avraham (MGA)](https://en.wikipedia.org/wiki/Avraham_Gombinern) based on *alos* being [alos120Zmanis] minutes *zmaniyos* before [sunrise]. This calculation divides
@@ -476,9 +448,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      */  // (forRemoval=false) // add back once Java 9 is the minimum supported version
     @get:Deprecated("This method should be used <em>lechumra</em> only since it returns a very late time, and if used\n" + "	          <em>lekula</em> can result in <em>chillul Shabbos</em> etc. There is no current plan to remove this\n" + "	          method from the API, and this deprecation is intended to alert developers of the danger of using it.\n" + "	  \n" + "	  ")
     val plagHamincha120MinutesZmanis: Date?
-        get() {
-            return getPlagHamincha(alos120Zmanis, tzais120Zmanis)
-        }
+        get() = getPlagHamincha(alos120Zmanis, tzais120Zmanis)
 
     /**
      * This method should be used *lechumra* only and returns the time of *plag hamincha* according to the
@@ -544,9 +514,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getShaahZmanisGra
      */
     val alos72Zmanis: Date?
-        get() {
-            return getZmanisBasedOffset(-1.2)
-        }
+        get() = getZmanisBasedOffset(-1.2)
 
     /**
      * Method to return *alos* (dawn) calculated using 96 minutes before before [sunrise][.getSunrise] or
@@ -580,9 +548,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getShaahZmanisGra
      */
     val alos90Zmanis: Date?
-        get() {
-            return getZmanisBasedOffset(-1.5)
-        }
+        get() = getZmanisBasedOffset(-1.5)
 
     /**
      * This method returns *alos* (dawn) calculated using 96 minutes *zmaniyos* or 1/7.5th of the day before
@@ -598,9 +564,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getShaahZmanisGra
      */
     val alos96Zmanis: Date?
-        get() {
-            return getZmanisBasedOffset(-1.6)
-        }
+        get() = getZmanisBasedOffset(-1.6)
 
     /**
      * Method to return *alos* (dawn) calculated using 90 minutes before [sea level][.getSeaLevelSunrise] based on the time to walk the distance of 4 *Mil* at 22.5 minutes a *Mil*. Time based
@@ -662,9 +626,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      */  // (forRemoval=false) // add back once Java 9 is the minimum supported version
     @get:Deprecated("This method should be used <em>lechumra</em> only (such as stopping to eat at this time on a fast day),\n" + "	          since it returns a very early time, and if used <em>lekula</em> can result in doing <em>mitzvos hayom</em>\n" + "	          too early according to most opinions. There is no current plan to remove this method from the API, and this\n" + "	          deprecation is intended to alert developers of the danger of using it.\n" + "	  \n" + "	  ")
     val alos120Zmanis: Date?
-        get() {
-            return getZmanisBasedOffset(-2.0)
-        }
+        get() = getZmanisBasedOffset(-2.0)
 
     /**
      * This method should be used *lechumra* only and returns *alos* (dawn) calculated when the sun is [ZENITH_26_DEGREES] below the eastern geometric horizon before sunrise. This calculation is based on the same
@@ -733,9 +695,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getAlos90
      */
     val alos19Point8Degrees: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_19_POINT_8)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_19_POINT_8)
 
     /**
      * Method to return *alos* (dawn) calculated when the sun is [16.1&amp;deg;][.ZENITH_16_POINT_1] below the
@@ -753,9 +713,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getAlos72
      */
     val alos16Point1Degrees: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_16_POINT_1)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_16_POINT_1)
 
     /**
      * This method returns *misheyakir* based on the position of the sun when it is [ 11.5&amp;deg;][.ZENITH_11_DEGREES] below [geometric zenith][.GEOMETRIC_ZENITH] (90). This calculation is used for calculating
@@ -771,9 +729,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .ZENITH_11_POINT_5
      */
     val misheyakir11Point5Degrees: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_11_POINT_5)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_11_POINT_5)
 
     /**
      * This method returns *misheyakir* based on the position of the sun when it is [ 11&amp;deg;][.ZENITH_11_DEGREES] below [geometric zenith][.GEOMETRIC_ZENITH] (90). This calculation is used for calculating
@@ -788,9 +744,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .ZENITH_11_DEGREES
      */
     val misheyakir11Degrees: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_11_DEGREES)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_11_DEGREES)
 
     /**
      * This method returns *misheyakir* based on the position of the sun when it is [ 10.2&amp;deg;][.ZENITH_10_POINT_2] below [geometric zenith][.GEOMETRIC_ZENITH] (90). This calculation is used for calculating
@@ -805,9 +759,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .ZENITH_10_POINT_2
      */
     val misheyakir10Point2Degrees: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_10_POINT_2)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_10_POINT_2)
 
     /**
      * This method returns *misheyakir* based on the position of the sun when it is [ 7.65&amp;deg;][.ZENITH_7_POINT_65] below [geometric zenith][.GEOMETRIC_ZENITH] (90). The degrees are based on a 35/36 minute
@@ -831,9 +783,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getMisheyakir9Point5Degrees
      */
     val misheyakir7Point65Degrees: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_7_POINT_65)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_7_POINT_65)
 
     /**
      * This method returns *misheyakir* based on the position of the sun when it is [ 9.5&amp;deg;][.ZENITH_9_POINT_5] below [geometric zenith][.GEOMETRIC_ZENITH] (90). This calculation is based on Rabbi Dovid Kronglass's
@@ -856,9 +806,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getMisheyakir7Point65Degrees
      */
     val misheyakir9Point5Degrees: Date?
-        get() {
-            return getSunriseOffsetByDegrees(ZENITH_9_POINT_5)
-        }
+        get() = getSunriseOffsetByDegrees(ZENITH_9_POINT_5)
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) according to the
@@ -876,9 +824,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getAlos19Point8Degrees
      */
     val sofZmanShmaMGA19Point8Degrees: Date?
-        get() {
-            return getSofZmanShma(alos19Point8Degrees, tzais19Point8Degrees)
-        }
+        get() = getSofZmanShma(alos19Point8Degrees, tzais19Point8Degrees)
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) according to the
@@ -916,9 +862,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getAlos18Degrees
      */
     val sofZmanShmaMGA18Degrees: Date?
-        get() {
-            return getSofZmanShma(alos18Degrees, tzais18Degrees)
-        }
+        get() = getSofZmanShma(alos18Degrees, tzais18Degrees)
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) according to the
@@ -975,9 +919,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getAlos90
      */
     val sofZmanShmaMGA90Minutes: Date?
-        get() {
-            return getSofZmanShma(alos90, tzais90)
-        }
+        get() = getSofZmanShma(alos90, tzais90)
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) according to the
@@ -1013,9 +955,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getAlos96
      */
     val sofZmanShmaMGA96Minutes: Date?
-        get() {
-            return getSofZmanShma(alos96, tzais96)
-        }
+        get() = getSofZmanShma(alos96, tzais96)
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) according to the
@@ -1059,12 +999,10 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getSofZmanTfila2HoursBeforeChatzos
      */
     val sofZmanShma3HoursBeforeChatzos: Date?
-        get() {
-            return getTimeOffset(
-                chatzos,
-                -180 * MINUTE_MILLIS
-            )
-        }
+        get() = getTimeOffset(
+            chatzos,
+            -180 * MINUTE_MILLIS
+        )
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) according to the
@@ -1083,9 +1021,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getAlos120
      */
     val sofZmanShmaMGA120Minutes: Date?
-        get() {
-            return getSofZmanShma(alos120, tzais120)
-        }
+        get() = getSofZmanShma(alos120, tzais120)
 
     /**
      * This method returns the latest *zman krias shema* (time to recite *Shema* in the morning) based
@@ -1105,9 +1041,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .getSeaLevelSunset
      */
     val sofZmanShmaAlos16Point1ToSunset: Date?
-        get() {
-            return getSofZmanShma(alos16Point1Degrees, elevationAdjustedSunset)
-        }
+        get() = getSofZmanShma(alos16Point1Degrees, elevationAdjustedSunset)
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) based on the
@@ -2259,7 +2193,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see .ZENITH_8_POINT_5
      */
     val tzaisGeonim8Point5Degrees: Date?
-        get() = getSunsetOffsetByDegrees(ZmanimCalendar.Companion.ZENITH_8_POINT_5)
+        get() = getSunsetOffsetByDegrees(ZENITH_8_POINT_5)
 
     /**
      * This method returns the *tzais* (nightfall) based on the calculations used in the [Luach Itim Lebinah](https://www.worldcat.org/oclc/243303103) as the stringent time for *tzais*.  It is
@@ -2764,8 +2698,9 @@ class ComplexZmanimCalendar : ZmanimCalendar {
     fun getSofZmanKidushLevanaBetweenMoldos(alos: Date?, tzais: Date?): Date? {
         val jewishCalendar = JewishCalendar()
         jewishCalendar.setGregorianDate(
-            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            calendar[Calendar.YEAR],
+            calendar[Calendar.MONTH],
+            calendar[Calendar.DAY_OF_MONTH]
         )
 
         // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in French
@@ -2802,21 +2737,13 @@ class ComplexZmanimCalendar : ZmanimCalendar {
         alos: Date?,
         tzais: Date?,
         techila: Boolean
-    ): Date? {
-        val lastMidnight: Date = midnightLastNight
-        val midnightTonigh: Date = midnightTonight
-        if (!(moladBasedTime.before(lastMidnight) || moladBasedTime.after(midnightTonigh))) {
-            if (alos != null || tzais != null) {
-                if (techila && !(moladBasedTime.before(tzais) || moladBasedTime.after(alos))) {
-                    return tzais
-                } else {
-                    return alos
-                }
-            }
-            return moladBasedTime
-        }
-        return null
-    }
+    ): Date? =
+        if (!(moladBasedTime.before(midnightLastNight) || moladBasedTime.after(midnightTonight)))
+            if (alos != null || tzais != null)
+                if (techila && !(moladBasedTime.before(tzais) || moladBasedTime.after(alos))) tzais
+                else alos
+            else moladBasedTime
+        else null
 
     /**
      * Returns the latest time of Kiddush Levana according to the [Maharil's](https://en.wikipedia.org/wiki/Yaakov_ben_Moshe_Levi_Moelin) opinion that it is calculated as
@@ -2860,7 +2787,7 @@ class ComplexZmanimCalendar : ZmanimCalendar {
      * @see JewishCalendar.getSofZmanKidushLevana15Days
      */
     fun getSofZmanKidushLevana15Days(alos: Date?, tzais: Date?): Date? {
-        val jewishCalendar: JewishCalendar = JewishCalendar()
+        val jewishCalendar = JewishCalendar()
         jewishCalendar.setGregorianDate(
             calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)

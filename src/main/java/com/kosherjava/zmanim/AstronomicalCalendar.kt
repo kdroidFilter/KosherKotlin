@@ -234,7 +234,7 @@ open class AstronomicalCalendar : Cloneable {
      *
      * @return The `Date` of the end of civil twilight using a zenith of [96&amp;deg;][.CIVIL_ZENITH]. If
      * the calculation can't be computed, null will be returned. See detailed explanation on top of the page.
-     * @see .CIVIL_ZENITH
+     * @see CIVIL_ZENITH
      */
     val endCivilTwilight: Date?
         get() = getSunsetOffsetByDegrees(CIVIL_ZENITH)
@@ -245,7 +245,7 @@ open class AstronomicalCalendar : Cloneable {
      * @return The `Date` of the end of nautical twilight using a zenith of [102&amp;deg;][.NAUTICAL_ZENITH]
      * . If the calculation can't be computed, null will be returned. See detailed explanation on top of the
      * page.
-     * @see .NAUTICAL_ZENITH
+     * @see NAUTICAL_ZENITH
      */
     val endNauticalTwilight: Date?
         get() = getSunsetOffsetByDegrees(NAUTICAL_ZENITH)
@@ -308,7 +308,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see .setAstronomicalCalculator
      */
     /**
-     * Default constructor will set a default [GeoLocation.geoLocation], a default
+     * Default constructor will set a default [geoLocation], a default
      * [AstronomicalCalculator][AstronomicalCalculator.default] and default the calendar to the current date.
      *//*
     init {

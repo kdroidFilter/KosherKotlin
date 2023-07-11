@@ -141,6 +141,21 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
     var gregorianMonth
         get() = gregorianMonthZeroBased + 1
         set(value) { gregorianMonthZeroBased = value - 1 }
+    /**
+     * Sets the Gregorian month.
+     *
+     * @param month
+     * the Gregorian month
+     *
+     * @throws IllegalArgumentException
+     * if a month < 0 or > 11 is passed in
+     */
+    @JvmName("setGregorianMonthExternal")
+    fun setGregorianMonth(month: Int): JewishDate { //TODO can't make this a setter because it has side effects and would cause a recursive StackOverflow, and because I already have ...ZeroBased. Figure out how to refactor it to use this setter.
+        validateGregorianMonth(month)
+        setInternalGregorianDate(gregorianYear, month + 1, gregorianDayOfMonth)
+        return this
+    }
 
     /**
      * The Gregorian month (between 0-11). Like the [java.util.Calendar], months are 0 based.
@@ -404,7 +419,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if the [Calendar.ERA] is [GregorianCalendar.BC]
      */
-    fun setDate(calendar: Calendar) {
+    fun setDate(calendar: Calendar): JewishDate {
         require(calendar.get(Calendar.ERA) != GregorianCalendar.BC) { ("Calendars with a BC era are not supported. The year ${calendar.get(Calendar.YEAR)} BC is invalid.") }
         gregorianMonth = calendar.get(Calendar.MONTH) + 1
         gregorianDayOfMonth = calendar.get(Calendar.DATE)
@@ -412,6 +427,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         absDate = gregorianDateToAbsDate(gregorianYear, gregorianMonth, gregorianDayOfMonth) // init the date
         absDateToJewishDate()
         dayOfWeek = abs(absDate % 7) + 1 // set day of week
+        return this
     }
 
     /**
@@ -422,8 +438,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if the date would fall prior to the year 1 AD
      */
-    fun setDate(date: Date?) {
+    fun setDate(date: Date?): JewishDate {
         setDate(Calendar.getInstance().apply { time = date })
+        return this
     }
 
     /**
@@ -434,12 +451,13 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if the date would fall prior to the year 1 AD
      */
-    fun setDate(localDate: LocalDate) {
+    fun setDate(localDate: LocalDate): JewishDate {
         setDate(
             Calendar
                 .getInstance()
                 .apply { set(localDate.year, localDate.monthValue - 1, localDate.dayOfMonth) }
         )
+        return this
     }
 
     /**
@@ -456,9 +474,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if a year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in
      */
-    fun setGregorianDate(year: Int, month: Int, dayOfMonth: Int) {
+    fun setGregorianDate(year: Int, month: Int, dayOfMonth: Int): JewishDate {
         validateGregorianDate(year, month, dayOfMonth)
         setInternalGregorianDate(year, month + 1, dayOfMonth)
+        return this
     }
 
     /**
@@ -471,7 +490,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @param month the month
      * @param dayOfMonth the day of month
      */
-    private fun setInternalGregorianDate(year: Int, month: Int, dayOfMonth: Int) {
+    private fun setInternalGregorianDate(year: Int, month: Int, dayOfMonth: Int): JewishDate {
         // make sure date is a valid date for the given month, if not, set to last day of month
         var dom = dayOfMonth
         if (dom > getLastDayOfGregorianMonth(month, year)) {
@@ -484,6 +503,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         absDate = gregorianDateToAbsDate(gregorianYear, gregorianMonth, gregorianDayOfMonth) // init date
         absDateToJewishDate()
         dayOfWeek = abs(absDate % 7) + 1 // set day of week
+        return this
     }
 
     /**
@@ -502,8 +522,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a
      * leap year) or the day of month is < 1 or > 30 is passed in
      */
-    fun setJewishDate(year: Int, month: Int, dayOfMonth: Int) {
+    fun setJewishDate(year: Int, month: Int, dayOfMonth: Int): JewishDate {
         setJewishDate(year, month, dayOfMonth, 0, 0, 0)
+        return this
     }
 
     /**
@@ -533,7 +554,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim into minutes (18
      * chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
      */
-    fun setJewishDate(year: Int, month: Int, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int) {
+    fun setJewishDate(year: Int, month: Int, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int): JewishDate {
         var dom = dayOfMonth
         validateJewishDate(year, month, dom, hours, minutes, chalakim)
 
@@ -551,6 +572,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         absDate = jewishDateToAbsDate(jewishYear, jewishMonth, jewishDay) // reset Gregorian date
         absDateToDate(absDate)
         dayOfWeek = abs(absDate % 7) + 1 // reset day of week
+        return this
     }
 
     /**
@@ -572,8 +594,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
     /**
      * Resets this date to the current system date.
      */
-    fun resetDate() {
+    fun resetDate(): JewishDate {
         setDate(Calendar.getInstance())
+        return this
     }
 
     /**
@@ -607,7 +630,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @see Calendar.add
      * @see Calendar.roll
      */
-    fun forward(field: Int, amount: Int) {
+    fun forward(field: Int, amount: Int): JewishDate {
         require(!((field != Calendar.DATE) && (field != Calendar.MONTH) && (field != Calendar.YEAR))) { "Unsupported field was passed to Forward. Only Calendar.DATE, Calendar.MONTH or Calendar.YEAR are supported." }
         require(amount >= 1) { "JewishDate.forward() does not support amounts less than 1. See JewishDate.back()" }
         when (field) {
@@ -660,6 +683,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
             Calendar.MONTH -> forwardJewishMonth(amount)
             Calendar.YEAR -> setJewishYear(jewishYear + amount)
         }
+        return this
     }
 
     /**
@@ -702,7 +726,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @see Calendar.add
      * @see Calendar.roll
      */
-    fun back() {
+    fun back(): JewishDate {
         // Change Gregorian date
         if (gregorianDayOfMonth == 1) { // if first day of month
             if (gregorianMonth == 1) { // if first day of year
@@ -733,6 +757,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         // if first day of week, loop back to Saturday
         if (dayOfWeek == 1) dayOfWeek = 7 else dayOfWeek--
         absDate-- // change the absolute date
+        return this
     }
 
     /**
@@ -771,20 +796,6 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
             setJewishDate(jewishYear, jewishMonth, dayOfMonth)
         }
 
-    /**
-     * Sets the Gregorian month.
-     *
-     * @param month
-     * the Gregorian month
-     *
-     * @throws IllegalArgumentException
-     * if a month < 0 or > 11 is passed in
-     */
-    @JvmName("setGregorianMonthExternal")
-    fun setGregorianMonth(month: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
-        validateGregorianMonth(month)
-        setInternalGregorianDate(gregorianYear, month + 1, gregorianDayOfMonth)
-    }
 
     /**
      * sets the Gregorian year.
@@ -794,9 +805,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if a year of < 1 is passed in
      */
-    fun setGregorianYear(year: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
+    fun setGregorianYear(year: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         validateGregorianYear(year)
         setInternalGregorianDate(year, gregorianMonth, gregorianDayOfMonth)
+        return this
     }
 
     /**
@@ -807,9 +819,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if the day of month of < 1 is passed in
      */
-    fun setGregorianDayOfMonth(dayOfMonth: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
+    fun setGregorianDayOfMonth(dayOfMonth: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         validateGregorianDayOfMonth(dayOfMonth)
         setInternalGregorianDate(gregorianYear, gregorianMonth, dayOfMonth)
+        return this
     }
 
     /**
@@ -821,8 +834,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException
      * if a month < 1 or > 12 (or 13 on a leap year) is passed in
      */
-    fun setJewishMonth(month: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
+    fun setJewishMonth(month: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         setJewishDate(jewishYear, month, jewishDay)
+        return this
     }
 
     /**
@@ -834,8 +848,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * if a year of < 3761 is passed in. The same will happen if the year is 3761 and the month and day
      * previously set are < 18 Teves (preior to Jan 1, 1 AD)
      */
-    fun setJewishYear(year: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
+    fun setJewishYear(year: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         setJewishDate(year, jewishMonth, jewishDay)
+        return this
     }
 
     /**

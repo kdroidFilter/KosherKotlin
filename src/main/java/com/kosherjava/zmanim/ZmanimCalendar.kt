@@ -64,7 +64,7 @@ import java.util.*
  *
  * @author  Eliyahu Hershfeld 2004 - 2022
  */
-open class ZmanimCalendar : AstronomicalCalendar {
+open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : AstronomicalCalendar(geoLocation) {
     /**
      * Is elevation above sea level calculated for times besides sunrise and sunset. According to Rabbi Dovid Yehuda
      * Bursztyn in his [Zmanim Kehilchasam (second edition published
@@ -610,22 +610,6 @@ open class ZmanimCalendar : AstronomicalCalendar {
         }
 
     /**
-     * Default constructor will set a default [GeoLocation.GeoLocation], a default
-     * [AstronomicalCalculator][AstronomicalCalculator.getDefault] and default the calendar to the current date.
-     *
-     * @see AstronomicalCalendar.AstronomicalCalendar
-     */
-    constructor() : super()
-
-    /**
-     * A constructor that takes a [GeoLocation] as a parameter.
-     *
-     * @param location
-     * the location
-     */
-    constructor(location: GeoLocation) : super(location)
-
-    /**
      * This is a utility method to determine if the current Date (date-time) passed in has a *melacha* (work) prohibition.
      * Since there are many opinions on the time of *tzais*, the *tzais* for the current day has to be passed to this
      * class. Sunset is the classes current day's [elevation adjusted sunset][.getElevationAdjustedSunset] that observes the
@@ -644,17 +628,13 @@ open class ZmanimCalendar : AstronomicalCalendar {
     fun isAssurBemlacha(currentTime: Date, tzais: Date?, inIsrael: Boolean): Boolean {
         val jewishCalendar = JewishCalendar()
         jewishCalendar.setGregorianDate(
-            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            calendar[Calendar.YEAR],
+            calendar[Calendar.MONTH],
+            calendar[Calendar.DAY_OF_MONTH]
         )
         jewishCalendar.inIsrael = inIsrael
-        if (jewishCalendar.hasCandleLighting() && currentTime >= elevationAdjustedSunset) { //erev shabbos, YT or YT sheni and after shkiah
-            return true
-        }
-        if (jewishCalendar.isAssurBemelacha && currentTime <= tzais) { //is shabbos or YT and it is before tzais
-            return true
-        }
-        return false
+        return jewishCalendar.hasCandleLighting() && currentTime >= elevationAdjustedSunset || //erev shabbos, YT or YT sheni and after shkiah
+                jewishCalendar.isAssurBemelacha && currentTime <= tzais //is shabbos or YT and it is before tzais
     }
 
     /**
@@ -678,10 +658,8 @@ open class ZmanimCalendar : AstronomicalCalendar {
      * as in the Arctic Circle where there is at least one day a year where the sun does not rise, and one
      * where it does not set, a null will be  returned. See detailed explanation on top of the [         ] documentation.
      */
-    fun getShaahZmanisBasedZman(startOfDay: Date?, endOfDay: Date?, hours: Double): Date? {
-        val shaahZmanis: Long = getTemporalHour(startOfDay, endOfDay)
-        return getTimeOffset(startOfDay, shaahZmanis * hours)
-    }
+    fun getShaahZmanisBasedZman(startOfDay: Date?, endOfDay: Date?, hours: Double): Date? =
+        getTimeOffset(startOfDay, /*shaa zmanis:*/getTemporalHour(startOfDay, endOfDay) * hours)
 
     companion object {
         /**

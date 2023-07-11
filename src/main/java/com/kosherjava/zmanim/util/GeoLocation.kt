@@ -153,7 +153,7 @@ data class GeoLocation(
      * @param direction
      * N for north and S for south. An IllegalArgumentException will be thrown if the value is not S or N.
      */
-    fun setLatitude(degrees: Int, minutes: Int, seconds: Double, direction: String) {
+    fun setLatitude(degrees: Int, minutes: Int, seconds: Double, direction: String): GeoLocation {
         var tempLat = degrees + (minutes + seconds / 60.0) / 60.0
         require(!(tempLat > 90 || tempLat < 0)) {  //FIXME An exception should be thrown if degrees, minutes or seconds are negative
             "Latitude must be between 0 and  90. Use direction of S instead of negative."
@@ -162,6 +162,7 @@ data class GeoLocation(
             tempLat *= -1.0
         } else require(direction == "N") { "Latitude direction must be N or S" }
         latitude = tempLat
+        return this
     }
 
     /**
@@ -179,7 +180,7 @@ data class GeoLocation(
      * An IllegalArgumentException will be thrown if
      * the value is not E or W.
      */
-    fun setLongitude(degrees: Int, minutes: Int, seconds: Double, direction: String) {
+    fun setLongitude(degrees: Int, minutes: Int, seconds: Double, direction: String): GeoLocation {
         var longTemp = degrees + (minutes + seconds / 60.0) / 60.0
         if (longTemp > 180 || longitude < 0) { //FIXME An exception should be thrown if degrees, minutes or seconds are negative
             throw IllegalArgumentException("Longitude must be between 0 and  180.  Use a direction of W instead of negative.")
@@ -188,6 +189,7 @@ data class GeoLocation(
             longTemp *= -1.0
         } else require(direction == "E") { "Longitude direction must be E or W" }
         longitude = longTemp
+        return this
     }
 
     /**
