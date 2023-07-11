@@ -57,15 +57,15 @@ import kotlin.Comparator
  *
  * @author  Eliyahu Hershfeld 2007-2020
  * @todo Add secondary sorting. As of now the `Comparator`s in this class do not sort by secondary order. This means that when sorting a
- * [java.util.Collection] of *zmanim* and using the [.DATE_ORDER] `Comparator` will have the duration based *zmanim*
+ * [java.util.Collection] of *zmanim* and using the [DATE_ORDER] `Comparator` will have the duration based *zmanim*
  * at the end, but they will not be sorted by duration. This should be N/A for label based sorting.
  */
-class Zman {
+data class Zman(
     /**
      * The name / label of the *zman*, such as "*Sof Zman Krias Shema GRA*". 
      * There are no automatically set labels.
      */
-    var label: String
+    var label: String,
     /**
      * Returns the `Date` based *zman*.
      * @return the *zman*.
@@ -79,7 +79,7 @@ class Zman {
     /**
      * The [Date] of the *zman*
      */
-    var zman: Date? = null
+    var zman: Date? = null,
     /**
      * Returns a duration based *zman* such as [temporal hour][com.kosherjava.zmanim.AstronomicalCalendar.getTemporalHour]
      * (or the various *shaah zmanis* times such as [<em>shaah zmanis GRA</em>][com.kosherjava.zmanim.ZmanimCalendar.getShaahZmanisGra]
@@ -95,11 +95,11 @@ class Zman {
      * @see .getDuration
      */
     /**
-     * The duration if the *zman* is  a [temporal hour][com.kosherjava.zmanim.AstronomicalCalendar.getTemporalHour] (or the various
-     * *shaah zmanis* base times such as [<em>shaah Zmanis GRA</em>][com.kosherjava.zmanim.ZmanimCalendar.getShaahZmanisGra] or
-     * [<em>shaah Zmanis 16.1&amp;deg;</em>][com.kosherjava.zmanim.ComplexZmanimCalendar.getShaahZmanis16Point1Degrees]).
+     * The duration if the *zman* is a [temporal hour][com.kosherjava.zmanim.AstronomicalCalendar.temporalHour] (or the various
+     * *shaah zmanis* base times such as [<em>shaah Zmanis GRA</em>][com.kosherjava.zmanim.ZmanimCalendar.shaahZmanisGra] or
+     * [<em>shaah Zmanis 16.1&amp;deg;</em>][com.kosherjava.zmanim.ComplexZmanimCalendar.shaahZmanis16Point1Degrees]).
      */
-    var duration: Long = 0
+    var duration: Long = 0,
     /**
      * Returns the longer description or explanation of a *zman*. There is no default value for this and it must be set using
      * [description]
@@ -115,7 +115,8 @@ class Zman {
     /**
      * A longer description or explanation of a *zman*.
      */
-    var description: String? = null
+    var description: String? = null,
+) {
 
     /**
      * The constructor setting a [Date] based *zman* and a label.
@@ -123,10 +124,10 @@ class Zman {
      * @param label the label of the  *zman* such as "*Sof Zman Krias Shema GRA*".
      * @see .Zman
      */
-    constructor(date: Date?, label: String) {
+    /*constructor(date: Date?, label: String) {
         this.label = label
         zman = date
-    }
+    }*/
 
     /**
      * The constructor setting a duration based *zman* such as
@@ -137,10 +138,10 @@ class Zman {
      * @param label the label of the  *zman* such as "*Shaah Zmanis GRA*".
      * @see .Zman
      */
-    constructor(duration: Long, label: String) {
+    /*constructor(duration: Long, label: String) {
         this.label = label
         this.duration = duration
-    }
+    }*/
 
     /**
      * @see Object.toString
@@ -161,7 +162,7 @@ class Zman {
          * than the second.
          * Please note that this class will handle cases where either the `Zman` is a null or [.getZman] returns a null.
          */
-        val DATE_ORDER: Comparator<Zman> = compareBy { it.zman?.time ?: Long.MAX_VALUE }
+        val DATE_ORDER: Comparator<Zman?> = compareBy { it?.zman?.time ?: Long.MAX_VALUE }
 
         /**
          * A [Comparator] that will compare and sort zmanim by zmanim label order. Compares its two arguments by the zmanim label
@@ -170,7 +171,7 @@ class Zman {
          * Please note that this class will will sort cases where either the `Zman` is a null or [.label] returns a null
          * as empty `String`s.
          */
-        val NAME_ORDER: Comparator<Zman> = compareBy { it.label ?: "" }
+        val NAME_ORDER: Comparator<Zman?> = compareBy { it?.label ?: "" }
 
         /**
          * A [Comparator] that will compare and sort duration based *zmanim*  such as
@@ -180,6 +181,6 @@ class Zman {
          * integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
          * Please note that this class will will sort cases where `Zman` is a null.
          */
-        val DURATION_ORDER: Comparator<Zman> = compareBy { it.duration ?: Long.MAX_VALUE }
+        val DURATION_ORDER: Comparator<Zman?> = compareBy { it?.duration ?: Long.MAX_VALUE }
     }
 }
