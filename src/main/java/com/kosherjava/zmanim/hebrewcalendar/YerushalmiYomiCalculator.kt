@@ -15,37 +15,9 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import com.kosherjava.zmanim.util.ZmanimFormatter
-import java.util.TimeZone
-import java.lang.StringBuffer
-import com.kosherjava.zmanim.util.Zman
 import java.lang.IllegalArgumentException
-import com.kosherjava.zmanim.util.GeoLocation
-import java.lang.StringBuilder
-import java.lang.CloneNotSupportedException
-import com.kosherjava.zmanim.util.AstronomicalCalculator
 import java.util.Calendar
-import com.kosherjava.zmanim.util.NOAACalculator
-import java.text.SimpleDateFormat
-import java.text.DecimalFormat
-import java.text.DateFormat
-import java.util.Collections
-import com.kosherjava.zmanim.util.GeoLocationUtils
-import com.kosherjava.zmanim.util.SunTimesCalculator
-import com.kosherjava.zmanim.hebrewcalendar.Daf
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate
-import java.time.LocalDate
 import java.util.GregorianCalendar
-import com.kosherjava.zmanim.hebrewcalendar.HebrewDateFormatter
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
-import com.kosherjava.zmanim.hebrewcalendar.YomiCalculator
-import com.kosherjava.zmanim.hebrewcalendar.YerushalmiYomiCalculator
-import java.util.EnumMap
-import com.kosherjava.zmanim.AstronomicalCalendar
-import com.kosherjava.zmanim.ZmanimCalendar
-import java.math.BigDecimal
-import com.kosherjava.zmanim.ComplexZmanimCalendar
 
 /**
  * This class calculates the [Talmud Yerusalmi](https://en.wikipedia.org/wiki/Jerusalem_Talmud) [Daf Yomi](https://en.wikipedia.org/wiki/Daf_Yomi) page ([Daf]) for the a given date.
@@ -60,10 +32,10 @@ object YerushalmiYomiCalculator {
     private val DAF_YOMI_START_DAY: Calendar = GregorianCalendar(1980, Calendar.FEBRUARY, 2)
 
     /** The number of milliseconds in a day.  */
-    private val DAY_MILIS: Int = 1000 * 60 * 60 * 24
+    private const val DAY_MILIS: Int = 1000 * 60 * 60 * 24
 
     /** The number of pages in the Talmud Yerushalmi. */
-    private val WHOLE_SHAS_DAFS: Int = 1554
+    private const val WHOLE_SHAS_DAFS: Int = 1554
 
     /** The number of pages per *masechta* (tractate). */
     private val BLATT_PER_MASECHTA: IntArray = intArrayOf(
@@ -156,12 +128,8 @@ object YerushalmiYomiCalculator {
         for (i in startYear..endYear) {
             yom_kippur.setJewishYear(i)
             tisha_beav.setJewishYear(i)
-            if (isBetween(start, yom_kippur.gregorianCalendar, end)) {
-                specialDays++
-            }
-            if (isBetween(start, tisha_beav.gregorianCalendar, end)) {
-                specialDays++
-            }
+            if (yom_kippur.gregorianCalendar.isBetween(start, end)) specialDays++
+            if (tisha_beav.gregorianCalendar.isBetween(start, end)) specialDays++
         }
         return specialDays
     }
@@ -170,13 +138,12 @@ object YerushalmiYomiCalculator {
      * Return if the date is between two dates
      *
      * @param start the start date
-     * @param date the date being compared
+     * @param this@isBetween the date being compared
      * @param end the end date
      * @return if the date is between the start and end dates
      */
-    private fun isBetween(start: Calendar, date: Calendar?, end: Calendar?): Boolean {
-        return start.before(date) && end!!.after(date)
-    }
+    private fun Calendar?.isBetween(start: Calendar, end: Calendar?): Boolean =
+        start.before(this) && end!!.after(this)
 
     /**
      * Return the number of days between the dates passed in
