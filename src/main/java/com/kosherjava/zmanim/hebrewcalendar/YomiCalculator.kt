@@ -110,12 +110,9 @@ object YomiCalculator {
         val julianDay = getJulianDay(calendar)
         val cycleNo: Int
         val dafNo: Int
-        if (calendar.before(dafYomiStartDay)) {
+        require(!calendar.before(dafYomiStartDay)) {
             // TODO: should we return a null or throw an IllegalArgumentException?
-            throw IllegalArgumentException(
-                (calendar.toString() + " is prior to organized Daf Yomi Bavli cycles that started on "
-                        + dafYomiStartDay)
-            )
+            "$calendar is prior to organized Daf Yomi Bavli cycles that started on $dafYomiStartDay"
         }
         if ((calendar == shekalimChangeDay) || calendar.after(shekalimChangeDay)) {
             cycleNo = 8 + ((julianDay - shekalimJulianChangeDay) / 2711)
