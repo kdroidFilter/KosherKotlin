@@ -61,7 +61,7 @@ object YomiCalculator {
     private val dafYomiStartDay: Calendar = GregorianCalendar(1923, Calendar.SEPTEMBER, 11)
 
     /** The start date of the first Daf Yomi Bavli cycle in the Julian calendar. Used internally for claculations. */
-    private val dafYomiJulianStartDay: Int = getJulianDay(dafYomiStartDay)
+    private val dafYomiJulianStartDay: Int = DateUtils.getJulianDay(dafYomiStartDay).toInt()
 
     /**
      * The date that the pagination for the Daf Yomi *Maseches Shekalim* changed to use the commonly used Vilna
@@ -72,7 +72,7 @@ object YomiCalculator {
     /** The Julian date that the cycle for Shekalim changed.
      * @see .getDafYomiBavli
      */
-    private val shekalimJulianChangeDay: Int = getJulianDay(shekalimChangeDay)
+    private val shekalimJulianChangeDay: Int = DateUtils.getJulianDay(shekalimChangeDay).toInt()
 
     /**
      * Returns the [Daf Yomi](http://en.wikipedia.org/wiki/Daf_yomi) [Bavli](http://en.wikipedia.org/wiki/Talmud) [Daf] for a given date. The first Daf Yomi cycle
@@ -107,14 +107,14 @@ object YomiCalculator {
         )
         val calendar: Calendar = jewishCalendar.gregorianCalendar
         var dafYomi: Daf? = null
-        val julianDay = getJulianDay(calendar)
+        val julianDay = DateUtils.getJulianDay(calendar).toInt()
         val cycleNo: Int
         val dafNo: Int
         require(!calendar.before(dafYomiStartDay)) {
             // TODO: should we return a null or throw an IllegalArgumentException?
             "$calendar is prior to organized Daf Yomi Bavli cycles that started on $dafYomiStartDay"
         }
-        if ((calendar == shekalimChangeDay) || calendar.after(shekalimChangeDay)) {
+        if (calendar == shekalimChangeDay || calendar.after(shekalimChangeDay)) {
             cycleNo = 8 + ((julianDay - shekalimJulianChangeDay) / 2711)
             dafNo = ((julianDay - shekalimJulianChangeDay) % 2711)
         } else {
@@ -123,7 +123,7 @@ object YomiCalculator {
         }
         var total = 0
         var masechta = -1
-        var blatt = 0
+        var blatt: Int
 
         // Fix Shekalim for old cycles.
         if (cycleNo <= 7) {
@@ -148,25 +148,5 @@ object YomiCalculator {
             }
         }
         return dafYomi
-    }
-
-    /**
-     * Return the [Julian day](http://en.wikipedia.org/wiki/Julian_day) from a Java Calendar.
-     *
-     * @param calendar
-     * The Java Calendar of the date to be calculated
-     * @return the Julian day number corresponding to the date
-     */
-    private fun getJulianDay(calendar: Calendar?): Int {
-        var year = calendar!!.get(Calendar.YEAR)
-        var month = calendar.get(Calendar.MONTH) + 1
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        if (month <= 2) {
-            year -= 1
-            month += 12
-        }
-        val a = year / 100
-        val b = 2 - a + a / 4
-        return (Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5).toInt()
     }
 }
