@@ -176,7 +176,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
     }
 
     /**
-     * Formats a date using this classe's [date format][.getDateFormat].
+     * Formats a date using this classe's [date format][dateFormat].
      *
      * @param dateTime
      * the date to format
@@ -320,11 +320,11 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
          * format used is:
          *
          * <pre>
-         * &lt;AstronomicalTimes date=&quot;1969-02-08&quot; type=&quot;com.kosherjava.zmanim.AstronomicalCalendar algorithm=&quot;US Naval Almanac Algorithm&quot; location=&quot;Lakewood, NJ&quot; latitude=&quot;40.095965&quot; longitude=&quot;-74.22213&quot; elevation=&quot;31.0&quot; timeZoneName=&quot;Eastern Standard Time&quot; timeZoneID=&quot;America/New_York&quot; timeZoneOffset=&quot;-5&quot;&gt;
-         * &lt;Sunrise&gt;2007-02-18T06:45:27-05:00&lt;/Sunrise&gt;
-         * &lt;TemporalHour&gt;PT54M17.529S&lt;/TemporalHour&gt;
+         * <AstronomicalTimes date=&quot;1969-02-08&quot; type=&quot;com.kosherjava.zmanim.AstronomicalCalendar algorithm=&quot;US Naval Almanac Algorithm&quot; location=&quot;Lakewood, NJ&quot; latitude=&quot;40.095965&quot; longitude=&quot;-74.22213&quot; elevation=&quot;31.0&quot; timeZoneName=&quot;Eastern Standard Time&quot; timeZoneID=&quot;America/New_York&quot; timeZoneOffset=&quot;-5&quot;>
+         * <Sunrise>2007-02-18T06:45:27-05:00</Sunrise>
+         * <TemporalHour>PT54M17.529S</TemporalHour>
          * ...
-         * &lt;/AstronomicalTimes&gt;
+         * </AstronomicalTimes>
         </pre> *
          *
          * Note that the output uses the [xsd:dateTime](http://www.w3.org/TR/xmlschema11-2/#dateTime) format for
@@ -338,19 +338,19 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
          * @return The XML formatted `String`. The format will be:
          *
          * <pre>
-         * &lt;AstronomicalTimes date=&quot;1969-02-08&quot; type=&quot;com.kosherjava.zmanim.AstronomicalCalendar algorithm=&quot;US Naval Almanac Algorithm&quot; location=&quot;Lakewood, NJ&quot; latitude=&quot;40.095965&quot; longitude=&quot;-74.22213&quot; elevation=&quot;31.0&quot; timeZoneName=&quot;Eastern Standard Time&quot; timeZoneID=&quot;America/New_York&quot; timeZoneOffset=&quot;-5&quot;&gt;
-         * &lt;Sunrise&gt;2007-02-18T06:45:27-05:00&lt;/Sunrise&gt;
-         * &lt;TemporalHour&gt;PT54M17.529S&lt;/TemporalHour&gt;
+         * <AstronomicalTimes date=&quot;1969-02-08&quot; type=&quot;com.kosherjava.zmanim.AstronomicalCalendar algorithm=&quot;US Naval Almanac Algorithm&quot; location=&quot;Lakewood, NJ&quot; latitude=&quot;40.095965&quot; longitude=&quot;-74.22213&quot; elevation=&quot;31.0&quot; timeZoneName=&quot;Eastern Standard Time&quot; timeZoneID=&quot;America/New_York&quot; timeZoneOffset=&quot;-5&quot;>
+         * <Sunrise>2007-02-18T06:45:27-05:00</Sunrise>
+         * <TemporalHour>PT54M17.529S</TemporalHour>
          * ...
-         * &lt;/AstronomicalTimes&gt;
+         * </AstronomicalTimes>
         </pre> *
          *
          * @todo Add proper schema, and support for nulls. XSD duration (for solar hours), should probably return nil and not P.
          */
         fun toXML(astronomicalCalendar: AstronomicalCalendar): String {
             val geoLocation = astronomicalCalendar.geoLocation
-            val tz = geoLocation?.timeZone!!
-            val formatter: ZmanimFormatter = ZmanimFormatter(
+            val tz = geoLocation.timeZone!!
+            val formatter = ZmanimFormatter(
                 XSD_DURATION_FORMAT, SimpleDateFormat(
                     "yyyy-MM-dd'T'HH:mm:ss"
                 ), tz
@@ -440,13 +440,13 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
             }
             Collections.sort(durationList, Zman.DURATION_ORDER)
             for (i in durationList.indices) {
-                zman = durationList.get(i)
+                zman = durationList[i]
                 sb.append("\t<" + zman.label).append(">")
                 sb.append(formatter.format(zman.duration.toInt())).append("</").append(zman.label)
                     .append(">\n")
             }
             for (i in otherList.indices) { // will probably never enter this block
-                sb.append("\t").append(otherList.get(i)).append("\n")
+                sb.append("\t").append(otherList[i]).append("\n")
             }
             when (className) {
                 "com.kosherjava.zmanim.AstronomicalCalendar" -> {
@@ -517,7 +517,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
          */
         fun toJSON(astronomicalCalendar: AstronomicalCalendar): String {
             val geoLocation = astronomicalCalendar.geoLocation
-            val tz = geoLocation?.timeZone!!
+            val tz = geoLocation.timeZone!!
             val formatter = ZmanimFormatter(
                 XSD_DURATION_FORMAT, SimpleDateFormat(
                     "yyyy-MM-dd'T'HH:mm:ss"
@@ -590,7 +590,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
             var zman: Zman
             Collections.sort(dateList, Zman.DATE_ORDER)
             for (i in dateList.indices) {
-                zman = dateList.get(i)
+                zman = dateList[i]
                 sb.append("\t\"").append(zman.label).append("\":\"")
                 sb.append(formatter.formatDateTime(zman.zman, astronomicalCalendar.calendar))
                 sb.append("\",\n")

@@ -33,8 +33,7 @@ data class GeoLocation(
     /**
      * If this is ever set after the GeoLocation is set in the
      * [com.kosherjava.zmanim.AstronomicalCalendar], it is critical that
-     * [com.kosherjava.zmanim.AstronomicalCalendar.getCalendar].
-     * [setTimeZone(TimeZone)][java.util.Calendar.setTimeZone] be called in order for the
+     * [com.kosherjava.zmanim.AstronomicalCalendar.calendar].[setTimeZone(TimeZone)][java.util.Calendar.setTimeZone] be called in order for the
      * AstronomicalCalendar to output times in the expected offset. This situation will arise if the
      * AstronomicalCalendar is ever [cloned][com.kosherjava.zmanim.AstronomicalCalendar.clone].
      */
@@ -416,16 +415,16 @@ data class GeoLocation(
      * change) is:
      *
      * <pre>
-     * &lt;GeoLocation&gt;
-     * &lt;LocationName&gt;Lakewood, NJ&lt;/LocationName&gt;
-     * &lt;Latitude&gt;40.0828&amp;deg&lt;/Latitude&gt;
-     * &lt;Longitude&gt;-74.2094&amp;deg&lt;/Longitude&gt;
-     * &lt;Elevation&gt;0 Meters&lt;/Elevation&gt;
-     * &lt;TimezoneName&gt;America/New_York&lt;/TimezoneName&gt;
-     * &lt;TimeZoneDisplayName&gt;Eastern Standard Time&lt;/TimeZoneDisplayName&gt;
-     * &lt;TimezoneGMTOffset&gt;-5&lt;/TimezoneGMTOffset&gt;
-     * &lt;TimezoneDSTOffset&gt;1&lt;/TimezoneDSTOffset&gt;
-     * &lt;/GeoLocation&gt;
+     * <GeoLocation>
+     * <LocationName>Lakewood, NJ</LocationName>
+     * <Latitude>40.0828&amp;deg</Latitude>
+     * <Longitude>-74.2094&amp;deg</Longitude>
+     * <Elevation>0 Meters</Elevation>
+     * <TimezoneName>America/New_York</TimezoneName>
+     * <TimeZoneDisplayName>Eastern Standard Time</TimeZoneDisplayName>
+     * <TimezoneGMTOffset>-5</TimezoneGMTOffset>
+     * <TimezoneDSTOffset>1</TimezoneDSTOffset>
+     * </GeoLocation>
     </pre> *
      *
      * @return The XML formatted `String`.

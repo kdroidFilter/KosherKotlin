@@ -50,7 +50,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
 /**
  * An abstract class that all sun time calculating classes extend. This allows the algorithm used to be changed at
  * runtime, easily allowing comparison the results of using different algorithms.
- * @todo Consider methods that would allow atmospheric modeling. This can currently be adjusted by [ ][.setRefraction].
+ * @todo Consider methods that would allow atmospheric modeling. This can currently be adjusted by [refraction].
  *
  * @author  Eliyahu Hershfeld 2004 - 2023
  */

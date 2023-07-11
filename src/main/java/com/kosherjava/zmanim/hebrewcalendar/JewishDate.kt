@@ -143,7 +143,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         set(value) { gregorianMonthZeroBased = value - 1 }
 
     /**
-     * The Gregorian month (between 0-11). Like the java.util.Calendar, months are 0 based.
+     * The Gregorian month (between 0-11). Like the [java.util.Calendar], months are 0 based.
      * */
     var gregorianMonthZeroBased = 0
         private set
@@ -169,8 +169,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @return the number of days since January 1, 1
      */
     /** Returns the absolute date (days since January 1, 0001 on the Gregorian calendar).
-     * @see .getAbsDate
-     * @see .absDateToJewishDate
+     * @see absDate
+     * @see absDateToJewishDate
      */
     var absDate = 0
         private set
@@ -181,13 +181,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      */
     private fun absDateToDate(absDate: Int) {
         var year = absDate / 366 // Search forward year by year from approximate year
-        while (absDate >= gregorianDateToAbsDate(year + 1, 1, 1)) {
-            year++
-        }
+        while (absDate >= gregorianDateToAbsDate(year + 1, 1, 1)) year++
         var month = 1 // Search forward month by month from January
-        while (absDate > gregorianDateToAbsDate(year, month, getLastDayOfGregorianMonth(month, year))) {
-            month++
-        }
+        while (absDate > gregorianDateToAbsDate(year, month, getLastDayOfGregorianMonth(month, year))) month++
         val dayOfMonth = absDate - gregorianDateToAbsDate(year, month, 1) + 1
         setInternalGregorianDate(year, month, dayOfMonth)
     }
@@ -197,7 +193,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * cycle are leap years.
      *
      * @return true if it is a leap year
-     * @see .isJewishLeapYear
+     * @see isJewishLeapYear
      */
     val isJewishLeapYear: Boolean
         get() = isJewishLeapYear(jewishYear)
@@ -215,9 +211,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * Returns the number of days for the current year that the calendar is set to.
      *
      * @return the number of days for the Object's current Jewish year.
-     * @see .isCheshvanLong
-     * @see .isKislevShort
-     * @see .isJewishLeapYear
+     * @see isCheshvanLong
+     * @see isKislevShort
+     * @see isJewishLeapYear
      */
     val daysInJewishYear: Int
         get() = getDaysInJewishYear(jewishYear)
@@ -227,7 +223,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * name isLong is done since in a Kesidran (ordered) year Cheshvan is short.
      *
      * @return true if Cheshvan is long for the current year that the calendar is set to
-     * @see .isCheshvanLong
+     * @see isCheshvanLong
      */
     val isCheshvanLong: Boolean
         get() = isCheshvanLong(jewishYear)
@@ -243,13 +239,13 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
 
     /**
      * Returns the Cheshvan and Kislev kviah (whether a Jewish year is short, regular or long). It will return
-     * [.SHELAIMIM] if both cheshvan and kislev are 30 days, [.KESIDRAN] if Cheshvan is 29 days and Kislev
-     * is 30 days and [.CHASERIM] if both are 29 days.
+     * [SHELAIMIM] if both cheshvan and kislev are 30 days, [KESIDRAN] if Cheshvan is 29 days and Kislev
+     * is 30 days and [CHASERIM] if both are 29 days.
      *
-     * @return [.SHELAIMIM] if both cheshvan and kislev are 30 days, [.KESIDRAN] if Cheshvan is 29 days and
-     * Kislev is 30 days and [.CHASERIM] if both are 29 days.
-     * @see .isCheshvanLong
-     * @see .isKislevShort
+     * @return [SHELAIMIM] if both cheshvan and kislev are 30 days, [KESIDRAN] if Cheshvan is 29 days and
+     * Kislev is 30 days and [CHASERIM] if both are 29 days.
+     * @see isCheshvanLong
+     * @see isKislevShort
      */
     val cheshvanKislevKviah: Int
         get() = if (isCheshvanLong && !isKislevShort) SHELAIMIM
@@ -271,35 +267,30 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         // Approximation from below
         jewishYear = (absDate - JEWISH_EPOCH) / 366
         // Search forward for year from the approximation
-        while (absDate >= jewishDateToAbsDate(jewishYear + 1, TISHREI, 1)) {
-            jewishYear++
-        }
+        while (absDate >= jewishDateToAbsDate(jewishYear + 1, TISHREI, 1)) jewishYear++
         // Search forward for month from either Tishri or Nisan.
         jewishMonth =
             if (absDate < jewishDateToAbsDate(jewishYear, NISSAN, 1)) TISHREI /*Start at Tishri*/
             else NISSAN /*Start at Nisan*/
-        while (absDate > jewishDateToAbsDate(jewishYear, jewishMonth, daysInJewishMonth)) {
-            jewishMonth++
-        }
+        while (absDate > jewishDateToAbsDate(jewishYear, jewishMonth, daysInJewishMonth)) jewishMonth++
         // Calculate the day by subtraction
         jewishDay = absDate - jewishDateToAbsDate(jewishYear, jewishMonth, 1) + 1
     }
 
     /**
      * Returns the molad for a given year and month. Returns a JewishDate [Object] set to the date of the molad
-     * with the [hours][.getMoladHours], [minutes][.getMoladMinutes] and [ chalakim][.getMoladChalakim] set. In the current implementation, it sets the molad time based on a midnight date rollover. This
+     * with the [hours][moladHours], [minutes][moladMinutes] and [chalakim][moladChalakim] set.
+     * In the current implementation, it sets the molad time based on a midnight date rollover. This
      * means that Rosh Chodesh Adar II, 5771 with a molad of 7 chalakim past midnight on Shabbos 29 Adar I / March 5,
      * 2011 12:00 AM and 7 chalakim, will have the following values: hours: 0, minutes: 0, Chalakim: 7.
      *
-     * @return a JewishDate [Object] set to the date of the molad with the [hours][.getMoladHours],
-     * [minutes][.getMoladMinutes] and [chalakim][.getMoladChalakim] set.
+     * @return a JewishDate [Object] set to the date of the molad with the [hours][moladHours],
+     * [minutes][moladMinutes] and [chalakim][moladChalakim] set.
      */
     val molad: JewishDate
         get() {
             val moladDate = JewishDate(chalakimSinceMoladTohu)
-            if (moladDate.moladHours >= 6) {
-                moladDate.forward(Calendar.DATE, 1)
-            }
+            if (moladDate.moladHours >= 6) moladDate.forward(Calendar.DATE, 1)
             moladDate.moladHours = (moladDate.moladHours + 18) % 24
             return moladDate
         }
@@ -349,14 +340,14 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * the Jewish year
      * @param jewishMonth
      * the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
-     * constants [.NISSAN] ... [.ADAR] (or [.ADAR_II] for a leap year Adar II) to avoid any
+     * constants [NISSAN] ... [ADAR] (or [ADAR_II] for a leap year Adar II) to avoid any
      * confusion.
      * @param jewishDayOfMonth
-     * the Jewish day of month. If 30 is passed in for a month with only 29 days (for example [.IYAR],
-     * or [.KISLEV] in a year that [.isKislevShort]), the 29th (last valid date of the month)
+     * the Jewish day of month. If 30 is passed in for a month with only 29 days (for example [IYAR],
+     * or [KISLEV] in a year that [isKislevShort]), the 29th (last valid date of the month)
      * will be set
      * @throws IllegalArgumentException
-     * if the day of month is &lt; 1 or &gt; 30, or a year of &lt; 0 is passed in.
+     * if the day of month is < 1 or > 30, or a year of < 0 is passed in.
      */
     constructor(jewishYear: Int, jewishMonth: Int, jewishDayOfMonth: Int) {
         setJewishDate(jewishYear, jewishMonth, jewishDayOfMonth)
@@ -460,10 +451,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @param month
      * the Gregorian month. Like the Java Calendar, this class expects 0 for January
      * @param dayOfMonth
-     * the Gregorian day of month. If this is &gt; the number of days in the month/year, the last valid date of
+     * the Gregorian day of month. If this is > the number of days in the month/year, the last valid date of
      * the month will be set
      * @throws IllegalArgumentException
-     * if a year of &lt; 1, a month &lt; 0 or &gt; 11 or a day of month &lt; 1 is passed in
+     * if a year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in
      */
     fun setGregorianDate(year: Int, month: Int, dayOfMonth: Int) {
         validateGregorianDate(year, month, dayOfMonth)
@@ -502,14 +493,14 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * the Jewish year. The year can't be negative
      * @param month
      * the Jewish month starting with Nisan. A value of 1 is expected for Nissan ... 12 for Adar and 13 for
-     * Adar II. Use the constants [.NISSAN] ... [.ADAR] (or [.ADAR_II] for a leap year Adar
+     * Adar II. Use the constants [NISSAN] ... [ADAR] (or [ADAR_II] for a leap year Adar
      * II) to avoid any confusion.
      * @param dayOfMonth
      * the Jewish day of month. valid values are 1-30. If the day of month is set to 30 for a month that only
      * has 29 days, the day will be set as 29.
      * @throws IllegalArgumentException
-     * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month &lt; 1 or &gt; 12 (or 13 on a
-     * leap year) or the day of month is &lt; 1 or &gt; 30 is passed in
+     * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a
+     * leap year) or the day of month is < 1 or > 30 is passed in
      */
     fun setJewishDate(year: Int, month: Int, dayOfMonth: Int) {
         setJewishDate(year, month, dayOfMonth, 0, 0, 0)
@@ -522,7 +513,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * the Jewish year. The year can't be negative
      * @param month
      * the Jewish month starting with Nisan. A value of 1 is expected for Nissan ... 12 for Adar and 13 for
-     * Adar II. Use the constants [.NISSAN] ... [.ADAR] (or [.ADAR_II] for a leap year Adar
+     * Adar II. Use the constants [NISSAN] ... [ADAR] (or [ADAR_II] for a leap year Adar
      * II) to avoid any confusion.
      * @param dayOfMonth
      * the Jewish day of month. valid values are 1-30. If the day of month is set to 30 for a month that only
@@ -537,8 +528,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * used for larger numbers.
      *
      * @throws IllegalArgumentException
-     * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month &lt; 1 or &gt; 12 (or 13 on a
-     * leap year), the day of month is &lt; 1 or &gt; 30, an hour &lt; 0 or &gt; 23, a minute &lt; 0 &gt; 59 or chalakim &lt; 0 &gt;
+     * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a
+     * leap year), the day of month is < 1 or > 30, an hour < 0 or > 23, a minute < 0 > 59 or chalakim < 0 >
      * 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim into minutes (18
      * chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
      */
@@ -559,7 +550,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         moladChalakim = chalakim
         absDate = jewishDateToAbsDate(jewishYear, jewishMonth, jewishDay) // reset Gregorian date
         absDateToDate(absDate)
-        dayOfWeek = Math.abs(absDate % 7) + 1 // reset day of week
+        dayOfWeek = abs(absDate % 7) + 1 // reset day of week
     }
 
     /**
@@ -612,7 +603,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @throws IllegalArgumentException if the field is anything besides [Calendar.DATE], [Calendar.MONTH] or [Calendar.YEAR]
      * or if the amount is less than 1
      *
-     * @see .back
+     * @see back
      * @see Calendar.add
      * @see Calendar.roll
      */
@@ -674,7 +665,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
     /**
      * Forward the Jewish date by the number of months passed in.
      * FIXME: Deal with forwarding a date such as 30 Nisan by a month. 30 Iyar does not exist. This should be dealt with similar to
-     * the way that the Java Calendar behaves (not that simple since there is a difference between add() or roll().
+     * the way that the Java Calendar behaves (not that simple since there is a difference between [Calendar.add] or [Calendar.roll].
      *
      * @throws IllegalArgumentException if the amount is less than 1
      * @param amount the number of months to roll the month forward
@@ -686,8 +677,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
                 setJewishMonth(TISHREI)
                 setJewishYear(jewishYear + 1)
             } else if (
-                (!isJewishLeapYear && jewishMonth == ADAR)
-                        || (isJewishLeapYear && jewishMonth == ADAR_II)
+                (!isJewishLeapYear && jewishMonth == ADAR) ||
+                (isJewishLeapYear && jewishMonth == ADAR_II)
             ) setJewishMonth(NISSAN)
             else setJewishMonth(jewishMonth + 1)
         }
@@ -707,7 +698,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
     ` *
     </pre> *
      *
-     * @see .back
+     * @see back
      * @see Calendar.add
      * @see Calendar.roll
      */
@@ -739,11 +730,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         } else {
             jewishDay--
         }
-        if (dayOfWeek == 1) { // if first day of week, loop back to Saturday
-            dayOfWeek = 7
-        } else {
-            dayOfWeek--
-        }
+        // if first day of week, loop back to Saturday
+        if (dayOfWeek == 1) dayOfWeek = 7 else dayOfWeek--
         absDate-- // change the absolute date
     }
 
@@ -775,7 +763,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @param dayOfMonth
      * the Jewish day of month
      * @throws IllegalArgumentException
-     * if the day of month is &lt; 1 or &gt; 30 is passed in
+     * if the day of month is < 1 or > 30 is passed in
      */
     var jewishDayOfMonth: Int
         get() = jewishDay
@@ -790,7 +778,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * the Gregorian month
      *
      * @throws IllegalArgumentException
-     * if a month &lt; 0 or &gt; 11 is passed in
+     * if a month < 0 or > 11 is passed in
      */
     @JvmName("setGregorianMonthExternal")
     fun setGregorianMonth(month: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
@@ -804,7 +792,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @param year
      * the Gregorian year.
      * @throws IllegalArgumentException
-     * if a year of &lt; 1 is passed in
+     * if a year of < 1 is passed in
      */
     fun setGregorianYear(year: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         validateGregorianYear(year)
@@ -817,7 +805,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @param dayOfMonth
      * the Gregorian Day of month.
      * @throws IllegalArgumentException
-     * if the day of month of &lt; 1 is passed in
+     * if the day of month of < 1 is passed in
      */
     fun setGregorianDayOfMonth(dayOfMonth: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         validateGregorianDayOfMonth(dayOfMonth)
@@ -831,7 +819,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * the Jewish month from 1 to 12 (or 13 years in a leap year). The month count starts with 1 for Nisan
      * and goes to 13 for Adar II
      * @throws IllegalArgumentException
-     * if a month &lt; 1 or &gt; 12 (or 13 on a leap year) is passed in
+     * if a month < 1 or > 12 (or 13 on a leap year) is passed in
      */
     fun setJewishMonth(month: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         setJewishDate(jewishYear, month, jewishDay)
@@ -843,8 +831,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @param year
      * the Jewish year
      * @throws IllegalArgumentException
-     * if a year of &lt; 3761 is passed in. The same will happen if the year is 3761 and the month and day
-     * previously set are &lt; 18 Teves (preior to Jan 1, 1 AD)
+     * if a year of < 3761 is passed in. The same will happen if the year is 3761 and the month and day
+     * previously set are < 18 Teves (preior to Jan 1, 1 AD)
      */
     fun setJewishYear(year: Int) { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         setJewishDate(year, jewishMonth, jewishDay)
@@ -880,38 +868,38 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
     companion object {
         /**
          * Value of the month field indicating Nissan, the first numeric month of the year in the Jewish calendar. With the
-         * year starting at [TISHREI], it would actually be the 7th (or 8th in a [leap][.isJewishLeapYear]) month of the year.
+         * year starting at [TISHREI], it would actually be the 7th (or 8th in a [leap][isJewishLeapYear]) month of the year.
          */
         const val NISSAN = 1
 
         /**
          * Value of the month field indicating Iyar, the second numeric month of the year in the Jewish calendar. With the
-         * year starting at [TISHREI], it would actually be the 8th (or 9th in a [leap][.isJewishLeapYear]) month of the year.
+         * year starting at [TISHREI], it would actually be the 8th (or 9th in a [leap][isJewishLeapYear]) month of the year.
          */
         const val IYAR = 2
 
         /**
          * Value of the month field indicating Sivan, the third numeric month of the year in the Jewish calendar. With the
-         * year starting at [TISHREI], it would actually be the 9th (or 10th in a [leap][.isJewishLeapYear]) month of the year.
+         * year starting at [TISHREI], it would actually be the 9th (or 10th in a [leap][isJewishLeapYear]) month of the year.
          */
         const val SIVAN = 3
 
         /**
          * Value of the month field indicating Tammuz, the fourth numeric month of the year in the Jewish calendar. With the
-         * year starting at [TISHREI], it would actually be the 10th (or 11th in a [leap][.isJewishLeapYear]) month of the year.
+         * year starting at [TISHREI], it would actually be the 10th (or 11th in a [leap][isJewishLeapYear]) month of the year.
          */
         const val TAMMUZ = 4
 
         /**
          * Value of the month field indicating Av, the fifth numeric month of the year in the Jewish calendar. With the year
-         * starting at [TISHREI], it would actually be the 11th (or 12th in a [leap year][.isJewishLeapYear])
+         * starting at [TISHREI], it would actually be the 11th (or 12th in a [leap year][isJewishLeapYear])
          * month of the year.
          */
         const val AV = 5
 
         /**
          * Value of the month field indicating Elul, the sixth numeric month of the year in the Jewish calendar. With the
-         * year starting at [TISHREI], it would actually be the 12th (or 13th in a [leap][.isJewishLeapYear]) month of the year.
+         * year starting at [TISHREI], it would actually be the 12th (or 13th in a [leap][isJewishLeapYear]) month of the year.
          */
         const val ELUL = 6
 
@@ -946,15 +934,15 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         const val SHEVAT = 11
 
         /**
-         * Value of the month field indicating Adar (or Adar I in a [leap year][.isJewishLeapYear]), the twelfth
-         * numeric month of the year in the Jewish calendar. With the year starting at [.TISHREI], it would actually
+         * Value of the month field indicating Adar (or Adar I in a [leap year][isJewishLeapYear]), the twelfth
+         * numeric month of the year in the Jewish calendar. With the year starting at [TISHREI], it would actually
          * be the 6th month of the year.
          */
         const val ADAR = 12
 
         /**
          * Value of the month field indicating Adar II, the leap (intercalary or embolismic) thirteenth (Undecimber) numeric
-         * month of the year added in Jewish [leap year][.isJewishLeapYear]). The leap years are years 3, 6, 8, 11,
+         * month of the year added in Jewish [leap year][isJewishLeapYear]). The leap years are years 3, 6, 8, 11,
          * 14, 17 and 19 of a 19 year cycle. With the year starting at [TISHREI], it would actually be the 7th month
          * of the year.
          */
@@ -986,25 +974,25 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         private const val CHALAKIM_MOLAD_TOHU = 31524
 
         /**
-         * A short year where both [.CHESHVAN] and [.KISLEV] are 29 days.
+         * A short year where both [CHESHVAN] and [KISLEV] are 29 days.
          *
-         * @see .getCheshvanKislevKviah
+         * @see cheshvanKislevKviah
          * @see HebrewDateFormatter.getFormattedKviah
          */
         const val CHASERIM = 0
 
         /**
-         * An ordered year where [.CHESHVAN] is 29 days and [.KISLEV] is 30 days.
+         * An ordered year where [CHESHVAN] is 29 days and [.KISLEV] is 30 days.
          *
-         * @see .getCheshvanKislevKviah
+         * @see cheshvanKislevKviah
          * @see HebrewDateFormatter.getFormattedKviah
          */
         const val KESIDRAN = 1
 
         /**
-         * A long year where both [.CHESHVAN] and [.KISLEV] are 30 days.
+         * A long year where both [CHESHVAN] and [KISLEV] are 30 days.
          *
-         * @see .getCheshvanKislevKviah
+         * @see cheshvanKislevKviah
          * @see HebrewDateFormatter.getFormattedKviah
          */
         const val SHELAIMIM = 2
@@ -1054,20 +1042,20 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @param year
          * the Jewish year.
          * @return true if it is a leap year
-         * @see .isJewishLeapYear
+         * @see isJewishLeapYear
          */
         @JvmName("isJewishLeapYearFunc")
         fun isJewishLeapYear(year: Int): Boolean = ((7 * year) + 1) % 19 < 7
         val Int.isJewishLeapYear get() = isJewishLeapYear(this)
 
         /**
-         * Returns the last month of a given Jewish year. This will be 12 on a non [leap year][.isJewishLeapYear]
+         * Returns the last month of a given Jewish year. This will be 12 on a non [leap year][isJewishLeapYear]
          * or 13 on a leap year.
          *
          * @param year
          * the Jewish year.
          * @return 12 on a non leap year or 13 on a leap year
-         * @see .isJewishLeapYear
+         * @see isJewishLeapYear
          */
         private fun getLastMonthOfJewishYear(year: Int): Int = if (isJewishLeapYear(year)) ADAR_II else ADAR
 
@@ -1192,31 +1180,31 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
 
         /**
          * Validates the components of a Jewish date for validity. It will throw an [IllegalArgumentException] if the
-         * Jewish date is earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month &lt; 1 or &gt; 12 (or 13 on a
-         * [leap year][.isJewishLeapYear]), the day of month is &lt; 1 or &gt; 30, an hour &lt; 0 or &gt; 23, a minute &lt; 0
-         * or &gt; 59 or chalakim &lt; 0 or &gt; 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim into
+         * Jewish date is earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a
+         * [leap year][isJewishLeapYear]), the day of month is < 1 or > 30, an hour < 0 or > 23, a minute < 0
+         * or > 59 or chalakim < 0 or > 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim into
          * minutes (18 chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793/TaShTzaG).
          *
          * @param year
-         * the Jewish year to validate. It will reject any year &lt;= 3761 (lower than the year 1 Gregorian).
+         * the Jewish year to validate. It will reject any year <= 3761 (lower than the year 1 Gregorian).
          * @param month
-         * the Jewish month to validate. It will reject a month &lt; 1 or &gt; 12 (or 13 on a leap year) .
+         * the Jewish month to validate. It will reject a month < 1 or > 12 (or 13 on a leap year) .
          * @param dayOfMonth
-         * the day of the Jewish month to validate. It will reject any value &lt; 1 or &gt; 30 TODO: check calling
+         * the day of the Jewish month to validate. It will reject any value < 1 or > 30 TODO: check calling
          * methods to see if there is any reason that the class can validate that 30 is invalid for some months.
          * @param hours
-         * the hours (for molad calculations). It will reject an hour &lt; 0 or &gt; 23
+         * the hours (for molad calculations). It will reject an hour < 0 or > 23
          * @param minutes
-         * the minutes (for molad calculations). It will reject a minute &lt; 0 or &gt; 59
+         * the minutes (for molad calculations). It will reject a minute < 0 or > 59
          * @param chalakim
-         * the chalakim/parts (for molad calculations). It will reject a chalakim &lt; 0 or &gt; 17. For larger numbers
+         * the chalakim/parts (for molad calculations). It will reject a chalakim < 0 or > 17. For larger numbers
          * such as 793 (TaShTzaG) break the chalakim into minutes (18 chalakim per minutes, so it would be 44
          * minutes and 1 chelek in the case of 793/TaShTzaG)
          *
          * @throws IllegalArgumentException
-         * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month &lt; 1 or &gt; 12 (or 13 on a
-         * leap year), the day of month is &lt; 1 or &gt; 30, an hour &lt; 0 or &gt; 23, a minute &lt; 0 or &gt; 59 or
-         * chalakim &lt; 0 or &gt; 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim
+         * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a
+         * leap year), the day of month is < 1 or > 30, an hour < 0 or > 23, a minute < 0 or > 59 or
+         * chalakim < 0 or > 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim
          * into minutes (18 chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
          */
         private fun validateJewishDate(
@@ -1245,22 +1233,22 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
 
         /**
          * Validates the components of a Gregorian date for validity. It will throw an [IllegalArgumentException] if a
-         * year of &lt; 1, a month &lt; 0 or &gt; 11 or a day of month &lt; 1 is passed in.
+         * year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in.
          *
          * @param year
-         * the Gregorian year to validate. It will reject any year &lt; 1.
+         * the Gregorian year to validate. It will reject any year < 1.
          * @param month
          * the Gregorian month number to validate. It will enforce that the month is between 0 - 11 like a
          * [GregorianCalendar], where [Calendar.JANUARY] has a value of 0.
          * @param dayOfMonth
-         * the day of the Gregorian month to validate. It will reject any value &lt; 1, but will allow values &gt; 31
+         * the day of the Gregorian month to validate. It will reject any value < 1, but will allow values > 31
          * since calling methods will simply set it to the maximum for that month. TODO: check calling methods to
-         * see if there is any reason that the class needs days &gt; the maximum.
+         * see if there is any reason that the class needs days > the maximum.
          * @throws IllegalArgumentException
-         * if a year of &lt; 1, a month &lt; 0 or &gt; 11 or a day of month &lt; 1 is passed in
-         * @see .validateGregorianYear
-         * @see .validateGregorianMonth
-         * @see .validateGregorianDayOfMonth
+         * if a year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in
+         * @see validateGregorianYear
+         * @see validateGregorianMonth
+         * @see validateGregorianDayOfMonth
          */
         private fun validateGregorianDate(year: Int, month: Int, dayOfMonth: Int) {
             validateGregorianMonth(month)
@@ -1283,9 +1271,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * Validates a Gregorian day of month for validity.
          *
          * @param dayOfMonth
-         * the day of the Gregorian month to validate. It will reject any value &lt; 1, but will allow values &gt; 31
+         * the day of the Gregorian month to validate. It will reject any value < 1, but will allow values > 31
          * since calling methods will simply set it to the maximum for that month. TODO: check calling methods to
-         * see if there is any reason that the class needs days &gt; the maximum.
+         * see if there is any reason that the class needs days > the maximum.
          */
         private fun validateGregorianDayOfMonth(dayOfMonth: Int) {
             require(dayOfMonth > 0) { "The day of month can't be less than 1. $dayOfMonth is invalid." }
@@ -1295,7 +1283,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * Validates a Gregorian year for validity.
          *
          * @param year
-         * the Gregorian year to validate. It will reject any year &lt; 1.
+         * the Gregorian year to validate. It will reject any year < 1.
          */
         private fun validateGregorianYear(year: Int) {
             require(year >= 1) { "Years < 1 can't be calculated. $year is invalid." }
@@ -1307,8 +1295,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @param year
          * the Jewish year
          * @return the number of days for a given Jewish year.
-         * @see .isCheshvanLong
-         * @see .isKislevShort
+         * @see isCheshvanLong
+         * @see isKislevShort
          */
         @JvmName("getDaysInJewishYearFunc")
         fun getDaysInJewishYear(year: Int): Int {
@@ -1323,8 +1311,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @param year
          * the year
          * @return true if Cheshvan is long in Jewish year.
-         * @see .isCheshvanLong
-         * @see .getCheshvanKislevKviah
+         * @see isCheshvanLong
+         * @see getCheshvanKislevKviah
          */
         @JvmName("isCheshvanLongFunc")
         fun isCheshvanLong(year: Int): Boolean = getDaysInJewishYear(year) % 10 == 5
@@ -1337,8 +1325,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @param year
          * the Jewish year
          * @return true if Kislev is short for the given Jewish year.
-         * @see .isKislevShort
-         * @see .getCheshvanKislevKviah
+         * @see isKislevShort
+         * @see cheshvanKislevKviah
          */
         @JvmName("isKislevShortFunc")
         fun isKislevShort(year: Int): Boolean = getDaysInJewishYear(year) % 10 == 3
@@ -1411,16 +1399,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
             // Before Tishrei (from Nissan to Tishrei), add days in prior months
             if (month < TISHREI) {
                 // this year before and after Nisan.
-                for (m in TISHREI..getLastMonthOfJewishYear(year)) {
-                    elapsedDays += getDaysInJewishMonth(m, year)
-                }
-                for (m in NISSAN until month) {
-                    elapsedDays += getDaysInJewishMonth(m, year)
-                }
+                for (m in TISHREI..getLastMonthOfJewishYear(year)) elapsedDays += getDaysInJewishMonth(m, year)
+                for (m in NISSAN until month) elapsedDays += getDaysInJewishMonth(m, year)
             } else { // Add days in prior months this year
-                for (m in TISHREI until month) {
-                    elapsedDays += getDaysInJewishMonth(m, year)
-                }
+                for (m in TISHREI until month) elapsedDays += getDaysInJewishMonth(m, year)
             }
             return elapsedDays
         }

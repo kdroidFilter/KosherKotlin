@@ -80,12 +80,8 @@ class NOAACalculator : AstronomicalCalculator() {
         sunrise /= 60
 
         // ensure that the time is >= 0 and < 24
-        while (sunrise < 0.0) {
-            sunrise += 24.0
-        }
-        while (sunrise >= 24.0) {
-            sunrise -= 24.0
-        }
+        while (sunrise < 0.0) sunrise += 24.0
+        while (sunrise >= 24.0) sunrise -= 24.0
         return sunrise
     }
 
@@ -135,7 +131,7 @@ class NOAACalculator : AstronomicalCalculator() {
         val julianDay: Double = getJulianDay(calendar)
         val julianCenturies: Double = getJulianCenturiesFromJulianDay(julianDay)
         var noon: Double = getSolarNoonUTC(julianCenturies, -geoLocation.longitude)
-        noon = noon / 60
+        noon /= 60
 
         // ensure that the time is >= 0 and < 24
         while (noon < 0.0) {

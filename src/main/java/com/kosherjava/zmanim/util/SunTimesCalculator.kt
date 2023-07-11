@@ -60,7 +60,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
  */
 class SunTimesCalculator : AstronomicalCalculator() {
     /**
-     * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getCalculatorName
+     * @see getCalculatorName
      */
     override val calculatorName: String
         get() {
@@ -212,7 +212,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
 
         /**
          * @param sunMeanAnomaly the Sun's mean anomaly in degrees
-         * @return the Sun's true longitude in degrees. The result is an angle &gt;= 0 and &lt;= 360.
+         * @return the Sun's true longitude in degrees. The result is an angle >= 0 and <= 360.
          */
         private fun getSunTrueLongitude(sunMeanAnomaly: Double): Double {
             var l: Double =
@@ -230,8 +230,8 @@ class SunTimesCalculator : AstronomicalCalculator() {
 
         /**
          * Calculates the Sun's right ascension in hours.
-         * @param sunTrueLongitude the Sun's true longitude in degrees &gt; 0 and &lt; 360.
-         * @return the Sun's right ascension in hours in angles &gt; 0 and &lt; 360.
+         * @param sunTrueLongitude the Sun's true longitude in degrees > 0 and < 360.
+         * @return the Sun's right ascension in hours in angles > 0 and < 360.
          */
         private fun getSunRightAscensionHours(sunTrueLongitude: Double): Double {
             val a: Double = 0.91764 * tanDeg(sunTrueLongitude)
