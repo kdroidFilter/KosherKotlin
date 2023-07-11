@@ -658,7 +658,6 @@ class JewishCalendar : JewishDate {
         get() {
             val day = jewishDayOfMonth
             val dayOfWeek = dayOfWeek
-            val NO_HOLIDAY = -1
             when (jewishMonth) {
                 NISSAN -> {
                     return when {
@@ -1759,6 +1758,9 @@ class JewishCalendar : JewishDate {
     }
 
     companion object {
+        /** value returned by [yomTovIndex] to indicate no holiday. */
+        const val NO_HOLIDAY = -1
+
         /** The 14th day of Nissan, the day before of Pesach (Passover). */
         const val EREV_PESACH = 0
 
