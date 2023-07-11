@@ -115,11 +115,11 @@ object YomiCalculator {
             "$calendar is prior to organized Daf Yomi Bavli cycles that started on $dafYomiStartDay"
         }
         if (calendar == shekalimChangeDay || calendar.after(shekalimChangeDay)) {
-            cycleNo = 8 + ((julianDay - shekalimJulianChangeDay) / 2711)
-            dafNo = ((julianDay - shekalimJulianChangeDay) % 2711)
+            cycleNo = 8 + (julianDay - shekalimJulianChangeDay) / 2711
+            dafNo = (julianDay - shekalimJulianChangeDay) % 2711
         } else {
-            cycleNo = 1 + ((julianDay - dafYomiJulianStartDay) / 2702)
-            dafNo = ((julianDay - dafYomiJulianStartDay) % 2702)
+            cycleNo = 1 + (julianDay - dafYomiJulianStartDay) / 2702
+            dafNo = (julianDay - dafYomiJulianStartDay) % 2702
         }
         var total = 0
         var masechta = -1
