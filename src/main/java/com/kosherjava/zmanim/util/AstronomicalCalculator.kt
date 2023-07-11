@@ -15,37 +15,9 @@
  */
 package com.kosherjava.zmanim.util
 
-import com.kosherjava.zmanim.util.ZmanimFormatter
-import java.util.TimeZone
-import java.lang.StringBuffer
-import com.kosherjava.zmanim.util.Zman
-import java.lang.IllegalArgumentException
-import com.kosherjava.zmanim.util.GeoLocation
-import java.lang.StringBuilder
 import java.lang.CloneNotSupportedException
-import com.kosherjava.zmanim.util.AstronomicalCalculator
 import java.util.Calendar
-import com.kosherjava.zmanim.util.NOAACalculator
-import java.text.SimpleDateFormat
-import java.text.DecimalFormat
-import java.text.DateFormat
-import java.util.Collections
-import com.kosherjava.zmanim.util.GeoLocationUtils
-import com.kosherjava.zmanim.util.SunTimesCalculator
-import com.kosherjava.zmanim.hebrewcalendar.Daf
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate
-import java.time.LocalDate
-import java.util.GregorianCalendar
-import com.kosherjava.zmanim.hebrewcalendar.HebrewDateFormatter
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
-import com.kosherjava.zmanim.hebrewcalendar.YomiCalculator
-import com.kosherjava.zmanim.hebrewcalendar.YerushalmiYomiCalculator
-import java.util.EnumMap
-import com.kosherjava.zmanim.AstronomicalCalendar
-import com.kosherjava.zmanim.ZmanimCalendar
-import java.math.BigDecimal
-import com.kosherjava.zmanim.ComplexZmanimCalendar
+import kotlin.math.acos
 
 /**
  * An abstract class that all sun time calculating classes extend. This allows the algorithm used to be changed at
@@ -230,10 +202,12 @@ abstract class AstronomicalCalculator : Cloneable {
      * elevation in Meters.
      * @return the adjusted zenith
      */
-    fun getElevationAdjustment(elevation: Double): Double {
-        val elevationAdjustment: Double = Math.toDegrees(Math.acos(earthRadius / (earthRadius + (elevation / 1000))))
-        return elevationAdjustment
-    }
+    fun getElevationAdjustment(elevation: Double): Double =
+        Math.toDegrees(
+            acos(
+                earthRadius / (earthRadius + (elevation / 1000))
+            )
+        )
 
     /**
      * Adjusts the zenith of astronomical sunrise and sunset to account for solar refraction, solar radius and
@@ -265,33 +239,28 @@ abstract class AstronomicalCalculator : Cloneable {
      * sunrise and sunset (if the zenith == 90)
      * @see .getElevationAdjustment
      */
-    fun adjustZenith(zenith: Double, elevation: Double): Double {
-        var adjustedZenith: Double = zenith
-        if (zenith == GEOMETRIC_ZENITH) { // only adjust if it is exactly sunrise or sunset
-            adjustedZenith = zenith + (solarRadius + refraction + getElevationAdjustment(elevation))
-        }
-        return adjustedZenith
-    }
+    fun adjustZenith(zenith: Double, elevation: Double): Double = zenith
+        .takeUnless { it == GEOMETRIC_ZENITH } ?: // only adjust if it is exactly sunrise or sunset
+        (zenith + solarRadius + refraction + getElevationAdjustment(elevation))
+
 
     /**
      * @see Object.clone
      * @since 1.1
      */
     public override fun clone(): Any {
-        var clone: AstronomicalCalculator? = null
-        try {
-            clone = super.clone() as AstronomicalCalculator
+        return try {
+            super.clone() as AstronomicalCalculator
         } catch (cnse: CloneNotSupportedException) {
             print("Required by the compiler. Should never be reached since we implement clone()")
         }
-        return (clone)!!
     }
 
     companion object {
         /**
          * The zenith of astronomical sunrise and sunset. The sun is 90 from the vertical 0
          */
-        private val GEOMETRIC_ZENITH: Double = 90.0
+        private const val GEOMETRIC_ZENITH: Double = 90.0
 
         /**
          * Returns the default class for calculating sunrise and sunset. This is currently the [NOAACalculator],
@@ -301,8 +270,6 @@ abstract class AstronomicalCalculator : Cloneable {
          * implementation the default calculator returned is the [NOAACalculator].
          */
         val default: AstronomicalCalculator
-            get() {
-                return NOAACalculator()
-            }
+            get() = NOAACalculator()
     }
 }
