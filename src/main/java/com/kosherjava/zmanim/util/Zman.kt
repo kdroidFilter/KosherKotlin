@@ -99,7 +99,7 @@ data class Zman(
      * *shaah zmanis* base times such as [<em>shaah Zmanis GRA</em>][com.kosherjava.zmanim.ZmanimCalendar.shaahZmanisGra] or
      * [<em>shaah Zmanis 16.1&amp;deg;</em>][com.kosherjava.zmanim.ComplexZmanimCalendar.shaahZmanis16Point1Degrees]).
      */
-    var duration: Long = 0,
+    var duration: Long? = null,
     /**
      * Returns the longer description or explanation of a *zman*. There is no default value for this and it must be set using
      * [description]
@@ -117,6 +117,9 @@ data class Zman(
      */
     var description: String? = null,
 ) {
+    init {
+        require(duration != null || zman != null) { "Either zman or duration must be non-null." }
+    }
 
     /**
      * The constructor setting a [Date] based *zman* and a label.
