@@ -108,7 +108,7 @@ class Time {
 
     /**
      * A constructor that sets the time by milliseconds. The milliseconds are converted to hours, minutes, seconds
-     * and milliseconds. If the milliseconds are negative it will call [.setIsNegative].
+     * and milliseconds. If the milliseconds are negative it will call [isNegative].
      * @param millis the milliseconds to set.
      */
     constructor(millis: Int) {

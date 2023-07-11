@@ -15,10 +15,10 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
 import java.util.EnumMap
+import kotlin.text.StringBuilder
 
 /**
  * The HebrewDateFormatter class formats a [JewishDate].
@@ -82,8 +82,7 @@ class HebrewDateFormatter {
      * כא שבט תשך). Single digit days or month or years such as כ׳
      * שבט ו׳ אלפים show the use of the Geresh.
      *
-     * @param useGershGershayim
-     * set to false to omit the Geresh ׳ and Gershayim ״ in formatting
+     * Set to false to omit the Geresh ׳ and Gershayim ״ in formatting
      */
     var isUseGershGershayim: Boolean = true
     /**
@@ -100,8 +99,6 @@ class HebrewDateFormatter {
      * ראשון or short such as א when formatting the day of week in
      * [Hebrew][isHebrewFormat].
      *
-     * @param longWeekFormat
-     * the longWeekFormat to set
      */
     var isLongWeekFormat: Boolean = true
         set(longWeekFormat) {
@@ -144,7 +141,7 @@ class HebrewDateFormatter {
     /**
      * List of transliterated parshiyos using the default *Ashkenazi* pronunciation.&nbsp; The formatParsha method
      * uses this for transliterated *parsha* formatting.&nbsp; This list can be overridden (for *Sephardi*
-     * English transliteration for example) by setting the [.setTransliteratedParshiosList].&nbsp; The list
+     * English transliteration for example) by setting the [transliteratedParshiosList].&nbsp; The list
      * includes double and special *parshiyos* is set as "*Bereshis, Noach, Lech Lecha, Vayera, Chayei Sara,
      * Toldos, Vayetzei, Vayishlach, Vayeshev, Miketz, Vayigash, Vayechi, Shemos, Vaera, Bo, Beshalach, Yisro, Mishpatim,
      * Terumah, Tetzaveh, Ki Sisa, Vayakhel, Pekudei, Vayikra, Tzav, Shmini, Tazria, Metzora, Achrei Mos, Kedoshim, Emor,
@@ -335,6 +332,7 @@ class HebrewDateFormatter {
             Parsha.NACHAMU to "\u05E0\u05D7\u05DE\u05D5"
         )
     )
+
     /**
      * Returns the list of months transliterated into Latin chars. The default list of months uses Ashkenazi
      * pronunciation in typical American English spelling. This list has a length of 14 with 3 variations for Adar -
@@ -343,85 +341,51 @@ class HebrewDateFormatter {
      * @return the list of months beginning in Nissan and ending in in "Adar", "Adar II", "Adar I". The default list is
      * currently ["Nissan", "Iyar", "Sivan", "Tammuz", "Av", "Elul", "Tishrei", "Cheshvan", "Kislev", "Teves",
      * "Shevat", "Adar", "Adar II", "Adar I"].
-     * @see .setTransliteratedMonthList
-     */
-    /**
-     * Setter method to allow overriding of the default list of months transliterated into into Latin chars. The default
-     * uses Ashkenazi American English transliteration.
-     *
-     * @param transliteratedMonths
-     * an array of 14 month names that defaults to ["Nissan", "Iyar", "Sivan", "Tamuz", "Av", "Elul", "Tishrei",
-     * "Heshvan", "Kislev", "Tevet", "Shevat", "Adar", "Adar II", "Adar I"].
-     * @see .getTransliteratedMonthList
-     */
-    /**
-     * Transliterated month names.&nbsp; Defaults to ["Nissan", "Iyar", "Sivan", "Tammuz", "Av", "Elul", "Tishrei", "Cheshvan",
-     * "Kislev", "Teves", "Shevat", "Adar", "Adar II", "Adar I" ].
-     * @see .getTransliteratedMonthList
-     * @see .setTransliteratedMonthList
      */
     var transliteratedMonthList: Array<String> = arrayOf(
         "Nissan", "Iyar", "Sivan", "Tammuz", "Av", "Elul", "Tishrei", "Cheshvan",
         "Kislev", "Teves", "Shevat", "Adar", "Adar II", "Adar I"
     )
     /**
-     * Returns the Hebrew Omer prefix.&nbsp; By default it is the letter &#x05D1; producing
-     * &#x05D1;&#x05E2;&#x05D5;&#x05DE;&#x05E8;, but it can be set to &#x05DC; to produce
-     * &#x05DC;&#x05E2;&#x05D5;&#x05DE;&#x05E8; (or any other prefix) using the [.setHebrewOmerPrefix].
+     * Returns the Hebrew Omer prefix.  By default it is the letter ב producing
+     * בעומר, but it can be set to ל to produce
+     * לעומר (or any other prefix) using the setter for [hebrewOmerPrefix].
      *
-     * @return the hebrewOmerPrefix
+     * @return the [hebrewOmerPrefix]
      *
-     * @see .hebrewOmerPrefix
-     *
-     * @see .setHebrewOmerPrefix
-     * @see .formatOmer
+     * @see formatOmer
      */
     /**
-     * Method to set the Hebrew Omer prefix.&nbsp; By default it is the letter &#x05D1; producing
-     * &#x05D1;&#x05E2;&#x05D5;&#x05DE;&#x05E8;, but it can be set to &#x05DC; to produce
-     * &#x05DC;&#x05E2;&#x05D5;&#x05DE;&#x05E8; (or any other prefix)
+     * Method to set the Hebrew Omer prefix.  By default it is the letter ב producing
+     * בעומר, but it can be set to ל to produce
+     * לעומר (or any other prefix)
      * @param hebrewOmerPrefix
-     * the hebrewOmerPrefix to set. You can use the Unicode &#92;u05DC to set it to &#x5DC;.
-     * @see .hebrewOmerPrefix
-     *
-     * @see .getHebrewOmerPrefix
-     * @see .formatOmer
+     * the hebrewOmerPrefix to set. You can use the Unicode \u05DC to set it to ל.
+     * @see formatOmer
      */
     /**
-     * The Hebrew omer prefix charachter. It defaults to &#x05D1; producing &#x05D1;&#x05E2;&#x05D5;&#x05DE;&#x05E8;,
-     * but can be set to &#x05DC; to produce &#x05DC;&#x05E2;&#x05D5;&#x05DE;&#x05E8; (or any other prefix).
-     * @see .getHebrewOmerPrefix
-     * @see .setHebrewOmerPrefix
+     * The Hebrew omer prefix character. It defaults to ב producing בעומר,
+     * but can be set to ל to produce לעומר (or any other prefix).
      */
-    var hebrewOmerPrefix: String = "\u05D1"
+    var hebrewOmerPrefix: String = "ב"
+
     /**
      * Returns the day of Shabbos transliterated into Latin chars. The default uses Ashkenazi pronunciation "Shabbos".
-     * This can be overwritten using the [.setTransliteratedShabbosDayOfWeek]
+     * This can be overwritten using the [transliteratedShabbosDayOfWeek] to alternate spellings such as "Shabbat" used by
+     * the [formatDayOfWeek]
      *
      * @return the transliteratedShabbos. The default list of months uses Ashkenazi pronunciation "Shabbos".
-     * @see .setTransliteratedShabbosDayOfWeek
-     * @see .formatDayOfWeek
-     */
-    /**
-     * Setter to override the default transliterated name of "Shabbos" to alternate spelling such as "Shabbat" used by
-     * the [.formatDayOfWeek]
-     *
-     * @param transliteratedShabbos
-     * the transliteratedShabbos to set
-     *
-     * @see .getTransliteratedShabbosDayOfWeek
-     * @see .formatDayOfWeek
-     */
-    /**
-     * The default value for formatting Shabbos (Saturday).&nbsp; Defaults to Shabbos.
-     * @see .getTransliteratedShabbosDayOfWeek
-     * @see .setTransliteratedShabbosDayOfWeek
+     * @see formatDayOfWeek
      */
     var transliteratedShabbosDayOfWeek: String = "Shabbos"
+
     /**
      * Returns the list of holidays transliterated into Latin chars. This is used by the
-     * [.formatYomTov] when formatting the Yom Tov String. The default list of months uses
+     * [formatYomTov] when formatting the Yom Tov String. The default list of months uses
      * Ashkenazi pronunciation in typical American English spelling.
+     *
+     * When setting, ensure that the sequence exactly matches the list returned by the
+     * default
      *
      * @return the list of transliterated holidays. The default list is currently ["Erev Pesach", "Pesach",
      * "Chol Hamoed Pesach", "Pesach Sheni", "Erev Shavuos", "Shavuos", "Seventeenth of Tammuz", "Tishah B'Av",
@@ -431,20 +395,9 @@ class HebrewDateFormatter {
      * "Purim Katan", "Rosh Chodesh", "Yom HaShoah", "Yom Hazikaron", "Yom Ha'atzmaut", "Yom Yerushalayim",
      * "Lag B'Omer","Shushan Purim Katan","Isru Chag"].
      *
-     * @see .setTransliteratedMonthList
-     * @see .formatYomTov
-     * @see .isHebrewFormat
-     */
-    /**
-     * Sets the list of holidays transliterated into Latin chars. This is used by the
-     * [.formatYomTov] when formatting the Yom Tov String.
-     *
-     * @param transliteratedHolidays
-     * the transliteratedHolidays to set. Ensure that the sequence exactly matches the list returned by the
-     * default
-     */
-    /**
-     * See [.getTransliteratedHolidayList] and [.setTransliteratedHolidayList].
+     * @see transliteratedMonthList
+     * @see formatYomTov
+     * @see isHebrewFormat
      */
     var transliteratedHolidayList: Array<String> = arrayOf(
         "Erev Pesach", "Pesach", "Chol Hamoed Pesach", "Pesach Sheni",
@@ -457,38 +410,38 @@ class HebrewDateFormatter {
     )
 
     /**
-     * Hebrew holiday array in the following format.<br></br>`["&#x05E2;&#x05E8;&#x05D1; &#x05E4;&#x05E1;&#x05D7;",
-     * "&#x05E4;&#x05E1;&#x05D7;", "&#x05D7;&#x05D5;&#x05DC; &#x05D4;&#x05DE;&#x05D5;&#x05E2;&#x05D3;
-     * &#x05E4;&#x05E1;&#x05D7;", "&#x05E4;&#x05E1;&#x05D7; &#x05E9;&#x05E0;&#x05D9;", "&#x05E2;&#x05E8;&#x05D1;
-     * &#x05E9;&#x05D1;&#x05D5;&#x05E2;&#x05D5;&#x05EA;", "&#x05E9;&#x05D1;&#x05D5;&#x05E2;&#x05D5;&#x05EA;",
-     * "&#x05E9;&#x05D1;&#x05E2;&#x05D4; &#x05E2;&#x05E9;&#x05E8; &#x05D1;&#x05EA;&#x05DE;&#x05D5;&#x05D6;",
-     * "&#x05EA;&#x05E9;&#x05E2;&#x05D4; &#x05D1;&#x05D0;&#x05D1;",
-     * "&#x05D8;&#x05F4;&#x05D5; &#x05D1;&#x05D0;&#x05D1;",
-     * "&#x05E2;&#x05E8;&#x05D1; &#x05E8;&#x05D0;&#x05E9; &#x05D4;&#x05E9;&#x05E0;&#x05D4;",
-     * "&#x05E8;&#x05D0;&#x05E9; &#x05D4;&#x05E9;&#x05E0;&#x05D4;",
-     * "&#x05E6;&#x05D5;&#x05DD; &#x05D2;&#x05D3;&#x05DC;&#x05D9;&#x05D4;",
-     * "&#x05E2;&#x05E8;&#x05D1; &#x05D9;&#x05D5;&#x05DD; &#x05DB;&#x05D9;&#x05E4;&#x05D5;&#x05E8;",
-     * "&#x05D9;&#x05D5;&#x05DD; &#x05DB;&#x05D9;&#x05E4;&#x05D5;&#x05E8;",
-     * "&#x05E2;&#x05E8;&#x05D1; &#x05E1;&#x05D5;&#x05DB;&#x05D5;&#x05EA;",
-     * "&#x05E1;&#x05D5;&#x05DB;&#x05D5;&#x05EA;",
-     * "&#x05D7;&#x05D5;&#x05DC; &#x05D4;&#x05DE;&#x05D5;&#x05E2;&#x05D3; &#x05E1;&#x05D5;&#x05DB;&#x05D5;&#x05EA;",
-     * "&#x05D4;&#x05D5;&#x05E9;&#x05E2;&#x05E0;&#x05D0; &#x05E8;&#x05D1;&#x05D4;",
-     * "&#x05E9;&#x05DE;&#x05D9;&#x05E0;&#x05D9; &#x05E2;&#x05E6;&#x05E8;&#x05EA;",
-     * "&#x05E9;&#x05DE;&#x05D7;&#x05EA; &#x05EA;&#x05D5;&#x05E8;&#x05D4;",
-     * "&#x05E2;&#x05E8;&#x05D1; &#x05D7;&#x05E0;&#x05D5;&#x05DB;&#x05D4;",
-     * "&#x05D7;&#x05E0;&#x05D5;&#x05DB;&#x05D4;", "&#x05E2;&#x05E9;&#x05E8;&#x05D4; &#x05D1;&#x05D8;&#x05D1;&#x05EA;",
-     * "&#x05D8;&#x05F4;&#x05D5; &#x05D1;&#x05E9;&#x05D1;&#x05D8;",
-     * "&#x05EA;&#x05E2;&#x05E0;&#x05D9;&#x05EA; &#x05D0;&#x05E1;&#x05EA;&#x05E8;",
-     * "&#x05E4;&#x05D5;&#x05E8;&#x05D9;&#x05DD;",
-     * "&#x05E4;&#x05D5;&#x05E8;&#x05D9;&#x05DD; &#x05E9;&#x05D5;&#x05E9;&#x05DF;",
-     * "&#x05E4;&#x05D5;&#x05E8;&#x05D9;&#x05DD; &#x05E7;&#x05D8;&#x05DF;",
-     * "&#x05E8;&#x05D0;&#x05E9; &#x05D7;&#x05D5;&#x05D3;&#x05E9;",
-     * "&#x05D9;&#x05D5;&#x05DD; &#x05D4;&#x05E9;&#x05D5;&#x05D0;&#x05D4;",
-     * "&#x05D9;&#x05D5;&#x05DD; &#x05D4;&#x05D6;&#x05D9;&#x05DB;&#x05E8;&#x05D5;&#x05DF;",
-     * "&#x05D9;&#x05D5;&#x05DD; &#x05D4;&#x05E2;&#x05E6;&#x05DE;&#x05D0;&#x05D5;&#x05EA;",
-     * "&#x05D9;&#x05D5;&#x05DD; &#x05D9;&#x05E8;&#x05D5;&#x05E9;&#x05DC;&#x05D9;&#x05DD;",
-     * "&#x05DC;&#x05F4;&#x05D2; &#x05D1;&#x05E2;&#x05D5;&#x05DE;&#x05E8;",
-     * "&#x05E4;&#x05D5;&#x05E8;&#x05D9;&#x05DD; &#x05E9;&#x05D5;&#x05E9;&#x05DF; &#x05E7;&#x05D8;&#x05DF;"]`
+     * Hebrew holiday array in the following format.<br></br>`["ערב פסח",
+     * "פסח", "חול המועד
+     * פסח", "פסח שני", "ערב
+     * שבועות", "שבועות",
+     * "שבעה עשר בתמוז",
+     * "תשעה באב",
+     * "ט״ו באב",
+     * "ערב ראש השנה",
+     * "ראש השנה",
+     * "צום גדליה",
+     * "ערב יום כיפור",
+     * "יום כיפור",
+     * "ערב סוכות",
+     * "סוכות",
+     * "חול המועד סוכות",
+     * "הושענא רבה",
+     * "שמיני עצרת",
+     * "שמחת תורה",
+     * "ערב חנוכה",
+     * "חנוכה", "עשרה בטבת",
+     * "ט״ו בשבט",
+     * "תענית אסתר",
+     * "פורים",
+     * "פורים שושן",
+     * "פורים קטן",
+     * "ראש חודש",
+     * "יום השואה",
+     * "יום הזיכרון",
+     * "יום העצמאות",
+     * "יום ירושלים",
+     * "ל״ג בעומר",
+     * "פורים שושן קטן"]`
      */
     private val hebrewHolidays: Array<String> = arrayOf(
         "\u05E2\u05E8\u05D1 \u05E4\u05E1\u05D7", "\u05E4\u05E1\u05D7",
@@ -524,7 +477,7 @@ class HebrewDateFormatter {
      *
      * @param jewishCalendar the JewishCalendar
      * @return the formatted holiday or an empty String if the day is not a holiday.
-     * @see .isHebrewFormat
+     * @see isHebrewFormat
      */
     fun formatYomTov(jewishCalendar: JewishCalendar): String {
         val index = jewishCalendar.yomTovIndex
@@ -539,19 +492,19 @@ class HebrewDateFormatter {
     }
 
     /**
-     * Formats a day as Rosh Chodesh in the format of in the format of &#x05E8;&#x05D0;&#x05E9;
-     * &#x05D7;&#x05D5;&#x05D3;&#x05E9; &#x05E9;&#x05D1;&#x05D8; or Rosh Chodesh Shevat. If it
+     * Formats a day as Rosh Chodesh in the format of in the format of ראש
+     * חודש שבט or Rosh Chodesh Shevat. If it
      * is not Rosh Chodesh, an empty `String` will be returned.
      * @param jewishCalendar the JewishCalendar
-     * @return The formatted `String` in the format of &#x05E8;&#x05D0;&#x05E9;
-     * &#x05D7;&#x05D5;&#x05D3;&#x05E9; &#x05E9;&#x05D1;&#x05D8; or Rosh Chodesh Shevat. If it
+     * @return The formatted `String` in the format of ראש
+     * חודש שבט or Rosh Chodesh Shevat. If it
      * is not Rosh Chodesh, an empty `String` will be returned.
      */
     fun formatRoshChodesh(jewishCalendar: JewishCalendar): String {
-        var jewishCalendar: JewishCalendar = jewishCalendar
         if (!jewishCalendar.isRoshChodesh) {
             return ""
         }
+        var jewishCalendar: JewishCalendar = jewishCalendar
         var month = jewishCalendar.jewishMonth
         if (jewishCalendar.jewishDayOfMonth == 30) {
             if (month < JewishDate.ADAR || (month == JewishDate.ADAR && jewishCalendar.isJewishLeapYear)) {
@@ -572,7 +525,7 @@ class HebrewDateFormatter {
 
     /**
      * Formats the day of week. If [Hebrew formatting][.isHebrewFormat] is set, it will display in the format
-     * &#x05E8;&#x05D0;&#x05E9;&#x05D5;&#x05DF; etc. If Hebrew formatting is not in use it will return it in the format
+     * ראשון etc. If Hebrew formatting is not in use it will return it in the format
      * of Sunday etc. There are various formatting options that will affect the output.
      *
      * @param jewishDate the JewishDate Object
@@ -580,197 +533,171 @@ class HebrewDateFormatter {
      * @see .isHebrewFormat
      * @see .isLongWeekFormat
      */
-    fun formatDayOfWeek(jewishDate: JewishDate): String {
-        if (isHebrewFormat) {
-            if (isLongWeekFormat) {
-                return hebrewDaysOfWeek.get(jewishDate.dayOfWeek - 1)
-            } else {
-                if (jewishDate.dayOfWeek == 7) {
-                    return formatHebrewNumber(300)
-                } else {
-                    return formatHebrewNumber(jewishDate.dayOfWeek)
-                }
-            }
-        } else {
-            if (jewishDate.dayOfWeek == 7) {
-                if (isLongWeekFormat) {
-                    return transliteratedShabbosDayOfWeek
-                } else {
-                    return transliteratedShabbosDayOfWeek.substring(0, 3)
-                }
-            } else {
-                return weekFormat!!.format(jewishDate.gregorianCalendar.time)
-            }
-        }
-    }
+    fun formatDayOfWeek(jewishDate: JewishDate): String =
+        if (isHebrewFormat)
+            if (isLongWeekFormat)
+                hebrewDaysOfWeek[jewishDate.dayOfWeek - 1]
+            else
+                if (jewishDate.dayOfWeek == 7) formatHebrewNumber(300)
+                else formatHebrewNumber(jewishDate.dayOfWeek)
+        else
+            if (jewishDate.dayOfWeek == 7)
+                if (isLongWeekFormat) transliteratedShabbosDayOfWeek
+                else transliteratedShabbosDayOfWeek.substring(0, 3)
+            else
+                weekFormat!!.format(jewishDate.gregorianCalendar.time)
 
     /**
      * Formats the Jewish date. If the formatter is set to Hebrew, it will format in the form, "day Month year" for
-     * example &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;, and the format
+     * example כ״א שבט תשכ״ט, and the format
      * "21 Shevat, 5729" if not.
      *
      * @param jewishDate
      * the JewishDate to be formatted
      * @return the formatted date. If the formatter is set to Hebrew, it will format in the form, "day Month year" for
-     * example &#x5DB;&#x5F4;&#x5D0; &#x5E9;&#x5D1;&#x5D8; &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;, and the format
+     * example כ״א שבט תשכ״ט, and the format
      * "21 Shevat, 5729" if not.
      */
-    fun format(jewishDate: JewishDate): String {
-        if (isHebrewFormat) {
-            return (formatHebrewNumber(jewishDate.jewishDayOfMonth) + " " + formatMonth(jewishDate) + " "
-                    + formatHebrewNumber(jewishDate.jewishYear))
-        } else {
-            return jewishDate.jewishDayOfMonth
-                .toString() + " " + formatMonth(jewishDate) + ", " + jewishDate.jewishYear
-        }
-    }
+    fun format(jewishDate: JewishDate): String =
+        if (isHebrewFormat) "${formatHebrewNumber(jewishDate.jewishDayOfMonth)} ${formatMonth(jewishDate)} ${
+            formatHebrewNumber(
+                jewishDate.jewishYear
+            )
+        }"
+        else "${jewishDate.jewishDayOfMonth} ${formatMonth(jewishDate)}, ${jewishDate.jewishYear}"
 
     /**
      * Returns a string of the current Hebrew month such as "Tishrei". Returns a string of the current Hebrew month such
-     * as "&#x5D0;&#x5D3;&#x5E8; &#x5D1;&#x5F3;".
+     * as "אדר ב׳".
      *
      * @param jewishDate
      * the JewishDate to format
      * @return the formatted month name
-     * @see .isHebrewFormat
-     * @see .setHebrewFormat
-     * @see .getTransliteratedMonthList
-     * @see .setTransliteratedMonthList
+     * @see isHebrewFormat
+     * @see transliteratedMonthList
      */
     fun formatMonth(jewishDate: JewishDate): String {
         val month = jewishDate.jewishMonth
-        if (isHebrewFormat) {
-            if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR) {
-                return hebrewMonths.get(13) + (if (isUseGershGershayim) GERESH else "") // return Adar I, not Adar in a leap year
-            } else if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR_II) {
-                return hebrewMonths.get(12) + (if (isUseGershGershayim) GERESH else "")
-            } else {
-                return hebrewMonths.get(month - 1)
-            }
-        } else {
-            if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR) {
-                return transliteratedMonthList.get(13) // return Adar I, not Adar in a leap year
-            } else {
-                return transliteratedMonthList.get(month - 1)
-            }
-        }
+        return if (isHebrewFormat)
+            if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR) "${hebrewMonths[13]}${if (isUseGershGershayim) GERESH else ""}" // return Adar I, not Adar in a leap year
+            else if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR_II) "${hebrewMonths[12]}${if (isUseGershGershayim) GERESH else ""}"
+            else hebrewMonths[month - 1]
+        else
+            if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR) transliteratedMonthList[13] // return Adar I, not Adar in a leap year
+            else transliteratedMonthList[month - 1]
     }
 
     /**
-     * Returns a String of the Omer day in the form &#x5DC;&#x5F4;&#x5D2; &#x5D1;&#x05E2;&#x05D5;&#x05DE;&#x5E8; if
+     * Returns a String of the Omer day in the form ל״ג בעומר if
      * Hebrew Format is set, or "Omer X" or "Lag B'Omer" if not. An empty string if there is no Omer this day.
      *
      * @param jewishCalendar
      * the JewishCalendar to be formatted
      *
      * @return a String of the Omer day in the form or an empty string if there is no Omer this day. The default
-     * formatting has a &#x5D1;&#x5F3; prefix that would output &#x5D1;&#x05E2;&#x05D5;&#x05DE;&#x5E8;, but this
-     * can be set via the [.setHebrewOmerPrefix] method to use a &#x5DC; and output
-     * &#x5DC;&#x5F4;&#x5D2; &#x5DC;&#x05E2;&#x05D5;&#x05DE;&#x5E8;.
-     * @see .isHebrewFormat
-     * @see .getHebrewOmerPrefix
-     * @see .setHebrewOmerPrefix
+     * formatting has a ב׳ prefix that would output בעומר, but this
+     * can be set via the [hebrewOmerPrefix] method to use a ל and output
+     * ל״ג לעומר.
+     * @see isHebrewFormat
+     * @see hebrewOmerPrefix
      */
     fun formatOmer(jewishCalendar: JewishCalendar): String {
         val omer = jewishCalendar.dayOfOmer
-        if (omer == -1) {
-            return ""
-        }
-        if (isHebrewFormat) {
-            return formatHebrewNumber(omer) + " " + hebrewOmerPrefix + "\u05E2\u05D5\u05DE\u05E8"
-        } else {
-            if (omer == 33) { // if Lag B'Omer
-                return transliteratedHolidayList.get(33)
-            } else {
-                return "Omer " + omer
-            }
-        }
+        if (omer == -1) return ""
+        return if (isHebrewFormat)
+            "${formatHebrewNumber(omer)} $hebrewOmerPrefix\u05E2\u05D5\u05DE\u05E8"
+        else if (omer == 33) transliteratedHolidayList[33] // if Lag B'Omer
+        else "Omer $omer"
     }
 
     /**
      * Returns the kviah in the traditional 3 letter Hebrew format where the first letter represents the day of week of
-     * Rosh Hashana, the second letter represents the lengths of Cheshvan and Kislev ([ Shelaimim][JewishDate.SHELAIMIM] , [Kesidran][JewishDate.KESIDRAN] or [Chaserim][JewishDate.CHASERIM]) and the 3rd letter
-     * represents the day of week of Pesach. For example 5729 (1969) would return &#x5D1;&#x5E9;&#x5D4; (Rosh Hashana on
-     * Monday, Shelaimim, and Pesach on Thursday), while 5771 (2011) would return &#x5D4;&#x5E9;&#x5D2; (Rosh Hashana on
+     * Rosh Hashana, the second letter represents the lengths of Cheshvan and Kislev ([Shelaimim][JewishDate.SHELAIMIM] , [Kesidran][JewishDate.KESIDRAN] or [Chaserim][JewishDate.CHASERIM]) and the 3rd letter
+     * represents the day of week of Pesach. For example 5729 (1969) would return בשה (Rosh Hashana on
+     * Monday, Shelaimim, and Pesach on Thursday), while 5771 (2011) would return השג (Rosh Hashana on
      * Thursday, Shelaimim, and Pesach on Tuesday).
      *
      * @param jewishYear
      * the Jewish year
-     * @return the Hebrew String such as &#x5D1;&#x5E9;&#x5D4; for 5729 (1969) and &#x5D4;&#x5E9;&#x5D2; for 5771
+     * @return the Hebrew String such as בשה for 5729 (1969) and השג for 5771
      * (2011).
      */
     fun getFormattedKviah(jewishYear: Int): String {
-        val jewishDate: JewishDate = JewishDate(jewishYear, JewishDate.TISHREI, 1) // set date to Rosh Hashana
+        val jewishDate = JewishDate(jewishYear, JewishDate.TISHREI, 1) // set date to Rosh Hashana
         val kviah = jewishDate.cheshvanKislevKviah
         val roshHashanaDayOfweek = jewishDate.dayOfWeek
-        var returnValue: String = formatHebrewNumber(roshHashanaDayOfweek)
-        returnValue += (if (kviah == JewishDate.CHASERIM) "\u05D7" else if (kviah == JewishDate.SHELAIMIM) "\u05E9" else "\u05DB")
+        val returnValue = StringBuilder(formatHebrewNumber(roshHashanaDayOfweek))
+        returnValue.append(
+            when (kviah) {
+                JewishDate.CHASERIM -> "\u05D7"
+                JewishDate.SHELAIMIM -> "\u05E9"
+                else -> "\u05DB"
+            }
+        )
         jewishDate.setJewishDate(jewishYear, JewishDate.NISSAN, 15) // set to Pesach of the given year
         val pesachDayOfweek = jewishDate.dayOfWeek
-        returnValue += formatHebrewNumber(pesachDayOfweek)
-        returnValue = returnValue.replace(GERESH.toRegex(), "") // geresh is never used in the kviah format
+        returnValue.append(formatHebrewNumber(pesachDayOfweek))
+        return returnValue.replace(GERESH.toRegex(), "") // geresh is never used in the kviah format
         // boolean isLeapYear = JewishDate.isJewishLeapYear(jewishYear);
         // for efficiency we can avoid the expensive recalculation of the pesach day of week by adding 1 day to Rosh
         // Hashana for a 353 day year, 2 for a 354 day year, 3 for a 355 or 383 day year, 4 for a 384 day year and 5 for
         // a 385 day year
-        return returnValue
     }
 
     /**
      * Formats the [Daf Yomi](https://en.wikipedia.org/wiki/Daf_Yomi) Bavli in the format of
-     * "&#x05E2;&#x05D9;&#x05E8;&#x05D5;&#x05D1;&#x05D9;&#x05DF; &#x05E0;&#x05F4;&#x05D1;" in [Hebrew][.isHebrewFormat],
+     * "עירובין נ״ב" in [Hebrew][isHebrewFormat],
      * or the transliterated format of "Eruvin 52".
      * @param daf the Daf to be formatted.
      * @return the formatted daf.
      */
-    fun formatDafYomiBavli(daf: Daf): String = if (isHebrewFormat) {
-        daf.masechta + " " + formatHebrewNumber(daf.daf)
-    } else {
-        daf.masechtaTransliterated + " " + daf.daf
-    }
+    fun formatDafYomiBavli(daf: Daf): String =
+        if (isHebrewFormat)
+            "${daf.masechta} ${formatHebrewNumber(daf.daf)}"
+        else "${daf.masechtaTransliterated} ${daf.daf}"
 
     /**
      * Formats the [Daf Yomi Yerushalmi](https://en.wikipedia.org/wiki/Jerusalem_Talmud#Daf_Yomi_Yerushalmi) in the format
-     * of "&#x05E2;&#x05D9;&#x05E8;&#x05D5;&#x05D1;&#x05D9;&#x05DF; &#x05E0;&#x05F4;&#x05D1;" in [Hebrew][.isHebrewFormat], or
+     * of "עירובין נ״ב" in [Hebrew][isHebrewFormat], or
      * the transliterated format of "Eruvin 52".
      *
      * @param daf the Daf to be formatted.
      * @return the formatted daf.
      */
     fun formatDafYomiYerushalmi(daf: Daf?): String {
-        if (daf == null) {
-            return if (isHebrewFormat) Daf.yerushlmiMasechtos[39] else Daf.yerushlmiMasechtosTransliterated[39]
-        }
-        return if (isHebrewFormat) daf.yerushalmiMasechta + " " + formatHebrewNumber(daf.daf)
-        else daf.yerushlmiMasechtaTransliterated + " " + daf.daf
+        if (daf == null)
+            return if (isHebrewFormat) Daf.yerushlmiMasechtos[39]
+            else Daf.yerushlmiMasechtosTransliterated[39]
+        return if (isHebrewFormat) "${daf.yerushalmiMasechta} ${formatHebrewNumber(daf.daf)}"
+        else "${daf.yerushlmiMasechtaTransliterated} ${daf.daf}"
     }
 
     /**
      * Returns a Hebrew formatted string of a number. The method can calculate from 0 - 9999.
      *
-     *  * Single digit numbers such as 3, 30 and 100 will be returned with a &#x5F3; ([Geresh](http://en.wikipedia.org/wiki/Geresh)) appended as at the end. For example &#x5D2;&#x5F3;,
-     * &#x5DC;&#x5F3; and &#x5E7;&#x5F3;
-     *  * multi digit numbers such as 21 and 769 will be returned with a &#x5F4; ([Gershayim](http://en.wikipedia.org/wiki/Gershayim)) between the second to last and last letters. For
-     * example &#x5DB;&#x5F4;&#x5D0;, &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;
-     *  * 15 and 16 will be returned as &#x5D8;&#x5F4;&#x5D5; and &#x5D8;&#x5F4;&#x5D6;
-     *  * Single digit numbers (years assumed) such as 6000 (%1000=0) will be returned as &#x5D5;&#x5F3;
-     * &#x5D0;&#x5DC;&#x5E4;&#x5D9;&#x5DD;
-     *  * 0 will return &#x5D0;&#x5E4;&#x05E1;
+     *  * Single digit numbers such as 3, 30 and 100 will be returned with a ׳ ([Geresh](http://en.wikipedia.org/wiki/Geresh)) appended as at the end. For example ג׳,
+     * ל׳ and ק׳
+     *  * multi digit numbers such as 21 and 769 will be returned with a ״ ([Gershayim](http://en.wikipedia.org/wiki/Gershayim)) between the second to last and last letters. For
+     * example כ״א, תשכ״ט
+     *  * 15 and 16 will be returned as ט״ו and ט״ז
+     *  * Single digit numbers (years assumed) such as 6000 (%1000=0) will be returned as ו׳
+     * אלפים
+     *  * 0 will return אפס
      *
      *
      * @param number
-     * the number to be formatted. It will trow an IllegalArgumentException if the number is &lt; 0 or &gt; 9999.
-     * @return the Hebrew formatted number such as &#x5EA;&#x5E9;&#x5DB;&#x5F4;&#x5D8;
-     * @see .isUseFinalFormLetters
-     * @see .isUseGershGershayim
-     * @see .isHebrewFormat
+     * the number to be formatted. It will trow an IllegalArgumentException if the number is < 0 or > 9999.
+     * @return the Hebrew formatted number such as תשכ״ט
+     * @see isUseFinalFormLetters
+     * @see isUseGershGershayim
+     * @see isHebrewFormat
      */
     fun formatHebrewNumber(number: Int): String {
         var num = number
         val range = 0..9999
         require(num in range) { "${if (num < range.first) "negative numbers" else "numbers > ${range.last}"} can't be formatted" }
-        val ALAFIM: String = "\u05D0\u05DC\u05E4\u05D9\u05DD"
-        val EFES: String = "\u05D0\u05E4\u05E1"
+        val ALAFIM = "\u05D0\u05DC\u05E4\u05D9\u05DD"
+        val EFES = "\u05D0\u05E4\u05E1"
         val jHundreds: Array<String> = arrayOf(
             "", "\u05E7", "\u05E8", "\u05E9", "\u05EA", "\u05EA\u05E7", "\u05EA\u05E8",
             "\u05EA\u05E9", "\u05EA\u05EA", "\u05EA\u05EA\u05E7"
@@ -788,110 +715,93 @@ class HebrewDateFormatter {
             "", "\u05D0", "\u05D1", "\u05D2", "\u05D3", "\u05D4", "\u05D5", "\u05D6",
             "\u05D7", "\u05D8"
         )
-        if (num == 0) { // do we really need this? Should it be applicable to a date?
-            return EFES
-        }
+        if (num == 0) return EFES // do we really need this? Should it be applicable to a date?
         val shortNumber = num % 1000 // discard thousands
         // next check for all possible single Hebrew digit years
-        val singleDigitNumber: Boolean =
-            ((shortNumber < 11) || (shortNumber < 100 && shortNumber % 10 == 0) || (shortNumber <= 400 && shortNumber % 100 == 0))
+        val singleDigitNumber =
+            shortNumber < 11 ||
+                    (shortNumber < 100 && shortNumber % 10 == 0) ||
+                    (shortNumber <= 400 && shortNumber % 100 == 0)
         val thousands = num / 1000 // get # thousands
         val sb = StringBuilder()
         // append thousands to String
         if (num % 1000 == 0) { // in year is 5000, 4000 etc
-            sb.append(jOnes.get(thousands))
-            if (isUseGershGershayim) {
-                sb.append(GERESH)
-            }
+            sb.append(jOnes[thousands])
+            if (isUseGershGershayim) sb.append(GERESH)
             sb.append(" ")
             sb.append(ALAFIM) // add # of thousands plus word thousand (overide alafim boolean)
             return sb.toString()
         } else if (isUseLongHebrewYears && num >= 1000) { // if alafim boolean display thousands
-            sb.append(jOnes.get(thousands))
-            if (isUseGershGershayim) {
-                sb.append(GERESH) // append thousands quote
-            }
+            sb.append(jOnes[thousands])
+            if (isUseGershGershayim) sb.append(GERESH) // append thousands quote
             sb.append(" ")
         }
-        num = num % 1000 // remove 1000s
+        num %= 1000 // remove 1000s
         val hundreds = num / 100 // # of hundreds
-        sb.append(jHundreds.get(hundreds)) // add hundreds to String
-        num = num % 100 // remove 100s
-        if (num == 15) { // special case 15
-            sb.append(tavTaz.get(0))
-        } else if (num == 16) { // special case 16
-            sb.append(tavTaz.get(1))
-        } else {
+        sb.append(jHundreds[hundreds]) // add hundreds to String
+        num %= 100 // remove 100s
+        if (num == 15) sb.append(tavTaz[0])  // special case 15
+        else if (num == 16) sb.append(tavTaz[1]) // special case 16
+        else {
             val tens = num / 10
             if (num % 10 == 0) { // if evenly divisable by 10
                 if (!singleDigitNumber) {
-                    if (isUseFinalFormLetters) {
-                        sb.append(jTenEnds.get(tens)) // years like 5780 will end with a final form &#x05E3;
-                    } else {
-                        sb.append(jTens.get(tens)) // years like 5780 will end with a regular &#x05E4;
-                    }
-                } else {
-                    sb.append(jTens.get(tens)) // standard letters so years like 5050 will end with a regular nun
-                }
+                    if (isUseFinalFormLetters) sb.append(jTenEnds[tens])  // years like 5780 will end with a final form &#x05E3;
+                    else sb.append(jTens[tens]) // years like 5780 will end with a regular &#x05E4;
+                } else sb.append(jTens[tens]) // standard letters so years like 5050 will end with a regular nun
             } else {
-                sb.append(jTens.get(tens))
-                num = num % 10
-                sb.append(jOnes.get(num))
+                sb.append(jTens[tens])
+                num %= 10
+                sb.append(jOnes[num])
             }
         }
         if (isUseGershGershayim) {
-            if (singleDigitNumber) {
-                sb.append(GERESH) // append single quote
-            } else { // append double quote before last digit
-                sb.insert(sb.length - 1, GERSHAYIM)
-            }
+            if (singleDigitNumber) sb.append(GERESH) // append single quote
+            else sb.insert(sb.length - 1, GERSHAYIM) // append double quote before last digit
         }
         return sb.toString()
     }
 
     /**
      * Returns a String with the name of the current parsha(ios). If the formatter is set to format in Hebrew, returns
-     * a string of the current parsha(ios) in Hebrew for example &#x05D1;&#x05E8;&#x05D0;&#x05E9;&#x05D9;&#x05EA; or
-     * &#x05E0;&#x05E6;&#x05D1;&#x05D9;&#x05DD; &#x05D5;&#x05D9;&#x05DC;&#x05DA; or an empty string if there
+     * a string of the current parsha(ios) in Hebrew for example בראשית or
+     * נצבים וילך or an empty string if there
      * are none. If not set to Hebrew, it returns a string of the parsha(ios) transliterated into Latin chars. The
      * default uses Ashkenazi pronunciation in typical American English spelling, for example Bereshis or
      * Nitzavim Vayeilech or an empty string if there are none.
      *
      * @param jewishCalendar the JewishCalendar Object
      * @return today's parsha(ios) in Hebrew for example, if the formatter is set to format in Hebrew, returns a string
-     * of the current parsha(ios) in Hebrew for example &#x05D1;&#x05E8;&#x05D0;&#x05E9;&#x05D9;&#x05EA; or
-     * &#x05E0;&#x05E6;&#x05D1;&#x05D9;&#x05DD; &#x05D5;&#x05D9;&#x05DC;&#x05DA; or an empty string if
+     * of the current parsha(ios) in Hebrew for example בראשית or
+     * נצבים וילך or an empty string if
      * there are none. If not set to Hebrew, it returns a string of the parsha(ios) transliterated into Latin
      * chars. The default uses Ashkenazi pronunciation in typical American English spelling, for example
      * Bereshis or Nitzavim Vayeilech or an empty string if there are none.
      */
-    fun formatParsha(jewishCalendar: JewishCalendar): String? {
-        val parshah = jewishCalendar.parshah
-        return if (isHebrewFormat) hebrewParshaMap[parshah]
-        else transliteratedParshiosList[parshah]
-    }
+    fun formatParsha(jewishCalendar: JewishCalendar): String? =
+        if (isHebrewFormat) hebrewParshaMap[jewishCalendar.parshah]
+        else transliteratedParshiosList[jewishCalendar.parshah]
 
     /**
      * Returns a String with the name of the current special parsha of Shekalim, Zachor, Parah or Hachodesh or an
      * empty String for a non-special parsha. If the formatter is set to format in Hebrew, it returns a string of
-     * the current special parsha in Hebrew, for example &#x05E9;&#x05E7;&#x05DC;&#x05D9;&#x05DD;,
-     * &#x05D6;&#x05DB;&#x05D5;&#x05E8;, &#x05E4;&#x05E8;&#x05D4; or &#x05D4;&#x05D7;&#x05D3;&#x05E9;. An empty
+     * the current special parsha in Hebrew, for example שקלים,
+     * זכור, פרה or החדש. An empty
      * string if the date is not a special parsha. If not set to Hebrew, it returns a string of the special parsha
      * transliterated into Latin chars. The default uses Ashkenazi pronunciation in typical American English spelling
      * Shekalim, Zachor, Parah or Hachodesh.
      *
      * @param jewishCalendar the JewishCalendar Object
      * @return today's special parsha. If the formatter is set to format in Hebrew, returns a string
-     * of the current special parsha  in Hebrew for in the format of &#x05E9;&#x05E7;&#x05DC;&#x05D9;&#x05DD;,
-     * &#x05D6;&#x05DB;&#x05D5;&#x05E8;, &#x05E4;&#x05E8;&#x05D4; or &#x05D4;&#x05D7;&#x05D3;&#x05E9; or an empty
+     * of the current special parsha  in Hebrew for in the format of שקלים,
+     * זכור, פרה or החדש or an empty
      * string if there are none. If not set to Hebrew, it returns a string of the special parsha transliterated
      * into Latin chars. The default uses Ashkenazi pronunciation in typical American English spelling of Shekalim,
      * Zachor, Parah or Hachodesh. An empty string if there are none.
      */
-    fun formatSpecialParsha(jewishCalendar: JewishCalendar): String? {
-        val specialParsha: Parsha = jewishCalendar.specialShabbos
-        return if (isHebrewFormat) hebrewParshaMap[specialParsha] else transliteratedParshiosList[specialParsha]
-    }
+    fun formatSpecialParsha(jewishCalendar: JewishCalendar): String? =
+        if (isHebrewFormat) hebrewParshaMap[jewishCalendar.specialShabbos]
+        else transliteratedParshiosList[jewishCalendar.specialShabbos]
 
     companion object {
         /**
