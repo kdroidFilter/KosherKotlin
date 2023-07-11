@@ -1265,8 +1265,8 @@ class JewishCalendar : JewishDate {
             val day = jewishDayOfMonth
             return (month == CHESHVAN || month == IYAR) &&
                     (
-                            (dayOfWeek == Calendar.MONDAY && day in 5..17/*4 < day < 18*/) ||
-                                    (dayOfWeek == Calendar.THURSDAY && day in 8..13/*7 < day < 14*/)
+                            dayOfWeek == Calendar.MONDAY && day in 5..17/*4 < day < 18*/ ||
+                                    dayOfWeek == Calendar.THURSDAY && day in 8..13/*7 < day < 14*/
                             )
         }
 

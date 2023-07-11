@@ -98,6 +98,7 @@ class TefilaRules {
      * @return If *tachanun* is set to be recited at the end of [<em>Tishrei</em>][JewishDate.TISHREI].
      */
     var isTachanunRecitedEndOfTishrei: Boolean = true
+
     /**
      * Is *tachanun* recited during the week after *Shavuos*. This is the opinion of the Pri Megadim
      * quoted by the Mishna Berurah. This is since *karbanos* of *Shavuos* have *tashlumim* for
@@ -107,6 +108,7 @@ class TefilaRules {
      * @return If *tachanun* is set to be recited during the week after Shavuos.
      */
     var isTachanunRecitedWeekAfterShavuos: Boolean = false
+
     /**
      * Is *tachanun* is recited on the 13th of [<em>Sivan</em>][JewishDate.SIVAN] ([*Yom Tov Sheni shel Galuyos*](https://en.wikipedia.org/wiki/Yom_tov_sheni_shel_galuyot) of the 7th
      * day) outside Israel. This is brought down by the Shaarie Teshuva 131:19 quoting the [Sheyarei Kneses Hagedola 131:12](https://hebrewbooks.org/pdfpager.aspx?req=41295&st=&pgnum=39)that
@@ -122,6 +124,7 @@ class TefilaRules {
      * @see isTachanunRecitedWeekAfterShavuos
      */
     var isTachanunRecited13SivanOutOfIsrael: Boolean = true
+
     /**
      * Is *tachanun* recited on [<em>Pesach Sheni</em>][JewishCalendar.PESACH_SHENI]. The Pri Chadash 131:7 states
      * that *tachanun* should not be recited. The Aruch Hashulchan states that this is the minhag of the *sephardim*.
@@ -132,6 +135,7 @@ class TefilaRules {
      * @return If *tachanun* is recited on [<em>Pesach Sheni</em>][JewishCalendar.PESACH_SHENI].
      */
     var isTachanunRecitedPesachSheni: Boolean = false
+
     /**
      * Is *tachanun* recited on 15 [<em>Iyar</em>][JewishDate.IYAR] (*sfaika deyoma* of [<em>Pesach Sheni</em>][JewishCalendar.PESACH_SHENI]) out of Israel. If [isTachanunRecitedPesachSheni] is `true` this will be
      * ignored even if `false`.
@@ -143,6 +147,7 @@ class TefilaRules {
      * @see isTachanunRecitedPesachSheni
      */
     var isTachanunRecited15IyarOutOfIsrael: Boolean = true
+
     /**
      * Is *tachanun* recited on *mincha* on *erev [Lag Baomer][JewishCalendar.LAG_BAOMER]*.
      * @return if *tachanun* is recited in *mincha* on *erev*
@@ -160,6 +165,7 @@ class TefilaRules {
      * @see isTachanunRecitedShivasYemeiHamiluim
      */
     var isTachanunRecitedShivasYemeiHamiluim: Boolean = true
+
     /**
      * Is *tachanun* recited during the *sefira* week of *Hod* (14 - 20 [<em>Iyar</em>][JewishDate.IYAR],
      * or the 29th - 35th of the [<em>Omer</em>][JewishCalendar.getDayOfOmer]). Some *chasidishe* communities
@@ -259,35 +265,51 @@ class TefilaRules {
         val holidayIndex = jewishCalendar.yomTovIndex
         val day = jewishCalendar.jewishDayOfMonth
         val month = jewishCalendar.jewishMonth
-        if (((jewishCalendar.dayOfWeek == Calendar.SATURDAY
-                    ) || (!isTachanunRecitedSundays && jewishCalendar.dayOfWeek == Calendar.SUNDAY)
-                    || (!isTachanunRecitedFridays && jewishCalendar.dayOfWeek == Calendar.FRIDAY)
-                    || (month == JewishDate.NISSAN
-                    ) || (month == JewishDate.TISHREI && (((!isTachanunRecitedEndOfTishrei && day > 8)
-                    || (isTachanunRecitedEndOfTishrei && (day > 8 && day < 22)))))
-                    || (month == JewishDate.SIVAN && ((isTachanunRecitedWeekAfterShavuos && day < 7
-                    || !isTachanunRecitedWeekAfterShavuos && day < (if (!jewishCalendar.inIsrael
-                && !isTachanunRecited13SivanOutOfIsrael
-            ) 14 else 13))))
-                    || (jewishCalendar.isYomTov && ((!jewishCalendar.isTaanis
-                    || (!isTachanunRecitedPesachSheni && holidayIndex == JewishCalendar.PESACH_SHENI)))) // Erev YT is included in isYomTov()
-                    || ((!jewishCalendar.inIsrael && !isTachanunRecitedPesachSheni && !isTachanunRecited15IyarOutOfIsrael
-                    && (jewishCalendar.jewishMonth == JewishDate.IYAR) && (day == 15)))
-                    || (holidayIndex == JewishCalendar.TISHA_BEAV) || jewishCalendar.isIsruChag
-                    || jewishCalendar.isRoshChodesh
-                    || ((!isTachanunRecitedShivasYemeiHamiluim &&
-                    (((!jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR)
-                            || (jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR_II))) && (day > 22)))
-                    || ((!isTachanunRecitedWeekOfPurim &&
-                    (((!jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR)
-                            || (jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR_II))) && (day > 10) && (day < 18)))
-                    || ((jewishCalendar.isUseModernHolidays
-                    && (holidayIndex == JewishCalendar.YOM_HAATZMAUT || holidayIndex == JewishCalendar.YOM_YERUSHALAYIM)))
-                    || (!isTachanunRecitedWeekOfHod && (month == JewishDate.IYAR) && (day > 13) && (day < 21)))
-        ) {
-            return false
-        }
-        return true
+        return !(
+                jewishCalendar.dayOfWeek == Calendar.SATURDAY ||
+                        !isTachanunRecitedSundays && jewishCalendar.dayOfWeek == Calendar.SUNDAY ||
+                        !isTachanunRecitedFridays && jewishCalendar.dayOfWeek == Calendar.FRIDAY ||
+                        month == JewishDate.NISSAN ||
+                        month == JewishDate.TISHREI &&
+                        (
+                                !isTachanunRecitedEndOfTishrei && day > 8 ||
+                                        isTachanunRecitedEndOfTishrei && day in 9..21/*8 < day < 22*/
+                                ) ||
+                        month == JewishDate.SIVAN && (
+                        isTachanunRecitedWeekAfterShavuos && day < 7 ||
+                                !isTachanunRecitedWeekAfterShavuos &&
+                                day < if (!jewishCalendar.inIsrael && !isTachanunRecited13SivanOutOfIsrael) 14 else 13
+                        ) ||
+                        jewishCalendar.isYomTov &&
+                        (
+                                !jewishCalendar.isTaanis ||
+                                        !isTachanunRecitedPesachSheni && holidayIndex == JewishCalendar.PESACH_SHENI
+                                ) || // Erev YT is included in isYomTov
+                        !jewishCalendar.inIsrael &&
+                        !isTachanunRecitedPesachSheni &&
+                        !isTachanunRecited15IyarOutOfIsrael &&
+                        jewishCalendar.jewishMonth == JewishDate.IYAR && day == 15 ||
+                        holidayIndex == JewishCalendar.TISHA_BEAV ||
+                        jewishCalendar.isIsruChag ||
+                        jewishCalendar.isRoshChodesh ||
+                        !isTachanunRecitedShivasYemeiHamiluim && (
+                        !jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR ||
+                                jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR_II
+                        ) && day > 22 ||
+                        !isTachanunRecitedWeekOfPurim &&
+                        (!jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR ||
+                                jewishCalendar.isJewishLeapYear && month == JewishDate.ADAR_II
+                                ) &&
+                        day in 11..17/*10 < day < 18*/ ||
+                        jewishCalendar.isUseModernHolidays &&
+                        (
+                                holidayIndex == JewishCalendar.YOM_HAATZMAUT ||
+                                        holidayIndex == JewishCalendar.YOM_YERUSHALAYIM
+                                ) ||
+                        !isTachanunRecitedWeekOfHod &&
+                        (month == JewishDate.IYAR) &&
+                        day in 14..20/*13 < day < 21*/
+                )
     }
 
     /**
@@ -298,20 +320,18 @@ class TefilaRules {
      * @see .isTachanunRecitedShacharis
      */
     fun isTachanunRecitedMincha(jewishCalendar: JewishCalendar): Boolean {
-        var tomorrow: JewishCalendar = JewishCalendar()
-        tomorrow = jewishCalendar.clone() as JewishCalendar
+        val tomorrow = jewishCalendar.clone() as JewishCalendar
         tomorrow.forward(Calendar.DATE, 1)
+        val yomTovIndex = tomorrow.yomTovIndex
         return !(
                 !isTachanunRecitedMinchaAllYear ||
                         jewishCalendar.dayOfWeek == Calendar.FRIDAY ||
                         !isTachanunRecitedShacharis(jewishCalendar) ||
-                        (
-                                (!isTachanunRecitedShacharis(tomorrow) &&
-                                        tomorrow.yomTovIndex != JewishCalendar.EREV_ROSH_HASHANA &&
-                                        tomorrow.yomTovIndex != JewishCalendar.EREV_YOM_KIPPUR &&
-                                        tomorrow.yomTovIndex != JewishCalendar.PESACH_SHENI)
-                                ) || 
-                        (!isTachanunRecitedMinchaErevLagBaomer && tomorrow.yomTovIndex == JewishCalendar.LAG_BAOMER)
+                        !isTachanunRecitedShacharis(tomorrow) &&
+                                yomTovIndex != JewishCalendar.EREV_ROSH_HASHANA &&
+                                yomTovIndex != JewishCalendar.EREV_YOM_KIPPUR &&
+                                yomTovIndex != JewishCalendar.PESACH_SHENI ||
+                        !isTachanunRecitedMinchaErevLagBaomer && yomTovIndex == JewishCalendar.LAG_BAOMER
                 )
     }
 
