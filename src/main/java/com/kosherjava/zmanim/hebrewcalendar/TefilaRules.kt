@@ -16,37 +16,7 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import com.kosherjava.zmanim.util.ZmanimFormatter
-import java.util.TimeZone
-import java.lang.StringBuffer
-import com.kosherjava.zmanim.util.Zman
-import java.lang.IllegalArgumentException
-import com.kosherjava.zmanim.util.GeoLocation
-import java.lang.StringBuilder
-import java.lang.CloneNotSupportedException
-import com.kosherjava.zmanim.util.AstronomicalCalculator
 import java.util.Calendar
-import com.kosherjava.zmanim.util.NOAACalculator
-import java.text.SimpleDateFormat
-import java.text.DecimalFormat
-import java.text.DateFormat
-import java.util.Collections
-import com.kosherjava.zmanim.util.GeoLocationUtils
-import com.kosherjava.zmanim.util.SunTimesCalculator
-import com.kosherjava.zmanim.hebrewcalendar.Daf
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate
-import java.time.LocalDate
-import java.util.GregorianCalendar
-import com.kosherjava.zmanim.hebrewcalendar.HebrewDateFormatter
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
-import com.kosherjava.zmanim.hebrewcalendar.YomiCalculator
-import com.kosherjava.zmanim.hebrewcalendar.YerushalmiYomiCalculator
-import java.util.EnumMap
-import com.kosherjava.zmanim.AstronomicalCalendar
-import com.kosherjava.zmanim.ZmanimCalendar
-import java.math.BigDecimal
-import com.kosherjava.zmanim.ComplexZmanimCalendar
 
 /**
  * Tefila Rules is a utility class that covers the various *halachos* and *minhagim* regarding
@@ -328,9 +298,9 @@ class TefilaRules {
                         jewishCalendar.dayOfWeek == Calendar.FRIDAY ||
                         !isTachanunRecitedShacharis(jewishCalendar) ||
                         !isTachanunRecitedShacharis(tomorrow) &&
-                                yomTovIndex != JewishCalendar.EREV_ROSH_HASHANA &&
-                                yomTovIndex != JewishCalendar.EREV_YOM_KIPPUR &&
-                                yomTovIndex != JewishCalendar.PESACH_SHENI ||
+                        yomTovIndex != JewishCalendar.EREV_ROSH_HASHANA &&
+                        yomTovIndex != JewishCalendar.EREV_YOM_KIPPUR &&
+                        yomTovIndex != JewishCalendar.PESACH_SHENI ||
                         !isTachanunRecitedMinchaErevLagBaomer && yomTovIndex == JewishCalendar.LAG_BAOMER
                 )
     }
@@ -352,24 +322,13 @@ class TefilaRules {
      * @see .isVeseinTalUmatarStartingTonight
      * @see .isVeseinTalUmatarRecited
      */
-    fun isVeseinTalUmatarStartDate(jewishCalendar: JewishCalendar): Boolean {
-        if (jewishCalendar.inIsrael) {
-            // The 7th Cheshvan can't occur on Shabbos, so always return true for 7 Cheshvan
-            if (jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 7) {
-                return true
-            }
-        } else {
-            if (jewishCalendar.dayOfWeek == Calendar.SATURDAY) { //Not recited on Friday night
-                return false
-            }
-            if (jewishCalendar.dayOfWeek == Calendar.SUNDAY) { // When starting on Sunday, it can be the start date or delayed from Shabbos
-                return jewishCalendar.tekufasTishreiElapsedDays == 48 || jewishCalendar.tekufasTishreiElapsedDays == 47
-            } else {
-                return jewishCalendar.tekufasTishreiElapsedDays == 47
-            }
+    fun isVeseinTalUmatarStartDate(jewishCalendar: JewishCalendar): Boolean =
+        if (jewishCalendar.inIsrael) jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 7 // The 7th Cheshvan can't occur on Shabbos, so always return true for 7 Cheshvan
+        else when (jewishCalendar.dayOfWeek) {
+            Calendar.SATURDAY -> false //Not recited on Friday night
+            Calendar.SUNDAY -> jewishCalendar.tekufasTishreiElapsedDays == 48 || jewishCalendar.tekufasTishreiElapsedDays == 47 // When starting on Sunday, it can be the start date or delayed from Shabbos
+            else -> jewishCalendar.tekufasTishreiElapsedDays == 47
         }
-        return false // keep the compiler happy
-    }
 
     /**
      * Returns if true if tonight is the first night to start reciting *Vesein Tal Umatar Livracha* (
@@ -384,27 +343,21 @@ class TefilaRules {
      * @return true if it is the first Jewish day (starting the prior evening of reciting *Vesein Tal Umatar
      * Livracha* (*Sheailas Geshamim*).
      *
-     * @see .isVeseinTalUmatarStartDate
-     * @see .isVeseinTalUmatarRecited
+     * @see isVeseinTalUmatarStartDate TODO seems like these can be dried up
+     * @see isVeseinTalUmatarRecited
      */
-    fun isVeseinTalUmatarStartingTonight(jewishCalendar: JewishCalendar): Boolean {
-        if (jewishCalendar.inIsrael) {
-            // The 7th Cheshvan can't occur on Shabbos, so always return true for 6 Cheshvan
-            if (jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 6) {
-                return true
-            }
-        } else {
-            if (jewishCalendar.dayOfWeek == Calendar.FRIDAY) { //Not recited on Friday night
-                return false
-            }
-            if (jewishCalendar.dayOfWeek == Calendar.SATURDAY) { // When starting on motzai Shabbos, it can be the start date or delayed from Friday night
-                return jewishCalendar.tekufasTishreiElapsedDays == 47 || jewishCalendar.tekufasTishreiElapsedDays == 46
-            } else {
-                return jewishCalendar.tekufasTishreiElapsedDays == 46
+    fun isVeseinTalUmatarStartingTonight(jewishCalendar: JewishCalendar): Boolean =
+        if (jewishCalendar.inIsrael)
+            jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 6 // The 7th Cheshvan can't occur on Shabbos, so always return true for 6 Cheshvan
+        else {
+            // When starting on motzai Shabbos, it can be the start date or delayed from Friday night
+            when (jewishCalendar.dayOfWeek) {
+                Calendar.FRIDAY -> false //Not recited on Friday night
+                Calendar.SATURDAY ->
+                    jewishCalendar.tekufasTishreiElapsedDays == 47 || jewishCalendar.tekufasTishreiElapsedDays == 46
+                else -> jewishCalendar.tekufasTishreiElapsedDays == 46
             }
         }
-        return false
-    }
 
     /**
      * Returns if *Vesein Tal Umatar Livracha* (*Sheailas Geshamim*) is recited. This will return
@@ -417,18 +370,11 @@ class TefilaRules {
      * @see .isVeseinTalUmatarStartDate
      * @see .isVeseinTalUmatarStartingTonight
      */
-    fun isVeseinTalUmatarRecited(jewishCalendar: JewishCalendar): Boolean {
-        if (jewishCalendar.jewishMonth == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth < 15) {
-            return true
-        }
-        if (jewishCalendar.jewishMonth < JewishDate.CHESHVAN) {
-            return false
-        }
-        if (jewishCalendar.inIsrael) {
-            return jewishCalendar.jewishMonth != JewishDate.CHESHVAN || jewishCalendar.jewishDayOfMonth >= 7
-        } else {
-            return jewishCalendar.tekufasTishreiElapsedDays >= 47
-        }
+    fun isVeseinTalUmatarRecited(jewishCalendar: JewishCalendar): Boolean = when {
+        jewishCalendar.jewishMonth == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth < 15 -> true
+        jewishCalendar.jewishMonth < JewishDate.CHESHVAN -> false
+        jewishCalendar.inIsrael -> jewishCalendar.jewishMonth != JewishDate.CHESHVAN || jewishCalendar.jewishDayOfMonth >= 7
+        else -> jewishCalendar.tekufasTishreiElapsedDays >= 47
     }
 
     /**
@@ -439,9 +385,7 @@ class TefilaRules {
      * @return true if *Vesein Beracha* is recited.
      * @see .isVeseinTalUmatarRecited
      */
-    fun isVeseinBerachaRecited(jewishCalendar: JewishCalendar): Boolean {
-        return !isVeseinTalUmatarRecited(jewishCalendar)
-    }
+    fun isVeseinBerachaRecited(jewishCalendar: JewishCalendar): Boolean = !isVeseinTalUmatarRecited(jewishCalendar)
 
     /**
      * Returns if the date is the start date for reciting *Mashiv Haruach Umorid Hageshem*. The date is 22
@@ -452,9 +396,8 @@ class TefilaRules {
      * @see .isMashivHaruachEndDate
      * @see .isMashivHaruachRecited
      */
-    fun isMashivHaruachStartDate(jewishCalendar: JewishCalendar): Boolean {
-        return jewishCalendar.jewishMonth == JewishDate.TISHREI && jewishCalendar.jewishDayOfMonth == 22
-    }
+    fun isMashivHaruachStartDate(jewishCalendar: JewishCalendar): Boolean =
+        jewishCalendar.jewishMonth == JewishDate.TISHREI && jewishCalendar.jewishDayOfMonth == 22
 
     /**
      * Returns if the date is the end date for reciting *Mashiv Haruach Umorid Hageshem*. The date is 15
@@ -462,12 +405,11 @@ class TefilaRules {
      *
      * @param jewishCalendar the Jewish calendar day.
      * @return true if the date is the end date for reciting *Mashiv Haruach Umorid Hageshem*.
-     * @see .isMashivHaruachStartDate
-     * @see .isMashivHaruachRecited
+     * @see isMashivHaruachStartDate
+     * @see isMashivHaruachRecited
      */
-    fun isMashivHaruachEndDate(jewishCalendar: JewishCalendar): Boolean {
-        return jewishCalendar.jewishMonth == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth == 15
-    }
+    fun isMashivHaruachEndDate(jewishCalendar: JewishCalendar): Boolean =
+        jewishCalendar.jewishMonth == JewishDate.NISSAN && jewishCalendar.jewishDayOfMonth == 15
 
     /**
      * Returns if *Mashiv Haruach Umorid Hageshem* is recited. This period starts on 22 [JewishDate.TISHREI] and ends on the 15th day of [<em>Nissan</em>][JewishDate.NISSAN].
@@ -477,11 +419,15 @@ class TefilaRules {
      * @see .isMashivHaruachStartDate
      * @see .isMashivHaruachEndDate
      */
-    fun isMashivHaruachRecited(jewishCalendar: JewishCalendar): Boolean {
-        val startDate: JewishDate = JewishDate(jewishCalendar.jewishYear, JewishDate.TISHREI, 22)
-        val endDate: JewishDate = JewishDate(jewishCalendar.jewishYear, JewishDate.NISSAN, 15)
-        return jewishCalendar.compareTo(startDate) > 0 && jewishCalendar.compareTo(endDate) < 0
-    }
+    fun isMashivHaruachRecited(jewishCalendar: JewishCalendar): Boolean = jewishCalendar.isBetween(
+        JewishDate(jewishCalendar.jewishYear, JewishDate.TISHREI, 22),
+        JewishDate(jewishCalendar.jewishYear, JewishDate.NISSAN, 15)
+    )
+
+    fun JewishCalendar.isBetween(
+        startDate: JewishDate,
+        endDate: JewishDate
+    ) = this > startDate && this < endDate
 
     /**
      * Returns if *Morid Hatal* (or the lack of reciting *Mashiv Haruach* following *nussach Ashkenaz*) is
@@ -491,11 +437,9 @@ class TefilaRules {
      *
      * @return true if *Morid Hatal* (or the lack of reciting *Mashiv Haruach* following *nussach Ashkenaz*) is recited.
      */
-    fun isMoridHatalRecited(jewishCalendar: JewishCalendar): Boolean {
-        return !isMashivHaruachRecited(jewishCalendar) || isMashivHaruachStartDate(jewishCalendar) || isMashivHaruachEndDate(
-            jewishCalendar
-        )
-    }
+    fun isMoridHatalRecited(jewishCalendar: JewishCalendar): Boolean = !isMashivHaruachRecited(jewishCalendar) ||
+            isMashivHaruachStartDate(jewishCalendar) ||
+            isMashivHaruachEndDate(jewishCalendar)
 
     /**
      * Returns if *Hallel* is recited on the day in question. This will return true for both *Hallel shalem*
@@ -504,36 +448,24 @@ class TefilaRules {
      *
      * @param jewishCalendar the Jewish calendar day.
      * @return if *Hallel* is recited.
-     * @see .isHallelShalemRecited
+     * @see isHallelShalemRecited
      */
     fun isHallelRecited(jewishCalendar: JewishCalendar): Boolean {
         val day = jewishCalendar.jewishDayOfMonth
         val month = jewishCalendar.jewishMonth
         val holidayIndex = jewishCalendar.yomTovIndex
         val inIsrael: Boolean = jewishCalendar.inIsrael
-        if (jewishCalendar.isRoshChodesh) { //RH returns false for RC
-            return true
-        }
-        if (jewishCalendar.isChanukah) {
-            return true
-        }
-        when (month) {
-            JewishDate.NISSAN -> if (day >= 15 && ((inIsrael && day <= 21) || (!inIsrael && day <= 22))) {
-                return true
-            }
-            JewishDate.IYAR -> if (jewishCalendar.isUseModernHolidays && ((holidayIndex == JewishCalendar.YOM_HAATZMAUT
-                        || holidayIndex == JewishCalendar.YOM_YERUSHALAYIM))
-            ) {
-                return true
-            }
-            JewishDate.SIVAN -> if (day == 6 || (!inIsrael && (day == 7))) {
-                return true
-            }
-            JewishDate.TISHREI -> if (day >= 15 && (day <= 22 || (!inIsrael && (day <= 23)))) {
-                return true
-            }
-        }
-        return false
+        return jewishCalendar.isRoshChodesh || //RH returns false for RC
+            jewishCalendar.isChanukah ||
+                month == JewishDate.NISSAN && day >= 15 && (inIsrael && day <= 21 || !inIsrael && day <= 22) ||
+
+                        month == JewishDate.IYAR &&
+                        jewishCalendar.isUseModernHolidays &&
+                        (holidayIndex == JewishCalendar.YOM_HAATZMAUT || holidayIndex == JewishCalendar.YOM_YERUSHALAYIM) ||
+
+                        (month == JewishDate.SIVAN && day == 6 || !inIsrael && day == 7) ||
+                        month == JewishDate.TISHREI && day >= 15 && (day <= 22 || !inIsrael && day <= 23)
+
     }
 
     /**
@@ -547,18 +479,10 @@ class TefilaRules {
         val day = jewishCalendar.jewishDayOfMonth
         val month = jewishCalendar.jewishMonth
         val inIsrael: Boolean = jewishCalendar.inIsrael
-        return isHallelRecited(jewishCalendar)
-                &&
+        return isHallelRecited(jewishCalendar) &&
                 !(
-                        (jewishCalendar.isRoshChodesh && !jewishCalendar.isChanukah)
-                                ||
-                                (
-                                        month == JewishDate.NISSAN &&
-                                                (
-                                                        (inIsrael && day > 15)
-                                                                || (!inIsrael && day > 16)
-                                                        )
-                                        )
+                        jewishCalendar.isRoshChodesh && !jewishCalendar.isChanukah ||
+                                month == JewishDate.NISSAN && day > if(inIsrael) 15 else 16
                         )
     }
 
@@ -571,9 +495,8 @@ class TefilaRules {
      * @see JewishCalendar.isPurim
      * @see JewishCalendar.getIsMukafChoma
      */
-    fun isAlHanissimRecited(jewishCalendar: JewishCalendar): Boolean {
-        return jewishCalendar.isPurim || jewishCalendar.isChanukah
-    }
+    fun isAlHanissimRecited(jewishCalendar: JewishCalendar): Boolean =
+        jewishCalendar.isPurim || jewishCalendar.isChanukah
 
     /**
      * Returns if *Yaaleh Veyavo* is recited on the day in question.
@@ -589,14 +512,12 @@ class TefilaRules {
      * @see JewishCalendar.isSimchasTorah
      * @see JewishCalendar.isRoshChodesh
      */
-    fun isYaalehVeyavoRecited(jewishCalendar: JewishCalendar): Boolean {
-        return jewishCalendar.isPesach ||
-                jewishCalendar.isShavuos ||
-                jewishCalendar.isRoshHashana ||
-                jewishCalendar.isYomKippur ||
-                jewishCalendar.isSuccos ||
-                jewishCalendar.isShminiAtzeres ||
-                jewishCalendar.isSimchasTorah ||
-                jewishCalendar.isRoshChodesh
-    }
+    fun isYaalehVeyavoRecited(jewishCalendar: JewishCalendar): Boolean = jewishCalendar.isPesach ||
+            jewishCalendar.isShavuos ||
+            jewishCalendar.isRoshHashana ||
+            jewishCalendar.isYomKippur ||
+            jewishCalendar.isSuccos ||
+            jewishCalendar.isShminiAtzeres ||
+            jewishCalendar.isSimchasTorah ||
+            jewishCalendar.isRoshChodesh
 }
