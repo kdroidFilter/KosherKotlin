@@ -107,7 +107,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
      * @param format
      * int the format constant to use.
      */
-    fun setTimeFormat(format: Int) {
+    fun setTimeFormat(format: Int): ZmanimFormatter {
         timeFormat = format
         when (format) {
             SEXAGESIMAL_XSD_FORMAT -> setSettings(true, true, true)
@@ -115,6 +115,7 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
             SEXAGESIMAL_SECONDS_FORMAT -> setSettings(false, true, false)
             SEXAGESIMAL_MILLIS_FORMAT -> setSettings(false, true, true)
         }
+        return this
     }
 
     /**
@@ -123,10 +124,11 @@ class ZmanimFormatter constructor(format: Int, dateFormat: SimpleDateFormat, tim
      * @param useSeconds should seconds be used in the time format
      * @param useMillis should milliseconds be used informatting time.
      */
-    private fun setSettings(prependZeroHours: Boolean, useSeconds: Boolean, useMillis: Boolean) {
+    private fun setSettings(prependZeroHours: Boolean, useSeconds: Boolean, useMillis: Boolean): ZmanimFormatter {
         this.prependZeroHours = prependZeroHours
         this.useSeconds = useSeconds
         this.useMillis = useMillis
+        return this
     }
 
     /**
