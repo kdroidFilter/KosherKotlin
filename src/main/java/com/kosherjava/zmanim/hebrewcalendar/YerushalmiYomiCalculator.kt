@@ -85,7 +85,7 @@ object YerushalmiYomiCalculator {
         }
 
         // Get the number of days from cycle start until request.
-        val dafNo = getDiffBetweenDays(prevCycle, requested).toInt()
+        val dafNo = prevCycle.daysUntil(requested).toInt()
 
         // Get the number of special day to subtract
         val specialDays = getNumOfSpecialDays(prevCycle, requested)
@@ -147,11 +147,9 @@ object YerushalmiYomiCalculator {
 
     /**
      * Return the number of days between the dates passed in
-     * @param start the start date
+     * @param this@daysUntil the start date
      * @param end the end date
      * @return the number of days between the start and end dates
      */
-    private fun getDiffBetweenDays(start: Calendar, end: Calendar): Long {
-        return (end.timeInMillis - start.timeInMillis) / DAY_MILIS
-    }
+    private fun Calendar.daysUntil(end: Calendar): Long = (end.timeInMillis - timeInMillis) / DAY_MILIS
 }
