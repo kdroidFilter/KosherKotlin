@@ -30,9 +30,7 @@ class NOAACalculator : AstronomicalCalculator() {
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getCalculatorName
      */
     override val calculatorName: String
-        get() {
-            return "US National Oceanic and Atmospheric Administration Algorithm"
-        }
+        get() = "US National Oceanic and Atmospheric Administration Algorithm"
 
     /**
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunrise
@@ -75,12 +73,8 @@ class NOAACalculator : AstronomicalCalculator() {
         sunset /= 60
 
         // ensure that the time is >= 0 and < 24
-        while (sunset < 0.0) {
-            sunset += 24.0
-        }
-        while (sunset >= 24.0) {
-            sunset -= 24.0
-        }
+        while (sunset < 0.0) sunset += 24.0
+        while (sunset >= 24.0) sunset -= 24.0
         return sunset
     }
 
@@ -116,12 +110,12 @@ class NOAACalculator : AstronomicalCalculator() {
          * The [Julian day](https://en.wikipedia.org/wiki/Julian_day) of January 1, 2000, known as
          * [J2000.0](https://en.wikipedia.org/wiki/Epoch_(astronomy)#J2000).
          */
-        private val JULIAN_DAY_JAN_1_2000: Double = 2451545.0
+        private const val JULIAN_DAY_JAN_1_2000: Double = 2451545.0
 
         /**
          * Julian days per century.
          */
-        private val JULIAN_DAYS_PER_CENTURY: Double = 36525.0
+        private const val JULIAN_DAYS_PER_CENTURY: Double = 36525.0
 
         /**
          * Convert [Julian day](https://en.wikipedia.org/wiki/Julian_day) to centuries since [J2000.0](https://en.wikipedia.org/wiki/Epoch_(astronomy)#J2000).
@@ -130,9 +124,8 @@ class NOAACalculator : AstronomicalCalculator() {
          * the Julian Day to convert
          * @return the centuries since 2000 Julian corresponding to the Julian Day
          */
-        private fun getJulianCenturiesFromJulianDay(julianDay: Double): Double {
-            return (julianDay - JULIAN_DAY_JAN_1_2000) / JULIAN_DAYS_PER_CENTURY
-        }
+        private fun getJulianCenturiesFromJulianDay(julianDay: Double): Double =
+            (julianDay - JULIAN_DAY_JAN_1_2000) / JULIAN_DAYS_PER_CENTURY
 
         /**
          * Convert centuries since [J2000.0](https://en.wikipedia.org/wiki/Epoch_(astronomy)#J2000) to
@@ -142,9 +135,8 @@ class NOAACalculator : AstronomicalCalculator() {
          * the number of Julian centuries since [J2000.0](https://en.wikipedia.org/wiki/Epoch_(astronomy)#J2000).
          * @return the Julian Day corresponding to the Julian centuries passed in
          */
-        private fun getJulianDayFromJulianCenturies(julianCenturies: Double): Double {
-            return julianCenturies * JULIAN_DAYS_PER_CENTURY + JULIAN_DAY_JAN_1_2000
-        }
+        private fun getJulianDayFromJulianCenturies(julianCenturies: Double): Double =
+            julianCenturies * JULIAN_DAYS_PER_CENTURY + JULIAN_DAY_JAN_1_2000
 
         /**
          * Returns the Geometric [Mean Longitude](https://en.wikipedia.org/wiki/Mean_longitude) of the Sun.
@@ -155,12 +147,8 @@ class NOAACalculator : AstronomicalCalculator() {
          */
         private fun getSunGeometricMeanLongitude(julianCenturies: Double): Double {
             var longitude: Double = 280.46646 + julianCenturies * (36000.76983 + 0.0003032 * julianCenturies)
-            while (longitude > 360.0) {
-                longitude -= 360.0
-            }
-            while (longitude < 0.0) {
-                longitude += 360.0
-            }
+            while (longitude > 360.0) longitude -= 360.0
+            while (longitude < 0.0) longitude += 360.0
             return longitude // in degrees
         }
 
@@ -171,9 +159,8 @@ class NOAACalculator : AstronomicalCalculator() {
          * the number of Julian centuries since [J2000.0](https://en.wikipedia.org/wiki/Epoch_(astronomy)#J2000).
          * @return the Geometric Mean Anomaly of the Sun in degrees
          */
-        private fun getSunGeometricMeanAnomaly(julianCenturies: Double): Double {
-            return 357.52911 + julianCenturies * (35999.05029 - 0.0001537 * julianCenturies) // in degrees
-        }
+        private fun getSunGeometricMeanAnomaly(julianCenturies: Double): Double =
+            357.52911 + julianCenturies * (35999.05029 - 0.0001537 * julianCenturies) // in degrees
 
         /**
          * Return the [eccentricity of earth's orbit](https://en.wikipedia.org/wiki/Eccentricity_%28orbit%29).
@@ -182,9 +169,8 @@ class NOAACalculator : AstronomicalCalculator() {
          * the number of Julian centuries since [J2000.0](https://en.wikipedia.org/wiki/Epoch_(astronomy)#J2000).
          * @return the unitless eccentricity
          */
-        private fun getEarthOrbitEccentricity(julianCenturies: Double): Double {
-            return 0.016708634 - julianCenturies * (0.000042037 + 0.0000001267 * julianCenturies) // unitless
-        }
+        private fun getEarthOrbitEccentricity(julianCenturies: Double): Double =
+            0.016708634 - julianCenturies * (0.000042037 + 0.0000001267 * julianCenturies) // unitless
 
         /**
          * Returns the [equation of center](https://en.wikipedia.org/wiki/Equation_of_the_center) for the sun.
@@ -196,9 +182,9 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getSunEquationOfCenter(julianCenturies: Double): Double {
             val m: Double = getSunGeometricMeanAnomaly(julianCenturies)
             val mrad: Double = Math.toRadians(m)
-            val sinm: Double = Math.sin(mrad)
-            val sin2m: Double = Math.sin(mrad + mrad)
-            val sin3m: Double = Math.sin(mrad + mrad + mrad)
+            val sinm: Double = sin(mrad)
+            val sin2m: Double = sin(mrad + mrad)
+            val sin3m: Double = sin(mrad + mrad + mrad)
             return (sinm * (1.914602 - julianCenturies * (0.004817 + 0.000014 * julianCenturies))) + ((sin2m
                     * (0.019993 - 0.000101 * julianCenturies))) + (sin3m * 0.000289) // in degrees
         }
@@ -238,7 +224,7 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getSunApparentLongitude(julianCenturies: Double): Double {
             val sunTrueLongitude: Double = getSunTrueLongitude(julianCenturies)
             val omega: Double = 125.04 - 1934.136 * julianCenturies
-            val lambda: Double = sunTrueLongitude - 0.00569 - (0.00478 * Math.sin(Math.toRadians(omega)))
+            val lambda: Double = sunTrueLongitude - 0.00569 - (0.00478 * sin(Math.toRadians(omega)))
             return lambda // in degrees
         }
 
@@ -266,7 +252,7 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getObliquityCorrection(julianCenturies: Double): Double {
             val obliquityOfEcliptic: Double = getMeanObliquityOfEcliptic(julianCenturies)
             val omega: Double = 125.04 - 1934.136 * julianCenturies
-            return obliquityOfEcliptic + 0.00256 * Math.cos(Math.toRadians(omega)) // in degrees
+            return obliquityOfEcliptic + 0.00256 * cos(Math.toRadians(omega)) // in degrees
         }
 
         /**
@@ -280,8 +266,8 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getSunDeclination(julianCenturies: Double): Double {
             val obliquityCorrection: Double = getObliquityCorrection(julianCenturies)
             val lambda: Double = getSunApparentLongitude(julianCenturies)
-            val sint: Double = Math.sin(Math.toRadians(obliquityCorrection)) * Math.sin(Math.toRadians(lambda))
-            val theta: Double = Math.toDegrees(Math.asin(sint))
+            val sint: Double = sin(Math.toRadians(obliquityCorrection)) * sin(Math.toRadians(lambda))
+            val theta: Double = Math.toDegrees(asin(sint))
             return theta // in degrees
         }
 
@@ -298,13 +284,13 @@ class NOAACalculator : AstronomicalCalculator() {
             val geomMeanLongSun: Double = getSunGeometricMeanLongitude(julianCenturies)
             val eccentricityEarthOrbit: Double = getEarthOrbitEccentricity(julianCenturies)
             val geomMeanAnomalySun: Double = getSunGeometricMeanAnomaly(julianCenturies)
-            var y: Double = Math.tan(Math.toRadians(epsilon) / 2.0)
+            var y: Double = tan(Math.toRadians(epsilon) / 2.0)
             y *= y
-            val sin2l0: Double = Math.sin(2.0 * Math.toRadians(geomMeanLongSun))
-            val sinm: Double = Math.sin(Math.toRadians(geomMeanAnomalySun))
-            val cos2l0: Double = Math.cos(2.0 * Math.toRadians(geomMeanLongSun))
-            val sin4l0: Double = Math.sin(4.0 * Math.toRadians(geomMeanLongSun))
-            val sin2m: Double = Math.sin(2.0 * Math.toRadians(geomMeanAnomalySun))
+            val sin2l0: Double = sin(2.0 * Math.toRadians(geomMeanLongSun))
+            val sinm: Double = sin(Math.toRadians(geomMeanAnomalySun))
+            val cos2l0: Double = cos(2.0 * Math.toRadians(geomMeanLongSun))
+            val sin4l0: Double = sin(4.0 * Math.toRadians(geomMeanLongSun))
+            val sin2m: Double = sin(2.0 * Math.toRadians(geomMeanAnomalySun))
             val equationOfTime: Double =
                 (y * sin2l0 - 2.0 * eccentricityEarthOrbit * sinm + (4.0 * eccentricityEarthOrbit * y
                         * sinm * cos2l0)) - (0.5 * y * y * sin4l0) - (1.25 * eccentricityEarthOrbit * eccentricityEarthOrbit * sin2m)
@@ -326,10 +312,10 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getSunHourAngleAtSunrise(lat: Double, solarDec: Double, zenith: Double): Double {
             val latRad: Double = Math.toRadians(lat)
             val sdRad: Double = Math.toRadians(solarDec)
-            return (Math.acos(
-                Math.cos(Math.toRadians(zenith)) / (Math.cos(latRad) * Math.cos(sdRad)) - Math.tan(latRad)
-                        * Math.tan(sdRad)
-            )) // in radians
+            return acos(
+                cos(Math.toRadians(zenith)) / (cos(latRad) * cos(sdRad)) - tan(latRad)
+                        * tan(sdRad)
+            ) // in radians
         }
 
         /**
@@ -348,10 +334,10 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getSunHourAngleAtSunset(lat: Double, solarDec: Double, zenith: Double): Double {
             val latRad: Double = Math.toRadians(lat)
             val sdRad: Double = Math.toRadians(solarDec)
-            val hourAngle: Double = (Math.acos(
-                (Math.cos(Math.toRadians(zenith)) / (Math.cos(latRad) * Math.cos(sdRad))
-                        - Math.tan(latRad) * Math.tan(sdRad))
-            ))
+            val hourAngle: Double = acos(
+                cos(Math.toRadians(zenith)) / (cos(latRad) * cos(sdRad))
+                                        - tan(latRad) * tan(sdRad)
+            )
             return -hourAngle // in radians
         }
 
