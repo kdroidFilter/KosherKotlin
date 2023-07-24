@@ -2,7 +2,7 @@ KosherKotlin Zmanim API
 =====================
 
 The Zmanim library is an API for a specialized calendar that can calculate different astronomical
-times including sunrise and sunset and Jewish _zmanim_ or religious times for prayers and other
+times including sunrise and sunset (default uses NOAA's algorithm) and Jewish _zmanim_ or religious times for prayers and other
 Jewish religious duties.
 
 It is based on Eliyahu Hershfeld's [KosherJava](https://github.com/KosherJava/zmanim).
