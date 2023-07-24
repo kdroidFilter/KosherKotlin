@@ -42,7 +42,7 @@ dependencies {
 ```
 ## Usage
 
-The library was designed to be as idiomatic as possible, both in its implementation and its API surface. Every client-facing zero-argument function is accessible as a computed property (e.g. `calendar.alos72`).
+The library was designed to be as idiomatic as possible, both in its implementation and its API surface. Every client-facing zero-argument function is accessible as a computed property (e.g. `calendar.alos72`). Hosted documentation coming soon!
 
 # Future
  - [ ] There are plans to port the library to `kotlinx-datetime` so that it is multi-platform friendly. This is a major overhaul - PRs are welcomed.
