@@ -37,7 +37,7 @@ And then download the library as usual:
 
 ```
 dependencies {
-    implementation 'com.github.Sternbach-Software:zmanim:-SNAPSHOT'
+    implementation 'com.github.Sternbach-Software:KosherKotlin:-SNAPSHOT'
 }
 ```
 ## Usage
