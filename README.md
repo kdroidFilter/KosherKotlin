@@ -49,9 +49,10 @@ The library was designed to be as idiomatic as possible, both in its implementat
  - [ ] There are still a significant amount of javadocs/kdocs that were written for specific Java getters, setters, or properties, which were combined into a public property, and all of the javadocs/kdocs were copied to the property. They must be combined. There is often overlap or complete duplication between doc strings, but sometimes there are notes only relevant to the setter or getter.
  - [ ] Unit tests need to be ported from upstream. They are (slowly) being translated into Java from the Python port. 
 
-License
+License & Attribution
 -------
 The library is released under the [LGPL 2.1 license](https://kosherjava.com/2011/05/09/kosherjava-zmanim-api-released-under-the-lgpl-license/).
+If you made a publicly-available program that uses this library, I want to know! Just send me a heads-up email at "software at sternbach.org".
 
 Disclaimer:
 -----------
