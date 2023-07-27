@@ -15,7 +15,8 @@
  */
 package com.kosherjava.zmanim.util
 
-import java.util.*
+
+import kotlinx.datetime.TimeZone
 import kotlin.math.abs
 
 /**
@@ -75,9 +76,9 @@ data class Time(
     /**
      * @see Object.toString
      */
-    override fun toString(): String {
-        return ZmanimFormatter(TimeZone.getTimeZone("UTC")).format(this)
-    }
+//    override fun toString(): String {
+//        return ZmanimFormatter(TimeZone.UTC).format(this)
+//    }
 
     companion object {
         /** milliseconds in a second.  */

@@ -15,7 +15,9 @@
  */
 package com.kosherjava.zmanim.util
 
-import java.util.Calendar
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+
 import com.kosherjava.zmanim.hebrewcalendar.*
 import kotlin.math.*
 
@@ -26,6 +28,7 @@ import kotlin.math.*
  * @author  Eliyahu Hershfeld 2011 - 2023
  */
 class NOAACalculator : AstronomicalCalculator() {
+    override fun copy(): AstronomicalCalculator = NOAACalculator()
     /**
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getCalculatorName
      */
@@ -36,7 +39,7 @@ class NOAACalculator : AstronomicalCalculator() {
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunrise
      */
     override fun getUTCSunrise(
-        calendar: Calendar,
+        LocalDate: LocalDate,
         geoLocation: GeoLocation,
         zenith: Double,
         adjustForElevation: Boolean
@@ -44,7 +47,7 @@ class NOAACalculator : AstronomicalCalculator() {
         val elevation = if (adjustForElevation) geoLocation.elevation else 0.0
         val adjustedZenith: Double = adjustZenith(zenith, elevation)
         var sunrise: Double = getSunriseUTC(
-            DateUtils.getJulianDay(calendar), geoLocation.latitude, -geoLocation.longitude,
+            DateUtils.getJulianDay(LocalDate), geoLocation.latitude, -geoLocation.longitude,
             adjustedZenith
         )
         sunrise /= 60
@@ -59,7 +62,7 @@ class NOAACalculator : AstronomicalCalculator() {
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunset
      */
     override fun getUTCSunset(
-        calendar: Calendar,
+        LocalDate: LocalDate,
         geoLocation: GeoLocation,
         zenith: Double,
         adjustForElevation: Boolean
@@ -67,7 +70,7 @@ class NOAACalculator : AstronomicalCalculator() {
         val elevation: Double = if (adjustForElevation) geoLocation.elevation else 0.0
         val adjustedZenith: Double = adjustZenith(zenith, elevation)
         var sunset: Double = getSunsetUTC(
-            DateUtils.getJulianDay(calendar), geoLocation.latitude, -geoLocation.longitude,
+            DateUtils.getJulianDay(LocalDate), geoLocation.latitude, -geoLocation.longitude,
             adjustedZenith
         )
         sunset /= 60
@@ -93,8 +96,8 @@ class NOAACalculator : AstronomicalCalculator() {
      * the longitude for calculating noon since it is the same time anywhere along the longitude line.
      * @return the time in minutes from zero UTC
      */
-    override fun getUTCNoon(calendar: Calendar, geoLocation: GeoLocation): Double {
-        val julianDay: Double = DateUtils.getJulianDay(calendar)
+    override fun getUTCNoon(LocalDate: LocalDate, geoLocation: GeoLocation): Double {
+        val julianDay: Double = DateUtils.getJulianDay(LocalDate)
         val julianCenturies: Double = getJulianCenturiesFromJulianDay(julianDay)
         var noon: Double = getSolarNoonUTC(julianCenturies, -geoLocation.longitude)
         noon /= 60
@@ -181,7 +184,7 @@ class NOAACalculator : AstronomicalCalculator() {
          */
         private fun getSunEquationOfCenter(julianCenturies: Double): Double {
             val m: Double = getSunGeometricMeanAnomaly(julianCenturies)
-            val mrad: Double = Math.toRadians(m)
+            val mrad: Double = toRadians(m)
             val sinm: Double = sin(mrad)
             val sin2m: Double = sin(mrad + mrad)
             val sin3m: Double = sin(mrad + mrad + mrad)
@@ -224,7 +227,7 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getSunApparentLongitude(julianCenturies: Double): Double {
             val sunTrueLongitude: Double = getSunTrueLongitude(julianCenturies)
             val omega: Double = 125.04 - 1934.136 * julianCenturies
-            val lambda: Double = sunTrueLongitude - 0.00569 - (0.00478 * sin(Math.toRadians(omega)))
+            val lambda: Double = sunTrueLongitude - 0.00569 - (0.00478 * sin(toRadians(omega)))
             return lambda // in degrees
         }
 
@@ -252,7 +255,7 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getObliquityCorrection(julianCenturies: Double): Double {
             val obliquityOfEcliptic: Double = getMeanObliquityOfEcliptic(julianCenturies)
             val omega: Double = 125.04 - 1934.136 * julianCenturies
-            return obliquityOfEcliptic + 0.00256 * cos(Math.toRadians(omega)) // in degrees
+            return obliquityOfEcliptic + 0.00256 * cos(toRadians(omega)) // in degrees
         }
 
         /**
@@ -266,8 +269,8 @@ class NOAACalculator : AstronomicalCalculator() {
         private fun getSunDeclination(julianCenturies: Double): Double {
             val obliquityCorrection: Double = getObliquityCorrection(julianCenturies)
             val lambda: Double = getSunApparentLongitude(julianCenturies)
-            val sint: Double = sin(Math.toRadians(obliquityCorrection)) * sin(Math.toRadians(lambda))
-            val theta: Double = Math.toDegrees(asin(sint))
+            val sint: Double = sin(toRadians(obliquityCorrection)) * sin(toRadians(lambda))
+            val theta: Double = toDegrees(asin(sint))
             return theta // in degrees
         }
 
@@ -284,17 +287,17 @@ class NOAACalculator : AstronomicalCalculator() {
             val geomMeanLongSun: Double = getSunGeometricMeanLongitude(julianCenturies)
             val eccentricityEarthOrbit: Double = getEarthOrbitEccentricity(julianCenturies)
             val geomMeanAnomalySun: Double = getSunGeometricMeanAnomaly(julianCenturies)
-            var y: Double = tan(Math.toRadians(epsilon) / 2.0)
+            var y: Double = tan(toRadians(epsilon) / 2.0)
             y *= y
-            val sin2l0: Double = sin(2.0 * Math.toRadians(geomMeanLongSun))
-            val sinm: Double = sin(Math.toRadians(geomMeanAnomalySun))
-            val cos2l0: Double = cos(2.0 * Math.toRadians(geomMeanLongSun))
-            val sin4l0: Double = sin(4.0 * Math.toRadians(geomMeanLongSun))
-            val sin2m: Double = sin(2.0 * Math.toRadians(geomMeanAnomalySun))
+            val sin2l0: Double = sin(2.0 * toRadians(geomMeanLongSun))
+            val sinm: Double = sin(toRadians(geomMeanAnomalySun))
+            val cos2l0: Double = cos(2.0 * toRadians(geomMeanLongSun))
+            val sin4l0: Double = sin(4.0 * toRadians(geomMeanLongSun))
+            val sin2m: Double = sin(2.0 * toRadians(geomMeanAnomalySun))
             val equationOfTime: Double =
                 (y * sin2l0 - 2.0 * eccentricityEarthOrbit * sinm + (4.0 * eccentricityEarthOrbit * y
                         * sinm * cos2l0)) - (0.5 * y * y * sin4l0) - (1.25 * eccentricityEarthOrbit * eccentricityEarthOrbit * sin2m)
-            return Math.toDegrees(equationOfTime) * 4.0 // in minutes of time
+            return toDegrees(equationOfTime) * 4.0 // in minutes of time
         }
 
         /**
@@ -310,10 +313,10 @@ class NOAACalculator : AstronomicalCalculator() {
          * @return hour angle of sunrise in [radians](https://en.wikipedia.org/wiki/Radian)
          */
         private fun getSunHourAngleAtSunrise(lat: Double, solarDec: Double, zenith: Double): Double {
-            val latRad: Double = Math.toRadians(lat)
-            val sdRad: Double = Math.toRadians(solarDec)
+            val latRad: Double = toRadians(lat)
+            val sdRad: Double = toRadians(solarDec)
             return acos(
-                cos(Math.toRadians(zenith)) / (cos(latRad) * cos(sdRad)) - tan(latRad)
+                cos(toRadians(zenith)) / (cos(latRad) * cos(sdRad)) - tan(latRad)
                         * tan(sdRad)
             ) // in radians
         }
@@ -332,10 +335,10 @@ class NOAACalculator : AstronomicalCalculator() {
          * @return the hour angle of sunset in [radians](https://en.wikipedia.org/wiki/Radian)
          */
         private fun getSunHourAngleAtSunset(lat: Double, solarDec: Double, zenith: Double): Double {
-            val latRad: Double = Math.toRadians(lat)
-            val sdRad: Double = Math.toRadians(solarDec)
+            val latRad: Double = toRadians(lat)
+            val sdRad: Double = toRadians(solarDec)
             val hourAngle: Double = acos(
-                cos(Math.toRadians(zenith)) / (cos(latRad) * cos(sdRad))
+                cos(toRadians(zenith)) / (cos(latRad) * cos(sdRad))
                                         - tan(latRad) * tan(sdRad)
             )
             return -hourAngle // in radians
@@ -354,9 +357,9 @@ class NOAACalculator : AstronomicalCalculator() {
          * longitude of location for calculation
          * @return solar elevation in degrees - horizon is 0 degrees, civil twilight is -6 degrees
          */
-        fun getSolarElevation(cal: Calendar, lat: Double, lon: Double): Double {
+        fun getSolarElevation(cal: LocalDateTime, lat: Double, lon: Double): Double {
             val (hourAngle_rad, lat_rad, dec_rad) = getHourAngleLatAndDec(cal, lat, lon)
-            return Math.toDegrees(
+            return toDegrees(
                 asin(
                     sin(lat_rad) * sin(dec_rad)
                             + cos(lat_rad) * cos(dec_rad) * cos(hourAngle_rad)
@@ -377,9 +380,9 @@ class NOAACalculator : AstronomicalCalculator() {
          * longitude of location for calculation
          * @return the solar azimuth
          */
-        fun getSolarAzimuth(cal: Calendar, lat: Double, lon: Double): Double {
+        fun getSolarAzimuth(cal: LocalDateTime, lat: Double, lon: Double): Double {
             val (hourAngle_rad, dec_rad, lat_rad) = getHourAngleLatAndDec(cal, lat, lon)
-            return Math.toDegrees(
+            return toDegrees(
                 atan(
                     sin(hourAngle_rad)
                             / (
@@ -390,17 +393,17 @@ class NOAACalculator : AstronomicalCalculator() {
             ) + 180
         }
 
-        fun getHourAngleLatAndDec(cal: Calendar, lat: Double, lon: Double): Triple<Double, Double, Double> {
-            val julianDay: Double = DateUtils.getJulianDay(cal)
+        fun getHourAngleLatAndDec(cal: LocalDateTime, lat: Double, lon: Double): Triple<Double, Double, Double> {
+            val julianDay: Double = DateUtils.getJulianDay(cal.date)
             val julianCenturies: Double = getJulianCenturiesFromJulianDay(julianDay)
             val eot: Double = getEquationOfTime(julianCenturies)
-            var longitude: Double = ((cal.get(Calendar.HOUR_OF_DAY) + 12.0)
-                    + (cal.get(Calendar.MINUTE) + eot + (cal.get(Calendar.SECOND) / 60.0)) / 60.0)
+            var longitude: Double = ((cal.hour + 12.0)
+                    + (cal.minute + eot + (cal.second / 60.0)) / 60.0)
             longitude = -(longitude * 360.0 / 24.0) % 360.0
-            val hourAngle_rad: Double = Math.toRadians(lon - longitude)
+            val hourAngle_rad: Double = toRadians(lon - longitude)
             val declination: Double = getSunDeclination(julianCenturies)
-            val dec_rad: Double = Math.toRadians(declination)
-            val lat_rad: Double = Math.toRadians(lat)
+            val dec_rad: Double = toRadians(declination)
+            val lat_rad: Double = toRadians(lat)
             return Triple(hourAngle_rad, lat_rad, dec_rad)
         }
 
@@ -430,7 +433,7 @@ class NOAACalculator : AstronomicalCalculator() {
             var eqTime: Double = getEquationOfTime(tnoon)
             var solarDec: Double = getSunDeclination(tnoon)
             var hourAngle: Double = getSunHourAngleAtSunrise(latitude, solarDec, zenith)
-            var delta: Double = longitude - Math.toDegrees(hourAngle)
+            var delta: Double = longitude - toDegrees(hourAngle)
             var timeDiff: Double = 4 * delta // in minutes of time
             var timeUTC: Double = 720 + timeDiff - eqTime // in minutes
 
@@ -442,7 +445,7 @@ class NOAACalculator : AstronomicalCalculator() {
             eqTime = getEquationOfTime(newt)
             solarDec = getSunDeclination(newt)
             hourAngle = getSunHourAngleAtSunrise(latitude, solarDec, zenith)
-            delta = longitude - Math.toDegrees(hourAngle)
+            delta = longitude - toDegrees(hourAngle)
             timeDiff = 4 * delta
             timeUTC = 720 + timeDiff - eqTime // in minutes
             return timeUTC
@@ -505,7 +508,7 @@ class NOAACalculator : AstronomicalCalculator() {
             var eqTime: Double = getEquationOfTime(tnoon)
             var solarDec: Double = getSunDeclination(tnoon)
             var hourAngle: Double = getSunHourAngleAtSunset(latitude, solarDec, zenith)
-            var delta: Double = longitude - Math.toDegrees(hourAngle)
+            var delta: Double = longitude - toDegrees(hourAngle)
             var timeDiff: Double = 4 * delta
             var timeUTC: Double = 720 + timeDiff - eqTime
 
@@ -517,7 +520,7 @@ class NOAACalculator : AstronomicalCalculator() {
             eqTime = getEquationOfTime(newt)
             solarDec = getSunDeclination(newt)
             hourAngle = getSunHourAngleAtSunset(latitude, solarDec, zenith)
-            delta = longitude - Math.toDegrees(hourAngle)
+            delta = longitude - toDegrees(hourAngle)
             timeDiff = 4 * delta
             timeUTC = 720 + timeDiff - eqTime // in minutes
             return timeUTC

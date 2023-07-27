@@ -15,7 +15,9 @@
  */
 package com.kosherjava.zmanim.util
 
-import java.util.*
+import kotlinx.datetime.Instant
+
+
 import kotlin.Comparator
 
 /**
@@ -79,7 +81,7 @@ data class Zman(
     /**
      * The [Date] of the *zman*
      */
-    var zman: Date? = null,
+    var zman: Instant? = null,
     /**
      * Returns a duration based *zman* such as [temporal hour][com.kosherjava.zmanim.AstronomicalCalendar.getTemporalHour]
      * (or the various *shaah zmanis* times such as [<em>shaah zmanis GRA</em>][com.kosherjava.zmanim.ZmanimCalendar.getShaahZmanisGra]
@@ -165,7 +167,7 @@ data class Zman(
          * than the second.
          * Please note that this class will handle cases where either the `Zman` is a null or [.getZman] returns a null.
          */
-        val DATE_ORDER: Comparator<Zman?> = compareBy { it?.zman?.time ?: Long.MAX_VALUE }
+        val DATE_ORDER: Comparator<Zman?> = compareBy { it?.zman ?: Long.MAX_VALUE }
 
         /**
          * A [Comparator] that will compare and sort zmanim by zmanim label order. Compares its two arguments by the zmanim label

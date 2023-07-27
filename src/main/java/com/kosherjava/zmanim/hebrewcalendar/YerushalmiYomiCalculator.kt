@@ -15,9 +15,17 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import java.lang.IllegalArgumentException
-import java.util.Calendar
-import java.util.GregorianCalendar
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.toInstant
+import kotlin.time.Duration.Companion.days
+
 
 /**
  * This class calculates the [Talmud Yerusalmi](https://en.wikipedia.org/wiki/Jerusalem_Talmud) [Daf Yomi](https://en.wikipedia.org/wiki/Daf_Yomi) page ([Daf]) for the a given date.
@@ -26,10 +34,18 @@ import java.util.GregorianCalendar
  * @author  Eliyahu Hershfeld 2017 - 2023
  */
 object YerushalmiYomiCalculator {
+    var timeZone = TimeZone.currentSystemDefault()
+
     /**
      * The start date of the first Daf Yomi Yerushalmi cycle of February 2, 1980 / 15 Shevat, 5740.
      */
-    private val DAF_YOMI_START_DAY: Calendar = GregorianCalendar(1980, Calendar.FEBRUARY, 2)
+    private val DAF_YOMI_START_DAY: Instant =
+        LocalDateTime(
+            1980, Month.FEBRUARY, 2,
+            0, 0, 0, 0
+        )
+            .toInstant(timeZone)
+
 
     /** The number of milliseconds in a day.  */
     private const val DAY_MILIS: Int = 1000 * 60 * 60 * 24
@@ -58,9 +74,11 @@ object YerushalmiYomiCalculator {
      * if the date is prior to the February 2, 1980, the start of the first Daf Yomi Yerushalmi cycle
      */
     fun getDafYomiYerushalmi(calendar: JewishCalendar): Daf? {
-        val nextCycle: Calendar = GregorianCalendar()
-        val prevCycle: Calendar = GregorianCalendar()
-        val requested: Calendar = calendar.gregorianCalendar
+        val requested = LocalDateTime(
+            calendar.gregorianLocalDate,
+            LocalTime(0, 0, 0)
+        )
+            .toInstant(timeZone)
         var masechta = 0
         var dafYomi: Daf? = null
 
@@ -70,22 +88,23 @@ object YerushalmiYomiCalculator {
         ) {
             return null
         }
-        require(!requested.before(DAF_YOMI_START_DAY)) { "$requested is prior to organized Daf Yomi Yerushalmi cycles that started on $DAF_YOMI_START_DAY" }
+        require(requested >= DAF_YOMI_START_DAY) { "$requested is prior to organized Daf Yomi Yerushalmi cycles that started on $DAF_YOMI_START_DAY" }
 
         // Start to calculate current cycle. init the start day
-        nextCycle.time = DAF_YOMI_START_DAY.time
+        var nextCycle = DAF_YOMI_START_DAY
+        var prevCycle = Clock.System.now()
 
         // Go cycle by cycle, until we get the next cycle
-        while (requested.after(nextCycle)) {
-            prevCycle.time = nextCycle.time
+        while (requested > nextCycle) {
+            prevCycle = nextCycle
 
             // Adds the number of whole shas dafs. and the number of days that not have daf.
-            nextCycle.add(Calendar.DAY_OF_MONTH, WHOLE_SHAS_DAFS)
-            nextCycle.add(Calendar.DAY_OF_MONTH, getNumOfSpecialDays(prevCycle, nextCycle))
+            nextCycle += WHOLE_SHAS_DAFS.days
+            nextCycle += getNumOfSpecialDays(prevCycle, nextCycle).days
         }
 
         // Get the number of days from cycle start until request.
-        val dafNo = prevCycle.daysUntil(requested).toInt()
+        val dafNo = prevCycle.daysUntil(requested, timeZone)
 
         // Get the number of special day to subtract
         val specialDays = getNumOfSpecialDays(prevCycle, requested)
@@ -111,7 +130,7 @@ object YerushalmiYomiCalculator {
      * @param end end date to calculate
      * @return the number of special days
      */
-    private fun getNumOfSpecialDays(start: Calendar, end: Calendar): Int {
+    private fun getNumOfSpecialDays(start: Instant, end: Instant): Int {
 
         // Find the start and end Jewish years
         val startYear = JewishCalendar(start).jewishYear
@@ -128,28 +147,11 @@ object YerushalmiYomiCalculator {
         for (i in startYear..endYear) {
             yom_kippur.setJewishYear(i)
             tisha_beav.setJewishYear(i)
-            if (yom_kippur.gregorianCalendar.isBetween(start, end)) specialDays++
-            if (tisha_beav.gregorianCalendar.isBetween(start, end)) specialDays++
+            val timeZone = TimeZone.currentSystemDefault()
+            val startToEnd = start..end
+            if (yom_kippur.gregorianLocalDate.atStartOfDayIn(timeZone) in startToEnd) specialDays++
+            if (tisha_beav.gregorianLocalDate.atStartOfDayIn(timeZone) in startToEnd) specialDays++
         }
         return specialDays
     }
-
-    /**
-     * Return if the date is between two dates
-     *
-     * @param start the start date
-     * @param this@isBetween the date being compared
-     * @param end the end date
-     * @return if the date is between the start and end dates
-     */
-    private fun Calendar?.isBetween(start: Calendar, end: Calendar?): Boolean =
-        start.before(this) && end!!.after(this)
-
-    /**
-     * Return the number of days between the dates passed in
-     * @param this@daysUntil the start date
-     * @param end the end date
-     * @return the number of days between the start and end dates
-     */
-    private fun Calendar.daysUntil(end: Calendar): Long = (end.timeInMillis - timeInMillis) / DAY_MILIS
 }

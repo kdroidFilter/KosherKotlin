@@ -15,8 +15,7 @@
  */
 package com.kosherjava.zmanim.util
 
-import java.lang.CloneNotSupportedException
-import java.util.Calendar
+import kotlinx.datetime.LocalDate
 import kotlin.math.acos
 
 /**
@@ -26,7 +25,7 @@ import kotlin.math.acos
  *
  * @author  Eliyahu Hershfeld 2004 - 2023
  */
-abstract class AstronomicalCalculator : Cloneable {
+abstract class AstronomicalCalculator {
     /**
      * Method to get the refraction value to be used when calculating sunrise and sunset. The default value is 34 arc
      * minutes. The [Errata and Notes for Calendrical Calculations: The Millennium Edition](https://web.archive.org/web/20150915094635/http://emr.cs.iit.edu/home/reingold/calendar-book/second-edition/errata.pdf) by Edward M. Reingold and Nachum Dershowitz
@@ -133,15 +132,15 @@ abstract class AstronomicalCalculator : Cloneable {
      * @see .getElevationAdjustment
      */
     abstract fun getUTCSunrise(
-        calendar: Calendar, geoLocation: GeoLocation, zenith: Double,
-        adjustForElevation: Boolean
+        LocalDate: LocalDate, geoLocation: GeoLocation, zenith: Double,
+        adjustForElevation: Boolean,
     ): Double
 
     /**
      * A method that calculates UTC sunset as well as any time based on an angle above or below sunset. This abstract
      * method is implemented by the classes that extend this class.
      *
-     * @param calendar
+     * @param LocalDate
      * Used to calculate day of year.
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
@@ -158,8 +157,8 @@ abstract class AstronomicalCalculator : Cloneable {
      * @see .getElevationAdjustment
      */
     abstract fun getUTCSunset(
-        calendar: Calendar, geoLocation: GeoLocation, zenith: Double,
-        adjustForElevation: Boolean
+        LocalDate: LocalDate, geoLocation: GeoLocation, zenith: Double,
+        adjustForElevation: Boolean,
     ): Double
 
     /**
@@ -168,14 +167,14 @@ abstract class AstronomicalCalculator : Cloneable {
      * true solar noon, while the [com.kosherjava.zmanim.util.SunTimesCalculator] approximates it, calculating
      * the time as halfway between sunrise and sunset.
      *
-     * @param calendar
+     * @param LocalDate
      * Used to calculate day of year.
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
      *
      * @return the time in minutes from zero UTC
      */
-    abstract fun getUTCNoon(calendar: Calendar, geoLocation: GeoLocation): Double
+    abstract fun getUTCNoon(LocalDate: LocalDate, geoLocation: GeoLocation): Double
 
     /**
      * Method to return the adjustment to the zenith required to account for the elevation. Since a person at a higher
@@ -203,9 +202,10 @@ abstract class AstronomicalCalculator : Cloneable {
      * @return the adjusted zenith
      */
     fun getElevationAdjustment(elevation: Double): Double =
-        Math.toDegrees(
+        toDegrees(
             acos(
-                earthRadius / (earthRadius + (elevation / 1000))
+                earthRadius /
+                        (earthRadius + (elevation / 1000))
             )
         )
 
@@ -241,22 +241,55 @@ abstract class AstronomicalCalculator : Cloneable {
      */
     fun adjustZenith(zenith: Double, elevation: Double): Double = zenith
         .takeUnless { it == GEOMETRIC_ZENITH } ?: // only adjust if it is exactly sunrise or sunset
-        (zenith + solarRadius + refraction + getElevationAdjustment(elevation))
+    (zenith + solarRadius + refraction + getElevationAdjustment(elevation))
 
 
-    /**
-     * @see Object.clone
-     * @since 1.1
-     */
-    public override fun clone(): Any {
-        return try {
-            super.clone() as AstronomicalCalculator
-        } catch (cnse: CloneNotSupportedException) {
-            print("Required by the compiler. Should never be reached since we implement clone()")
-        }
-    }
+    abstract fun copy(): AstronomicalCalculator
 
     companion object {
+
+        //Taken from java.lang.Math:
+
+        /**
+         * Constant by which to multiply an angular value in degrees to obtain an
+         * angular value in radians.
+         */
+        const val DEGREES_TO_RADIANS = 0.017453292519943295
+
+        /**
+         * Constant by which to multiply an angular value in radians to obtain an
+         * angular value in degrees.
+         */
+        const val RADIANS_TO_DEGREES = 57.29577951308232
+
+        /**
+         * Converts an angle measured in radians to an approximately
+         * equivalent angle measured in degrees.  The conversion from
+         * radians to degrees is generally inexact; users should
+         * *not* expect `cos(toRadians(90.0))` to exactly
+         * equal `0.0`.
+         *
+         * @param   angrad   an angle, in radians
+         * @return  the measurement of the angle `angrad`
+         * in degrees.
+         * @since   1.2
+         */
+        fun toDegrees(angrad: Double): Double = angrad * RADIANS_TO_DEGREES
+//        fun Double.toDegrees() = toDegrees(this)
+
+        /**
+         * Converts an angle measured in degrees to an approximately
+         * equivalent angle measured in radians.  The conversion from
+         * degrees to radians is generally inexact.
+         *
+         * @param   angdeg   an angle, in degrees
+         * @return  the measurement of the angle `angdeg`
+         * in radians.
+         * @since   1.2
+         */
+        fun toRadians(angdeg: Double): Double = angdeg * DEGREES_TO_RADIANS
+//        fun Double.toRadians() = toRadians(this)
+
         /**
          * The zenith of astronomical sunrise and sunset. The sun is 90 from the vertical 0
          */

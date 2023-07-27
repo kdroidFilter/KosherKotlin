@@ -17,7 +17,8 @@ package com.kosherjava.zmanim
 
 import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
 import com.kosherjava.zmanim.util.GeoLocation
-import java.util.*
+import kotlinx.datetime.Instant
+
 
 /**
  * The ZmanimCalendar is a specialized calendar that can calculate sunrise, sunset and Jewish *zmanim*
@@ -131,13 +132,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * [AstronomicalCalendar.getSunrise] if it is true.
      * @see com.kosherjava.zmanim.AstronomicalCalendar.getSunrise
      */
-    protected val elevationAdjustedSunrise: Date?
-        get() {
-            if (isUseElevation) {
-                return super.sunrise
-            }
-            return seaLevelSunrise
-        }
+    protected val elevationAdjustedSunrise: Instant?
+        get() = if (isUseElevation) super.sunrise else seaLevelSunrise
 
     /**
      * This method will return [sea level sunrise][.getSeaLevelSunrise] if [.isUseElevation] is false (the default),
@@ -148,7 +144,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * [AstronomicalCalendar.getSunset] if it is true.
      * @see com.kosherjava.zmanim.AstronomicalCalendar.getSunset
      */
-    protected val elevationAdjustedSunset: Date?
+    protected val elevationAdjustedSunset: Instant?
         get() {
             if (isUseElevation) {
                 return super.sunset
@@ -172,7 +168,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .ZENITH_8_POINT_5
      * ComplexZmanimCalendar.getTzaisGeonim8Point5Degrees
      */
-    val tzais: Date?
+    val tzais: Instant?
         get() = getSunsetOffsetByDegrees(ZENITH_8_POINT_5)
 
     /**
@@ -191,7 +187,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * low enough below the horizon for this calculation, a null will be returned. See detailed explanation on
      * top of the [AstronomicalCalendar] documentation.
      */
-    val alosHashachar: Date?
+    val alosHashachar: Instant?
         get() = getSunriseOffsetByDegrees(ZENITH_16_POINT_1)
 
     /**
@@ -207,7 +203,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val alos72: Date?
+    val alos72: Instant?
         get() = getTimeOffset(
             elevationAdjustedSunrise,
             -72 * MINUTE_MILLIS
@@ -225,7 +221,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * where there is at least one day where the sun does not rise, and one where it does not set, a null will
      * be returned. See detailed explanation on top of the [AstronomicalCalendar] documentation.
      */
-    val chatzos: Date?
+    val chatzos: Instant?
         get() = sunTransit
 
     /**
@@ -249,7 +245,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * a year where the sun does not rise, and one where it does not set, a null will be returned. See detailed
      * explanation on top of the [AstronomicalCalendar] documentation.
      */
-    fun getSofZmanShma(startOfDay: Date?, endOfDay: Date?): Date? {
+    fun getSofZmanShma(startOfDay: Instant?, endOfDay: Instant?): Instant? {
         return getShaahZmanisBasedZman(startOfDay, endOfDay, 3.0)
     }
 
@@ -269,7 +265,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * computed such as in the Arctic Circle where there is at least one day a year where the sun does not rise,
      * and one where it does not set, a null will be returned. See the detailed explanation on top of the [         ] documentation.
      */
-    val sofZmanShmaGRA: Date?
+    val sofZmanShmaGRA: Instant?
         get() {
             return getSofZmanShma(elevationAdjustedSunrise, elevationAdjustedSunset)
         }
@@ -289,7 +285,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see ComplexZmanimCalendar.getAlos72
      * @see ComplexZmanimCalendar.getSofZmanShmaMGA72Minutes
      */
-    val sofZmanShmaMGA: Date?
+    val sofZmanShmaMGA: Instant?
         get() {
             return getSofZmanShma(alos72, tzais72)
         }
@@ -309,7 +305,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * and one where it does not set, a null will be returned See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val tzais72: Date?
+    val tzais72: Instant?
         get() {
             return getTimeOffset(
                 elevationAdjustedSunset,
@@ -332,7 +328,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .getCandleLightingOffset
      * @see .setCandleLightingOffset
      */
-    val candleLighting: Date?
+    val candleLighting: Instant?
         get() {
             return getTimeOffset(
                 seaLevelSunset,
@@ -360,7 +356,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * one day a year where the sun does not rise, and one where it does not set, a null will be returned. See
      * detailed explanation on top of the [AstronomicalCalendar] documentation.
      */
-    fun getSofZmanTfila(startOfDay: Date?, endOfDay: Date?): Date? {
+    fun getSofZmanTfila(startOfDay: Instant?, endOfDay: Instant?): Instant? {
         return getShaahZmanisBasedZman(startOfDay, endOfDay, 4.0)
     }
 
@@ -380,7 +376,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * does not set, a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val sofZmanTfilaGRA: Date?
+    val sofZmanTfilaGRA: Instant?
         get() {
             return getSofZmanTfila(elevationAdjustedSunrise, elevationAdjustedSunset)
         }
@@ -399,7 +395,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .getShaahZmanisMGA
      * @see .getAlos72
      */
-    val sofZmanTfilaMGA: Date?
+    val sofZmanTfilaMGA: Instant?
         get() {
             return getSofZmanTfila(alos72, tzais72)
         }
@@ -425,7 +421,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * at least one day a year where the sun does not rise, and one where it does not set, a null will be
      * returned. See detailed explanation on top of the [AstronomicalCalendar] documentation.
      */
-    fun getMinchaGedola(startOfDay: Date?, endOfDay: Date?): Date? {
+    fun getMinchaGedola(startOfDay: Instant?, endOfDay: Instant?): Instant? {
         return getShaahZmanisBasedZman(startOfDay, endOfDay, 6.5)
     }
 
@@ -449,7 +445,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * not set, a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val minchaGedola: Date?
+    val minchaGedola: Instant?
         get() = getMinchaGedola(elevationAdjustedSunrise, elevationAdjustedSunset)
 
     /**
@@ -477,7 +473,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see ComplexZmanimCalendar.getSamuchLeMinchaKetana16Point1Degrees
      * @see ComplexZmanimCalendar.getSamuchLeMinchaKetana72Minutes
      */
-    fun getSamuchLeMinchaKetana(startOfDay: Date?, endOfDay: Date?): Date? {
+    fun getSamuchLeMinchaKetana(startOfDay: Instant?, endOfDay: Instant?): Instant? {
         return getShaahZmanisBasedZman(startOfDay, endOfDay, 9.0)
     }
 
@@ -503,7 +499,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * at least one day a year where the sun does not rise, and one where it does not set, a null will be
      * returned. See detailed explanation on top of the [AstronomicalCalendar] documentation.
      */
-    fun getMinchaKetana(startOfDay: Date?, endOfDay: Date?): Date? {
+    fun getMinchaKetana(startOfDay: Instant?, endOfDay: Instant?): Instant? {
         return getShaahZmanisBasedZman(startOfDay, endOfDay, 9.5)
     }
 
@@ -526,7 +522,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * not set, a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val minchaKetana: Date?
+    val minchaKetana: Instant?
         get() = getMinchaKetana(elevationAdjustedSunrise, elevationAdjustedSunset)
 
     /**
@@ -548,7 +544,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * at least one day a year where the sun does not rise, and one where it does not set, a null will be
      * returned. See detailed explanation on top of the [AstronomicalCalendar] documentation.
      */
-    fun getPlagHamincha(startOfDay: Date?, endOfDay: Date?): Date? {
+    fun getPlagHamincha(startOfDay: Instant?, endOfDay: Instant?): Instant? {
         return getShaahZmanisBasedZman(startOfDay, endOfDay, 10.75)
     }
 
@@ -565,7 +561,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * does not set, a null will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val plagHamincha: Date?
+    val plagHamincha: Instant?
         get() {
             return getPlagHamincha(elevationAdjustedSunrise, elevationAdjustedSunset)
         }
@@ -625,16 +621,16 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see JewishCalendar.hasCandleLighting
      * @see JewishCalendar.setInIsrael
      */
-    fun isAssurBemlacha(currentTime: Date, tzais: Date?, inIsrael: Boolean): Boolean {
+    fun isAssurBemlacha(currentTime: Instant, tzais: Instant?, inIsrael: Boolean): Boolean {
         val jewishCalendar = JewishCalendar()
         jewishCalendar.setGregorianDate(
-            calendar[Calendar.YEAR],
-            calendar[Calendar.MONTH],
-            calendar[Calendar.DAY_OF_MONTH]
+            localDate.year,
+            localDate.monthNumber,
+            localDate.dayOfMonth
         )
         jewishCalendar.inIsrael = inIsrael
-        return jewishCalendar.hasCandleLighting() && currentTime >= elevationAdjustedSunset || //erev shabbos, YT or YT sheni and after shkiah
-                jewishCalendar.isAssurBemelacha && currentTime <= tzais //is shabbos or YT and it is before tzais
+        return jewishCalendar.hasCandleLighting() && currentTime >= elevationAdjustedSunset!! || //erev shabbos, YT or YT sheni and after shkiah
+                jewishCalendar.isAssurBemelacha && currentTime <= tzais!! //is shabbos or YT and it is before tzais
     }
 
     /**
@@ -658,7 +654,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * as in the Arctic Circle where there is at least one day a year where the sun does not rise, and one
      * where it does not set, a null will be  returned. See detailed explanation on top of the [         ] documentation.
      */
-    fun getShaahZmanisBasedZman(startOfDay: Date?, endOfDay: Date?, hours: Double): Date? =
+    fun getShaahZmanisBasedZman(startOfDay: Instant?, endOfDay: Instant?, hours: Double): Instant? =
         getTimeOffset(startOfDay, /*shaa zmanis:*/getTemporalHour(startOfDay, endOfDay) * hours)
 
     companion object {
