@@ -45,7 +45,9 @@ dependencies {
 The library was designed to be as idiomatic as possible, both in its implementation and its API surface. Every client-facing zero-argument function is accessible as a computed property (e.g. `calendar.alos72`). Hosted documentation coming soon!
 
 # Future
- - [ ] There are plans to port the library to `kotlinx-datetime` so that it is multi-platform friendly. This is a major overhaul - PRs are welcomed.
+ - [x] ~~There are plans to port the library to `kotlinx-datetime` so that it is multi-platform friendly. This is a major overhaul - PRs are welcomed.~~
+   - [ ] ZmanimFormatter needs to be re-written once kotlinx-datetime implements formatting
+ - [ ] Library distribution needs to be improved (e.g. positing to mavenCentral, etc.), especially in light of the kotlinx-datetime port (not sure it builds properly)
  - [ ] There are still a significant amount of javadocs/kdocs that were written for specific Java getters, setters, or properties, which were combined into a public property, and all of the javadocs/kdocs were copied to the property. They must be combined. There is often overlap or complete duplication between doc strings, but sometimes there are notes only relevant to the setter or getter.
  - [ ] Unit tests need to be ported from upstream. They are (slowly) being translated into Java from the Python port. 
 
