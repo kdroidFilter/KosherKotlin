@@ -16,15 +16,17 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import java.lang.IllegalArgumentException
-import java.lang.CloneNotSupportedException
-import java.time.LocalDate
-import java.util.*
-import kotlin.math.abs
+import com.kosherjava.zmanim.util.DateUtils.now
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.until
 
 /**
- * The JewishDate is the base calendar class, that supports maintenance of a [GregorianCalendar]
- * instance along with the corresponding Jewish date. This class can use the standard Java Date and Calendar
+ * The JewishDate is the base calendar class, that supports maintenance of a [LocalDateTime]
+ * instance along with the corresponding Jewish date. This class can use the standard Java (TODO change for kotlin) Date and Calendar
  * classes for setting and maintaining the dates, but it does not subclass these classes or use them internally
  * in any calculations. This class also does not have a concept of a time (which the Date class does). Please
  * note that the calendar does not currently support dates prior to 1/1/1 Gregorian. Also keep in mind that the
@@ -53,12 +55,59 @@ import kotlin.math.abs
  *
  * @see Date
  *
- * @see Calendar
+ * @see java.util.Calendar
  *
  * @author  Avrom Finkelstien 2002
  * @author  Eliyahu Hershfeld 2011 - 2021
  */
-open class JewishDate : Comparable<JewishDate>, Cloneable {
+open class JewishDate : Comparable<JewishDate> {
+
+    /**
+     * Constructor that creates a JewishDate based on a molad passed in. The molad would be the number of chalakim/parts
+     * starting at the beginning of Sunday prior to the molad Tohu BeHaRaD (Be = Monday, Ha= 5 hours and Rad =204
+     * chalakim/parts) - prior to the start of the Jewish calendar. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080
+     * chalakim after sunset on Sunday evening).
+     *
+     * @param molad the number of chalakim since the beginning of Sunday prior to BaHaRaD
+     */
+    constructor(molad: Long) {
+        absDateToDate(moladToAbsDate(molad))
+        // long chalakimSince = getChalakimSinceMoladTohu(year, TISHREI);// tishrei
+        val conjunctionDay = (molad / CHALAKIM_PER_DAY.toLong()).toInt()
+        val conjunctionParts = (molad - conjunctionDay * CHALAKIM_PER_DAY.toLong()).toInt()
+        setMoladTime(conjunctionParts)
+    }
+    /**
+     * Creates a Jewish date based on a Jewish year, month and day of month.
+     *
+     * @param jewishYear
+     * the Jewish year
+     * @param jewishMonth
+     * the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
+     * constants [NISSAN] ... [ADAR] (or [ADAR_II] for a leap year Adar II) to avoid any
+     * confusion.
+     * @param jewishDayOfMonth
+     * the Jewish day of month. If 30 is passed in for a month with only 29 days (for example [IYAR],
+     * or [KISLEV] in a year that [isKislevShort]), the 29th (last valid date of the month)
+     * will be set
+     * @throws IllegalArgumentException
+     * if the day of month is < 1 or > 30, or a year of < 0 is passed in.
+     */
+    constructor(jewishYear: Int, jewishMonth: Int, jewishDayOfMonth: Int) {
+        setJewishDate(jewishYear, jewishMonth, jewishDayOfMonth)
+    }
+
+    constructor(localDate: LocalDate) {
+        setDate(localDate)
+    }
+
+    /**
+     * Default constructor will set a default date to the current system date.
+     */
+    constructor() {
+        resetDate()
+    }
+
     /** 
      * The Jewish month 1-12 (or 13 years in a leap year). The month count starts with 1 for Nisan and goes to
      * 13 for Adar II 
@@ -109,76 +158,6 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
     var moladChalakim = 0
 
     /**
-     * Returns the last day in a gregorian month
-     *
-     * @param month
-     * the Gregorian month
-     * @return the last day of the Gregorian month
-     */
-    @JvmName("getLastDayOfGregorianMonthFunc")
-    fun getLastDayOfGregorianMonth(month: Int): Int = getLastDayOfGregorianMonth(month, gregorianYear)
-
-    /**
-     * The last day in a gregorian month
-     * @param receiver the Gregorian month
-     * */
-    val Int.lastDayOfGregorianMonth: Int get() = getLastDayOfGregorianMonth(this@lastDayOfGregorianMonth)
-
-
-    /**
-     * Returns is the year passed in is a [Gregorian leap year](https://en.wikipedia.org/wiki/Leap_year#Gregorian_calendar).
-     * @param year the Gregorian year
-     * @return if the year in question is a leap year.
-     */
-    @JvmName("isGregorianLeapYearFunc")
-    fun isGregorianLeapYear(year: Int): Boolean = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
-    val Int.isGregorianLeapYear: Boolean get() = isGregorianLeapYear(this)
-
-    /**
-     * The month, where 1 == January, 2 == February, etc... Note that this is different than the Java's Calendar class
-     * where January ==0
-     */
-    var gregorianMonth
-        get() = gregorianMonthZeroBased + 1
-        set(value) { gregorianMonthZeroBased = value - 1 }
-    /**
-     * Sets the Gregorian month.
-     *
-     * @param month
-     * the Gregorian month
-     *
-     * @throws IllegalArgumentException
-     * if a month < 0 or > 11 is passed in
-     */
-    @JvmName("setGregorianMonthExternal")
-    fun setGregorianMonth(month: Int): JewishDate { //TODO can't make this a setter because it has side effects and would cause a recursive StackOverflow, and because I already have ...ZeroBased. Figure out how to refactor it to use this setter.
-        validateGregorianMonth(month)
-        setInternalGregorianDate(gregorianYear, month + 1, gregorianDayOfMonth)
-        return this
-    }
-
-    /**
-     * The Gregorian month (between 0-11). Like the [java.util.Calendar], months are 0 based.
-     * */
-    var gregorianMonthZeroBased = 0
-        private set
-
-    /** The day of the Gregorian month  */
-    var gregorianDayOfMonth = 0
-        private set
-
-    /** The Gregorian year  */
-    var gregorianYear = 0
-        private set
-    /**
-     * Returns the day of the week as a number between 1-7.
-     *
-     * @return the day of the week as a number between 1-7.
-     */
-    /** 1 == Sunday, 2 == Monday, etc...  */
-    var dayOfWeek = 0
-        private set
-    /**
      * Returns the absolute date (days since January 1, 0001 on the Gregorian calendar).
      *
      * @return the number of days since January 1, 1
@@ -187,8 +166,9 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @see absDate
      * @see absDateToJewishDate
      */
-    var absDate = 0
-        private set
+    val absDate: Int
+        get() = JAN_1_0001.until(gregorianLocalDate, DateTimeUnit.DAY)
+    val JAN_1_0001 = LocalDate(1, 1, 1)
 
     /**
      * Computes the Gregorian date from the absolute date. ND+ER
@@ -196,10 +176,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      */
     private fun absDateToDate(absDate: Int) {
         var year = absDate / 366 // Search forward year by year from approximate year
-        while (absDate >= gregorianDateToAbsDate(year + 1, 1, 1)) year++
+        while (absDate >= gregorianDateToAbsDate(LocalDate(year + 1, 1, 1))) year++
         var month = 1 // Search forward month by month from January
-        while (absDate > gregorianDateToAbsDate(year, month, getLastDayOfGregorianMonth(month, year))) month++
-        val dayOfMonth = absDate - gregorianDateToAbsDate(year, month, 1) + 1
+        while (absDate > gregorianDateToAbsDate(LocalDate(year, month, getLastDayOfGregorianMonth(month, year)))) month++
+        val dayOfMonth = absDate - gregorianDateToAbsDate(LocalDate(year, month, 1)) + 1
         setInternalGregorianDate(year, month, dayOfMonth)
     }
 
@@ -211,7 +191,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @see isJewishLeapYear
      */
     val isJewishLeapYear: Boolean
-        get() = isJewishLeapYear(jewishYear)
+        get() = jewishYear.isJewishLeapYear
 
     /**
      * Returns the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu to the Jewish
@@ -231,7 +211,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @see isJewishLeapYear
      */
     val daysInJewishYear: Int
-        get() = getDaysInJewishYear(jewishYear)
+        get() = jewishYear.daysInJewishYear
 
     /**
      * Returns if Cheshvan is long (30 days VS 29 days) for the current year that the calendar is set to. The method
@@ -241,7 +221,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @see isCheshvanLong
      */
     val isCheshvanLong: Boolean
-        get() = isCheshvanLong(jewishYear)
+        get() = jewishYear.isCheshvanLong
 
     /**
      * Returns if the Kislev is short for the year that this class is set to. The method name isShort is done since in a
@@ -250,7 +230,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @return true if Kislev is short for the year that this class is set to
      */
     val isKislevShort: Boolean
-        get() = isKislevShort(jewishYear)
+        get() = jewishYear.isKislevShort
 
     /**
      * Returns the Cheshvan and Kislev kviah (whether a Jewish year is short, regular or long). It will return
@@ -305,25 +285,22 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
     val molad: JewishDate
         get() {
             val moladDate = JewishDate(chalakimSinceMoladTohu)
-            if (moladDate.moladHours >= 6) moladDate.forward(Calendar.DATE, 1)
+            if (moladDate.moladHours >= 6) moladDate.forward(DateTimeUnit.DAY, 1)
             moladDate.moladHours = (moladDate.moladHours + 18) % 24
             return moladDate
         }
 
     /**
-     * Constructor that creates a JewishDate based on a molad passed in. The molad would be the number of chalakim/parts
-     * starting at the beginning of Sunday prior to the molad Tohu BeHaRaD (Be = Monday, Ha= 5 hours and Rad =204
-     * chalakim/parts) - prior to the start of the Jewish calendar. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080
-     * chalakim after sunset on Sunday evening).
+     * Sets the date based on a [LocalDateTime] object. Modifies the Jewish date as well.
      *
-     * @param molad the number of chalakim since the beginning of Sunday prior to BaHaRaD
+     * @param dateTime
+     * the `LocalDateTime` to set the LocalDate to
      */
-    constructor(molad: Long) {
-        absDateToDate(moladToAbsDate(molad))
-        // long chalakimSince = getChalakimSinceMoladTohu(year, TISHREI);// tishrei
-        val conjunctionDay = (molad / CHALAKIM_PER_DAY.toLong()).toInt()
-        val conjunctionParts = (molad - conjunctionDay * CHALAKIM_PER_DAY.toLong()).toInt()
-        setMoladTime(conjunctionParts)
+    fun setDate(date: LocalDate): JewishDate {
+//        require(LocalDate.get(LocalDate.ERA) != GregorianLocalDate.BC) { ("LocalDates with a BC era are not supported. The year ${LocalDate.get(LocalDate.YEAR)} BC is invalid.") } //TODO how should this be dealt with?
+        gregorianLocalDate = date
+        absDateToJewishDate()
+        return this
     }
 
     /**
@@ -347,118 +324,6 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      */
     val daysSinceStartOfJewishYear: Int
         get() = getDaysSinceStartOfJewishYear(jewishYear, jewishMonth, jewishDayOfMonth)
-
-    /**
-     * Creates a Jewish date based on a Jewish year, month and day of month.
-     *
-     * @param jewishYear
-     * the Jewish year
-     * @param jewishMonth
-     * the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
-     * constants [NISSAN] ... [ADAR] (or [ADAR_II] for a leap year Adar II) to avoid any
-     * confusion.
-     * @param jewishDayOfMonth
-     * the Jewish day of month. If 30 is passed in for a month with only 29 days (for example [IYAR],
-     * or [KISLEV] in a year that [isKislevShort]), the 29th (last valid date of the month)
-     * will be set
-     * @throws IllegalArgumentException
-     * if the day of month is < 1 or > 30, or a year of < 0 is passed in.
-     */
-    constructor(jewishYear: Int, jewishMonth: Int, jewishDayOfMonth: Int) {
-        setJewishDate(jewishYear, jewishMonth, jewishDayOfMonth)
-    }
-
-    /**
-     * Default constructor will set a default date to the current system date.
-     */
-    constructor() {
-        resetDate()
-    }
-
-    /**
-     * A constructor that initializes the date to the [Date] paremeter.
-     *
-     * @param date
-     * the `Date` to set the calendar to
-     * @throws IllegalArgumentException
-     * if the date would fall prior to the January 1, 1 AD
-     */
-    constructor(date: Date?) {
-        setDate(date)
-    }
-
-    /**
-     * A constructor that initializes the date to the [Calendar] paremeter.
-     *
-     * @param calendar
-     * the `Calendar` to set the calendar to
-     * @throws IllegalArgumentException
-     * if the [Calendar.ERA] is [GregorianCalendar.BC]
-     */
-    constructor(calendar: Calendar) {
-        setDate(calendar)
-    }
-
-    /**
-     * A constructor that initializes the date to the [LocalDate] paremeter.
-     *
-     * @param localDate
-     * the `LocalDate` to set the calendar to
-     * @throws IllegalArgumentException
-     * if the [Calendar.ERA] is [GregorianCalendar.BC]
-     */
-    constructor(localDate: LocalDate) {
-        setDate(localDate)
-    }
-
-    /**
-     * Sets the date based on a [Calendar] object. Modifies the Jewish date as well.
-     *
-     * @param calendar
-     * the `Calendar` to set the calendar to
-     * @throws IllegalArgumentException
-     * if the [Calendar.ERA] is [GregorianCalendar.BC]
-     */
-    fun setDate(calendar: Calendar): JewishDate {
-        require(calendar.get(Calendar.ERA) != GregorianCalendar.BC) { ("Calendars with a BC era are not supported. The year ${calendar.get(Calendar.YEAR)} BC is invalid.") }
-        gregorianMonth = calendar.get(Calendar.MONTH) + 1
-        gregorianDayOfMonth = calendar.get(Calendar.DATE)
-        gregorianYear = calendar.get(Calendar.YEAR)
-        absDate = gregorianDateToAbsDate(gregorianYear, gregorianMonth, gregorianDayOfMonth) // init the date
-        absDateToJewishDate()
-        dayOfWeek = abs(absDate % 7) + 1 // set day of week
-        return this
-    }
-
-    /**
-     * Sets the date based on a [Date] object. Modifies the Jewish date as well.
-     *
-     * @param date
-     * the `Date` to set the calendar to
-     * @throws IllegalArgumentException
-     * if the date would fall prior to the year 1 AD
-     */
-    fun setDate(date: Date?): JewishDate {
-        setDate(Calendar.getInstance().apply { time = date })
-        return this
-    }
-
-    /**
-     * Sets the date based on a [LocalDate] object. Modifies the Jewish date as well.
-     *
-     * @param localDate
-     * the `LocalDate` to set the calendar to
-     * @throws IllegalArgumentException
-     * if the date would fall prior to the year 1 AD
-     */
-    fun setDate(localDate: LocalDate): JewishDate {
-        setDate(
-            Calendar
-                .getInstance()
-                .apply { set(localDate.year, localDate.monthValue - 1, localDate.dayOfMonth) }
-        )
-        return this
-    }
 
     /**
      * Sets the Gregorian Date, and updates the Jewish date accordingly. Like the Java Calendar A value of 0 is expected
@@ -497,12 +362,8 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
             dom = getLastDayOfGregorianMonth(month, year)
         }
         // init month, date, year
-        gregorianMonth = month
-        gregorianDayOfMonth = dom
-        gregorianYear = year
-        absDate = gregorianDateToAbsDate(gregorianYear, gregorianMonth, gregorianDayOfMonth) // init date
+        gregorianLocalDate = LocalDate(year, month, dom)
         absDateToJewishDate()
-        dayOfWeek = abs(absDate % 7) + 1 // set day of week
         return this
     }
 
@@ -569,33 +430,22 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         moladHours = hours
         moladMinutes = minutes
         moladChalakim = chalakim
-        absDate = jewishDateToAbsDate(jewishYear, jewishMonth, jewishDay) // reset Gregorian date
         absDateToDate(absDate)
-        dayOfWeek = abs(absDate % 7) + 1 // reset day of week
         return this
     }
-
-    /**
-     * Returns this object's date as a [Calendar] object.
-     *
-     * @return The [Calendar]
-     */
-    val gregorianCalendar: Calendar
-        get() = Calendar.getInstance().apply { set(gregorianYear, gregorianMonthZeroBased, gregorianDayOfMonth) }
 
     /**
      * Returns this object's date as a [LocalDate] object.
      *
      * @return The [LocalDate]
      */
-    val localDate: LocalDate
-        get() = LocalDate.of(gregorianYear, gregorianMonth, gregorianDayOfMonth)
+    var gregorianLocalDate: LocalDate = LocalDate.now()
 
     /**
      * Resets this date to the current system date.
      */
     fun resetDate(): JewishDate {
-        setDate(Calendar.getInstance())
+        setDate(LocalDate.now())
         return this
     }
 
@@ -630,25 +480,14 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      * @see Calendar.add
      * @see Calendar.roll
      */
-    fun forward(field: Int, amount: Int): JewishDate {
-        require(!((field != Calendar.DATE) && (field != Calendar.MONTH) && (field != Calendar.YEAR))) { "Unsupported field was passed to Forward. Only Calendar.DATE, Calendar.MONTH or Calendar.YEAR are supported." }
+    fun forward(field: DateTimeUnit.DateBased, amount: Int): JewishDate {
+        require(!((field != DateTimeUnit.DAY) && (field != DateTimeUnit.MONTH) && (field != DateTimeUnit.YEAR))) { "Unsupported field was passed to Forward. Only DateTimeUnit.DATE, DateTimeUnit.MONTH or DateTimeUnit.YEAR are supported." }
         require(amount >= 1) { "JewishDate.forward() does not support amounts less than 1. See JewishDate.back()" }
         when (field) {
-            Calendar.DATE -> {
+            DateTimeUnit.DAY -> {
                 // Change Gregorian date
                 for (i in 0 until amount) {
-                    if (gregorianDayOfMonth == getLastDayOfGregorianMonth(gregorianMonth, gregorianYear)) {
-                        gregorianDayOfMonth = 1
-                        // if last day of year
-                        if (gregorianMonth == 12) {
-                            gregorianYear++
-                            gregorianMonth = 1
-                        } else {
-                            gregorianMonth++
-                        }
-                    } else { // if not last day of month
-                        gregorianDayOfMonth++
-                    }
+                    gregorianLocalDate = gregorianLocalDate.plus(1, DateTimeUnit.DAY)
 
                     // Change the Jewish Date
                     if (jewishDay == daysInJewishMonth) {
@@ -672,16 +511,13 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
                     } else { // if not last date of month
                         jewishDay++
                     }
-                    if (dayOfWeek == 7) { // if last day of week, loop back to Sunday
-                        dayOfWeek = 1
-                    } else {
-                        dayOfWeek++
-                    }
-                    absDate++ // increment the absolute date
                 }
             }
-            Calendar.MONTH -> forwardJewishMonth(amount)
-            Calendar.YEAR -> setJewishYear(jewishYear + amount)
+            DateTimeUnit.MONTH -> forwardJewishMonth(amount)
+            DateTimeUnit.YEAR -> setJewishYear(jewishYear + amount)
+            else -> {
+                throw IllegalArgumentException("Unsupported field was passed to Forward. Only DateTimeUnit.DATE, DateTimeUnit.MONTH or DateTimeUnit.YEAR are supported.")
+            }
         }
         return this
     }
@@ -728,18 +564,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      */
     fun back(): JewishDate {
         // Change Gregorian date
-        if (gregorianDayOfMonth == 1) { // if first day of month
-            if (gregorianMonth == 1) { // if first day of year
-                gregorianMonth = 12
-                gregorianYear--
-            } else {
-                gregorianMonth--
-            }
-            // change to last day of previous month
-            gregorianDayOfMonth = getLastDayOfGregorianMonth(gregorianMonth, gregorianYear)
-        } else {
-            gregorianDayOfMonth--
-        }
+        gregorianLocalDate = gregorianLocalDate.minus(1, DateTimeUnit.DAY)
         // change Jewish date
         if (jewishDay == 1) { // if first day of the Jewish month
             when (jewishMonth) {
@@ -754,9 +579,6 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         } else {
             jewishDay--
         }
-        // if first day of week, loop back to Saturday
-        if (dayOfWeek == 1) dayOfWeek = 7 else dayOfWeek--
-        absDate-- // change the absolute date
         return this
     }
 
@@ -807,7 +629,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      */
     fun setGregorianYear(year: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         validateGregorianYear(year)
-        setInternalGregorianDate(year, gregorianMonth, gregorianDayOfMonth)
+        setInternalGregorianDate(year, gregorianLocalDate.monthNumber, gregorianLocalDate.dayOfMonth)
         return this
     }
 
@@ -821,7 +643,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      */
     fun setGregorianDayOfMonth(dayOfMonth: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         validateGregorianDayOfMonth(dayOfMonth)
-        setInternalGregorianDate(gregorianYear, gregorianMonth, dayOfMonth)
+        setInternalGregorianDate(gregorianLocalDate.year, gregorianLocalDate.monthNumber, dayOfMonth)
         return this
     }
 
@@ -858,7 +680,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      *
      * @see Object.clone
      */
-    public override fun clone(): Any {
+    /*public override fun clone(): Any {
         var clone: JewishDate? = null
         try {
             clone = super.clone() as JewishDate
@@ -867,7 +689,12 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
         }
         clone!!.setInternalGregorianDate(gregorianYear, gregorianMonth, gregorianDayOfMonth)
         return clone
-    }
+    }*/
+    fun copy(
+        jewishYear: Int = this.jewishYear,
+        jewishMonth: Int = this.jewishMonth,
+        jewishDayOfMonth: Int = this.jewishDayOfMonth
+    ): JewishDate = JewishDate(jewishYear, jewishMonth, jewishDayOfMonth)
 
     /**
      * Overrides [Object.hashCode].
@@ -875,7 +702,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
      */
     override fun hashCode(): Int {
         var result = 17
-        result = 37 * result + javaClass.hashCode() // needed or this and subclasses will return identical hash
+        result = 37 * result + this::class.hashCode() // needed or this and subclasses will return identical hash
         result += 37 * result + absDate
         return result
     }
@@ -1039,7 +866,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * the day of the month (1st, 2nd, etc...)
          * @return the absolute Gregorian day
          */
-        private fun gregorianDateToAbsDate(year: Int, month: Int, dayOfMonth: Int): Int {
+        private fun gregorianDateToAbsDate(date: LocalDate): Int {
+            val year: Int = date.year
+            val month: Int = date.monthNumber
+            val dayOfMonth: Int = date.dayOfMonth
             var absDate = dayOfMonth
             for (m in month - 1 downTo 1) {
                 absDate += getLastDayOfGregorianMonth(m, year) // days in prior months of the year
@@ -1059,9 +889,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @return true if it is a leap year
          * @see isJewishLeapYear
          */
-        @JvmName("isJewishLeapYearFunc")
-        fun isJewishLeapYear(year: Int): Boolean = ((7 * year) + 1) % 19 < 7
-        val Int.isJewishLeapYear get() = isJewishLeapYear(this)
+        val Int.isJewishLeapYear get() = ((7 * this) + 1) % 19 < 7
 
         /**
          * Returns the last month of a given Jewish year. This will be 12 on a non [leap year][isJewishLeapYear]
@@ -1072,10 +900,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @return 12 on a non leap year or 13 on a leap year
          * @see isJewishLeapYear
          */
-        private fun getLastMonthOfJewishYear(year: Int): Int = if (isJewishLeapYear(year)) ADAR_II else ADAR
+        private fun getLastMonthOfJewishYear(year: Int): Int = if (year.isJewishLeapYear) ADAR_II else ADAR
 
         /**
-         * Returns the number of days elapsed from the Sunday prior to the start of the Jewish calendar to the mean
+         * Returns the number of days elapsed from the Sunday prior to the start of the Jewish LocalDate to the mean
          * conjunction of Tishri of the Jewish year.
          *
          * @param year
@@ -1137,10 +965,10 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
             if (((moladParts >= 19440) // Dechiya of Molad Zaken - molad is >= midday (18 hours * 1080 chalakim)
                         || ((((moladDay % 7) == 2) // start Dechiya of GaTRaD - Ga = is a Tuesday
                         && (moladParts >= 9924) // TRaD = 9 hours, 204 parts or later (9 * 1080 + 204)
-                        && !isJewishLeapYear(year))) // of a non-leap year - end Dechiya of GaTRaD
+                        && !year.isJewishLeapYear)) // of a non-leap year - end Dechiya of GaTRaD
                         || ((((moladDay % 7) == 1) // start Dechiya of BeTuTaKFoT - Be = is on a Monday
                         && (moladParts >= 16789) // TRaD = 15 hours, 589 parts or later (15 * 1080 + 589)
-                        && (isJewishLeapYear(year - 1)))))
+                        && (year - 1).isJewishLeapYear)))
             ) { // in a year following a leap year - end Dechiya of BeTuTaKFoT
                 roshHashanaDay += 1 // Then postpone Rosh HaShanah one day
             }
@@ -1189,7 +1017,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @return the Jewish month of the year starting with Tishrei
          */
         private fun getJewishMonthOfYear(year: Int, month: Int): Int {
-            val isLeapYear = isJewishLeapYear(year)
+            val isLeapYear = year.isJewishLeapYear
             return (month + (if (isLeapYear) 6 else 5)) % (if (isLeapYear) 13 else 12) + 1
         }
 
@@ -1313,11 +1141,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @see isCheshvanLong
          * @see isKislevShort
          */
-        @JvmName("getDaysInJewishYearFunc")
-        fun getDaysInJewishYear(year: Int): Int {
-            return getJewishCalendarElapsedDays(year + 1) - getJewishCalendarElapsedDays(year)
-        }
-        val Int.daysInJewishYear get() = getDaysInJewishYear(this)
+        val Int.daysInJewishYear get() = getJewishLocalDateElapsedDays(this + 1) - getJewishLocalDateElapsedDays(this)
 
         /**
          * Returns if Cheshvan is long in a given Jewish year. The method name isLong is done since in a Kesidran (ordered)
@@ -1329,9 +1153,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @see isCheshvanLong
          * @see getCheshvanKislevKviah
          */
-        @JvmName("isCheshvanLongFunc")
-        fun isCheshvanLong(year: Int): Boolean = getDaysInJewishYear(year) % 10 == 5
-        val Int.isCheshvanLong get() = isCheshvanLong(this)
+        val Int.isCheshvanLong get() = this.daysInJewishYear % 10 == 5
 
         /**
          * Returns if Kislev is short (29 days VS 30 days) in a given Jewish year. The method name isShort is done since in
@@ -1343,9 +1165,7 @@ open class JewishDate : Comparable<JewishDate>, Cloneable {
          * @see isKislevShort
          * @see cheshvanKislevKviah
          */
-        @JvmName("isKislevShortFunc")
-        fun isKislevShort(year: Int): Boolean = getDaysInJewishYear(year) % 10 == 3
-        val Int.isKislevShort get() = isKislevShort(this)
+        val Int.isKislevShort get() = this.daysInJewishYear % 10 == 3
 
         /**
          * Returns the number of days of a Jewish month for a given month and year.

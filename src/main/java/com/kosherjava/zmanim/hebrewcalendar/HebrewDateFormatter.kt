@@ -15,9 +15,9 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import java.text.SimpleDateFormat
+import com.kosherjava.zmanim.util.WeekFormat
+import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Companion.toJewishDayOfWeek
 import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
-import java.util.EnumMap
 import kotlin.text.StringBuilder
 
 /**
@@ -103,7 +103,7 @@ class HebrewDateFormatter {
     var isLongWeekFormat: Boolean = true
         set(longWeekFormat) {
             field = longWeekFormat
-            weekFormat = SimpleDateFormat(if (longWeekFormat) "EEEE" else "EEE")
+            weekFormat = if (longWeekFormat) WeekFormat.long else WeekFormat.short
         }
     /**
      * Returns whether the class is set to use the מנצפ״ך letters when
@@ -128,7 +128,7 @@ class HebrewDateFormatter {
      * The internal DateFormat.
      * See [isLongWeekFormat].
      */
-    private var weekFormat: SimpleDateFormat? = null
+    private var weekFormat: WeekFormat.Formatter? = null
     /**
      * Retruns the list of transliterated parshiyos used by this formatter.
      *
@@ -152,80 +152,78 @@ class HebrewDateFormatter {
      *
      * @see .formatParsha
      */
-    var transliteratedParshiosList = EnumMap(
-        mapOf(
-            Parsha.NONE to "",
-            Parsha.BERESHIS to "Bereshis",
-            Parsha.NOACH to "Noach",
-            Parsha.LECH_LECHA to "Lech Lecha",
-            Parsha.VAYERA to "Vayera",
-            Parsha.CHAYEI_SARA to "Chayei Sara",
-            Parsha.TOLDOS to "Toldos",
-            Parsha.VAYETZEI to "Vayetzei",
-            Parsha.VAYISHLACH to "Vayishlach",
-            Parsha.VAYESHEV to "Vayeshev",
-            Parsha.MIKETZ to "Miketz",
-            Parsha.VAYIGASH to "Vayigash",
-            Parsha.VAYECHI to "Vayechi",
-            Parsha.SHEMOS to "Shemos",
-            Parsha.VAERA to "Vaera",
-            Parsha.BO to "Bo",
-            Parsha.BESHALACH to "Beshalach",
-            Parsha.YISRO to "Yisro",
-            Parsha.MISHPATIM to "Mishpatim",
-            Parsha.TERUMAH to "Terumah",
-            Parsha.TETZAVEH to "Tetzaveh",
-            Parsha.KI_SISA to "Ki Sisa",
-            Parsha.VAYAKHEL to "Vayakhel",
-            Parsha.PEKUDEI to "Pekudei",
-            Parsha.VAYIKRA to "Vayikra",
-            Parsha.TZAV to "Tzav",
-            Parsha.SHMINI to "Shmini",
-            Parsha.TAZRIA to "Tazria",
-            Parsha.METZORA to "Metzora",
-            Parsha.ACHREI_MOS to "Achrei Mos",
-            Parsha.KEDOSHIM to "Kedoshim",
-            Parsha.EMOR to "Emor",
-            Parsha.BEHAR to "Behar",
-            Parsha.BECHUKOSAI to "Bechukosai",
-            Parsha.BAMIDBAR to "Bamidbar",
-            Parsha.NASSO to "Nasso",
-            Parsha.BEHAALOSCHA to "Beha'aloscha",
-            Parsha.SHLACH to "Sh'lach",
-            Parsha.KORACH to "Korach",
-            Parsha.CHUKAS to "Chukas",
-            Parsha.BALAK to "Balak",
-            Parsha.PINCHAS to "Pinchas",
-            Parsha.MATOS to "Matos",
-            Parsha.MASEI to "Masei",
-            Parsha.DEVARIM to "Devarim",
-            Parsha.VAESCHANAN to "Vaeschanan",
-            Parsha.EIKEV to "Eikev",
-            Parsha.REEH to "Re'eh",
-            Parsha.SHOFTIM to "Shoftim",
-            Parsha.KI_SEITZEI to "Ki Seitzei",
-            Parsha.KI_SAVO to "Ki Savo",
-            Parsha.NITZAVIM to "Nitzavim",
-            Parsha.VAYEILECH to "Vayeilech",
-            Parsha.HAAZINU to "Ha'Azinu",
-            Parsha.VZOS_HABERACHA to "Vezos Habracha",
-            Parsha.VAYAKHEL_PEKUDEI to "Vayakhel Pekudei",
-            Parsha.TAZRIA_METZORA to "Tazria Metzora",
-            Parsha.ACHREI_MOS_KEDOSHIM to "Achrei Mos Kedoshim",
-            Parsha.BEHAR_BECHUKOSAI to "Behar Bechukosai",
-            Parsha.CHUKAS_BALAK to "Chukas Balak",
-            Parsha.MATOS_MASEI to "Matos Masei",
-            Parsha.NITZAVIM_VAYEILECH to "Nitzavim Vayeilech",
-            Parsha.SHKALIM to "Shekalim",
-            Parsha.ZACHOR to "Zachor",
-            Parsha.PARA to "Parah",
-            Parsha.HACHODESH to "Hachodesh",
-            Parsha.SHUVA to "Shuva",
-            Parsha.SHIRA to "Shira",
-            Parsha.HAGADOL to "Hagadol",
-            Parsha.CHAZON to "Chazon",
-            Parsha.NACHAMU to "Nachamu"
-        )
+    var transliteratedParshiosList = mapOf(
+        Parsha.NONE to "",
+        Parsha.BERESHIS to "Bereshis",
+        Parsha.NOACH to "Noach",
+        Parsha.LECH_LECHA to "Lech Lecha",
+        Parsha.VAYERA to "Vayera",
+        Parsha.CHAYEI_SARA to "Chayei Sara",
+        Parsha.TOLDOS to "Toldos",
+        Parsha.VAYETZEI to "Vayetzei",
+        Parsha.VAYISHLACH to "Vayishlach",
+        Parsha.VAYESHEV to "Vayeshev",
+        Parsha.MIKETZ to "Miketz",
+        Parsha.VAYIGASH to "Vayigash",
+        Parsha.VAYECHI to "Vayechi",
+        Parsha.SHEMOS to "Shemos",
+        Parsha.VAERA to "Vaera",
+        Parsha.BO to "Bo",
+        Parsha.BESHALACH to "Beshalach",
+        Parsha.YISRO to "Yisro",
+        Parsha.MISHPATIM to "Mishpatim",
+        Parsha.TERUMAH to "Terumah",
+        Parsha.TETZAVEH to "Tetzaveh",
+        Parsha.KI_SISA to "Ki Sisa",
+        Parsha.VAYAKHEL to "Vayakhel",
+        Parsha.PEKUDEI to "Pekudei",
+        Parsha.VAYIKRA to "Vayikra",
+        Parsha.TZAV to "Tzav",
+        Parsha.SHMINI to "Shmini",
+        Parsha.TAZRIA to "Tazria",
+        Parsha.METZORA to "Metzora",
+        Parsha.ACHREI_MOS to "Achrei Mos",
+        Parsha.KEDOSHIM to "Kedoshim",
+        Parsha.EMOR to "Emor",
+        Parsha.BEHAR to "Behar",
+        Parsha.BECHUKOSAI to "Bechukosai",
+        Parsha.BAMIDBAR to "Bamidbar",
+        Parsha.NASSO to "Nasso",
+        Parsha.BEHAALOSCHA to "Beha'aloscha",
+        Parsha.SHLACH to "Sh'lach",
+        Parsha.KORACH to "Korach",
+        Parsha.CHUKAS to "Chukas",
+        Parsha.BALAK to "Balak",
+        Parsha.PINCHAS to "Pinchas",
+        Parsha.MATOS to "Matos",
+        Parsha.MASEI to "Masei",
+        Parsha.DEVARIM to "Devarim",
+        Parsha.VAESCHANAN to "Vaeschanan",
+        Parsha.EIKEV to "Eikev",
+        Parsha.REEH to "Re'eh",
+        Parsha.SHOFTIM to "Shoftim",
+        Parsha.KI_SEITZEI to "Ki Seitzei",
+        Parsha.KI_SAVO to "Ki Savo",
+        Parsha.NITZAVIM to "Nitzavim",
+        Parsha.VAYEILECH to "Vayeilech",
+        Parsha.HAAZINU to "Ha'Azinu",
+        Parsha.VZOS_HABERACHA to "Vezos Habracha",
+        Parsha.VAYAKHEL_PEKUDEI to "Vayakhel Pekudei",
+        Parsha.TAZRIA_METZORA to "Tazria Metzora",
+        Parsha.ACHREI_MOS_KEDOSHIM to "Achrei Mos Kedoshim",
+        Parsha.BEHAR_BECHUKOSAI to "Behar Bechukosai",
+        Parsha.CHUKAS_BALAK to "Chukas Balak",
+        Parsha.MATOS_MASEI to "Matos Masei",
+        Parsha.NITZAVIM_VAYEILECH to "Nitzavim Vayeilech",
+        Parsha.SHKALIM to "Shekalim",
+        Parsha.ZACHOR to "Zachor",
+        Parsha.PARA to "Parah",
+        Parsha.HACHODESH to "Hachodesh",
+        Parsha.SHUVA to "Shuva",
+        Parsha.SHIRA to "Shira",
+        Parsha.HAGADOL to "Hagadol",
+        Parsha.CHAZON to "Chazon",
+        Parsha.NACHAMU to "Nachamu"
     )
 
     /**
@@ -257,80 +255,78 @@ class HebrewDateFormatter {
      * שובה,שירה,הגדול,
      * חזון,נחמו"`
      */
-    private val hebrewParshaMap = EnumMap(
-        mapOf(
-            Parsha.NONE to "",
-            Parsha.BERESHIS to "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
-            Parsha.NOACH to "\u05E0\u05D7",
-            Parsha.LECH_LECHA to "\u05DC\u05DA \u05DC\u05DA",
-            Parsha.VAYERA to "\u05D5\u05D9\u05E8\u05D0",
-            Parsha.CHAYEI_SARA to "\u05D7\u05D9\u05D9 \u05E9\u05E8\u05D4",
-            Parsha.TOLDOS to "\u05EA\u05D5\u05DC\u05D3\u05D5\u05EA",
-            Parsha.VAYETZEI to "\u05D5\u05D9\u05E6\u05D0",
-            Parsha.VAYISHLACH to "\u05D5\u05D9\u05E9\u05DC\u05D7",
-            Parsha.VAYESHEV to "\u05D5\u05D9\u05E9\u05D1",
-            Parsha.MIKETZ to "\u05DE\u05E7\u05E5",
-            Parsha.VAYIGASH to "\u05D5\u05D9\u05D2\u05E9",
-            Parsha.VAYECHI to "\u05D5\u05D9\u05D7\u05D9",
-            Parsha.SHEMOS to "\u05E9\u05DE\u05D5\u05EA",
-            Parsha.VAERA to "\u05D5\u05D0\u05E8\u05D0",
-            Parsha.BO to "\u05D1\u05D0",
-            Parsha.BESHALACH to "\u05D1\u05E9\u05DC\u05D7",
-            Parsha.YISRO to "\u05D9\u05EA\u05E8\u05D5",
-            Parsha.MISHPATIM to "\u05DE\u05E9\u05E4\u05D8\u05D9\u05DD",
-            Parsha.TERUMAH to "\u05EA\u05E8\u05D5\u05DE\u05D4",
-            Parsha.TETZAVEH to "\u05EA\u05E6\u05D5\u05D4",
-            Parsha.KI_SISA to "\u05DB\u05D9 \u05EA\u05E9\u05D0",
-            Parsha.VAYAKHEL to "\u05D5\u05D9\u05E7\u05D4\u05DC",
-            Parsha.PEKUDEI to "\u05E4\u05E7\u05D5\u05D3\u05D9",
-            Parsha.VAYIKRA to "\u05D5\u05D9\u05E7\u05E8\u05D0",
-            Parsha.TZAV to "\u05E6\u05D5",
-            Parsha.SHMINI to "\u05E9\u05DE\u05D9\u05E0\u05D9",
-            Parsha.TAZRIA to "\u05EA\u05D6\u05E8\u05D9\u05E2",
-            Parsha.METZORA to "\u05DE\u05E6\u05E8\u05E2",
-            Parsha.ACHREI_MOS to "\u05D0\u05D7\u05E8\u05D9 \u05DE\u05D5\u05EA",
-            Parsha.KEDOSHIM to "\u05E7\u05D3\u05D5\u05E9\u05D9\u05DD",
-            Parsha.EMOR to "\u05D0\u05DE\u05D5\u05E8",
-            Parsha.BEHAR to "\u05D1\u05D4\u05E8",
-            Parsha.BECHUKOSAI to "\u05D1\u05D7\u05E7\u05EA\u05D9",
-            Parsha.BAMIDBAR to "\u05D1\u05DE\u05D3\u05D1\u05E8",
-            Parsha.NASSO to "\u05E0\u05E9\u05D0",
-            Parsha.BEHAALOSCHA to "\u05D1\u05D4\u05E2\u05DC\u05EA\u05DA",
-            Parsha.SHLACH to "\u05E9\u05DC\u05D7 \u05DC\u05DA",
-            Parsha.KORACH to "\u05E7\u05E8\u05D7",
-            Parsha.CHUKAS to "\u05D7\u05D5\u05E7\u05EA",
-            Parsha.BALAK to "\u05D1\u05DC\u05E7",
-            Parsha.PINCHAS to "\u05E4\u05D9\u05E0\u05D7\u05E1",
-            Parsha.MATOS to "\u05DE\u05D8\u05D5\u05EA",
-            Parsha.MASEI to "\u05DE\u05E1\u05E2\u05D9",
-            Parsha.DEVARIM to "\u05D3\u05D1\u05E8\u05D9\u05DD",
-            Parsha.VAESCHANAN to "\u05D5\u05D0\u05EA\u05D7\u05E0\u05DF",
-            Parsha.EIKEV to "\u05E2\u05E7\u05D1",
-            Parsha.REEH to "\u05E8\u05D0\u05D4",
-            Parsha.SHOFTIM to "\u05E9\u05D5\u05E4\u05D8\u05D9\u05DD",
-            Parsha.KI_SEITZEI to "\u05DB\u05D9 \u05EA\u05E6\u05D0",
-            Parsha.KI_SAVO to "\u05DB\u05D9 \u05EA\u05D1\u05D5\u05D0",
-            Parsha.NITZAVIM to "\u05E0\u05E6\u05D1\u05D9\u05DD",
-            Parsha.VAYEILECH to "\u05D5\u05D9\u05DC\u05DA",
-            Parsha.HAAZINU to "\u05D4\u05D0\u05D6\u05D9\u05E0\u05D5",
-            Parsha.VZOS_HABERACHA to "\u05D5\u05D6\u05D0\u05EA \u05D4\u05D1\u05E8\u05DB\u05D4 ",
-            Parsha.VAYAKHEL_PEKUDEI to "\u05D5\u05D9\u05E7\u05D4\u05DC \u05E4\u05E7\u05D5\u05D3\u05D9",
-            Parsha.TAZRIA_METZORA to "\u05EA\u05D6\u05E8\u05D9\u05E2 \u05DE\u05E6\u05E8\u05E2",
-            Parsha.ACHREI_MOS_KEDOSHIM to "\u05D0\u05D7\u05E8\u05D9 \u05DE\u05D5\u05EA \u05E7\u05D3\u05D5\u05E9\u05D9\u05DD",
-            Parsha.BEHAR_BECHUKOSAI to "\u05D1\u05D4\u05E8 \u05D1\u05D7\u05E7\u05EA\u05D9",
-            Parsha.CHUKAS_BALAK to "\u05D7\u05D5\u05E7\u05EA \u05D1\u05DC\u05E7",
-            Parsha.MATOS_MASEI to "\u05DE\u05D8\u05D5\u05EA \u05DE\u05E1\u05E2\u05D9",
-            Parsha.NITZAVIM_VAYEILECH to "\u05E0\u05E6\u05D1\u05D9\u05DD \u05D5\u05D9\u05DC\u05DA",
-            Parsha.SHKALIM to "\u05E9\u05E7\u05DC\u05D9\u05DD",
-            Parsha.ZACHOR to "\u05D6\u05DB\u05D5\u05E8",
-            Parsha.PARA to "\u05E4\u05E8\u05D4",
-            Parsha.HACHODESH to "\u05D4\u05D7\u05D3\u05E9",
-            Parsha.SHUVA to "\u05E9\u05D5\u05D1\u05D4",
-            Parsha.SHIRA to "\u05E9\u05D9\u05E8\u05D4",
-            Parsha.HAGADOL to "\u05D4\u05D2\u05D3\u05D5\u05DC",
-            Parsha.CHAZON to "\u05D7\u05D6\u05D5\u05DF",
-            Parsha.NACHAMU to "\u05E0\u05D7\u05DE\u05D5"
-        )
+    private val hebrewParshaMap = mapOf(
+        Parsha.NONE to "",
+        Parsha.BERESHIS to "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
+        Parsha.NOACH to "\u05E0\u05D7",
+        Parsha.LECH_LECHA to "\u05DC\u05DA \u05DC\u05DA",
+        Parsha.VAYERA to "\u05D5\u05D9\u05E8\u05D0",
+        Parsha.CHAYEI_SARA to "\u05D7\u05D9\u05D9 \u05E9\u05E8\u05D4",
+        Parsha.TOLDOS to "\u05EA\u05D5\u05DC\u05D3\u05D5\u05EA",
+        Parsha.VAYETZEI to "\u05D5\u05D9\u05E6\u05D0",
+        Parsha.VAYISHLACH to "\u05D5\u05D9\u05E9\u05DC\u05D7",
+        Parsha.VAYESHEV to "\u05D5\u05D9\u05E9\u05D1",
+        Parsha.MIKETZ to "\u05DE\u05E7\u05E5",
+        Parsha.VAYIGASH to "\u05D5\u05D9\u05D2\u05E9",
+        Parsha.VAYECHI to "\u05D5\u05D9\u05D7\u05D9",
+        Parsha.SHEMOS to "\u05E9\u05DE\u05D5\u05EA",
+        Parsha.VAERA to "\u05D5\u05D0\u05E8\u05D0",
+        Parsha.BO to "\u05D1\u05D0",
+        Parsha.BESHALACH to "\u05D1\u05E9\u05DC\u05D7",
+        Parsha.YISRO to "\u05D9\u05EA\u05E8\u05D5",
+        Parsha.MISHPATIM to "\u05DE\u05E9\u05E4\u05D8\u05D9\u05DD",
+        Parsha.TERUMAH to "\u05EA\u05E8\u05D5\u05DE\u05D4",
+        Parsha.TETZAVEH to "\u05EA\u05E6\u05D5\u05D4",
+        Parsha.KI_SISA to "\u05DB\u05D9 \u05EA\u05E9\u05D0",
+        Parsha.VAYAKHEL to "\u05D5\u05D9\u05E7\u05D4\u05DC",
+        Parsha.PEKUDEI to "\u05E4\u05E7\u05D5\u05D3\u05D9",
+        Parsha.VAYIKRA to "\u05D5\u05D9\u05E7\u05E8\u05D0",
+        Parsha.TZAV to "\u05E6\u05D5",
+        Parsha.SHMINI to "\u05E9\u05DE\u05D9\u05E0\u05D9",
+        Parsha.TAZRIA to "\u05EA\u05D6\u05E8\u05D9\u05E2",
+        Parsha.METZORA to "\u05DE\u05E6\u05E8\u05E2",
+        Parsha.ACHREI_MOS to "\u05D0\u05D7\u05E8\u05D9 \u05DE\u05D5\u05EA",
+        Parsha.KEDOSHIM to "\u05E7\u05D3\u05D5\u05E9\u05D9\u05DD",
+        Parsha.EMOR to "\u05D0\u05DE\u05D5\u05E8",
+        Parsha.BEHAR to "\u05D1\u05D4\u05E8",
+        Parsha.BECHUKOSAI to "\u05D1\u05D7\u05E7\u05EA\u05D9",
+        Parsha.BAMIDBAR to "\u05D1\u05DE\u05D3\u05D1\u05E8",
+        Parsha.NASSO to "\u05E0\u05E9\u05D0",
+        Parsha.BEHAALOSCHA to "\u05D1\u05D4\u05E2\u05DC\u05EA\u05DA",
+        Parsha.SHLACH to "\u05E9\u05DC\u05D7 \u05DC\u05DA",
+        Parsha.KORACH to "\u05E7\u05E8\u05D7",
+        Parsha.CHUKAS to "\u05D7\u05D5\u05E7\u05EA",
+        Parsha.BALAK to "\u05D1\u05DC\u05E7",
+        Parsha.PINCHAS to "\u05E4\u05D9\u05E0\u05D7\u05E1",
+        Parsha.MATOS to "\u05DE\u05D8\u05D5\u05EA",
+        Parsha.MASEI to "\u05DE\u05E1\u05E2\u05D9",
+        Parsha.DEVARIM to "\u05D3\u05D1\u05E8\u05D9\u05DD",
+        Parsha.VAESCHANAN to "\u05D5\u05D0\u05EA\u05D7\u05E0\u05DF",
+        Parsha.EIKEV to "\u05E2\u05E7\u05D1",
+        Parsha.REEH to "\u05E8\u05D0\u05D4",
+        Parsha.SHOFTIM to "\u05E9\u05D5\u05E4\u05D8\u05D9\u05DD",
+        Parsha.KI_SEITZEI to "\u05DB\u05D9 \u05EA\u05E6\u05D0",
+        Parsha.KI_SAVO to "\u05DB\u05D9 \u05EA\u05D1\u05D5\u05D0",
+        Parsha.NITZAVIM to "\u05E0\u05E6\u05D1\u05D9\u05DD",
+        Parsha.VAYEILECH to "\u05D5\u05D9\u05DC\u05DA",
+        Parsha.HAAZINU to "\u05D4\u05D0\u05D6\u05D9\u05E0\u05D5",
+        Parsha.VZOS_HABERACHA to "\u05D5\u05D6\u05D0\u05EA \u05D4\u05D1\u05E8\u05DB\u05D4 ",
+        Parsha.VAYAKHEL_PEKUDEI to "\u05D5\u05D9\u05E7\u05D4\u05DC \u05E4\u05E7\u05D5\u05D3\u05D9",
+        Parsha.TAZRIA_METZORA to "\u05EA\u05D6\u05E8\u05D9\u05E2 \u05DE\u05E6\u05E8\u05E2",
+        Parsha.ACHREI_MOS_KEDOSHIM to "\u05D0\u05D7\u05E8\u05D9 \u05DE\u05D5\u05EA \u05E7\u05D3\u05D5\u05E9\u05D9\u05DD",
+        Parsha.BEHAR_BECHUKOSAI to "\u05D1\u05D4\u05E8 \u05D1\u05D7\u05E7\u05EA\u05D9",
+        Parsha.CHUKAS_BALAK to "\u05D7\u05D5\u05E7\u05EA \u05D1\u05DC\u05E7",
+        Parsha.MATOS_MASEI to "\u05DE\u05D8\u05D5\u05EA \u05DE\u05E1\u05E2\u05D9",
+        Parsha.NITZAVIM_VAYEILECH to "\u05E0\u05E6\u05D1\u05D9\u05DD \u05D5\u05D9\u05DC\u05DA",
+        Parsha.SHKALIM to "\u05E9\u05E7\u05DC\u05D9\u05DD",
+        Parsha.ZACHOR to "\u05D6\u05DB\u05D5\u05E8",
+        Parsha.PARA to "\u05E4\u05E8\u05D4",
+        Parsha.HACHODESH to "\u05D4\u05D7\u05D3\u05E9",
+        Parsha.SHUVA to "\u05E9\u05D5\u05D1\u05D4",
+        Parsha.SHIRA to "\u05E9\u05D9\u05E8\u05D4",
+        Parsha.HAGADOL to "\u05D4\u05D2\u05D3\u05D5\u05DC",
+        Parsha.CHAZON to "\u05D7\u05D6\u05D5\u05DF",
+        Parsha.NACHAMU to "\u05E0\u05D7\u05DE\u05D5"
     )
 
     /**
@@ -504,7 +500,6 @@ class HebrewDateFormatter {
         if (!jewishCalendar.isRoshChodesh) {
             return ""
         }
-        var jewishCalendar: JewishCalendar = jewishCalendar
         var month = jewishCalendar.jewishMonth
         if (jewishCalendar.jewishDayOfMonth == 30) {
             if (month < JewishDate.ADAR || (month == JewishDate.ADAR && jewishCalendar.isJewishLeapYear)) {
@@ -515,8 +510,8 @@ class HebrewDateFormatter {
         }
 
         // This method is only about formatting, so we shouldn't make any changes to the params passed in...
-        jewishCalendar = jewishCalendar.clone() as JewishCalendar
-        jewishCalendar.setJewishMonth(month)
+        val copy = jewishCalendar.copy(inIsrael = jewishCalendar.inIsrael) //force JewishCalendar.copy, not JewishDate.copy
+        copy.setJewishMonth(month)
         return "${
             if (isHebrewFormat) hebrewHolidays[JewishCalendar.ROSH_CHODESH]
             else transliteratedHolidayList[JewishCalendar.ROSH_CHODESH]
@@ -533,19 +528,21 @@ class HebrewDateFormatter {
      * @see .isHebrewFormat
      * @see .isLongWeekFormat
      */
-    fun formatDayOfWeek(jewishDate: JewishDate): String =
-        if (isHebrewFormat)
+    fun formatDayOfWeek(jewishDate: JewishDate): String {
+        val jewishDayOfWeek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
+        return if (isHebrewFormat)
             if (isLongWeekFormat)
-                hebrewDaysOfWeek[jewishDate.dayOfWeek - 1]
+                hebrewDaysOfWeek[jewishDayOfWeek - 1]
             else
-                if (jewishDate.dayOfWeek == 7) formatHebrewNumber(300)
-                else formatHebrewNumber(jewishDate.dayOfWeek)
+                if (jewishDayOfWeek == 7) formatHebrewNumber(300)
+                else formatHebrewNumber(jewishDayOfWeek)
         else
-            if (jewishDate.dayOfWeek == 7)
+            if (jewishDayOfWeek == 7)
                 if (isLongWeekFormat) transliteratedShabbosDayOfWeek
                 else transliteratedShabbosDayOfWeek.substring(0, 3)
             else
-                weekFormat!!.format(jewishDate.gregorianCalendar.time)
+                weekFormat!!.format(jewishDate.gregorianLocalDate)
+    }
 
     /**
      * Formats the Jewish date. If the formatter is set to Hebrew, it will format in the form, "day Month year" for
@@ -625,7 +622,7 @@ class HebrewDateFormatter {
     fun getFormattedKviah(jewishYear: Int): String {
         val jewishDate = JewishDate(jewishYear, JewishDate.TISHREI, 1) // set date to Rosh Hashana
         val kviah = jewishDate.cheshvanKislevKviah
-        val roshHashanaDayOfweek = jewishDate.dayOfWeek
+        val roshHashanaDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
         val returnValue = StringBuilder(formatHebrewNumber(roshHashanaDayOfweek))
         returnValue.append(
             when (kviah) {
@@ -635,7 +632,7 @@ class HebrewDateFormatter {
             }
         )
         jewishDate.setJewishDate(jewishYear, JewishDate.NISSAN, 15) // set to Pesach of the given year
-        val pesachDayOfweek = jewishDate.dayOfWeek
+        val pesachDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
         returnValue.append(formatHebrewNumber(pesachDayOfweek))
         return returnValue.replace(GERESH.toRegex(), "") // geresh is never used in the kviah format
         // boolean isLeapYear = JewishDate.isJewishLeapYear(jewishYear);

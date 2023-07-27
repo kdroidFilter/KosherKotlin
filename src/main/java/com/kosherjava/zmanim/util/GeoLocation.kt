@@ -15,9 +15,16 @@
  */
 package com.kosherjava.zmanim.util
 
-import java.util.TimeZone
-import java.lang.IllegalArgumentException
-import java.lang.StringBuilder
+import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toDegrees
+import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toRadians
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.asTimeZone
+import kotlinx.datetime.offsetAt
+import kotlinx.datetime.offsetIn
+import kotlin.time.Duration.Companion.seconds
+
+
 import kotlin.math.*
 
 /**
@@ -32,12 +39,12 @@ data class GeoLocation(
     /**
      * If this is ever set after the GeoLocation is set in the
      * [com.kosherjava.zmanim.AstronomicalCalendar], it is critical that
-     * [com.kosherjava.zmanim.AstronomicalCalendar.calendar].[setTimeZone(TimeZone)][java.util.Calendar.setTimeZone] be called in order for the
+     * [com.kosherjava.zmanim.AstronomicalCalendar.localDate].[setTimeZone(TimeZone)][java.util.Calendar.setTimeZone] be called in order for the
      * AstronomicalCalendar to output times in the expected offset. This situation will arise if the
      * AstronomicalCalendar is ever [cloned][com.kosherjava.zmanim.AstronomicalCalendar.clone].
      */
-    var timeZone: TimeZone? = null,
-    var locationName: String? = null
+    var timeZone: TimeZone,
+    var locationName: String
 ) {
     var latitude: Double = 0.0
         /**
@@ -93,7 +100,7 @@ data class GeoLocation(
      * @param timeZone
      * the `TimeZone` for the location.
      */
-    constructor(name: String?, latitude: Double, longitude: Double, timeZone: TimeZone?) : this(
+    constructor(name: String, latitude: Double, longitude: Double, timeZone: TimeZone) : this(
         name,
         latitude,
         longitude,
@@ -120,11 +127,11 @@ data class GeoLocation(
      * the `TimeZone` for the location.
      */
     constructor(
-        name: String?,
+        name: String,
         latitude: Double,
         longitude: Double,
         elevation: Double,
-        timeZone: TimeZone?
+        timeZone: TimeZone
     ) : this(timeZone, name) {
         this.latitude = latitude
         this.longitude = longitude
@@ -135,7 +142,7 @@ data class GeoLocation(
      * Default GeoLocation constructor will set location to the Prime Meridian at Greenwich, England and a TimeZone of
      * GMT. The longitude will be set to 0 and the latitude will be 51.4772 to match the location of the [Royal Observatory, Greenwich](https://www.rmg.co.uk/royal-observatory). No daylight savings time will be used.
      */
-    constructor() : this(TimeZone.getTimeZone("GMT"), "Greenwich, England") {
+    constructor() : this(TimeZone.UTC, "Greenwich, England") {
         longitude = 0.0 // added for clarity
         latitude = 51.4772
     }
@@ -217,11 +224,10 @@ data class GeoLocation(
             * than a location using a timezone across the anti meridian to the east such as Samoa)
             * roll the date forward a day
             */
-            (longitude * 4 * MINUTE_MILLIS - timeZone!!.rawOffset).toLong()
-
+            (longitude * 4 * MINUTE_MILLIS - timeZone.rawOffset).toLong()
     /**
      * Adjust the date for [antimeridian](https://en.wikipedia.org/wiki/180th_meridian) crossover. This is
-     * needed to deal with edge cases such as Samoa that use a different calendar date than expected based on their
+     * needed to deal with edge cases such as Samoa that use a different LocalDate date than expected based on their
      * geographic location.
      *
      * The actual Time Zone offset may deviate from the expected offset based on the longitude. Since the 'absolute time'
@@ -301,15 +307,15 @@ data class GeoLocation(
         val a = 6378137.0
         val b = 6356752.3142
         val f = 1 / 298.257223563 // WGS-84 ellipsiod
-        val L = Math.toRadians(location.longitude - longitude)
-        val U1 = atan((1 - f) * tan(Math.toRadians(latitude)))
-        val U2 = atan((1 - f) * tan(Math.toRadians(location.latitude)))
+        val L = toRadians(location.longitude - longitude)
+        val U1 = atan((1 - f) * tan(toRadians(latitude)))
+        val U2 = atan((1 - f) * tan(toRadians(location.latitude)))
         val sinU1 = sin(U1)
         val cosU1 = cos(U1)
         val sinU2 = sin(U2)
         val cosU2 = cos(U2)
         var lambda = L
-        var lambdaP = 2 * Math.PI
+        var lambdaP = 2 * PI
         var iterLimit = 20.0
         var sinLambda = 0.0
         var cosLambda = 0.0
@@ -329,7 +335,7 @@ data class GeoLocation(
             )
             if (sinSigma == 0.0) return 0.0 // co-incident points
             cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda
-            sigma = Math.atan2(sinSigma, cosSigma)
+            sigma = atan2(sinSigma, cosSigma)
             sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma
             cosSqAlpha = 1 - sinAlpha * sinAlpha
             cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha
@@ -352,10 +358,10 @@ data class GeoLocation(
         val distance = b * A * (sigma - deltaSigma)
 
         // initial bearing
-        val fwdAz = Math.toDegrees(atan2(cosU2 * sinLambda, cosU1 * sinU2 - sinU1 * cosU2 * cosLambda))
+        val fwdAz = toDegrees(atan2(cosU2 * sinLambda, cosU1 * sinU2 - sinU1 * cosU2 * cosLambda))
 
         // final bearing
-        val revAz = Math.toDegrees(atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda))
+        val revAz = toDegrees(atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda))
         return when (formula) {
             DISTANCE -> distance
             INITIAL_BEARING -> fwdAz
@@ -373,13 +379,13 @@ data class GeoLocation(
      * @return the bearing in degrees
      */
     fun getRhumbLineBearing(location: GeoLocation): Double {
-        var dLon = Math.toRadians(location.longitude - longitude)
+        var dLon = toRadians(location.longitude - longitude)
         val dPhi = ln(
-            tan(Math.toRadians(location.latitude) / 2 + Math.PI / 4)
-                    / tan(Math.toRadians(latitude) / 2 + Math.PI / 4)
+            tan(toRadians(location.latitude) / 2 + PI / 4)
+                    / tan(toRadians(latitude) / 2 + PI / 4)
         )
-        if (abs(dLon) > Math.PI) dLon = if (dLon > 0) -(2 * Math.PI - dLon) else 2 * Math.PI + dLon
-        return Math.toDegrees(atan2(dLon, dPhi))
+        if (abs(dLon) > PI) dLon = if (dLon > 0) -(2 * PI - dLon) else 2 * PI + dLon
+        return toDegrees(atan2(dLon, dPhi))
     }
 
     /**
@@ -392,19 +398,19 @@ data class GeoLocation(
      */
     fun getRhumbLineDistance(location: GeoLocation): Double {
         val earthRadius = 6378137.0 // Earth's radius in meters (WGS-84)
-        val dLat = Math.toRadians(location.latitude) - Math.toRadians(latitude)
-        var dLon = abs(Math.toRadians(location.longitude) - Math.toRadians(longitude))
+        val dLat = toRadians(location.latitude) - toRadians(latitude)
+        var dLon = abs(toRadians(location.longitude) - toRadians(longitude))
         val dPhi = ln(
-            tan(Math.toRadians(location.latitude) / 2 + Math.PI / 4)
-                    / tan(Math.toRadians(latitude) / 2 + Math.PI / 4)
+            tan(toRadians(location.latitude) / 2 + PI / 4)
+                    / tan(toRadians(latitude) / 2 + PI / 4)
         )
         var q = dLat / dPhi
         if (abs(q) > Double.MAX_VALUE) {
-            q = cos(Math.toRadians(latitude))
+            q = cos(toRadians(latitude))
         }
         // if dLon over 180° take shorter rhumb across 180° meridian:
-        if (dLon > Math.PI) {
-            dLon = 2 * Math.PI - dLon
+        if (dLon > PI) {
+            dLon = 2 * PI - dLon
         }
         val d = sqrt(dLat * dLat + q * q * dLon * dLon)
         return d * earthRadius
@@ -438,10 +444,10 @@ data class GeoLocation(
         sb.append("\t<Longitude>").append(longitude).append("</Longitude>\n")
         sb.append("\t<Elevation>").append(elevation).append(" Meters").append("</Elevation>\n")
         sb.append("\t<TimezoneName>").append(timeZone!!.id).append("</TimezoneName>\n")
-        sb.append("\t<TimeZoneDisplayName>").append(timeZone!!.displayName).append("</TimeZoneDisplayName>\n")
+        sb.append("\t<TimeZoneDisplayName>").append(timeZone!!.id).append("</TimeZoneDisplayName>\n") //TODO kinda broke with kotlinx
         sb.append("\t<TimezoneGMTOffset>").append(timeZone!!.rawOffset / HOUR_MILLIS)
             .append("</TimezoneGMTOffset>\n")
-        sb.append("\t<TimezoneDSTOffset>").append(timeZone!!.dstSavings / HOUR_MILLIS)
+        sb.append("\t<TimezoneDSTOffset>").append(timeZone!!.rawOffset / HOUR_MILLIS)//TODO kinda broke with kotlinx
             .append("</TimezoneDSTOffset>\n")
         sb.append("</GeoLocation>")
         return sb.toString()
@@ -471,12 +477,12 @@ data class GeoLocation(
         val latInt = (latLong xor (latLong ushr 32)).toInt()
         val lonInt = (lonLong xor (lonLong ushr 32)).toInt()
         val elevInt = (elevLong xor (elevLong ushr 32)).toInt()
-        result = 37 * result + javaClass.hashCode()
+        result = 37 * result + this::class.hashCode()
         result += 37 * result + latInt
         result += 37 * result + lonInt
         result += 37 * result + elevInt
-        result += 37 * result + (locationName?.hashCode() ?: 0)
-        result += 37 * result + (timeZone?.hashCode() ?: 0)
+        result += 37 * result + locationName.hashCode()
+        result += 37 * result + timeZone.hashCode()
         return result
     }
 
@@ -490,10 +496,10 @@ data class GeoLocation(
         sb.append("\nLongitude:\t\t\t").append(longitude).append("\u00B0")
         sb.append("\nElevation:\t\t\t").append(elevation).append(" Meters")
         sb.append("\nTimezone ID:\t\t\t").append(timeZone!!.id)
-        sb.append("\nTimezone Display Name:\t\t").append(timeZone!!.displayName)
-            .append(" (").append(timeZone!!.getDisplayName(false, TimeZone.SHORT)).append(")")
+        sb.append("\nTimezone Display Name:\t\t").append(timeZone!!.id) //TODO kinda broke with kotlinx
+            .append(" (").append(timeZone!!.id).append(")")//TODO kinda broke with kotlinx
         sb.append("\nTimezone GMT Offset:\t\t").append(timeZone!!.rawOffset / HOUR_MILLIS)
-        sb.append("\nTimezone DST Offset:\t\t").append(timeZone!!.dstSavings / HOUR_MILLIS)
+        sb.append("\nTimezone DST Offset:\t\t").append(timeZone!!.rawOffset / HOUR_MILLIS)//TODO kinda broke with kotlinx
         return sb.toString()
     }
 
@@ -520,6 +526,14 @@ data class GeoLocation(
     }*/
 
     companion object {
+        /**
+         * This is a best approximation of [java.util.TimeZone.getRawOffset], which returns the offset,
+         * regardless of daylight savings time - possibly even with historic accuracy. TODO kinda broke with kotlinx
+         * */
+        val TimeZone.rawOffset: Long get() =
+            if(this is kotlinx.datetime.FixedOffsetTimeZone) this.offset.totalSeconds.seconds.inWholeMilliseconds
+            else offsetAt(Clock.System.now()).totalSeconds.seconds.inWholeMilliseconds
+
         /**
          * Constant for a distance type calculation.
          * @see .getGeodesicDistance

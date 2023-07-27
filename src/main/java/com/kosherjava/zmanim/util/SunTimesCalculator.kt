@@ -15,7 +15,16 @@
  */
 package com.kosherjava.zmanim.util
 
-import java.util.*
+import kotlinx.datetime.LocalDate
+import kotlin.math.PI
+import kotlin.math.acos
+import kotlin.math.asin
+import kotlin.math.atan
+import kotlin.math.cos
+import kotlin.math.floor
+import kotlin.math.sin
+import kotlin.math.tan
+
 
 /**
  * Implementation of sunrise and sunset methods to calculate astronomical times. This calculator uses the Java algorithm
@@ -29,6 +38,7 @@ import java.util.*
  * @author  Kevin Boone 2000
  */
 class SunTimesCalculator : AstronomicalCalculator() {
+    override fun copy(): AstronomicalCalculator = SunTimesCalculator()
     /**
      * @see getCalculatorName
      */
@@ -41,7 +51,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunrise
      */
     override fun getUTCSunrise(
-        calendar: Calendar,
+        LocalDate: LocalDate,
         geoLocation: GeoLocation,
         zenith: Double,
         adjustForElevation: Boolean
@@ -49,7 +59,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
         val doubleTime: Double
         val elevation: Double = if (adjustForElevation) geoLocation.elevation else 0.0
         val adjustedZenith: Double = adjustZenith(zenith, elevation)
-        doubleTime = getTimeUTC(calendar, geoLocation, adjustedZenith, true)
+        doubleTime = getTimeUTC(LocalDate, geoLocation, adjustedZenith, true)
         return doubleTime
     }
 
@@ -57,7 +67,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCSunset
      */
     override fun getUTCSunset(
-        calendar: Calendar,
+        LocalDate: LocalDate,
         geoLocation: GeoLocation,
         zenith: Double,
         adjustForElevation: Boolean
@@ -65,7 +75,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
         var doubleTime: Double = Double.NaN
         val elevation: Double = if (adjustForElevation) geoLocation.elevation else 0.0
         val adjustedZenith: Double = adjustZenith(zenith, elevation)
-        doubleTime = getTimeUTC(calendar, geoLocation, adjustedZenith, false)
+        doubleTime = getTimeUTC(LocalDate, geoLocation, adjustedZenith, false)
         return doubleTime
     }
 
@@ -79,15 +89,15 @@ class SunTimesCalculator : AstronomicalCalculator() {
      * @see NOAACalculator
      *
      *
-     * @param calendar
-     * The Calendar representing the date to calculate solar noon for
+     * @param LocalDate
+     * The LocalDate representing the date to calculate solar noon for
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
      * @return the time in minutes from zero UTC
      */
-    override fun getUTCNoon(calendar: Calendar, geoLocation: GeoLocation): Double {
-        val sunrise: Double = getUTCSunrise(calendar, geoLocation, 90.0, true)
-        val sunset: Double = getUTCSunset(calendar, geoLocation, 90.0, true)
+    override fun getUTCNoon(LocalDate: LocalDate, geoLocation: GeoLocation): Double {
+        val sunrise: Double = getUTCSunrise(LocalDate, geoLocation, 90.0, true)
+        val sunset: Double = getUTCSunset(LocalDate, geoLocation, 90.0, true)
         return (sunrise + ((sunset - sunrise) / 2))
     }
 
@@ -102,7 +112,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
          * @return sin of the angle in degrees
          */
         private fun sinDeg(deg: Double): Double {
-            return Math.sin(deg * 2.0 * Math.PI / 360.0)
+            return sin(deg * 2.0 * PI / 360.0)
         }
 
         /**
@@ -110,7 +120,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
          * @return acos of the angle in degrees
          */
         private fun acosDeg(x: Double): Double {
-            return Math.acos(x) * 360.0 / (2 * Math.PI)
+            return acos(x) * 360.0 / (2 * PI)
         }
 
         /**
@@ -118,7 +128,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
          * @return asin of the angle in degrees
          */
         private fun asinDeg(x: Double): Double {
-            return Math.asin(x) * 360.0 / (2 * Math.PI)
+            return asin(x) * 360.0 / (2 * PI)
         }
 
         /**
@@ -126,7 +136,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
          * @return tan of the angle in degrees
          */
         private fun tanDeg(deg: Double): Double {
-            return Math.tan(deg * 2.0 * Math.PI / 360.0)
+            return tan(deg * 2.0 * PI / 360.0)
         }
 
         /**
@@ -136,7 +146,7 @@ class SunTimesCalculator : AstronomicalCalculator() {
          * @return cosine of the angle in degrees
          */
         private fun cosDeg(deg: Double): Double {
-            return Math.cos(deg * 2.0 * Math.PI / 360.0)
+            return cos(deg * 2.0 * PI / 360.0)
         }
 
         /**
@@ -205,9 +215,9 @@ class SunTimesCalculator : AstronomicalCalculator() {
          */
         private fun getSunRightAscensionHours(sunTrueLongitude: Double): Double {
             val a: Double = 0.91764 * tanDeg(sunTrueLongitude)
-            var ra: Double = 360.0 / (2.0 * Math.PI) * Math.atan(a)
-            val lQuadrant: Double = Math.floor(sunTrueLongitude / 90.0) * 90.0
-            val raQuadrant: Double = Math.floor(ra / 90.0) * 90.0
+            var ra: Double = 360.0 / (2.0 * PI) * atan(a)
+            val lQuadrant: Double = floor(sunTrueLongitude / 90.0) * 90.0
+            val raQuadrant: Double = floor(ra / 90.0) * 90.0
             ra = ra + (lQuadrant - raQuadrant)
             return ra / DEG_PER_HOUR // convert to hours
         }
@@ -249,8 +259,8 @@ class SunTimesCalculator : AstronomicalCalculator() {
          * Get sunrise or sunset time in UTC, according to flag. This time is returned as
          * a double and is not adjusted for time-zone.
          *
-         * @param calendar
-         * the Calendar object to extract the day of year for calculation
+         * @param LocalDate
+         * the LocalDate object to extract the day of year for calculation
          * @param geoLocation
          * the GeoLocation object that contains the latitude and longitude
          * @param zenith
@@ -262,12 +272,12 @@ class SunTimesCalculator : AstronomicalCalculator() {
          * [Double.NaN] will be returned.
          */
         private fun getTimeUTC(
-            calendar: Calendar,
+            LocalDate: LocalDate,
             geoLocation: GeoLocation,
             zenith: Double,
             isSunrise: Boolean
         ): Double {
-            val dayOfYear = calendar.get(Calendar.DAY_OF_YEAR)
+            val dayOfYear = LocalDate.dayOfYear
             val sunMeanAnomaly: Double = getMeanAnomaly(dayOfYear, geoLocation.longitude, isSunrise)
             val sunTrueLong: Double = getSunTrueLongitude(sunMeanAnomaly)
             val sunRightAscensionHours: Double = getSunRightAscensionHours(sunTrueLong)

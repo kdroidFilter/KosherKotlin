@@ -17,9 +17,16 @@ package com.kosherjava.zmanim
 
 import com.kosherjava.zmanim.util.AstronomicalCalculator
 import com.kosherjava.zmanim.util.GeoLocation
-import com.kosherjava.zmanim.util.ZmanimFormatter
-import java.math.BigDecimal
-import java.util.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * A Java calendar that calculates astronomical times such as [sunrise], [sunset] and twilight times. This class contains a [Calendar][calendar] and can therefore use the standard
@@ -62,7 +69,7 @@ import java.util.*
  *
  * @author  Eliyahu Hershfeld 2004 - 2023
  */
-open class AstronomicalCalendar : Cloneable {
+open class AstronomicalCalendar {
 
     constructor(location: GeoLocation) {
         geoLocation = location
@@ -86,19 +93,11 @@ open class AstronomicalCalendar : Cloneable {
      * the [GeoLocation] used for calculations.
      */
     var geoLocation: GeoLocation = GeoLocation()
-        set(value) {
-            field = value
-            calendar.timeZone = value.timeZone
-        }
 
     /**
      * The Java Calendar encapsulated by this class to track the current date used by the class
      */
-    var calendar: Calendar = Calendar.getInstance(geoLocation.timeZone)
-        set(calendar) {
-            field = calendar
-            calendar.timeZone = geoLocation.timeZone
-        }
+    var localDate: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
 
     /**
      * The internal [AstronomicalCalculator] used for calculating solar based times.
@@ -128,7 +127,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see [seaLevelSunrise]
      * @see AstronomicalCalendar.getUTCSunrise
      */
-    val sunrise: Date?
+    val sunrise: Instant?
         get() = getUTCSunrise(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, true) }
@@ -148,7 +147,7 @@ open class AstronomicalCalendar : Cloneable {
      *
      * @see .getSeaLevelSunset
      */
-    val seaLevelSunrise: Date?
+    val seaLevelSunrise: Instant?
         get() = getUTCSeaLevelSunrise(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, true) }
@@ -161,7 +160,7 @@ open class AstronomicalCalendar : Cloneable {
      * can't be computed, null will be returned. See detailed explanation on top of the page.
      * @see .CIVIL_ZENITH
      */
-    val beginCivilTwilight: Date?
+    val beginCivilTwilight: Instant?
         get() = getSunriseOffsetByDegrees(CIVIL_ZENITH)
 
     /**
@@ -171,7 +170,7 @@ open class AstronomicalCalendar : Cloneable {
      * calculation can't be computed null will be returned. See detailed explanation on top of the page.
      * @see .NAUTICAL_ZENITH
      */
-    val beginNauticalTwilight: Date?
+    val beginNauticalTwilight: Instant?
         get() = getSunriseOffsetByDegrees(NAUTICAL_ZENITH)
 
     /**
@@ -182,7 +181,7 @@ open class AstronomicalCalendar : Cloneable {
      * calculation can't be computed, null will be returned. See detailed explanation on top of the page.
      * @see .ASTRONOMICAL_ZENITH
      */
-    val beginAstronomicalTwilight: Date?
+    val beginAstronomicalTwilight: Instant?
         get() = getSunriseOffsetByDegrees(ASTRONOMICAL_ZENITH)
 
     /**
@@ -205,7 +204,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see [seaLevelSunset]
      * @see AstronomicalCalendar.getUTCSunset
      */
-    val sunset: Date?
+    val sunset: Instant?
         get() = getUTCSunset(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
@@ -223,7 +222,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see AstronomicalCalendar.getUTCSeaLevelSunset
      * @see sunset
      */
-    val seaLevelSunset: Date?
+    val seaLevelSunset: Instant?
         get() = getUTCSeaLevelSunset(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
@@ -236,7 +235,7 @@ open class AstronomicalCalendar : Cloneable {
      * the calculation can't be computed, null will be returned. See detailed explanation on top of the page.
      * @see CIVIL_ZENITH
      */
-    val endCivilTwilight: Date?
+    val endCivilTwilight: Instant?
         get() = getSunsetOffsetByDegrees(CIVIL_ZENITH)
 
     /**
@@ -247,7 +246,7 @@ open class AstronomicalCalendar : Cloneable {
      * page.
      * @see NAUTICAL_ZENITH
      */
-    val endNauticalTwilight: Date?
+    val endNauticalTwilight: Instant?
         get() = getSunsetOffsetByDegrees(NAUTICAL_ZENITH)
 
     /**
@@ -257,7 +256,7 @@ open class AstronomicalCalendar : Cloneable {
      * of the page.
      * @see .ASTRONOMICAL_ZENITH
      */
-    val endAstronomicalTwilight: Date?
+    val endAstronomicalTwilight: Instant?
         get() = getSunsetOffsetByDegrees(ASTRONOMICAL_ZENITH)
 
     /**
@@ -275,7 +274,7 @@ open class AstronomicalCalendar : Cloneable {
      * not rise, and one where it does not set, a null will be returned. See detailed explanation on top of the
      * page.
      */
-    fun getSunriseOffsetByDegrees(offsetZenith: Double): Date? =
+    fun getSunriseOffsetByDegrees(offsetZenith: Double): Instant? =
         getUTCSunrise(offsetZenith)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, true) }
@@ -293,7 +292,7 @@ open class AstronomicalCalendar : Cloneable {
      * rise, and one where it does not set, a null will be returned. See detailed explanation on top of the
      * page.
      */
-    fun getSunsetOffsetByDegrees(offsetZenith: Double): Date? =
+    fun getSunsetOffsetByDegrees(offsetZenith: Double): Instant? =
         getUTCSunset(offsetZenith)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
@@ -309,7 +308,7 @@ open class AstronomicalCalendar : Cloneable {
      */
     /**
      * Default constructor will set a default [geoLocation], a default
-     * [AstronomicalCalculator][AstronomicalCalculator.default] and default the calendar to the current date.
+     * [AstronomicalCalculator][AstronomicalCalculator.default] and default the LocalDate to the current date.
      *//*
     init {
         astronomicalCalculator
@@ -326,7 +325,7 @@ open class AstronomicalCalendar : Cloneable {
      * not set, [Double.NaN] will be returned. See detailed explanation on top of the page.
      */
     fun getUTCSunrise(zenith: Double): Double =
-        astronomicalCalculator.getUTCSunrise(adjustedCalendar, geoLocation, zenith, true)
+        astronomicalCalculator.getUTCSunrise(adjustedLocalDate.date, geoLocation, zenith, true)
 
     /**
      * A method that returns the sunrise in UTC time without correction for time zone offset from GMT and without using
@@ -344,7 +343,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see AstronomicalCalendar.getUTCSeaLevelSunset
      */
     fun getUTCSeaLevelSunrise(zenith: Double): Double =
-        astronomicalCalculator.getUTCSunrise(adjustedCalendar, geoLocation, zenith, false)
+        astronomicalCalculator.getUTCSunrise(adjustedLocalDate.date, geoLocation, zenith, false)
 
     /**
      * A method that returns the sunset in UTC time without correction for time zone offset from GMT and without using
@@ -358,7 +357,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see AstronomicalCalendar.getUTCSeaLevelSunset
      */
     fun getUTCSunset(zenith: Double): Double =
-        astronomicalCalculator.getUTCSunset(adjustedCalendar, geoLocation, zenith, true)
+        astronomicalCalculator.getUTCSunset(adjustedLocalDate.date, geoLocation, zenith, true)
 
     /**
      * A method that returns the sunset in UTC time without correction for elevation, time zone offset from GMT and
@@ -377,7 +376,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see AstronomicalCalendar.getUTCSeaLevelSunrise
      */
     fun getUTCSeaLevelSunset(zenith: Double): Double =
-        astronomicalCalculator.getUTCSunset(adjustedCalendar, geoLocation, zenith, false)
+        astronomicalCalculator.getUTCSunset(adjustedLocalDate.date, geoLocation, zenith, false)
 
     /**
      * A method that returns an [elevation adjusted][AstronomicalCalculator.getElevationAdjustment]
@@ -411,11 +410,11 @@ open class AstronomicalCalendar : Cloneable {
      *
      * @see .getTemporalHour
      */
-    fun getTemporalHour(startOfday: Date?, endOfDay: Date?): Long {
+    fun getTemporalHour(startOfday: Instant?, endOfDay: Instant?): Long {
         if (startOfday == null || endOfDay == null) {
             return Long.MIN_VALUE
         }
-        return (endOfDay.time - startOfday.time) / 12
+        return (endOfDay - startOfday).div(12).inWholeMilliseconds
     }
 
     /**
@@ -433,9 +432,9 @@ open class AstronomicalCalendar : Cloneable {
      * @see .getSunTransit
      * @see .getTemporalHour
      */
-    val sunTransit: Date?
+    val sunTransit: Instant?
         get() = astronomicalCalculator
-            .getUTCNoon(adjustedCalendar, geoLocation)
+            .getUTCNoon(adjustedLocalDate.date, geoLocation)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
 
@@ -455,7 +454,7 @@ open class AstronomicalCalendar : Cloneable {
      * Arctic Circle where there is at least one day a year where the sun does not rise, and one where it does
      * not set, null will be returned. See detailed explanation on top of the page.
      */
-    fun getSunTransit(startOfDay: Date?, endOfDay: Date?): Date? =
+    fun getSunTransit(startOfDay: Instant?, endOfDay: Instant?): Instant? =
         getTimeOffset(startOfDay, getTemporalHour(startOfDay, endOfDay) * 6)
 
     /**
@@ -463,21 +462,18 @@ open class AstronomicalCalendar : Cloneable {
      *
      * @param time
      * The time to be set as the time for the `Date`. The time expected is in the format: 18.75
-     * for 6:45:00 PM.time is sunrise and false if it is sunset
-     * @param isSunrise true if the
+     * for 6:45:00 PM.
+     * @param isSunrise true if the time is sunrise and false if it is sunset
      * @return The Date. null if [time] is [Double.NaN]
      */
-    protected fun getDateFromTime(time: Double, isSunrise: Boolean): Date? {
+    protected fun getDateFromTime(time: Double, isSunrise: Boolean): Instant? {
         if (time.isNaN()) {
             return null
         }
         var calculatedTime: Double = time
-        val adjustedCalendar: Calendar = adjustedCalendar
-        val cal: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        cal.clear() // clear all fields
-        cal[Calendar.YEAR] = adjustedCalendar[Calendar.YEAR]
-        cal[Calendar.MONTH] = adjustedCalendar[Calendar.MONTH]
-        cal[Calendar.DAY_OF_MONTH] = adjustedCalendar[Calendar.DAY_OF_MONTH]
+        val adjustedLocalDate = this.adjustedLocalDate
+        val timeZone = TimeZone.UTC
+        var cal = adjustedLocalDate.toInstant(timeZone)
         val hours = calculatedTime.toInt() // retain only the hours
         calculatedTime -= hours.toDouble()
 
@@ -495,14 +491,11 @@ open class AstronomicalCalendar : Cloneable {
         // actually not the target date, but the day prior or after
         val localTimeHours = (geoLocation.longitude / 15).toInt()
         if (isSunrise && localTimeHours.plus(hours) > 18)
-            cal.add(Calendar.DAY_OF_MONTH, -1)
+            cal = cal.plus(DatePeriod(days = -1), timeZone)
         else if (!isSunrise && localTimeHours.plus(hours) < 6)
-            cal.add(Calendar.DAY_OF_MONTH, 1)
-        cal[Calendar.HOUR_OF_DAY] = hours
-        cal[Calendar.MINUTE] = minutes
-        cal[Calendar.SECOND] = seconds
-        cal[Calendar.MILLISECOND] = (calculatedTime * 1000).toInt()
-        return cal.time
+            cal = cal.plus(DatePeriod(days = 1), timeZone)
+        val dt = cal.toLocalDateTime(timeZone)
+        return LocalDateTime(dt.year, dt.month, dt.dayOfMonth, hours, minutes, seconds, (calculatedTime * 1000).milliseconds.inWholeNanoseconds.toInt()).toInstant(timeZone)
     }
 
     /**
@@ -517,23 +510,23 @@ open class AstronomicalCalendar : Cloneable {
      * @see .getSunsetSolarDipFromOffset
      */
     fun getSunriseSolarDipFromOffset(minutes: Double): Double {
-        var offsetByDegrees: Date? = seaLevelSunrise
-        val offsetByTime: Date? = getTimeOffset(
+        var offsetByDegrees: Instant? = seaLevelSunrise
+        val offsetByTime: Instant? = getTimeOffset(
             seaLevelSunrise, -(minutes * MINUTE_MILLIS)
         )
-        var degrees = BigDecimal(0)
-        val incrementor = BigDecimal("0.0001")
+        var degrees = 0.0
+        val incrementor = 0.0001 //TODO upstream uses BigDecimal
         while (
             offsetByDegrees == null ||
             (
-                    (minutes < 0.0 && offsetByDegrees.time < offsetByTime!!.time) ||
-                            (minutes > 0.0 && offsetByDegrees.time > offsetByTime!!.time)
+                    (minutes < 0.0 && offsetByDegrees < offsetByTime!!) ||
+                            (minutes > 0.0 && offsetByDegrees > offsetByTime!!)
                     )
         ) {
-            degrees = if (minutes > 0.0) degrees.add(incrementor) else degrees.subtract(incrementor)
-            offsetByDegrees = getSunriseOffsetByDegrees(GEOMETRIC_ZENITH + degrees.toDouble())
+            degrees = if (minutes > 0.0) degrees + incrementor else degrees - incrementor
+            offsetByDegrees = getSunriseOffsetByDegrees(GEOMETRIC_ZENITH + degrees)
         }
-        return degrees.toDouble()
+        return degrees
     }
 
     /**
@@ -548,32 +541,37 @@ open class AstronomicalCalendar : Cloneable {
      * @see .getSunriseSolarDipFromOffset
      */
     fun getSunsetSolarDipFromOffset(minutes: Double): Double {
-        var offsetByDegrees: Date? = seaLevelSunset
-        val offsetByTime: Date? = getTimeOffset(
+        var offsetByDegrees: Instant? = seaLevelSunset
+        val offsetByTime: Instant? = getTimeOffset(
             seaLevelSunset, minutes * MINUTE_MILLIS
         )
-        var degrees = BigDecimal(0)
-        val incrementor = BigDecimal("0.001")
-        while (offsetByDegrees == null || ((minutes > 0.0 && offsetByDegrees.time < offsetByTime!!.time) || (minutes < 0.0 && offsetByDegrees.time > offsetByTime!!.time))) {
+        var degrees = 0.0
+        val incrementor = 0.001 //TODO upstream uses BigDecimal
+        while (
+            offsetByDegrees == null ||
+            minutes > 0.0 && offsetByDegrees < offsetByTime!! ||
+            minutes < 0.0 && offsetByDegrees > offsetByTime!!
+        ) {
             degrees = if (minutes > 0.0) degrees + incrementor else degrees - incrementor
-            offsetByDegrees = getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + degrees.toDouble())
+            offsetByDegrees = getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + degrees)
         }
-        return degrees.toDouble()
+        return degrees
     }
 
     /**
-     * Adjusts the `Calendar` to deal with edge cases where the location crosses the antimeridian.
+     * Adjusts the `LocalDate` to deal with edge cases where the location crosses the antimeridian.
      *
      * @see GeoLocation.antimeridianAdjustment
-     * @return the adjusted Calendar
+     * @return the adjusted LocalDate
      */
-    private val adjustedCalendar: Calendar
+    private val adjustedLocalDate: LocalDateTime
         get() {
             val offset = geoLocation.antimeridianAdjustment
-            if (offset == 0) return calendar
-            val adjustedCalendar: Calendar = calendar.clone() as Calendar
-            adjustedCalendar.add(Calendar.DAY_OF_MONTH, offset)
-            return adjustedCalendar
+            return if (offset == 0) localDate
+            else localDate
+                .toInstant(geoLocation.timeZone)
+                .plus(DatePeriod(days = offset), geoLocation.timeZone)
+                .toLocalDateTime(geoLocation.timeZone)
         }
 
     /**
@@ -582,7 +580,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see com.kosherjava.zmanim.util.ZmanimFormatter.toXML
      * @see Object.toString
      */
-    override fun toString(): String = ZmanimFormatter.toXML(this)
+//    override fun toString(): String = ZmanimFormatter.toXML(this)
 
     /**
      * @return a JSON formatted representation of the class. It returns the default output of the
@@ -590,7 +588,7 @@ open class AstronomicalCalendar : Cloneable {
      * @see com.kosherjava.zmanim.util.ZmanimFormatter.toJSON
      * @see Object.toString
      */
-    fun toJSON(): String = ZmanimFormatter.toJSON(this)
+//    fun toJSON(): String = ZmanimFormatter.toJSON(this)
 
     /**
      * @see Object.equals
@@ -598,7 +596,7 @@ open class AstronomicalCalendar : Cloneable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is AstronomicalCalendar) return false
-        return calendar == other.calendar &&
+        return localDate == other.localDate &&
                 geoLocation == other.geoLocation &&
                 astronomicalCalculator == other.astronomicalCalculator
     }
@@ -608,8 +606,9 @@ open class AstronomicalCalendar : Cloneable {
      */
     override fun hashCode(): Int {
         var result = 17
-        result = 37 * result + javaClass.hashCode() // needed or this and subclasses will return identical hash
-        result += 37 * result + calendar.hashCode()
+        result =
+            37 * result + this::class.hashCode() // needed or this and subclasses will return identical hash
+        result += 37 * result + localDate.hashCode()
         result += 37 * result + geoLocation.hashCode()
         result += 37 * result + astronomicalCalculator.hashCode()
         return result
@@ -617,25 +616,11 @@ open class AstronomicalCalendar : Cloneable {
 
     /**
      * A method that creates a [deep copy](https://en.wikipedia.org/wiki/Object_copy#Deep_copy) of the object.
-     * **Note:** If the [TimeZone] in the cloned [com.kosherjava.zmanim.util.GeoLocation] will
-     * be changed from the original, it is critical that
-     * [com.kosherjava.zmanim.AstronomicalCalendar.calendar].
-     * [setTimeZone(TimeZone)][Calendar.setTimeZone] be called in order for the
-     * AstronomicalCalendar to output times in the expected offset after being cloned.
      *
      * @see Object.clone
      */
-    public override fun clone(): Any {
-        var clone: AstronomicalCalendar? = null
-        try {
-            clone = super.clone() as AstronomicalCalendar
-        } catch (cnse: CloneNotSupportedException) {
-            // Required by the compiler. Should never be reached since we implement clone()
-        }
-        clone!!.geoLocation = geoLocation.copy()
-        clone.calendar = calendar.clone() as Calendar
-        clone.astronomicalCalculator = astronomicalCalculator.clone() as AstronomicalCalculator
-        return clone
+    fun copy(): AstronomicalCalendar = AstronomicalCalendar(geoLocation.copy()).apply { //TODO copy over date once superclass constructors are figured out
+        this.astronomicalCalculator = astronomicalCalculator.copy()
     }
 
     companion object {
@@ -672,7 +657,8 @@ open class AstronomicalCalendar : Cloneable {
          * the offset in milliseconds to add to the time
          * @return the [Date]with the offset added to it
          */
-        fun getTimeOffset(time: Date?, offset: Double): Date? = getTimeOffset(time, offset.toLong())
+        fun getTimeOffset(time: Instant?, offset: Double): Instant? =
+            getTimeOffset(time, offset.toLong())
 
         /**
          * A utility method that returns a date offset by the offset time passed in. Please note that the level of light
@@ -686,11 +672,11 @@ open class AstronomicalCalendar : Cloneable {
          * the offset in milliseconds to add to the time.
          * @return the [Date] with the offset in milliseconds added to it, or null if [time] is null or [offset] is [Long.MIN_VALUE]
          */
-        fun getTimeOffset(time: Date?, offset: Long): Date? {
+        fun getTimeOffset(time: Instant?, offset: Long): Instant? {
             if (time == null || offset == Long.MIN_VALUE) {
                 return null
             }
-            return Date(time.time + offset)
+            return time + offset.milliseconds
         }
     }
 }

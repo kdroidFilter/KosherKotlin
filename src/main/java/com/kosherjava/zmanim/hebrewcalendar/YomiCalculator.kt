@@ -15,10 +15,8 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import java.lang.IllegalArgumentException
-import java.util.Calendar
-import java.util.GregorianCalendar
 import com.kosherjava.zmanim.util.*
+import kotlinx.datetime.LocalDate
 
 /**
  * This class calculates the Daf Yomi Bavli page (daf) for a given date. To calculate Daf Yomi Yerushalmi
@@ -31,7 +29,7 @@ object YomiCalculator {
     /**
      * The start date of the first Daf Yomi Bavli cycle of September 11, 1923 / Rosh Hashana 5684.
      */
-    private val dafYomiStartDay: Calendar = GregorianCalendar(1923, Calendar.SEPTEMBER, 11)
+    private val dafYomiStartDay: LocalDate = LocalDate(1923, 9, 11)
 
     /** The start date of the first Daf Yomi Bavli cycle in the Julian calendar. Used internally for claculations. */
     private val dafYomiJulianStartDay: Int = DateUtils.getJulianDay(dafYomiStartDay).toInt()
@@ -40,7 +38,7 @@ object YomiCalculator {
      * The date that the pagination for the Daf Yomi *Maseches Shekalim* changed to use the commonly used Vilna
      * Shas pagination from the no longer commonly available Zhitomir / Slavuta Shas used by Rabbi Meir Shapiro.
      */
-    private val shekalimChangeDay: Calendar = GregorianCalendar(1975, Calendar.JUNE, 24)
+    private val shekalimChangeDay: LocalDate = LocalDate(1975, 6, 24)
 
     /** The Julian date that the cycle for Shekalim changed.
      * @see .getDafYomiBavli
@@ -78,16 +76,16 @@ object YomiCalculator {
             64, 157, 105, 121, 22, 88, 56, 40, 35, 31, 32, 29, 27, 122, 112, 91, 66, 49, 90, 82,
             119, 119, 176, 113, 24, 49, 76, 14, 120, 110, 142, 61, 34, 34, 28, 22, 4, 9, 5, 73
         )
-        val calendar: Calendar = jewishCalendar.gregorianCalendar
+        val LocalDate = jewishCalendar.gregorianLocalDate
         var dafYomi: Daf? = null
-        val julianDay = DateUtils.getJulianDay(calendar).toInt()
+        val julianDay = DateUtils.getJulianDay(LocalDate).toInt()
         val cycleNo: Int
         val dafNo: Int
-        require(!calendar.before(dafYomiStartDay)) {
+        require(LocalDate >= (dafYomiStartDay)) {
             // TODO: should we return a null or throw an IllegalArgumentException?
-            "$calendar is prior to organized Daf Yomi Bavli cycles that started on $dafYomiStartDay"
+            "$LocalDate is prior to organized Daf Yomi Bavli cycles that started on $dafYomiStartDay"
         }
-        if (calendar == shekalimChangeDay || calendar.after(shekalimChangeDay)) {
+        if (LocalDate >= shekalimChangeDay) {
             cycleNo = 8 + (julianDay - shekalimJulianChangeDay) / 2711
             dafNo = (julianDay - shekalimJulianChangeDay) % 2711
         } else {

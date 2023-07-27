@@ -16,7 +16,8 @@
  */
 package com.kosherjava.zmanim.hebrewcalendar
 
-import java.util.Calendar
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
 
 /**
  * Tefila Rules is a utility class that covers the various *halachos* and *minhagim* regarding
@@ -236,9 +237,9 @@ class TefilaRules {
         val day = jewishCalendar.jewishDayOfMonth
         val month = jewishCalendar.jewishMonth
         return !(
-                jewishCalendar.dayOfWeek == Calendar.SATURDAY ||
-                        !isTachanunRecitedSundays && jewishCalendar.dayOfWeek == Calendar.SUNDAY ||
-                        !isTachanunRecitedFridays && jewishCalendar.dayOfWeek == Calendar.FRIDAY ||
+                jewishCalendar.gregorianLocalDate.dayOfWeek == DayOfWeek.SATURDAY ||
+                        !isTachanunRecitedSundays && jewishCalendar.gregorianLocalDate.dayOfWeek == DayOfWeek.SUNDAY ||
+                        !isTachanunRecitedFridays && jewishCalendar.gregorianLocalDate.dayOfWeek == DayOfWeek.FRIDAY ||
                         month == JewishDate.NISSAN ||
                         month == JewishDate.TISHREI &&
                         (
@@ -285,17 +286,17 @@ class TefilaRules {
     /**
      * Returns if *tachanun* is recited during *mincha* on the day in question.
      *
-     * @param jewishCalendar the Jewish calendar day.
+     * @param jewishCalendar the Jewish LocalDate day.
      * @return if *tachanun* is recited during *mincha*.
      * @see .isTachanunRecitedShacharis
      */
     fun isTachanunRecitedMincha(jewishCalendar: JewishCalendar): Boolean {
-        val tomorrow = jewishCalendar.clone() as JewishCalendar
-        tomorrow.forward(Calendar.DATE, 1)
+        val tomorrow = jewishCalendar.copy(inIsrael = jewishCalendar.inIsrael) //force JewishCalendar.copy, not JewishDate.copy
+        tomorrow.forward(DateTimeUnit.DAY, 1)
         val yomTovIndex = tomorrow.yomTovIndex
         return !(
                 !isTachanunRecitedMinchaAllYear ||
-                        jewishCalendar.dayOfWeek == Calendar.FRIDAY ||
+                        jewishCalendar.gregorianLocalDate.dayOfWeek == DayOfWeek.FRIDAY ||
                         !isTachanunRecitedShacharis(jewishCalendar) ||
                         !isTachanunRecitedShacharis(tomorrow) &&
                         yomTovIndex != JewishCalendar.EREV_ROSH_HASHANA &&
@@ -324,9 +325,9 @@ class TefilaRules {
      */
     fun isVeseinTalUmatarStartDate(jewishCalendar: JewishCalendar): Boolean =
         if (jewishCalendar.inIsrael) jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 7 // The 7th Cheshvan can't occur on Shabbos, so always return true for 7 Cheshvan
-        else when (jewishCalendar.dayOfWeek) {
-            Calendar.SATURDAY -> false //Not recited on Friday night
-            Calendar.SUNDAY -> jewishCalendar.tekufasTishreiElapsedDays == 48 || jewishCalendar.tekufasTishreiElapsedDays == 47 // When starting on Sunday, it can be the start date or delayed from Shabbos
+        else when (jewishCalendar.gregorianLocalDate.dayOfWeek) {
+            DayOfWeek.SATURDAY -> false //Not recited on Friday night
+            DayOfWeek.SUNDAY -> jewishCalendar.tekufasTishreiElapsedDays == 48 || jewishCalendar.tekufasTishreiElapsedDays == 47 // When starting on Sunday, it can be the start date or delayed from Shabbos
             else -> jewishCalendar.tekufasTishreiElapsedDays == 47
         }
 
@@ -351,9 +352,9 @@ class TefilaRules {
             jewishCalendar.jewishMonth == JewishDate.CHESHVAN && jewishCalendar.jewishDayOfMonth == 6 // The 7th Cheshvan can't occur on Shabbos, so always return true for 6 Cheshvan
         else {
             // When starting on motzai Shabbos, it can be the start date or delayed from Friday night
-            when (jewishCalendar.dayOfWeek) {
-                Calendar.FRIDAY -> false //Not recited on Friday night
-                Calendar.SATURDAY ->
+            when (jewishCalendar.gregorianLocalDate.dayOfWeek) {
+                DayOfWeek.FRIDAY -> false //Not recited on Friday night
+                DayOfWeek.SATURDAY ->
                     jewishCalendar.tekufasTishreiElapsedDays == 47 || jewishCalendar.tekufasTishreiElapsedDays == 46
                 else -> jewishCalendar.tekufasTishreiElapsedDays == 46
             }

@@ -7,7 +7,8 @@
  */
 package com.kosherjava.zmanim.util
 
-import com.kosherjava.zmanim.util.ZmanimFormatter
+//import com.kosherjava.zmanim.util.ZmanimFormatter
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.NOAACalculator
+import com.kosherjava.zmanim.util.GeoLocationUtils
 import com.kosherjava.zmanim.util.SunTimesCalculator

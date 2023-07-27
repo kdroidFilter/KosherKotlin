@@ -24,4 +24,3 @@ import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
 import com.kosherjava.zmanim.hebrewcalendar.JewishDate
 import com.kosherjava.zmanim.hebrewcalendar.YerushalmiYomiCalculator
 import com.kosherjava.zmanim.hebrewcalendar.YomiCalculator
-import java.util.GregorianCalendar
