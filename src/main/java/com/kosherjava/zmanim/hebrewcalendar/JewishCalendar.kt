@@ -426,7 +426,7 @@ class JewishCalendar : JewishDate {
 
     /* Molad Nissan year 1 was 177 days after molad tohu of Tishrei. We multiply 29.5 days * 6 months from Tishrei
       * to Nissan = 177. Subtract 7 days since tekufas Nissan was 7 days and 9 hours before the molad as stated in the Rambam
-      * and we are now at 170 days. Because getJewishLocalDateElapsedDays and getDaysSinceStartOfJewishYear use the value for
+      * and we are now at 170 days. Because getJewishCalendarElapsedDays and getDaysSinceStartOfJewishYear use the value for
       * Rosh Hashana as 1, we have to add 1 day for a total of 171. To this add a day since the tekufah is on a Tuesday
       * night and we push off the bracha to Wednesday AM resulting in the 172 used in the calculation.
       */
@@ -440,12 +440,12 @@ class JewishCalendar : JewishDate {
     val isBirkasHachamah: Boolean
         get() {
             val elapsedDays =
-                getJewishLocalDateElapsedDays(jewishYear) + //elapsed days since molad ToHu
+                getJewishCalendarElapsedDays(jewishYear) + //elapsed days since molad ToHu
                 daysSinceStartOfJewishYear //elapsed days to the current LocalDate date
 
             /* Molad Nissan year 1 was 177 days after molad tohu of Tishrei. We multiply 29.5 days * 6 months from Tishrei
               * to Nissan = 177. Subtract 7 days since tekufas Nissan was 7 days and 9 hours before the molad as stated in the Rambam
-              * and we are now at 170 days. Because getJewishLocalDateElapsedDays and getDaysSinceStartOfJewishYear use the value for
+              * and we are now at 170 days. Because getJewishCalendarElapsedDays and getDaysSinceStartOfJewishYear use the value for
               * Rosh Hashana as 1, we have to add 1 day for a total of 171. To this add a day since the tekufah is on a Tuesday
               * night and we push off the bracha to Wednesday AM resulting in the 172 used in the calculation.
               */
@@ -459,7 +459,7 @@ class JewishCalendar : JewishDate {
     private val parshaYearType: Int
         get() {
             var roshHashanaDayOfWeek =
-                (getJewishLocalDateElapsedDays(jewishYear) + 1) % 7 // plus one to the original Rosh Hashana of year 1 to get a week starting on Sunday
+                (getJewishCalendarElapsedDays(jewishYear) + 1) % 7 // plus one to the original Rosh Hashana of year 1 to get a week starting on Sunday
             if (roshHashanaDayOfWeek == 0) {
                 roshHashanaDayOfWeek = 7 // convert 0 to 7 for Shabbos for readability
             }
@@ -524,7 +524,7 @@ class JewishCalendar : JewishDate {
                 return NONE
             }
             val yearType = parshaYearType
-            val roshHashanaDayOfWeek = getJewishLocalDateElapsedDays(jewishYear) % 7
+            val roshHashanaDayOfWeek = getJewishCalendarElapsedDays(jewishYear) % 7
             val day = roshHashanaDayOfWeek + daysSinceStartOfJewishYear
             if (yearType >= 0) { // negative year should be impossible, but let's cover all bases
                 return parshalist[yearType][day / 7]
@@ -1534,7 +1534,7 @@ class JewishCalendar : JewishDate {
             // Days since Rosh Hashana year 1. Add 1/2 day as the first tekufas tishrei was 9 hours into the day. This allows all
             // 4 years of the secular leap year cycle to share 47 days. Truncate 47D and 9H to 47D for simplicity.
             val days: Double =
-                getJewishLocalDateElapsedDays(jewishYear) + (daysSinceStartOfJewishYear - 1) + 0.5
+                getJewishCalendarElapsedDays(jewishYear) + (daysSinceStartOfJewishYear - 1) + 0.5
             // days of completed solar years
             val solar: Double = (jewishYear - 1) * 365.25
             return floor(days - solar).toInt()
