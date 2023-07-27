@@ -1141,7 +1141,7 @@ open class JewishDate : Comparable<JewishDate> {
          * @see isCheshvanLong
          * @see isKislevShort
          */
-        val Int.daysInJewishYear get() = getJewishLocalDateElapsedDays(this + 1) - getJewishLocalDateElapsedDays(this)
+        val Int.daysInJewishYear get() = getJewishCalendarElapsedDays(this + 1) - getJewishCalendarElapsedDays(this)
 
         /**
          * Returns if Cheshvan is long in a given Jewish year. The method name isLong is done since in a Kesidran (ordered)
