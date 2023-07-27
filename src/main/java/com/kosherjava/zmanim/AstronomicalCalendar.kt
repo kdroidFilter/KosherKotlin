@@ -69,11 +69,7 @@ import kotlin.time.Duration.Companion.milliseconds
  *
  * @author  Eliyahu Hershfeld 2004 - 2023
  */
-open class AstronomicalCalendar {
-
-    constructor(location: GeoLocation) {
-        geoLocation = location
-    }
+open class AstronomicalCalendar(
 
     /**
      * A method that returns the currently set [GeoLocation] which contains location information used for the
@@ -92,7 +88,8 @@ open class AstronomicalCalendar {
     /**
      * the [GeoLocation] used for calculations.
      */
-    var geoLocation: GeoLocation = GeoLocation()
+    var geoLocation: GeoLocation
+) {
 
     /**
      * The Java Calendar encapsulated by this class to track the current date used by the class

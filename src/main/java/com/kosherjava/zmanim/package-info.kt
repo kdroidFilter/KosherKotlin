@@ -12,7 +12,6 @@
 package com.kosherjava.zmanim
 
 import com.kosherjava.zmanim.util.AstronomicalCalculator
-import java.util.GregorianCalendar
 import com.kosherjava.zmanim.AstronomicalCalendar
 import com.kosherjava.zmanim.ZmanimCalendar
 import com.kosherjava.zmanim.ComplexZmanimCalendar
