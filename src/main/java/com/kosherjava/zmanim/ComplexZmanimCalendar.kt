@@ -30,6 +30,8 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
+import kotlin.time.Duration.Companion.milliseconds
 
 
 /**
@@ -2956,7 +2958,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
 
     /**
      * Used by Molad based *zmanim* to determine if *zmanim* occur during the current day.
-     * @see .getMoladBasedTime
+     * @see moladBasedTime
      * @return following midnight
      */
     private val midnightTonight: LocalDateTime
@@ -3206,10 +3208,10 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * rise, and one where it does not set, a null will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      *
-     * @see .getSunset
-     * @see .getSeaLevelSunset
-     * @see .getSunriseBaalHatanya
-     * @see .ZENITH_1_POINT_583
+     * @see sunset
+     * @see seaLevelSunset
+     * @see sunriseBaalHatanya
+     * @see ZENITH_1_POINT_583
      */
     private val sunsetBaalHatanya: Instant?
         get() =
@@ -3441,8 +3443,12 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         if (startOfHalfDay == null || endOfHalfDay == null) {
             return null
         }
-        val shaahZmanis = ((endOfHalfDay - startOfHalfDay).div(6)).inWholeMilliseconds
-        return startOfHalfDay.plus(DateTimePeriod(0,0,0, (shaahZmanis * hours).roundToInt(),0,0,0), TimeZone.currentSystemDefault())
+        val startInEpochMilli = startOfHalfDay.toEpochMilliseconds()
+        val endMinusStart = endOfHalfDay.toEpochMilliseconds() - startInEpochMilli
+        //println("End minus start: $endMinusStart")
+        val shaahZmanis = endMinusStart.div(6)
+        //println("Shaa zmanis: $shaahZmanis")
+        return Instant.fromEpochMilliseconds(startInEpochMilli + (shaahZmanis * hours).roundToLong())
     }
 
     /**
