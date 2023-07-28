@@ -21,25 +21,8 @@ For a basic set of instructions on the use of the API, see [How to Use the Zmani
 To add KosherKotlin as a dependency to your project, add the following dependency:
 
 ## Dependency
+The library is currently in the process of transitioning to Kotlinx-DateTime. Once the transition is complete, multiple target dependencies will be supported. Until then, you can copy the `zmanim` folder into your project. Unfortunately, I did not develop on a branch, so master is not tested and stable. You can checkout the commit before the transition, when the library only supported Kotlin/JVM, and copy the files in `zmanim`.
 
-In newer Gradle versions, insert this into `settings.gradle`:
-
-```
-dependencyResolutionManagement {
-    ...
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-And then download the library as usual:
-
-```
-dependencies {
-    implementation 'com.github.Sternbach-Software:KosherKotlin:9fba11bd'
-}
-```
 ## Usage
 
 The library was designed to be as idiomatic as possible, both in its implementation and its API surface. Every client-facing zero-argument function is accessible as a computed property (e.g. `calendar.alos72`). Hosted documentation coming soon!
