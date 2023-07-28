@@ -38,13 +38,14 @@ The library was designed to be as idiomatic as possible, both in its implementat
  - [ ] Library distribution needs to be improved (e.g. publishing to mavenCentral, etc.), especially in light of the kotlinx-datetime port (not sure it builds properly)
    - [ ] May need to implement multi-project gradle - not sure how to do that yet.
  - [ ] There are still a significant amount of javadocs/kdocs that were written for specific Java getters, setters, or properties, which were combined into a public property, and all of the javadocs/kdocs were copied to the property. They must be combined. There is often overlap or complete duplication between doc strings, but sometimes there are notes only relevant to the setter or getter.
- - [ ] Unit tests need to be ported from upstream. They are (slowly) being translated into Java from the Python port. 
+ - [ ] Unit tests need to be ported from upstream. They are (slowly) being translated into Java from the Python port.
 
-License & Attribution
--------
+# Projects using this library
+ - [BeautifulZmanim](https://github.com/Sternbach-Software/BeautifulZmanim): a multi-platform zmanim app for desktop, web, and mobile. Written using Jetpack Compose.
+
+# License & Attribution
 The library is released under the [LGPL 2.1 license](https://kosherjava.com/2011/05/09/kosherjava-zmanim-api-released-under-the-lgpl-license/).
 If you made a publicly-available program that uses this library, I want to know! Just send me a heads-up email at "software at sternbach.org".
 
-Disclaimer:
------------
+# Disclaimer:
 __While I did my best to get accurate results, please double check before relying on these zmanim for <em>halacha lemaaseh</em>__.
