@@ -663,10 +663,10 @@ class HebrewDateFormatter {
      */
     fun formatDafYomiYerushalmi(daf: Daf?): String {
         if (daf == null)
-            return if (isHebrewFormat) Daf.yerushlmiMasechtos[39]
-            else Daf.yerushlmiMasechtosTransliterated[39]
+            return if (isHebrewFormat) Daf.yerushalmiMasechtos[39]
+            else Daf.yerushalmiMasechtosTransliterated[39]
         return if (isHebrewFormat) "${daf.yerushalmiMasechta} ${formatHebrewNumber(daf.daf)}"
-        else "${daf.yerushlmiMasechtaTransliterated} ${daf.daf}"
+        else "${daf.yerushalmiMasechtaTransliterated} ${daf.daf}"
     }
 
     /**

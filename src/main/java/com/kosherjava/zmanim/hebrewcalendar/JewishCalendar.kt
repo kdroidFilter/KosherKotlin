@@ -1559,7 +1559,7 @@ class JewishCalendar : JewishDate {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is JewishCalendar) return false
-        return absDate == other.absDate && inIsrael == other.inIsrael
+        return gregorianLocalDate == other.gregorianLocalDate && inIsrael == other.inIsrael
     }
 
     /**
@@ -1570,7 +1570,7 @@ class JewishCalendar : JewishDate {
         var result = 17
         result =
             37 * result + this::class.hashCode() // needed or this and subclasses will return identical hash
-        result += (37 * result) + absDate + (if (inIsrael) 1 else 3)
+        result += (37 * result) + gregorianLocalDate.hashCode() + (if (inIsrael) 1 else 3)
         return result
     }
     fun copy(
