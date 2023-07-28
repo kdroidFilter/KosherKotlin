@@ -1079,30 +1079,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = getSofZmanShma(alos16Point1Degrees, tzaisGeonim7Point083Degrees)
 
     /**
-     * From the GRA in Kol Eliyahu on Berachos #173 that states that *zman krias shema* is calculated as half the
-     * time from [sea level sunrise][.getSeaLevelSunrise] to [fixed local chatzos][.getFixedLocalChatzos].
-     * The GRA himself seems to contradict this when he stated that *zman krias shema* is 1/4 of the day from
-     * sunrise to sunset. See *Sarah Lamoed* #25 in Yisroel Vehazmanim Vol. III page 1016.
-     *
-     * @return the `Date` of the latest *zman krias shema* based on this calculation. If the
-     * calculation can't be computed such as in the Arctic Circle where there is at least one day a year where
-     * the sun does not rise, and one where it does not set, a null will be returned. See detailed explanation
-     * on top of the [AstronomicalCalendar] documentation.
-     * @see .getFixedLocalChatzos
-     */  // (since="1.3", forRemoval=true) // add back once Java 9 is the minimum supported version
-    @get:Deprecated("As per a conversation Rabbi Yisroel Twerski had with Rabbi Harfenes, this <em>zman</em> published in\n" + "	          the Yisrael Vehazmanim was based on a misunderstanding and should not be used. This deprecated method\n" + "	          will be removed (likely in v3.0) pending confirmation from Rabbi Harfenes.")
-    val sofZmanShmaKolEliyahu: Instant?
-        get() {
-            val chatzos: Instant? = fixedLocalChatzos
-            if (chatzos == null || sunrise == null) {
-                return null
-            }
-            val elevationAdjustedSunriseTime = elevationAdjustedSunrise ?: return null
-            val diff: Long = (chatzos - elevationAdjustedSunriseTime).div(2).inWholeMilliseconds
-            return getTimeOffset(chatzos, -diff)
-        }
-
-    /**
      * This method returns the latest *zman tfila* (time to recite the morning prayers) according to the opinion
      * of the [Magen Avraham (MGA)](https://en.wikipedia.org/wiki/Avraham_Gombinern) based on
      * *alos* being [19.8&amp;deg;][.getAlos19Point8Degrees] before [sunrise][.getSunrise]. This time
@@ -1754,14 +1730,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = getSunsetOffsetByDegrees(ZENITH_13_POINT_24)
 
     /**
-     * Misspelled method name that should be [.getBainHashmashosRT13Point24Degrees].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosRT13Point24Degrees: Instant?
-        get() = bainHashmashosRT13Point24Degrees
-
-    /**
      * This method returns the beginning of *Bain hashmashos* of Rabbeinu Tam calculated as a 58.5
      * minute offset after sunset. *bain hashmashos* is 3/4 of a *Mil* before *tzais* or 3 1/4
      * *Mil* after sunset. With a *Mil* calculated as 18 minutes, 3.25 * 18 = 58.5 minutes.
@@ -1776,14 +1744,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             elevationAdjustedSunset,
             58.5 * MINUTE_MILLIS
         )
-
-    /**
-     * Misspelled method name that should be [.getBainHashmashosRT58Point5Minutes].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosRT58Point5Minutes: Instant?
-        get() = bainHashmashosRT58Point5Minutes
 
     /**
      * This method returns the beginning of *bain hashmashos* based on the calculation of 13.5 minutes (3/4 of an
@@ -1801,14 +1761,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSunsetOffsetByDegrees(ZENITH_7_POINT_083),
             -13.5 * MINUTE_MILLIS
         )
-
-    /**
-     * Misspelled method name that should be [.getBainHashmashosRT13Point5MinutesBefore7Point083Degrees].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosRT13Point5MinutesBefore7Point083Degrees: Instant?
-        get() = bainHashmashosRT13Point5MinutesBefore7Point083Degrees
 
     /**
      * This method returns the beginning of *bain hashmashos* of Rabbeinu Tam calculated according to the
@@ -1833,14 +1785,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         }
 
     /**
-     * Misspelled method name that should be [.getBainHashmashosRT2Stars].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosRT2Stars: Instant?
-        get() = bainHashmashosRT2Stars
-
-    /**
      * This method returns the beginning of *bain hashmashos* (twilight) according to the [Yereim (Rabbi Eliezer of Metz)](https://en.wikipedia.org/wiki/Eliezer_ben_Samuel) calculated as 18 minutes
      * or 3/4 of a 24-minute *Mil* before sunset. According to the Yereim, *bain hashmashos* starts 3/4
      * of a *Mil* before sunset and *tzais* or nightfall starts at sunset.
@@ -1856,14 +1800,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             elevationAdjustedSunset,
             -18 * MINUTE_MILLIS
         )
-
-    /**
-     * Misspelled method name that should be [.getBainHashmashosYereim18Minutes].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosYereim18Minutes: Instant?
-        get() = bainHashmashosYereim18Minutes
 
     /**
      * This method returns the beginning of *bain hashmashos* (twilight) according to the [Yereim (Rabbi Eliezer of Metz)](https://en.wikipedia.org/wiki/Eliezer_ben_Samuel) calculated as the sun's
@@ -1895,14 +1831,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = getSunsetOffsetByDegrees(ZENITH_MINUS_3_POINT_05)
 
     /**
-     * Misspelled method name that should be [.getBainHashmashosYereim3Point05Degrees].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosYereim3Point05Degrees: Instant?
-        get() = bainHashmashosYereim3Point05Degrees
-
-    /**
      * This method returns the beginning of *bain hashmashos* (twilight) according to the [Yereim (Rabbi Eliezer of Metz)](https://en.wikipedia.org/wiki/Eliezer_ben_Samuel) calculated as 16.875
      * minutes or 3/4 of a 22.5-minute *Mil* before sunset. According to the Yereim, *bain hashmashos*
      * starts 3/4 of a *Mil* before sunset and *tzais* or nightfall starts at sunset.
@@ -1919,14 +1847,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             elevationAdjustedSunset,
             -16.875 * MINUTE_MILLIS
         )
-
-    /**
-     * Misspelled method name that should be [.getBainHashmashosYereim16Point875Minutes].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosYereim16Point875Minutes: Instant?
-        get() = bainHashmashosYereim16Point875Minutes
 
     /**
      * This method returns the beginning of *bain hashmashos* (twilight) according to the [Yereim (Rabbi Eliezer of Metz)](https://en.wikipedia.org/wiki/Eliezer_ben_Samuel) calculated as the sun's
@@ -1951,14 +1871,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = getSunsetOffsetByDegrees(ZENITH_MINUS_2_POINT_8)
 
     /**
-     * Misspelled method name that should be [.getBainHashmashosYereim2Point8Degrees].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosYereim2Point8Degrees: Instant?
-        get() = bainHashmashosYereim2Point8Degrees
-
-    /**
      * This method returns the beginning of *bain hashmashos* (twilight) according to the [Yereim (Rabbi Eliezer of Metz)](https://en.wikipedia.org/wiki/Eliezer_ben_Samuel) calculated as 13.5 minutes
      * or 3/4 of an 18-minute *Mil* before sunset. According to the Yereim, *bain hashmashos* starts 3/4 of
      * a *Mil* before sunset and *tzais* or nightfall starts at sunset.
@@ -1975,14 +1887,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             elevationAdjustedSunset,
             -13.5 * MINUTE_MILLIS
         )
-
-    /**
-     * Misspelled method name that should be [.getBainHashmashosYereim13Point5Minutes].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosYereim13Point5Minutes: Instant?
-        get() = bainHashmashosYereim13Point5Minutes
 
     /**
      * This method returns the beginning of *bain hashmashos* according to the [Yereim (Rabbi Eliezer of Metz)](https://en.wikipedia.org/wiki/Eliezer_ben_Samuel) calculated as the sun's
@@ -2005,14 +1909,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val bainHashmashosYereim2Point1Degrees: Instant?
         get() = getSunsetOffsetByDegrees(ZENITH_MINUS_2_POINT_1)
-
-    /**
-     * Misspelled method name that should be [.getBainHashmashosYereim2Point1Degrees].
-     * @return the properly spelled version.
-     */
-    @Deprecated("") // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    val bainHasmashosYereim2Point1Degrees: Instant?
-        get() = bainHashmashosYereim2Point1Degrees
 
     /**
      * This method returns the *tzais* (nightfall) based on the opinion of the *Geonim* calculated at the
@@ -2648,53 +2544,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 12.0 - geoLocation.timeZone.rawOffset
                         / HOUR_MILLIS.toDouble(), true
             ), -geoLocation.localMeanTimeOffset
-        )
-
-    /**
-     * A method that returns the latest *zman krias shema* (time to recite Shema in the morning) calculated as 3
-     * clock hours before [.getFixedLocalChatzos]. Note that there are opinions brought down in Yisrael Vehazmanim
-     * [page 57](https://hebrewbooks.org/pdfpager.aspx?req=9765&st=&pgnum=85) and Rav Yitzchak Silber's [Sha'aos Shavos Balalacha](https://www.worldcat.org/oclc/811253716) that this calculation is a mistake and regular
-     * *chatzos* shoud be used for clock-hour calculations as opposed to fixed local *chatzos*. According to
-     * these opinions it should be 3 clock hours before regular *chatzos* as calculated in [sofZmanShma3HoursBeforeChatzos].
-     *
-     * @return the `Date` of the latest *zman krias shema* calculated as 3 clock hours before
-     * [.getFixedLocalChatzos].
-     * @see .getFixedLocalChatzos
-     * @see .getSofZmanShma3HoursBeforeChatzos
-     * @see .getSofZmanTfilaFixedLocal
-     */
-    @Deprecated(
-        "This method of calculating <em>sof zman Shma</em> is considered a mistaken understanding of the proper\n" + "	          calculation of this <em>zman</em> in the opinion of Rav Yitzchak Silber's <a href=\n" + "	          \" https ://www.worldcat.org/oclc/811253716\">Sha'aos Shavos Balalacha</a>. On pages 316-318 he discusses Rav Yisrael\n" + "	          Harfenes's calculations and points to his seeming agreement that using fixed local <em>chatzos</em> as the focal\n" + "	          point is problematic. See Yisrael Vehazmanim <a href=\n" + "	          \"https://hebrewbooks.org/pdfpager.aspx?req=9765&st=&pgnum=85\">page 57</a>. While the Yisrael Vehazmanim mentions\n" + "	          this issue in vol. 1, it was not corrected in the calculations in vol. 3 and other parts of the <em>sefer</em>.\n" + "	          A competent rabbinical authority should be consulted before using this <em>zman</em>. Instead, the use of {@link\n" + "	 *         #getSofZmanShma3HoursBeforeChatzos()} should be used to calculate <em>sof zman Tfila</em> using 3 fixed clock hours.\n" + "	          This will likely be removed in v3.0.",
-        ReplaceWith(
-            "sofZmanShma3HoursBeforeChatzos"
-        )
-    )  // (since="2.4.0", forRemoval=true) // add back once Java 9 is the minimum supported version
-    val sofZmanShmaFixedLocal: Instant?
-        get() = getTimeOffset(
-            fixedLocalChatzos,
-            -180 * MINUTE_MILLIS
-        )
-
-    /**
-     * This method returns the latest *zman tfila* (time to recite the morning prayers) calculated as 2 hours
-     * before [.getFixedLocalChatzos]. See the documentation on [.getSofZmanShmaFixedLocal] showing
-     * differing opinions on how the *zman* is calculated. According to many opinions [ ][.getSofZmanTfila2HoursBeforeChatzos] should be used as opposed to this *zman*.
-     *
-     * @return the `Date` of the latest *zman tfila*.
-     * @see .getFixedLocalChatzos
-     * @see .getSofZmanShmaFixedLocal
-     * @see .getSofZmanTfila2HoursBeforeChatzos
-     */
-    @Deprecated(
-        "This method of calculating <em>sof zman Tfila</em> is considered a mistaken understanding of the proper\n" + "	          calculation of this <em>zman</em> in the opinion of Rav Yitzchak Silber's <a href=\n" + "	          \" https ://www.worldcat.org/oclc/811253716\">Sha'aos Shavos Balalacha</a>. On pages 316-318 he discusses Rav Yisrael\n" + "	          Harfenes's calculations and points to his seeming agreement that using fixed local <em>chatzos</em> as the focal\n" + "	          point is problematic. See Yisrael Vehazmanim <a href=\n" + "	          \"https://hebrewbooks.org/pdfpager.aspx?req=9765&st=&pgnum=85\">page 57</a>. While the Yisrael Vehazmanim mentions\n" + "	          this issue in vol. 1, it was not corrected in the calculations in vol. 3 and other parts of the <em>sefer</em>.\n" + "	          A competent rabbinical authority should be consulted before using this <em>zman</em>. Instead, the use of {@link\n" + "	 *         #getSofZmanTfila2HoursBeforeChatzos()} should be used to calculate <em>sof zman Tfila</em> using 2 fixed\n" + "	          clock hours. This will likely be removed in v3.0.",
-        ReplaceWith(
-            "sofZmanTfila2HoursBeforeChatzos"
-        )
-    )  // (since="2.4.0", forRemoval=true) // add back once Java 9 is the minimum supported version
-    val sofZmanTfilaFixedLocal: Instant?
-        get() = getTimeOffset(
-            fixedLocalChatzos,
-            -120 * MINUTE_MILLIS
         )
 
     /**
@@ -3445,9 +3294,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         }
         val startInEpochMilli = startOfHalfDay.toEpochMilliseconds()
         val endMinusStart = endOfHalfDay.toEpochMilliseconds() - startInEpochMilli
-        //println("End minus start: $endMinusStart")
         val shaahZmanis = endMinusStart.div(6)
-        //println("Shaa zmanis: $shaahZmanis")
         return Instant.fromEpochMilliseconds(startInEpochMilli + (shaahZmanis * hours).roundToLong())
     }
 
