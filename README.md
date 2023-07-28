@@ -18,8 +18,6 @@ This class contains the main functionality of the Zmanim library.
 For a basic set of instructions on the use of the API, see [How to Use the Zmanim API](https://kosherjava.com/zmanim-project/how-to-use-the-zmanim-api/), [zmanim code samples](https://kosherjava.com/tag/code-sample/) and the [KosherJava FAQ](https://kosherjava.com/tag/faq/). See the <a href="https://kosherjava.com">KosherJava Zmanim site</a> for additional information.
 
 # Get Started
-To add KosherKotlin as a dependency to your project, add the following dependency:
-
 ## Dependency
 The library is currently in the process of transitioning to Kotlinx-DateTime. Once the transition is complete, multiple target dependencies will be supported. 
 
