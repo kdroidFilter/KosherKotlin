@@ -91,18 +91,6 @@ data class Daf(
      */
     val yerushalmiMasechtaTransliterated: String
         get() = yerushalmiMasechtosTransliterated[masechtaNumber]
-
-    /**
-     * @see .getYerushalmiMasechtaTransliterated
-     * @return the transliterated name of the *masechta* (tractate) of the Daf Yomi such as Berachos.
-     */  // (forRemoval=true) // add back once Java 9 is the minimum supported version
-    @get:Deprecated(
-        "misspelled method name to be removed in 3.0.0.\n" + "	  ",
-        ReplaceWith("yerushalmiMasechtaTransliterated")
-    )
-    val yerushlmiMasechtaTransliterated: String
-        get() = yerushalmiMasechtaTransliterated
-
     /**
      * Returns the Yerushalmi *masechta* (tractate) of the Daf Yomi in Hebrew. As an example, it will return
      * &#x05D1;&#x05E8;&#x05DB;&#x05D5;&#x05EA; for Berachos.
@@ -268,31 +256,5 @@ data class Daf(
             "\u05e0\u05d9\u05d3\u05d4",
             "\u05d0\u05d9\u05df \u05d3\u05e3 \u05d4\u05d9\u05d5\u05dd"
         )
-
-        /**
-         * @see .getYerushalmiMasechtosTransliterated
-         * @return the array of transliterated *masechta* (tractate) names of the Daf Yomi Yerushalmi.
-         */  // (forRemoval=true) // add back once Java 9 is the minimum supported version
-        @get:Deprecated(
-            "misspelled method name to be removed in 3.0.0.\n" + "	  ", ReplaceWith(
-                "yerushalmiMasechtosTransliterated",
-                "com.kosherjava.zmanim.hebrewcalendar.Daf.Companion.yerushalmiMasechtosTransliterated"
-            )
-        )
-        val yerushlmiMasechtosTransliterated: Array<String>
-            get() = yerushalmiMasechtosTransliterated
-
-        /**
-         * @see .getYerushalmiMasechtos
-         * @return the array of Hebrew *masechta* (tractate) names of the Daf Yomi Yerushalmi.
-         */  // (forRemoval=true) // add back once Java 9 is the minimum supported version
-        @get:Deprecated(
-            "misspelled method name to be removed in 3.0.0.\n" + "	  ", ReplaceWith(
-                "yerushalmiMasechtos",
-                "com.kosherjava.zmanim.hebrewcalendar.Daf.Companion.yerushalmiMasechtos"
-            )
-        )
-        val yerushlmiMasechtos: Array<String>
-            get() = yerushalmiMasechtos
     }
 }
