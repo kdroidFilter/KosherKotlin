@@ -434,7 +434,7 @@ open class JewishDate : Comparable<JewishDate> {
      * @see Calendar.roll
      */
     fun forward(field: DateTimeUnit.DateBased, amount: Int): JewishDate {
-        require(!((field != DateTimeUnit.DAY) && (field != DateTimeUnit.MONTH) && (field != DateTimeUnit.YEAR))) { "Unsupported field was passed to Forward. Only DateTimeUnit.DATE, DateTimeUnit.MONTH or DateTimeUnit.YEAR are supported." }
+        require(field == DateTimeUnit.DAY || field == DateTimeUnit.MONTH || field == DateTimeUnit.YEAR) { "Unsupported field was passed to Forward. Only DateTimeUnit.DATE, DateTimeUnit.MONTH or DateTimeUnit.YEAR are supported." }
         require(amount >= 1) { "JewishDate.forward() does not support amounts less than 1. See JewishDate.back()" }
         when (field) {
             DateTimeUnit.DAY -> {
