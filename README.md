@@ -21,7 +21,13 @@ For a basic set of instructions on the use of the API, see [How to Use the Zmani
 To add KosherKotlin as a dependency to your project, add the following dependency:
 
 ## Dependency
-The library is currently in the process of transitioning to Kotlinx-DateTime. Once the transition is complete, multiple target dependencies will be supported. Until then, you can copy the `zmanim` folder into your project. Unfortunately, I did not develop on a branch, so master is not tested and stable. You can checkout [the commit before the transition](https://github.com/Sternbach-Software/KosherKotlin/commit/177ab9314e468f19fcd04ec47eb22d12eccf2210), when the library only supported Kotlin/JVM, and copy the files in `zmanim`.
+The library is currently in the process of transitioning to Kotlinx-DateTime. Once the transition is complete, multiple target dependencies will be supported. 
+
+Until then, you can copy the `zmanim` folder into your project. 
+
+Unfortunately, I did not develop on a branch, so master is not tested and stable. 
+
+If you only need Kotlin/JVM support, you can checkout [the commit before the transition](https://github.com/Sternbach-Software/KosherKotlin/commit/177ab9314e468f19fcd04ec47eb22d12eccf2210), when the library only supported Kotlin/JVM and was tested and stable, and copy the files in `zmanim`.
 
 ## Usage
 
