@@ -2,53 +2,53 @@ package com.kosherjava.zmanim.hebrewcalendar
 
 import com.kosherjava.zmanim.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
 import com.kosherjava.zmanim.hebrewcalendar.JewishDate.Companion.daysInJewishYear
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
+import com.kosherjava.zmanim.util.DateUtils.now
+import kotlinx.datetime.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.File
 
 class ConvertBetweenGregorianAndHebrewTest {
 
     // Simple cases, after starting date
 
     @Test
-    fun oneDayAfterStartingDate() {
+    fun `gregorian to hebrew - one day after start date`() {
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 1))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         assertEquals(HebrewLocalDate(hebrew.year, hebrew.month, hebrew.dayOfMonth + 1), date.toHebrewDate())
     }
 
     @Test
-    fun oneMonthAfterStartingDate() {
+    fun `gregorian to hebrew - one month after start date`() {
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 30))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         assertEquals(HebrewLocalDate(hebrew.year, hebrew.month.nextMonth, hebrew.dayOfMonth), date.toHebrewDate())
     }
 
     @Test
-    fun oneYearAfterStartingDate() {
+    fun `gregorian to hebrew - one year after start date`() {
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = hebrew.year.daysInJewishYear))
         assertEquals(HebrewLocalDate(hebrew.year + 1, hebrew.month, hebrew.dayOfMonth), date.toHebrewDate())
     }
 
     @Test
-    fun lessThanMonthAfterStartingDate() {
+    fun `gregorian to hebrew - less than month after start date`() {
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 3))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         assertEquals(HebrewLocalDate(hebrew.year, hebrew.month, hebrew.dayOfMonth + 3), date.toHebrewDate())
     }
 
     @Test
-    fun moreThanMonthAfterStartingDate() {
+    fun `gregorian to hebrew - more than month after start date`() {
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 32))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         assertEquals(HebrewLocalDate(hebrew.year, hebrew.month.nextMonth, 3), date.toHebrewDate())
     }
 
     @Test
-    fun moreThanYearAfterStartingDate() {
+    fun `gregorian to hebrew - more than year after start date`() {
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = hebrew.year.daysInJewishYear + 1))
         println("Num days in year")
@@ -59,7 +59,7 @@ class ConvertBetweenGregorianAndHebrewTest {
 
 
     @Test
-    fun bi_oneDayAfterStartingDate() {
+    fun `hebrew to gregorian - one day after start date`() {
         val startingDateGregorian = HebrewLocalDate.STARTING_DATE_GREGORIAN
         println("Starting gregorian date: $startingDateGregorian")
         val date = startingDateGregorian.plus(DatePeriod(days = 1))
@@ -68,39 +68,97 @@ class ConvertBetweenGregorianAndHebrewTest {
     }
 
     @Test
-    fun bi_oneMonthAfterStartingDate() {
+    fun `hebrew to gregorian - one month after start date`() {
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 30))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
-        assertEquals(date, HebrewLocalDate(hebrew.year, hebrew.month.nextMonth, hebrew.dayOfMonth).toLocalDateGregorian())
+        assertEquals(
+            date,
+            HebrewLocalDate(hebrew.year, hebrew.month.nextMonth, hebrew.dayOfMonth).toLocalDateGregorian()
+        )
     }
 
     @Test
-    fun bi_oneYearAfterStartingDate() {
+    fun `hebrew to gregorian - one year after start date`() {
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = hebrew.year.daysInJewishYear))
         assertEquals(date, HebrewLocalDate(hebrew.year + 1, hebrew.month, hebrew.dayOfMonth).toLocalDateGregorian())
     }
 
     @Test
-    fun bi_lessThanMonthAfterStartingDate() {
+    fun `hebrew to gregorian - less than one month after start date`() {
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 3))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         assertEquals(date, HebrewLocalDate(hebrew.year, hebrew.month, hebrew.dayOfMonth + 3).toLocalDateGregorian())
     }
 
     @Test
-    fun bi_moreThanMonthAfterStartingDate() {
+    fun `hebrew to gregorian - more than one month after start date`() {
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 32))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         assertEquals(date, HebrewLocalDate(hebrew.year, hebrew.month.nextMonth, 3).toLocalDateGregorian())
     }
 
     @Test
-    fun bi_moreThanYearAfterStartingDate() {
+    fun `hebrew to gregorian - more than one year after start date`() {
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = hebrew.year.daysInJewishYear + 1))
         println("Num days in year")
         assertEquals(date, HebrewLocalDate(hebrew.year + 1, hebrew.month, hebrew.dayOfMonth + 1).toLocalDateGregorian())
+    }
+
+    @Test
+    fun `hebrew to gregorian - min and max date`() {
+        assertEquals(
+            HebrewLocalDate.STARTING_DATE_GREGORIAN,
+            HebrewLocalDate.STARTING_DATE_HEBREW.toLocalDateGregorian()
+        )
+        val distantFuture = Instant.DISTANT_FUTURE.toLocalDateTime(TimeZone.UTC).date
+        val distantFutureHebrew = HebrewLocalDate(103759, HebrewMonth.CHESHVAN, 22)
+        assertEquals(distantFuture, distantFutureHebrew.toLocalDateGregorian())
+    }
+
+    @Test
+    fun `gregorian to hebrew - min and max date`() {
+        assertEquals(HebrewLocalDate.STARTING_DATE_HEBREW, HebrewLocalDate.STARTING_DATE_GREGORIAN.toHebrewDate())
+        val distantFutureHebrew = HebrewLocalDate(103759, HebrewMonth.CHESHVAN, 22)
+        val distantFuture = Instant.DISTANT_FUTURE.toLocalDateTime(TimeZone.UTC).date
+        assertEquals(distantFutureHebrew, distantFuture.toHebrewDate())
+    }
+
+    @Test
+    fun twoWayConversion() {
+        val now = LocalDate.now() //probably bad practice to use this
+        assertEquals(now, now.toHebrewDate().toLocalDateGregorian())
+    }
+
+    @Test
+    fun regressionTest() {
+        File("output.csv").useLines {
+            for (line in it) {
+                val (hebrew, gregorian) = line.split(",")
+                val (hebrewYear, hebrewMonth, hebrewDayOfMonth) = hebrew.split("-")
+                val hebrewLocalDate =
+                    HebrewLocalDate(
+                        hebrewYear.toInt(),
+                        HebrewMonth.getMonthForValue(hebrewMonth.toInt()),
+                        hebrewDayOfMonth.toInt()
+                    )
+                val gregorianYearIsNegative = gregorian.first() == '-'
+                val (gregorianYear, gregorianMonth, gregorianDayOfMonth) = (if (gregorianYearIsNegative) gregorian.drop(
+                    1
+                ) else gregorian).split("-")
+                val localDate = LocalDate(
+                    gregorianYear.toInt() * if (gregorianYearIsNegative) -1 else 1,
+                    gregorianMonth.toInt(),
+                    gregorianDayOfMonth.toInt()
+                )
+                println("Target gregorian: $localDate")
+                assertEquals(
+                    hebrewLocalDate,
+                    localDate.toHebrewDate()
+                )
+            }
+        }
     }
 
 

@@ -852,7 +852,7 @@ open class JewishDate : Comparable<JewishDate> {
         private fun getChalakimSinceMoladTohu(year: Int, month: HebrewMonth): Long {
             // Jewish lunar month = 29 days, 12 hours and 793 chalakim
             // chalakim since Molad Tohu BeHaRaD - 1 day, 5 hours and 204 chalakim
-            val monthNumberOfYear = month.toTishreiBasedMonthValue(year)
+            val monthNumberOfYear = month.toTishreiBasedValueInYear(year)
             val monthsElapsed =
                 ((235 * ((year - 1) / 19)) // Months in complete 19 year lunar (Metonic) cycles so far
                         + (12 * ((year - 1) % 19)) // Regular months in this cycle
