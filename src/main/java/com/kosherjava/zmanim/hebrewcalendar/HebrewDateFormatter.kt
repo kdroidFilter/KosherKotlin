@@ -500,17 +500,17 @@ class HebrewDateFormatter {
         if (!jewishCalendar.isRoshChodesh) {
             return ""
         }
-        var month = jewishCalendar.jewishMonth
+        var month = jewishCalendar.hebrewLocalDate.month
         if (jewishCalendar.jewishDayOfMonth == 30) {
-            if (month < JewishDate.ADAR || (month == JewishDate.ADAR && jewishCalendar.isJewishLeapYear)) {
-                month++
+            month = if (month < HebrewMonth.ADAR || (month == HebrewMonth.ADAR && jewishCalendar.isJewishLeapYear)) {
+                month.nextMonth
             } else { // roll to Nissan
-                month = JewishDate.NISSAN
+                HebrewMonth.NISSAN
             }
         }
 
         // This method is only about formatting, so we shouldn't make any changes to the params passed in...
-        val copy = jewishCalendar.copy(inIsrael = jewishCalendar.inIsrael) //force JewishCalendar.copy, not JewishDate.copy
+        val copy = jewishCalendar.copy(jewishMonth = jewishCalendar.hebrewLocalDate.month, inIsrael = jewishCalendar.inIsrael) //force JewishCalendar.copy, not JewishDate.copy
         copy.setJewishMonth(month)
         return "${
             if (isHebrewFormat) hebrewHolidays[JewishCalendar.ROSH_CHODESH]
@@ -558,10 +558,10 @@ class HebrewDateFormatter {
     fun format(jewishDate: JewishDate): String =
         if (isHebrewFormat) "${formatHebrewNumber(jewishDate.jewishDayOfMonth)} ${formatMonth(jewishDate)} ${
             formatHebrewNumber(
-                jewishDate.jewishYear
+                jewishDate.hebrewLocalDate.year
             )
         }"
-        else "${jewishDate.jewishDayOfMonth} ${formatMonth(jewishDate)}, ${jewishDate.jewishYear}"
+        else "${jewishDate.jewishDayOfMonth} ${formatMonth(jewishDate)}, ${jewishDate.hebrewLocalDate.year}"
 
     /**
      * Returns a string of the current Hebrew month such as "Tishrei". Returns a string of the current Hebrew month such
@@ -574,14 +574,14 @@ class HebrewDateFormatter {
      * @see transliteratedMonthList
      */
     fun formatMonth(jewishDate: JewishDate): String {
-        val month = jewishDate.jewishMonth
+        val month = jewishDate.hebrewLocalDate.month
         return if (isHebrewFormat)
-            if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR) "${hebrewMonths[13]}${if (isUseGershGershayim) GERESH else ""}" // return Adar I, not Adar in a leap year
-            else if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR_II) "${hebrewMonths[12]}${if (isUseGershGershayim) GERESH else ""}"
-            else hebrewMonths[month - 1]
+            if (jewishDate.isJewishLeapYear && month == HebrewMonth.ADAR) "${hebrewMonths[13]}${if (isUseGershGershayim) GERESH else ""}" // return Adar I, not Adar in a leap year
+            else if (jewishDate.isJewishLeapYear && month == HebrewMonth.ADAR_II) "${hebrewMonths[12]}${if (isUseGershGershayim) GERESH else ""}"
+            else hebrewMonths[month.value - 1]
         else
-            if (jewishDate.isJewishLeapYear && month == JewishDate.ADAR) transliteratedMonthList[13] // return Adar I, not Adar in a leap year
-            else transliteratedMonthList[month - 1]
+            if (jewishDate.isJewishLeapYear && month == HebrewMonth.ADAR) transliteratedMonthList[13] // return Adar I, not Adar in a leap year
+            else transliteratedMonthList[month.value - 1]
     }
 
     /**
@@ -609,7 +609,7 @@ class HebrewDateFormatter {
 
     /**
      * Returns the kviah in the traditional 3 letter Hebrew format where the first letter represents the day of week of
-     * Rosh Hashana, the second letter represents the lengths of Cheshvan and Kislev ([Shelaimim][JewishDate.SHELAIMIM] , [Kesidran][JewishDate.KESIDRAN] or [Chaserim][JewishDate.CHASERIM]) and the 3rd letter
+     * Rosh Hashana, the second letter represents the lengths of Cheshvan and Kislev ([Shelaimim][JewishDate.SHELAIMIM] , [Kesidran][JewishDate.KESIDRAN] or [Chaserim][JewishDate.CHASEIRIM]) and the 3rd letter
      * represents the day of week of Pesach. For example 5729 (1969) would return בשה (Rosh Hashana on
      * Monday, Shelaimim, and Pesach on Thursday), while 5771 (2011) would return השג (Rosh Hashana on
      * Thursday, Shelaimim, and Pesach on Tuesday).
@@ -620,7 +620,7 @@ class HebrewDateFormatter {
      * (2011).
      */
     fun getFormattedKviah(jewishYear: Int): String {
-        val jewishDate = JewishDate(jewishYear, JewishDate.TISHREI, 1) // set date to Rosh Hashana
+        val jewishDate = JewishDate(jewishYear, HebrewMonth.TISHREI, 1) // set date to Rosh Hashana
         val kviah = jewishDate.cheshvanKislevKviah
         val roshHashanaDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
         val returnValue = StringBuilder(formatHebrewNumber(roshHashanaDayOfweek))
@@ -631,7 +631,7 @@ class HebrewDateFormatter {
                 else -> "\u05DB"
             }
         )
-        jewishDate.setJewishDate(jewishYear, JewishDate.NISSAN, 15) // set to Pesach of the given year
+        jewishDate.setJewishDate(jewishYear, HebrewMonth.NISSAN, 15) // set to Pesach of the given year
         val pesachDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
         returnValue.append(formatHebrewNumber(pesachDayOfweek))
         return returnValue.replace(GERESH.toRegex(), "") // geresh is never used in the kviah format

@@ -2,19 +2,63 @@ package com.kosherjava.zmanim.hebrewcalendar
 
 import com.kosherjava.zmanim.ComplexZmanimCalendar
 import com.kosherjava.zmanim.util.GeoLocation
+import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
+import kotlinx.datetime.*
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.File
-import java.lang.AssertionError
 import java.nio.file.Files
-import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.util.*
+import kotlin.time.Duration.Companion.milliseconds
 
 class RegressionTest {
     val hdf = HebrewDateFormatter()
 
+    val mYear = 3762
+    val mMonth = 1
+    val mDay = 1
+
+    fun Int.toHrMinSec(): Triple<Int, Int, Int> {
+        var hour = 0
+        var minute = 0
+        var second = this
+        minute += (second / 60)
+        hour += (minute / 60)
+        second %= 60
+        minute %= 60
+        return Triple(hour, minute, second)
+    }
+    @Test
+    fun assertConstructorWorks() {
+        val year = mYear + 1
+        val month = mMonth + 1
+        val day = mDay + 1
+        val jd = JewishDate(year, HebrewMonth.getMonthForValue(month), day)
+        assertEquals(year, jd.hebrewLocalDate.year)
+        assertEquals(month, jd.hebrewLocalDate.month.value)
+        assertEquals(day, jd.jewishDayOfMonth)
+    }
+
+    @Test
+    fun assertSetYearWorks() {
+        val year = mYear + 1
+        val jd = JewishDate(mYear, HebrewMonth.getMonthForValue(mMonth), mDay)
+        jd.setJewishYear(year)
+        assertEquals(year, jd.hebrewLocalDate.year)
+        assertEquals(mMonth, jd.hebrewLocalDate.month.value)
+        assertEquals(mDay, jd.jewishDayOfMonth)
+    }
+    @Test
+    fun assertSetMonthWorks() {
+        val month = mMonth + 1
+        val jd = JewishDate(mYear, HebrewMonth.getMonthForValue(mMonth), mDay)
+        jd.setJewishMonth(HebrewMonth.getMonthForValue(month))
+        assertEquals(mYear, jd.hebrewLocalDate.year)
+        assertEquals(month, jd.hebrewLocalDate.month.value)
+        assertEquals(mDay, jd.jewishDayOfMonth)
+    }
     @Test
     fun testAllTimes() {
         val delimiter = "\t"
@@ -23,33 +67,37 @@ class RegressionTest {
             40.096,
             -74.222,
             29.02,
-            TimeZone.getTimeZone("America/New_York")
+            TimeZone.of("America/New_York")
         )
         val calc = ComplexZmanimCalendar(location)
 //        calc.isUseElevation = true
-        println("Time zone of calc.calendar: ${calc.calendar.timeZone}")
+        println("Time zone of calc.calendar: ${calc.geoLocation.timeZone}")
         val lines = Files.readAllLines(File("./zmanim_Lakewood_NJ.tsv").toPath()).drop(1)
-        var zoneOffset: ZoneOffset? = null
+        var zoneOffset: UtcOffset? = null
         val pattern = DateTimeFormatter.ofPattern("MMM d, uuuu")
 
         for (line in lines) {
             val fields = line.split(delimiter)
             try {
                 val quote = "\""
-                val civilDate =
-                    LocalDate.parse(fields.first().removeSurrounding(quote), pattern)
-                val zoneId = calc.calendar.timeZone.toZoneId()
-                println("Zone id: $zoneId")
-                val atStartOfDay = civilDate.atStartOfDay(zoneId)
+                val civilDate = java.time.LocalDate.parse(fields.first().removeSurrounding(quote), pattern).toKotlinLocalDate()
+                val tz = calc.geoLocation.timeZone
+                println("Zone id: $tz")
+                val atStartOfDay = civilDate.atStartOfDayIn(tz)
                 println("At start of day: $atStartOfDay")
-                if (zoneOffset == null) zoneOffset = atStartOfDay.offset
-                calc.calendar.time = Date.from(atStartOfDay.toInstant())
-                val jewishDate = JewishDate(calc.calendar)
-                val jewishCalendar = JewishCalendar(calc.calendar)
+                val offsetInSeconds = tz.rawOffset.milliseconds.inWholeSeconds.toInt()
+                if (zoneOffset == null) {
+                    val (hr, min, sec) = offsetInSeconds.toHrMinSec()
+                    zoneOffset = UtcOffset(hr,min, sec)
+                }
+                calc.localDate = atStartOfDay.toLocalDateTime(tz)
+                val jewishDate = JewishDate(calc.localDate.date)
+                val jewishCalendar = JewishCalendar(calc.localDate.date)
                 Assert.assertEquals(fields[1].removeSurrounding(quote), jewishDate.toString())
 //                assertYomTovOrParshaMatches(jewishDate, jewishCalendar, fields, quote)
                 val timeFormatter = DateTimeFormatter.ofPattern("h:mm:ss a")
-                fun Date?.fmt() = this?.toInstant()?.atOffset(zoneOffset)?.also { println(it) }?.format(timeFormatter)
+                fun Instant?.fmt() =
+                    this?.let { java.time.Instant.ofEpochSecond(it.epochSeconds)?.atOffset(ZoneOffset.ofTotalSeconds(offsetInSeconds))?.also { println(it) }?.format(timeFormatter) }
                 var col = 4
                 Assert.assertEquals(fields[col++], jewishCalendar.dafYomiBavli?.let { "${it.masechtaTransliterated} ${it.daf}" })
                 Assert.assertEquals(fields[col++], calc.alos120.fmt())
@@ -264,8 +312,8 @@ class RegressionTest {
                     jewishCalendar.isRoshChodesh -> {
                         "Rosh Chodesh ${
                             hdf.transliteratedMonthList[
-                                    if (jewishCalendar.jewishDayOfMonth >= 29) jewishCalendar.jewishMonth/*intentionally +1 month*/
-                                    else jewishCalendar.jewishMonth - 1
+                                    if (jewishCalendar.jewishDayOfMonth >= 29) jewishCalendar.hebrewLocalDate.month.value/*intentionally +1 month*/
+                                    else jewishCalendar.hebrewLocalDate.month.value - 1
                             ]
                         }"
                     }

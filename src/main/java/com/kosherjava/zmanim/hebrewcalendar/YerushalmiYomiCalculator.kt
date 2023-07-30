@@ -133,8 +133,8 @@ object YerushalmiYomiCalculator {
     private fun getNumOfSpecialDays(start: Instant, end: Instant): Int {
 
         // Find the start and end Jewish years
-        val startYear = JewishCalendar(start).jewishYear
-        val endYear = JewishCalendar(end).jewishYear
+        val startYear = JewishCalendar(start).hebrewLocalDate.year
+        val endYear = JewishCalendar(end).hebrewLocalDate.year
 
         // Value to return
         var specialDays = 0

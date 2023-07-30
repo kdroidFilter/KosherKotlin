@@ -4,35 +4,28 @@
 package com.kosherjava.zmanim.hebrewcalendar
 
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 
 /**
  *
  */
 class UT_JewishDateNavigation {
-    lateinit var jewishDate: JewishDate
-
-    @Before
-    fun setupProps() {
-        jewishDate = JewishDate()
-    }
 
     @Test
     fun jewishForwardMonthToMonth() {
-        jewishDate.setJewishDate(5771, 1, 1)
-        Assert.assertEquals(5, jewishDate.gregorianDayOfMonth)
-        Assert.assertEquals(3, jewishDate.gregorianMonthZeroBased)
-        Assert.assertEquals(2011, jewishDate.gregorianYear)
+        val jewishDate = JewishDate(5771, HebrewMonth.getMonthForValue(1), 1)
+        Assert.assertEquals(5, jewishDate.gregorianLocalDate.dayOfMonth)
+        Assert.assertEquals(3, jewishDate.gregorianLocalDate.monthNumber - 1)
+        Assert.assertEquals(2011, jewishDate.gregorianLocalDate.year)
     }
 
     @Test
     fun computeRoshHashana5771() {
 
         // At one point, this test was failing as the JewishDate class spun through a never-ending loop...
-        jewishDate.setJewishDate(5771, 7, 1)
-        Assert.assertEquals(9, jewishDate.gregorianDayOfMonth)
-        Assert.assertEquals(8, jewishDate.gregorianMonthZeroBased)
-        Assert.assertEquals(2010, jewishDate.gregorianYear)
+        val jewishDate = JewishDate(5771, HebrewMonth.getMonthForValue(7), 1)
+        Assert.assertEquals(9, jewishDate.gregorianLocalDate.dayOfMonth)
+        Assert.assertEquals(8, jewishDate.gregorianLocalDate.monthNumber - 1)
+        Assert.assertEquals(2010, jewishDate.gregorianLocalDate.year)
     }
 } // End of UT_JewishDateNavigation class
