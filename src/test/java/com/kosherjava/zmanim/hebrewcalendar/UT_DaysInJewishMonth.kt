@@ -4,8 +4,7 @@
 package com.kosherjava.zmanim.hebrewcalendar
 
 import org.junit.Assert
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -13,8 +12,6 @@ import org.junit.Test
  * Validate the days in a Hebrew month (in various types of years) are correct.
  */
 class UT_DaysInJewishMonth {
-
-    lateinit var jewishDate: JewishDate
 
     @Test
     fun daysInMonthsInHaserYear() {
@@ -55,44 +52,43 @@ class UT_DaysInJewishMonth {
     }
 
     private fun assertHaser(year: Int) {
-        jewishDate = JewishDate()
-        jewishDate.setJewishYear(year)
+        val jewishDate = JewishDate(year, 1, 1)
+        assertEquals(year, jewishDate.hebrewLocalDate.year)
         assertFalse(jewishDate.isCheshvanLong)
         assertTrue(jewishDate.isKislevShort)
     }
 
     private fun assertHaserLeap(year: Int) {
-        jewishDate = JewishDate()
-        jewishDate.setJewishYear(year)
+        val jewishDate = JewishDate(year, 1, 1)
+        assertEquals(year, jewishDate.hebrewLocalDate.year)
         assertHaser(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }
 
     private fun assertQesidrah(year: Int) {
-        jewishDate = JewishDate()
-        jewishDate.setJewishYear(year)
+        val jewishDate = JewishDate(year, 1, 1)
+        assertEquals(year, jewishDate.hebrewLocalDate.year)
         assertFalse(jewishDate.isCheshvanLong)
         assertFalse(jewishDate.isKislevShort)
     }
 
     private fun assertQesidrahLeap(year: Int) {
-        jewishDate = JewishDate()
-
-        jewishDate.setJewishYear(year)
+        val jewishDate = JewishDate(year, 1, 1)
+        assertEquals(year, jewishDate.hebrewLocalDate.year)
         assertQesidrah(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }
 
     private fun assertShalem(year: Int) {
-        jewishDate = JewishDate()
-        jewishDate.setJewishYear(year)
+        val jewishDate = JewishDate(year, 1, 1)
+        assertEquals(year, jewishDate.hebrewLocalDate.year)
         assertTrue(jewishDate.isCheshvanLong)
         assertFalse(jewishDate.isKislevShort)
     }
 
     private fun assertShalemLeap(year: Int) {
-        jewishDate = JewishDate()
-        jewishDate.setJewishYear(year)
+        val jewishDate = JewishDate(year, 1, 1)
+        assertEquals(year, jewishDate.hebrewLocalDate.year)
         assertShalem(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }

@@ -92,7 +92,7 @@ open class JewishDate : Comparable<JewishDate> {
     constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) {
         setJewishDate(hebrewYear, hebrewMonth, hebrewDayOfMonth)
     }
-
+    constructor(hebrewYear: Int, hebrewMonth: Int, hebrewDayOfMonth: Int) : this(hebrewYear, HebrewMonth.getMonthForValue(hebrewMonth), hebrewDayOfMonth)
     constructor(localDate: LocalDate) {
         setDate(localDate)
     }
@@ -557,6 +557,8 @@ open class JewishDate : Comparable<JewishDate> {
         set(dayOfMonth) {
             setJewishDate(hebrewLocalDate.year, hebrewLocalDate.month, dayOfMonth)
         }
+    val jewishYear get() = hebrewLocalDate.year
+    val jewishMonth get() = hebrewLocalDate.month.value
 
 
     /**
@@ -844,7 +846,7 @@ open class JewishDate : Comparable<JewishDate> {
          * the Jewish year
          * @param month
          * the Jewish month the Jewish month, with the month numbers starting from Nisan. Use the JewishDate
-         * constants such as [JewishDate.TISHREI].
+         * constants such as [HebrewMonth.TISHREI].
          * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
          */
         private fun getChalakimSinceMoladTohu(year: Int, month: HebrewMonth): Long {
@@ -1016,7 +1018,7 @@ open class JewishDate : Comparable<JewishDate> {
          * the Jewish Year
          * @return the number of days for a given Jewish month
          */
-        private fun getDaysInJewishMonth(month: HebrewMonth, year: Int): Int = if (
+        internal fun getDaysInJewishMonth(month: HebrewMonth, year: Int): Int = if (
             (
                     (month == HebrewMonth.IYAR) ||
                             (month == HebrewMonth.TAMMUZ) ||
