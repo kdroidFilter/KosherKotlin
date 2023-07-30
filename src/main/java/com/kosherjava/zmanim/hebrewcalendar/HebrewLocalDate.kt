@@ -164,8 +164,8 @@ data class HebrewLocalDate(
                 else currentHebrewDate.year != targetHebrewDate!!.year
             ) {
                 val daysInYear = getNumDaysInHebrewYear(currentHebrewDate.year) //accounts for leap years
-                println("Days in year ${currentHebrewDate.year}: $daysInYear")
-                println("Before adding days: $currentGregorianDate")
+                if(logging) println("Days in year ${currentHebrewDate.year}: $daysInYear")
+                if(logging) println("Before adding days: $currentGregorianDate")
                 val newStartOfHebrewYear = currentGregorianDate.plus(DatePeriod(days = daysInYear))
                 val newHebrewYear = currentHebrewDate.withYear(currentHebrewDate.year + 1)
                 if (
@@ -173,14 +173,14 @@ data class HebrewLocalDate(
                     else newHebrewYear > targetHebrewDate!!
                 ) break //overshot, don't keep adding. Could have overshot because the date could be between the two Rosh Hashanahs.
                 currentGregorianDate = newStartOfHebrewYear
-                println("After adding days : $currentGregorianDate")
-                println("Before adding year: $currentHebrewDate")
+                if(logging) println("After adding days : $currentGregorianDate")
+                if(logging) println("Before adding year: $currentHebrewDate")
                 currentHebrewDate = newHebrewYear
-                println("After adding year : $currentHebrewDate")
+                if(logging) println("After adding year : $currentHebrewDate")
             }
             // we have the year right, now we need to get the month right
-            println("Current gregorian: $currentGregorianDate")
-            println("Current hebrew: $currentHebrewDate")
+            if(logging) println("Current gregorian: $currentGregorianDate")
+            if(logging) println("Current hebrew: $currentHebrewDate")
             while (
                 if(targetGregorianDate != null) currentGregorianDate.month != targetGregorianDate.month
                 else currentHebrewDate.month != targetHebrewDate!!.month
@@ -189,8 +189,8 @@ data class HebrewLocalDate(
                     currentHebrewDate.month,
                     currentHebrewDate.year
                 )
-                println("Days in month ${currentHebrewDate.month}: $daysInMonth")
-                println("Before adding days: $currentGregorianDate")
+                if(logging) println("Days in month ${currentHebrewDate.month}: $daysInMonth")
+                if(logging) println("Before adding days: $currentGregorianDate")
                 val newStartOfHebrewMonth = currentGregorianDate.plus(
                     DatePeriod(
                         days = daysInMonth
@@ -202,27 +202,27 @@ data class HebrewLocalDate(
                     if(targetGregorianDate != null) newStartOfHebrewMonth > targetGregorianDate
                     else newHebrewDate > targetHebrewDate!!
                 ) {
-                    println("New start of hebrew month $newStartOfHebrewMonth is after $targetGregorianDate")
+                    if(logging) println("New start of hebrew month $newStartOfHebrewMonth is after $targetGregorianDate")
                     break
                 } //overshot, don't keep adding. Could have overshot because the date could be between the two months
                 currentGregorianDate = newStartOfHebrewMonth
 
-                println("After adding days : $currentGregorianDate")
-                println("Before adding month: $currentHebrewDate")
+                if(logging) println("After adding days : $currentGregorianDate")
+                if(logging) println("Before adding month: $currentHebrewDate")
                 currentHebrewDate = newHebrewDate
-                println("After adding month: $currentHebrewDate")
+                if(logging) println("After adding month: $currentHebrewDate")
             }
             //gregorian month is right. Now we need to get the day right.
             if (currentGregorianDate == targetGregorianDate) return currentHebrewDate to currentGregorianDate // if day is already right, return
 
-            println("Current gregorian: $currentGregorianDate")
-            println("Current hebrew: $currentHebrewDate")
+            if(logging) println("Current gregorian: $currentGregorianDate")
+            if(logging) println("Current hebrew: $currentHebrewDate")
             // currentHebrewDate is at the first day of the month of targetGregorianDate's hebrew equivalent month.
             val numDaysLeftToAdd =
                 if(targetGregorianDate != null) targetGregorianDate.dayOfMonth - currentGregorianDate.dayOfMonth
                 else targetHebrewDate!!.dayOfMonth - currentHebrewDate.dayOfMonth
             val numDaysInHebrewMonth = getNumDaysInHebrewMonth(currentHebrewDate.month, currentHebrewDate.year)
-            println("Num days left: $numDaysLeftToAdd, numDays in hebrew month: $numDaysInHebrewMonth")
+            if(logging) println("Num days left: $numDaysLeftToAdd, numDays in hebrew month: $numDaysInHebrewMonth")
             currentHebrewDate = if (numDaysLeftToAdd
                 /*TODO what if this is equal to numDaysInHebrewMonth? 1 (current day) + 30 (num days) = 31...*/
                 <= numDaysInHebrewMonth
@@ -244,6 +244,7 @@ data class HebrewLocalDate(
          */
         const val JEWISH_EPOCH = -1_373_429
 
+        private const val logging = false
         /**
          * The start of the Hebrew calendar. Used as a reference point for converting between
          * Gregorian and Hebrew dates.
