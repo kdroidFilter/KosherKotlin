@@ -231,6 +231,7 @@ data class HebrewLocalDate(
                 currentHebrewDate
                     .withMonth(currentHebrewDate.month.nextMonth)
                     .withDayOfMonth(numDaysLeftToAdd - numDaysInHebrewMonth + 1/*started on day 1, so need to add that*/)
+            currentGregorianDate = currentGregorianDate.plus(DatePeriod(days = numDaysLeftToAdd/*don't need to account for month because datetime library will do the math*/))
             return currentHebrewDate to currentGregorianDate
         }
 

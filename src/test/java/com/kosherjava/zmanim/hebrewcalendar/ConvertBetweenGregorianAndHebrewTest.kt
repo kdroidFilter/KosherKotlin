@@ -60,7 +60,9 @@ class ConvertBetweenGregorianAndHebrewTest {
 
     @Test
     fun bi_oneDayAfterStartingDate() {
-        val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = 1))
+        val startingDateGregorian = HebrewLocalDate.STARTING_DATE_GREGORIAN
+        println("Starting gregorian date: $startingDateGregorian")
+        val date = startingDateGregorian.plus(DatePeriod(days = 1))
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
         assertEquals(date, HebrewLocalDate(hebrew.year, hebrew.month, hebrew.dayOfMonth + 1).toLocalDateGregorian())
     }
