@@ -469,7 +469,7 @@ open class AstronomicalCalendar(
         }
         var calculatedTime: Double = time
         val adjustedLocalDate = this.adjustedLocalDate
-        val timeZone = TimeZone.UTC
+        val timeZone = TimeZone.currentSystemDefault()
         var cal = adjustedLocalDate.toInstant(timeZone)
         val hours = calculatedTime.toInt() // retain only the hours
         calculatedTime -= hours.toDouble()
