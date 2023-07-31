@@ -28,7 +28,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             null,
             null,
-            5771 to { jewishYear },
+            5771 to { jewishYear.toInt() },
             11 to { jewishMonth },
             26 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
@@ -122,7 +122,7 @@ class UT_GregorianDateNavigation {
         assertProperties(
             Calendar.OCTOBER,
             31,
-            5772 to { jewishYear },
+            5772 to { jewishYear.toInt() },
             10 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
             8 to { jewishMonth },
@@ -202,7 +202,7 @@ class UT_GregorianDateNavigation {
             1,
             7 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
-            5770 to { jewishYear },
+            5770 to { jewishYear.toInt() },
             6 to { jewishMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -281,10 +281,28 @@ class UT_GregorianDateNavigation {
         )
     }
 
+    @JvmName("assertPropertiesInt")
     private fun assertProperties(
         month: Int? = null,
         day: Int? = null,
         vararg expectedToActual: Pair<Int, JewishDate.() -> Int>,
+        moveDateForwardBeforeAssert: Boolean = true,
+        setDateBeforeAssert: Boolean = true,
+        moveDateForwardAfterAssert: Boolean = false,
+        moveDateBackwardBeforeAssert: Boolean = false
+    ) {
+        if (month != null) cal[Calendar.MONTH] = month
+        if (day != null) cal[Calendar.DATE] = day
+        if (setDateBeforeAssert) hebrewDate.setDate(LocalDate(cal[Calendar.YEAR], cal[Calendar.MONTH] + 1, cal[Calendar.DAY_OF_MONTH]))
+        if (moveDateForwardBeforeAssert) hebrewDate.forward(DateTimeUnit.DAY, 1)
+        if (moveDateBackwardBeforeAssert) hebrewDate.back()
+        for ((expected, actual) in expectedToActual) Assert.assertEquals(expected, hebrewDate.actual())
+        if (moveDateForwardAfterAssert) hebrewDate.forward(DateTimeUnit.DAY, 1)
+    }
+    private fun assertProperties(
+        month: Int? = null,
+        day: Int? = null,
+        vararg expectedToActual: Pair<Long, JewishDate.() -> Int>,
         moveDateForwardBeforeAssert: Boolean = true,
         setDateBeforeAssert: Boolean = true,
         moveDateForwardAfterAssert: Boolean = false,

@@ -80,7 +80,7 @@ class ConvertBetweenGregorianAndHebrewTest {
     @Test
     fun `hebrew to gregorian - one year after start date`() {
         val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
-        val date = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(days = hebrew.year.daysInJewishYear))
+        val date = HebrewLocalDate.STARTING_DATE_GREGORIAN + DatePeriod(days = hebrew.year.daysInJewishYear)
         assertEquals(date, HebrewLocalDate(hebrew.year + 1, hebrew.month, hebrew.dayOfMonth).toLocalDateGregorian())
     }
 
@@ -112,7 +112,7 @@ class ConvertBetweenGregorianAndHebrewTest {
             HebrewLocalDate.STARTING_DATE_GREGORIAN,
             HebrewLocalDate.STARTING_DATE_HEBREW.toLocalDateGregorian()
         )
-        val distantFuture = Instant.DISTANT_FUTURE.toLocalDateTime(TimeZone.UTC).date
+        val distantFuture = LocalDate(100_000, 1, 1)
         val distantFutureHebrew = HebrewLocalDate(103759, HebrewMonth.CHESHVAN, 22)
         assertEquals(distantFuture, distantFutureHebrew.toLocalDateGregorian())
     }
@@ -120,9 +120,15 @@ class ConvertBetweenGregorianAndHebrewTest {
     @Test
     fun `gregorian to hebrew - min and max date`() {
         assertEquals(HebrewLocalDate.STARTING_DATE_HEBREW, HebrewLocalDate.STARTING_DATE_GREGORIAN.toHebrewDate())
-        val distantFutureHebrew = HebrewLocalDate(103759, HebrewMonth.CHESHVAN, 22)
-        val distantFuture = Instant.DISTANT_FUTURE.toLocalDateTime(TimeZone.UTC).date
+        val distantFutureHebrew = HebrewLocalDate(103_759, HebrewMonth.CHESHVAN, 22)
+        val distantFuture = LocalDate(100_000, 1, 1)
         assertEquals(distantFutureHebrew, distantFuture.toHebrewDate())
+    }
+
+    @Test
+    fun yearZero() {
+        val target = LocalDate(1,1,1)
+        assertEquals(target, HebrewLocalDate(3762, HebrewMonth.TEVES, 18).toLocalDateGregorian())
     }
 
     @Test
@@ -159,6 +165,17 @@ class ConvertBetweenGregorianAndHebrewTest {
                 )
             }
         }
+    }
+    @Test
+    fun `adding days to hebrew date works`() {
+        val hebrew = HebrewLocalDate.STARTING_DATE_HEBREW
+        assertEquals(hebrew.plusDays(1), HebrewLocalDate(hebrew.year, hebrew.month, hebrew.dayOfMonth + 1))
+        assertEquals(hebrew.plusDays(2), HebrewLocalDate(hebrew.year, hebrew.month, hebrew.dayOfMonth + 2))
+        assertEquals(hebrew.plusDays(32).month, hebrew.month.getNextMonthInYear(hebrew.year))
+        val plusYear = hebrew.plusDays(hebrew.year.daysInJewishYear.toLong())
+        println(hebrew)
+        println(plusYear)
+        assertEquals(hebrew.year + 1, plusYear.year)
     }
 
 
