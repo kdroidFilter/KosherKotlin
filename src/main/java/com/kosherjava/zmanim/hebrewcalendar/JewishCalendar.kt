@@ -393,8 +393,14 @@ class JewishCalendar : JewishDate {
         HebrewMonth.getMonthForValue(jewishMonth),
         jewishDayOfMonth
     )
+    constructor(jewishYear: Long, jewishMonth: Int, jewishDayOfMonth: Int) : super(
+        jewishYear,
+        HebrewMonth.getMonthForValue(jewishMonth),
+        jewishDayOfMonth
+    )
 
     constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(hebrewYear, hebrewMonth, hebrewDayOfMonth)
+    constructor(hebrewYear: Long, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(hebrewYear, hebrewMonth, hebrewDayOfMonth)
 
     /**
      * Creates a Jewish date based on a Jewish date and whether in Israel
@@ -414,6 +420,12 @@ class JewishCalendar : JewishDate {
      */
     constructor(
         jewishYear: Int,
+        jewishMonth: Int,
+        jewishDayOfMonth: Int,
+        inIsrael: Boolean,
+    ): this(jewishYear.toLong(), jewishMonth, jewishDayOfMonth, inIsrael)
+    constructor(
+        jewishYear: Long,
         jewishMonth: Int,
         jewishDayOfMonth: Int,
         inIsrael: Boolean,
@@ -442,6 +454,12 @@ class JewishCalendar : JewishDate {
      */
     constructor(
         jewishYear: Int,
+        jewishMonth: HebrewMonth,
+        jewishDayOfMonth: Int,
+        inIsrael: Boolean,
+    ): this(jewishYear.toLong(), jewishMonth, jewishDayOfMonth, inIsrael)
+    constructor(
+        jewishYear: Long,
         jewishMonth: HebrewMonth,
         jewishDayOfMonth: Int,
         inIsrael: Boolean,
@@ -489,7 +507,7 @@ class JewishCalendar : JewishDate {
     private val parshaYearType: Int
         get() {
             var roshHashanaDayOfWeek =
-                (getJewishCalendarElapsedDays(hebrewLocalDate.year) + 1) % 7 // plus one to the original Rosh Hashana of year 1 to get a week starting on Sunday
+                ((getJewishCalendarElapsedDays(hebrewLocalDate.year) + 1) % 7).toInt() // plus one to the original Rosh Hashana of year 1 to get a week starting on Sunday
             if (roshHashanaDayOfWeek == 0) {
                 roshHashanaDayOfWeek = 7 // convert 0 to 7 for Shabbos for readability
             }
@@ -555,7 +573,7 @@ class JewishCalendar : JewishDate {
             }
             val yearType = parshaYearType
             val roshHashanaDayOfWeek = getJewishCalendarElapsedDays(hebrewLocalDate.year) % 7
-            val day = roshHashanaDayOfWeek + daysSinceStartOfJewishYear
+            val day = (roshHashanaDayOfWeek + daysSinceStartOfJewishYear).toInt()
             if (yearType >= 0) { // negative year should be impossible, but let's cover all bases
                 return parshalist[yearType][day / 7]
             }
@@ -1604,18 +1622,18 @@ class JewishCalendar : JewishDate {
         return result
     }
     fun copy(
-        jewishYear: Int = this.hebrewLocalDate.year,
+        jewishYear: Long = this.hebrewLocalDate.year,
         jewishMonth: Int = this.hebrewLocalDate.month.value,
         jewishDayOfMonth: Int = this.jewishDayOfMonth,
         inIsrael: Boolean = this.inIsrael,
-    ): JewishCalendar = JewishCalendar(hebrewLocalDate.year, hebrewLocalDate.month.value, jewishDayOfMonth, inIsrael)
+    ): JewishCalendar = JewishCalendar(jewishYear, jewishMonth, jewishDayOfMonth, inIsrael)
 
     fun copy(
-        jewishYear: Int = this.hebrewLocalDate.year,
+        jewishYear: Long = this.hebrewLocalDate.year,
         jewishMonth: HebrewMonth = this.hebrewLocalDate.month,
         jewishDayOfMonth: Int = this.jewishDayOfMonth,
         inIsrael: Boolean = this.inIsrael,
-    ): JewishCalendar = JewishCalendar(hebrewLocalDate.year, hebrewLocalDate.month, jewishDayOfMonth, inIsrael)
+    ): JewishCalendar = JewishCalendar(jewishYear, jewishMonth, jewishDayOfMonth, inIsrael)
 
     companion object {
         /** value returned by [yomTovIndex] to indicate no holiday. */

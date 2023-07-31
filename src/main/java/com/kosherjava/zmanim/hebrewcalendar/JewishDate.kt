@@ -89,7 +89,8 @@ open class JewishDate : Comparable<JewishDate> {
      * @throws IllegalArgumentException
      * if the day of month is < 1 or > 30, or a year of < 0 is passed in.
      */
-    constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) {
+    constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : this(hebrewYear.toLong(), hebrewMonth, hebrewDayOfMonth)
+    constructor(hebrewYear: Long, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) {
         setJewishDate(hebrewYear, hebrewMonth, hebrewDayOfMonth)
     }
     constructor(hebrewYear: Int, hebrewMonth: Int, hebrewDayOfMonth: Int) : this(hebrewYear, HebrewMonth.getMonthForValue(hebrewMonth), hebrewDayOfMonth)
@@ -336,7 +337,7 @@ open class JewishDate : Comparable<JewishDate> {
      * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a
      * leap year) or the day of month is < 1 or > 30 is passed in
      */
-    fun setJewishDate(year: Int, month: HebrewMonth, dayOfMonth: Int): JewishDate {
+    fun setJewishDate(year: Long, month: HebrewMonth, dayOfMonth: Int): JewishDate {
         setJewishDate(year, month, dayOfMonth, 0, 0, 0)
         return this
     }
@@ -368,7 +369,7 @@ open class JewishDate : Comparable<JewishDate> {
      * 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim into minutes (18
      * chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
      */
-    fun setJewishDate(year: Int, month: HebrewMonth, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int): JewishDate {
+    fun setJewishDate(year: Long, month: HebrewMonth, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int): JewishDate {
         var dom = dayOfMonth
         validateJewishDate(year, month.value, dom, hours, minutes, chalakim)
 
@@ -612,7 +613,8 @@ open class JewishDate : Comparable<JewishDate> {
      * if a year of < 3761 is passed in. The same will happen if the year is 3761 and the month and day
      * previously set are < 18 Teves (preior to Jan 1, 1 AD)
      */
-    fun setJewishYear(year: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
+    fun setJewishYear(year: Int): JewishDate = setJewishYear(year.toLong()) //can't make this a setter because it has side effects and would cause a recursive StackOverflow
+    fun setJewishYear(year: Long): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         setJewishDate(year, hebrewLocalDate.month, hebrewLocalDate.dayOfMonth)
         return this
     }
@@ -634,7 +636,7 @@ open class JewishDate : Comparable<JewishDate> {
         return clone
     }*/
     fun copy(
-        hebrewYear: Int = hebrewLocalDate.year,
+        hebrewYear: Long = hebrewLocalDate.year,
         month: HebrewMonth = hebrewLocalDate.month,
         hebrewDayOfMonth: Int = hebrewLocalDate.dayOfMonth
     ): JewishDate = JewishDate(hebrewYear, month, hebrewDayOfMonth)
@@ -704,7 +706,7 @@ open class JewishDate : Comparable<JewishDate> {
          * the year (only impacts February)
          * @return the number of days in the month in the given year
          */
-        private fun getLastDayOfGregorianMonth(month: Int, year: Int): Int = when (month) {
+        internal fun getLastDayOfGregorianMonth(month: Int, year: Int): Int = when (month) {
             2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 29 else 28
             4, 6, 9, 11 -> 30
             else -> 31
@@ -746,6 +748,7 @@ open class JewishDate : Comparable<JewishDate> {
          * @see isJewishLeapYear
          */
         val Int.isJewishLeapYear get() = ((7 * this) + 1) % 19 < 7
+        val Long.isJewishLeapYear get() = ((7 * this) + 1) % 19 < 7
 
         /**
          * Returns the last month of a given Jewish year. This will be 12 on a non [leap year][isJewishLeapYear]
@@ -756,10 +759,10 @@ open class JewishDate : Comparable<JewishDate> {
          * @return 12 on a non leap year or 13 on a leap year
          * @see isJewishLeapYear
          */
-        private fun getLastMonthOfJewishYear(year: Int): HebrewMonth = if (year.isJewishLeapYear) HebrewMonth.ADAR_II else HebrewMonth.ADAR
+        private fun getLastMonthOfJewishYear(year: Long): HebrewMonth = if (year.isJewishLeapYear) HebrewMonth.ADAR_II else HebrewMonth.ADAR
 
         /**
-         * Returns the number of days elapsed from the Sunday prior to the start of the Jewish LocalDate to the mean
+         * Returns the number of days elapsed from the Sunday prior to the start of the Jewish Calendar to the mean
          * conjunction of Tishri of the Jewish year.
          *
          * @param year
@@ -769,12 +772,13 @@ open class JewishDate : Comparable<JewishDate> {
          * Jewish year. BeHaRaD is 23:11:20 on Sunday night(5 hours 204/1080 chalakim after sunset on Sunday
          * evening).
          */
-        fun getJewishCalendarElapsedDays(year: Int): Int {
+        fun getJewishCalendarElapsedDays(year: Int): Int = getJewishCalendarElapsedDays(year.toLong()).toInt()
+        fun getJewishCalendarElapsedDays(year: Long): Long {
             val chalakimSince = getChalakimSinceMoladTohu(year, HebrewMonth.TISHREI)
             val moladDay = (chalakimSince / CHALAKIM_PER_DAY.toLong()).toInt()
             val moladParts = (chalakimSince - moladDay * CHALAKIM_PER_DAY.toLong()).toInt()
             // delay Rosh Hashana for the 4 dechiyos
-            return addDechiyos(year, moladDay, moladParts)
+            return addDechiyos(year, moladDay.toLong(), moladParts)
         }
         // private static int getJewishCalendarElapsedDaysOLD(int year) {
         // // Jewish lunar month = 29 days, 12 hours and 793 chalakim
@@ -815,23 +819,24 @@ open class JewishDate : Comparable<JewishDate> {
          * @param moladParts the molad parts
          * @return the number of elapsed days in the JewishCalendar adjusted for the 4 dechiyos.
          */
-        private fun addDechiyos(year: Int, moladDay: Int, moladParts: Int): Int {
+        private fun addDechiyos(year: Int, moladDay: Int, moladParts: Int): Int = addDechiyos(year.toLong(), moladDay.toLong(), moladParts).toInt()
+        private fun addDechiyos(year: Long, moladDay: Long, moladParts: Int): Long {
             var roshHashanaDay = moladDay // if no dechiyos
             // delay Rosh Hashana for the dechiyos of the Molad - new moon 1 - Molad Zaken, 2- GaTRaD 3- BeTuTaKFoT
             if (((moladParts >= 19440) // Dechiya of Molad Zaken - molad is >= midday (18 hours * 1080 chalakim)
-                        || ((((moladDay % 7) == 2) // start Dechiya of GaTRaD - Ga = is a Tuesday
+                        || ((((moladDay % 7L) == 2L) // start Dechiya of GaTRaD - Ga = is a Tuesday
                         && (moladParts >= 9924) // TRaD = 9 hours, 204 parts or later (9 * 1080 + 204)
                         && !year.isJewishLeapYear)) // of a non-leap year - end Dechiya of GaTRaD
-                        || ((((moladDay % 7) == 1) // start Dechiya of BeTuTaKFoT - Be = is on a Monday
+                        || ((((moladDay % 7L) == 1L) // start Dechiya of BeTuTaKFoT - Be = is on a Monday
                         && (moladParts >= 16789) // TRaD = 15 hours, 589 parts or later (15 * 1080 + 589)
                         && (year - 1).isJewishLeapYear)))
             ) { // in a year following a leap year - end Dechiya of BeTuTaKFoT
                 roshHashanaDay += 1 // Then postpone Rosh HaShanah one day
             }
             // start 4th Dechiya - Lo ADU Rosh - Rosh Hashana can't occur on A- sunday, D- Wednesday, U - Friday
-            if ((((roshHashanaDay % 7) == 0) // If Rosh HaShanah would occur on Sunday,
-                        || ((roshHashanaDay % 7) == 3) // or Wednesday,
-                        || ((roshHashanaDay % 7) == 5))
+            if ((((roshHashanaDay % 7L) == 0L) // If Rosh HaShanah would occur on Sunday,
+                        || ((roshHashanaDay % 7L) == 3L) // or Wednesday,
+                        || ((roshHashanaDay % 7L) == 5L))
             ) { // or Friday - end 4th Dechiya - Lo ADU Rosh
                 roshHashanaDay += 1 // Then postpone it one (more) day
             }
@@ -849,7 +854,7 @@ open class JewishDate : Comparable<JewishDate> {
          * constants such as [HebrewMonth.TISHREI].
          * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
          */
-        private fun getChalakimSinceMoladTohu(year: Int, month: HebrewMonth): Long {
+        private fun getChalakimSinceMoladTohu(year: Long, month: HebrewMonth): Long {
             // Jewish lunar month = 29 days, 12 hours and 793 chalakim
             // chalakim since Molad Tohu BeHaRaD - 1 day, 5 hours and 204 chalakim
             val monthNumberOfYear = month.toTishreiBasedValueInYear(year)
@@ -898,6 +903,14 @@ open class JewishDate : Comparable<JewishDate> {
             hours: Int,
             minutes: Int,
             chalakim: Int
+        ) = validateJewishDate(year.toLong(), monthNum, dayOfMonth, hours, minutes, chalakim)
+        private fun validateJewishDate(
+            year: Long,
+            monthNum: Int,
+            dayOfMonth: Int,
+            hours: Int,
+            minutes: Int,
+            chalakim: Int
         ) {
             val month = HebrewMonth.getMonthForValue(monthNum)
             require(!(month < HebrewMonth.NISSAN || month > getLastMonthOfJewishYear(year))) { "The Jewish month has to be between 1 and 12 (or 13 on a leap year). $month is invalid for the year $year." }
@@ -907,8 +920,8 @@ open class JewishDate : Comparable<JewishDate> {
             require(
                 !(
                         (year < 3761) ||
-                                (year == 3761 && (month in HebrewMonth.TISHREI until HebrewMonth.TEVES)) ||
-                                ((year == 3761) && (month == HebrewMonth.TEVES) && (dayOfMonth < 18))
+                                (year == 3761L && (month in HebrewMonth.TISHREI until HebrewMonth.TEVES)) ||
+                                ((year == 3761L) && (month == HebrewMonth.TEVES) && (dayOfMonth < 18))
                         )
             ) { "A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian) can't be set. $year, $month, $dayOfMonth is invalid." }
             require(!(hours < 0 || hours > 23)) { "Hours < 0 or > 23 can't be set. $hours is invalid." }
@@ -984,6 +997,7 @@ open class JewishDate : Comparable<JewishDate> {
          * @see isKislevShort
          */
         val Int.daysInJewishYear get() = getJewishCalendarElapsedDays(this + 1) - getJewishCalendarElapsedDays(this)
+        val Long.daysInJewishYear get() = (getJewishCalendarElapsedDays(this + 1) - getJewishCalendarElapsedDays(this)).toInt()
 
         /**
          * Returns if Cheshvan is long in a given Jewish year. The method name isLong is done since in a Kesidran (ordered)
@@ -996,6 +1010,7 @@ open class JewishDate : Comparable<JewishDate> {
          * @see getCheshvanKislevKviah
          */
         val Int.isCheshvanLong get() = this.daysInJewishYear % 10 == 5
+        val Long.isCheshvanLong get() = this.daysInJewishYear % 10L == 5L
 
         /**
          * Returns if Kislev is short (29 days VS 30 days) in a given Jewish year. The method name isShort is done since in
@@ -1007,6 +1022,7 @@ open class JewishDate : Comparable<JewishDate> {
          * @see isKislevShort
          * @see cheshvanKislevKviah
          */
+        val Long.isKislevShort get() = this.daysInJewishYear % 10L == 3L
         val Int.isKislevShort get() = this.daysInJewishYear % 10 == 3
 
         /**
@@ -1018,7 +1034,8 @@ open class JewishDate : Comparable<JewishDate> {
          * the Jewish Year
          * @return the number of days for a given Jewish month
          */
-        internal fun getDaysInJewishMonth(month: HebrewMonth, year: Int): Int = if (
+        internal fun getDaysInJewishMonth(month: HebrewMonth, year: Int): Int = getDaysInJewishMonth(month, year.toLong())
+        internal fun getDaysInJewishMonth(month: HebrewMonth, year: Long): Int = if (
             (
                     (month == HebrewMonth.IYAR) ||
                             (month == HebrewMonth.TAMMUZ) ||
@@ -1051,7 +1068,7 @@ open class JewishDate : Comparable<JewishDate> {
          * the day in the Jewish month
          * @return the number of days
          */
-        fun getDaysSinceStartOfJewishYear(year: Int, month: HebrewMonth, dayOfMonth: Int): Int {
+        fun getDaysSinceStartOfJewishYear(year: Long, month: HebrewMonth, dayOfMonth: Int): Int {
             var elapsedDays = dayOfMonth
             // Before Tishrei (from Nissan to Tishrei), add days in prior months
             if (month < HebrewMonth.TISHREI) {

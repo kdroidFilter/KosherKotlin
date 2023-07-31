@@ -102,10 +102,11 @@ enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {
      * */
     val nextMonth get() = getMonthForValue(value + 1)
 
-    fun isLastMonthInYear(jewishYear: Int, tishreiBased: Boolean = true) =
-        tishreiBased && this == ELUL ||
-                jewishYear.isJewishLeapYear && this == ADAR_II ||
-                this == ADAR
+    fun isLastMonthInYear(jewishYear: Long, tishreiBased: Boolean = true) =
+        if(tishreiBased) this == ELUL
+        else
+            if(jewishYear.isJewishLeapYear) this == ADAR_II
+            else this == ADAR
 
     fun isFirstMonthInYear(tishreiBased: Boolean = true) =
         tishreiBased && this == TISHREI || this == NISSAN
@@ -116,16 +117,19 @@ enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {
      * This method will not return [ADAR_II] if [jewishYear] is not a leap year.
      * @return next jewish month, or null if [this] is the last jewish month of [jewishYear]
      * */
-    fun getNextMonthInYear(jewishYear: Int, tishreiBased: Boolean = true) =
+    fun getNextMonthInYear(jewishYear: Long, tishreiBased: Boolean = true) =
         if (this.isLastMonthInYear(
                 jewishYear,
                 tishreiBased
             )
         ) null /*get next month after last month?! we would spill over to the next year*/
-        else if (jewishYear.isJewishLeapYear && this == ADAR) ADAR_II
-        else nextMonth
+        else
+            if (this == ADAR)
+                if(jewishYear.isJewishLeapYear) ADAR_II
+                else NISSAN
+            else nextMonth
 
-    fun toTishreiBasedValueInYear(jewishYear: Int) = getTishreiBasedValue(value, jewishYear)
+    fun toTishreiBasedValueInYear(jewishYear: Long) = getTishreiBasedValue(value, jewishYear)
     fun toTishreiBasedMonthInYear(jewishYear: Int) = getTishreiBasedMonth(this, jewishYear)
 
     /**
@@ -181,7 +185,9 @@ enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {
          * The Jewish Month
          * @return the Jewish month of the year starting with Tishrei
          */
-        fun getTishreiBasedValue(nissanBasedValue: Int, jewishYear: Int): Int {
+        fun getTishreiBasedValue(nissanBasedValue: Int, jewishYear: Int): Int =
+            getTishreiBasedValue(nissanBasedValue, jewishYear.toLong())
+        fun getTishreiBasedValue(nissanBasedValue: Int, jewishYear: Long): Int {
             val isLeapYear = jewishYear.isJewishLeapYear
             return (nissanBasedValue + if (isLeapYear) 6 else 5) % (if (isLeapYear) 13 else 12) + 1
         }
