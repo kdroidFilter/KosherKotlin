@@ -399,7 +399,7 @@ data class HebrewLocalDate(
         /**
          * The start of the Hebrew calendar. Used as a reference point for converting between
          * Gregorian and Hebrew dates.
-         * This currently starts at Rosh Hashana of Gregorian year 1 so as not to deal with year 0.
+         * This currently starts at Rosh Hashana of Gregorian year 1 so as not to deal with year 0 (1 B.C.E in kotlinx-datetime).
          * Certain edge cases related to year zero were not handled correctly by the library.
          * TODO reimplement to handle those cases.
          * */
