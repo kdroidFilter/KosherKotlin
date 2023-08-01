@@ -187,10 +187,10 @@ enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {
          */
         fun getTishreiBasedValue(nissanBasedValue: Int, jewishYear: Int): Int =
             getTishreiBasedValue(nissanBasedValue, jewishYear.toLong())
-        fun getTishreiBasedValue(nissanBasedValue: Int, jewishYear: Long): Int {
-            val isLeapYear = jewishYear.isJewishLeapYear
-            return (nissanBasedValue + if (isLeapYear) 6 else 5) % (if (isLeapYear) 13 else 12) + 1
-        }
+        fun getTishreiBasedValue(nissanBasedValue: Int, jewishYear: Long): Int =
+            1 +
+                    if(jewishYear.isJewishLeapYear) (nissanBasedValue + 6) % 13
+                    else (nissanBasedValue + 5) % 12
         /**
          * Interpolates this [month]
          * */
