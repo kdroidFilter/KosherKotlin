@@ -371,7 +371,7 @@ open class JewishDate : Comparable<JewishDate> {
      */
     fun setJewishDate(year: Long, month: HebrewMonth, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int): JewishDate {
         var dom = dayOfMonth
-        validateJewishDate(year, month.value, dom, hours, minutes, chalakim)
+        validateJewishDate(hours, minutes, chalakim)
 
         // if 30 is passed for a month that only has 29 days (for example by rolling the month from a month that had 30
         // days to a month that only has 29) set the date to 29th
@@ -897,33 +897,10 @@ open class JewishDate : Comparable<JewishDate> {
          * into minutes (18 chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
          */
         private fun validateJewishDate(
-            year: Int,
-            monthNum: Int,
-            dayOfMonth: Int,
-            hours: Int,
-            minutes: Int,
-            chalakim: Int
-        ) = validateJewishDate(year.toLong(), monthNum, dayOfMonth, hours, minutes, chalakim)
-        private fun validateJewishDate(
-            year: Long,
-            monthNum: Int,
-            dayOfMonth: Int,
             hours: Int,
             minutes: Int,
             chalakim: Int
         ) {
-            val month = HebrewMonth.getMonthForValue(monthNum)
-            require(!(month < HebrewMonth.NISSAN || month > getLastMonthOfJewishYear(year))) { "The Jewish month has to be between 1 and 12 (or 13 on a leap year). $month is invalid for the year $year." }
-            require(!(dayOfMonth < 1 || dayOfMonth > 30)) { "The Jewish day of month can't be < 1 or > 30.  $dayOfMonth is invalid." }
-            // reject dates prior to 18 Teves, 3761 (1/1/1 AD). This restriction can be relaxed if the date coding is
-            // changed/corrected
-            require(
-                !(
-                        (year < 3761) ||
-                                (year == 3761L && (month in HebrewMonth.TISHREI until HebrewMonth.TEVES)) ||
-                                ((year == 3761L) && (month == HebrewMonth.TEVES) && (dayOfMonth < 18))
-                        )
-            ) { "A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian) can't be set. $year, $month, $dayOfMonth is invalid." }
             require(!(hours < 0 || hours > 23)) { "Hours < 0 or > 23 can't be set. $hours is invalid." }
             require(!(minutes < 0 || minutes > 59)) { "Minutes < 0 or > 59 can't be set. $minutes is invalid." }
             require(!(chalakim < 0 || chalakim > 17)) { "Chalakim/parts < 0 or > 17 can't be set. $chalakim is invalid. For larger numbers such as 793 (TaShTzaG) break the chalakim into minutes (18 chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG)" }
