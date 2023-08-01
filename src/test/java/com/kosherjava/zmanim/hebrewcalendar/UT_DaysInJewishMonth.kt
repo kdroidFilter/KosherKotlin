@@ -53,42 +53,42 @@ class UT_DaysInJewishMonth {
 
     private fun assertHaser(year: Int) {
         val jewishDate = JewishDate(year, 1, 1)
-        assertEquals(year, jewishDate.hebrewLocalDate.year)
+        assertEquals(year, jewishDate.hebrewLocalDate.year.toInt())
         assertFalse(jewishDate.isCheshvanLong)
         assertTrue(jewishDate.isKislevShort)
     }
 
     private fun assertHaserLeap(year: Int) {
         val jewishDate = JewishDate(year, 1, 1)
-        assertEquals(year, jewishDate.hebrewLocalDate.year)
+        assertEquals(year, jewishDate.hebrewLocalDate.year.toInt())
         assertHaser(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }
 
     private fun assertQesidrah(year: Int) {
         val jewishDate = JewishDate(year, 1, 1)
-        assertEquals(year, jewishDate.hebrewLocalDate.year)
+        assertEquals(year, jewishDate.hebrewLocalDate.year.toInt())
         assertFalse(jewishDate.isCheshvanLong)
         assertFalse(jewishDate.isKislevShort)
     }
 
     private fun assertQesidrahLeap(year: Int) {
         val jewishDate = JewishDate(year, 1, 1)
-        assertEquals(year, jewishDate.hebrewLocalDate.year)
+        assertEquals(year, jewishDate.hebrewLocalDate.year.toInt())
         assertQesidrah(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }
 
     private fun assertShalem(year: Int) {
         val jewishDate = JewishDate(year, 1, 1)
-        assertEquals(year, jewishDate.hebrewLocalDate.year)
+        assertEquals(year, jewishDate.hebrewLocalDate.year.toInt())
         assertTrue(jewishDate.isCheshvanLong)
         assertFalse(jewishDate.isKislevShort)
     }
 
     private fun assertShalemLeap(year: Int) {
         val jewishDate = JewishDate(year, 1, 1)
-        assertEquals(year, jewishDate.hebrewLocalDate.year)
+        assertEquals(year, jewishDate.hebrewLocalDate.year.toInt())
         assertShalem(year)
         assertTrue(jewishDate.isJewishLeapYear)
     }
