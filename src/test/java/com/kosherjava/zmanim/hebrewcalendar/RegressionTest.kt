@@ -4,6 +4,7 @@ import com.kosherjava.zmanim.ComplexZmanimCalendar
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
 import kotlinx.datetime.*
+import kotlinx.datetime.TimeZone
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -11,6 +12,7 @@ import java.io.File
 import java.nio.file.Files
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
 class RegressionTest {
@@ -36,7 +38,7 @@ class RegressionTest {
         val month = mMonth + 1
         val day = mDay + 1
         val jd = JewishDate(year, HebrewMonth.getMonthForValue(month), day)
-        assertEquals(year, jd.hebrewLocalDate.year)
+        assertEquals(year, jd.hebrewLocalDate.year.toInt())
         assertEquals(month, jd.hebrewLocalDate.month.value)
         assertEquals(day, jd.jewishDayOfMonth)
     }
@@ -59,8 +61,196 @@ class RegressionTest {
         assertEquals(month, jd.hebrewLocalDate.month.value)
         assertEquals(mDay, jd.jewishDayOfMonth)
     }
+
+    fun Instant?.toDate(): Date? = this?.let { Date.from(it.toJavaInstant()) }
+
     @Test
-    fun testAllTimes() {
+    fun testJavaCompatibility() {
+        val location = GeoLocation(
+            "Lakewood, NJ",
+            40.096,
+            -74.222,
+            29.02,
+            TimeZone.of("America/New_York")
+        )
+        val calc = ComplexZmanimCalendar(location)
+        val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(
+            com.kosherjava.zmanim.java.zmanim.util.GeoLocation(
+                location.locationName,
+                location.latitude,
+                location.longitude,
+                java.util.TimeZone.getTimeZone(location.timeZone.toJavaZoneId())
+            )
+        )
+        assertEquals(javaCalc.geoLocation.timeZone.rawOffset, calc.geoLocation.timeZone.rawOffset)
+        assertEquals(javaCalc.sunrise, calc.sunrise?.toDate())
+        assertEquals(javaCalc.alos60, calc.alos60?.toDate())
+        assertEquals(javaCalc.tzais60, calc.tzais60?.toDate())
+        calc.apply {
+            val values = listOf(
+                shaahZmanis19Point8Degrees to  javaCalc.shaahZmanis19Point8Degrees,
+                shaahZmanis18Degrees to  javaCalc.shaahZmanis18Degrees,
+                shaahZmanis26Degrees to  javaCalc.shaahZmanis26Degrees,
+                shaahZmanis16Point1Degrees to  javaCalc.shaahZmanis16Point1Degrees,
+                shaahZmanis60Minutes to  javaCalc.shaahZmanis60Minutes,
+                shaahZmanis72MinutesZmanis to  javaCalc.shaahZmanis72MinutesZmanis,
+                shaahZmanis90Minutes to  javaCalc.shaahZmanis90Minutes,
+                shaahZmanis90MinutesZmanis to  javaCalc.shaahZmanis90MinutesZmanis,
+                shaahZmanis96MinutesZmanis to  javaCalc.shaahZmanis96MinutesZmanis,
+                shaahZmanisAteretTorah to  javaCalc.shaahZmanisAteretTorah,
+                shaahZmanisAlos16Point1ToTzais3Point8 to  javaCalc.shaahZmanisAlos16Point1ToTzais3Point8,
+                shaahZmanisAlos16Point1ToTzais3Point7 to  javaCalc.shaahZmanisAlos16Point1ToTzais3Point7,
+                shaahZmanis96Minutes to  javaCalc.shaahZmanis96Minutes,
+                shaahZmanis120Minutes to  javaCalc.shaahZmanis120Minutes,
+                shaahZmanis120MinutesZmanis to javaCalc.shaahZmanis120MinutesZmanis,
+            )
+            val listOfZmanim = listOf(
+                plagHamincha120MinutesZmanis to javaCalc.plagHamincha120MinutesZmanis,
+                plagHamincha120Minutes to javaCalc.plagHamincha120Minutes,
+                alos60 to javaCalc.alos60,
+                alos72Zmanis to javaCalc.alos72Zmanis,
+                alos96 to javaCalc.alos96,
+                alos90Zmanis to javaCalc.alos90Zmanis,
+                alos96Zmanis to javaCalc.alos96Zmanis,
+                alos90 to javaCalc.alos90,
+                alos120 to javaCalc.alos120,
+                alos120Zmanis to javaCalc.alos120Zmanis,
+                alos26Degrees to javaCalc.alos26Degrees,
+                alos18Degrees to javaCalc.alos18Degrees,
+                alos19Degrees to javaCalc.alos19Degrees,
+                alos19Point8Degrees to javaCalc.alos19Point8Degrees,
+                alos16Point1Degrees to javaCalc.alos16Point1Degrees,
+                misheyakir11Point5Degrees to javaCalc.misheyakir11Point5Degrees,
+                misheyakir11Degrees to javaCalc.misheyakir11Degrees,
+                misheyakir10Point2Degrees to javaCalc.misheyakir10Point2Degrees,
+                misheyakir7Point65Degrees to javaCalc.misheyakir7Point65Degrees,
+                misheyakir9Point5Degrees to javaCalc.misheyakir9Point5Degrees,
+                sofZmanShmaMGA19Point8Degrees to javaCalc.sofZmanShmaMGA19Point8Degrees,
+                sofZmanShmaMGA16Point1Degrees to javaCalc.sofZmanShmaMGA16Point1Degrees,
+                sofZmanShmaMGA18Degrees to javaCalc.sofZmanShmaMGA18Degrees,
+                sofZmanShmaMGA72MinutesZmanis to javaCalc.sofZmanShmaMGA72MinutesZmanis,
+                sofZmanShmaMGA90Minutes to javaCalc.sofZmanShmaMGA90Minutes,
+                sofZmanShmaMGA90MinutesZmanis to javaCalc.sofZmanShmaMGA90MinutesZmanis,
+                sofZmanShmaMGA96Minutes to javaCalc.sofZmanShmaMGA96Minutes,
+                sofZmanShmaMGA96MinutesZmanis to javaCalc.sofZmanShmaMGA96MinutesZmanis,
+                sofZmanShma3HoursBeforeChatzos to javaCalc.sofZmanShma3HoursBeforeChatzos,
+                sofZmanShmaMGA120Minutes to javaCalc.sofZmanShmaMGA120Minutes,
+                sofZmanShmaAlos16Point1ToSunset to javaCalc.sofZmanShmaAlos16Point1ToSunset,
+                sofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees to javaCalc.sofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees,
+                sofZmanTfilaMGA19Point8Degrees to javaCalc.sofZmanTfilaMGA19Point8Degrees,
+                sofZmanTfilaMGA16Point1Degrees to javaCalc.sofZmanTfilaMGA16Point1Degrees,
+                sofZmanTfilaMGA18Degrees to javaCalc.sofZmanTfilaMGA18Degrees,
+                sofZmanTfilaMGA72MinutesZmanis to javaCalc.sofZmanTfilaMGA72MinutesZmanis,
+                sofZmanTfilaMGA90MinutesZmanis to javaCalc.sofZmanTfilaMGA90MinutesZmanis,
+                sofZmanTfilaMGA96MinutesZmanis to javaCalc.sofZmanTfilaMGA96MinutesZmanis,
+                sofZmanTfila2HoursBeforeChatzos to javaCalc.sofZmanTfila2HoursBeforeChatzos,
+                minchaGedola30Minutes to javaCalc.minchaGedola30Minutes,
+                minchaGedola16Point1Degrees to javaCalc.minchaGedola16Point1Degrees,
+                minchaGedolaAhavatShalom to javaCalc.minchaGedolaAhavatShalom,
+                minchaGedolaGreaterThan30 to javaCalc.minchaGedolaGreaterThan30,
+                minchaKetana16Point1Degrees to javaCalc.minchaKetana16Point1Degrees,
+                minchaKetanaAhavatShalom to javaCalc.minchaKetanaAhavatShalom,
+                minchaKetana72Minutes to javaCalc.minchaKetana72Minutes,
+                plagHamincha60Minutes to javaCalc.plagHamincha60Minutes,
+                plagHamincha72Minutes to javaCalc.plagHamincha72Minutes,
+                plagHamincha90Minutes to javaCalc.plagHamincha90Minutes,
+                plagHamincha96Minutes to javaCalc.plagHamincha96Minutes,
+                plagHamincha96MinutesZmanis to javaCalc.plagHamincha96MinutesZmanis,
+                plagHamincha90MinutesZmanis to javaCalc.plagHamincha90MinutesZmanis,
+                plagHamincha72MinutesZmanis to javaCalc.plagHamincha72MinutesZmanis,
+                plagHamincha16Point1Degrees to javaCalc.plagHamincha16Point1Degrees,
+                plagHamincha19Point8Degrees to javaCalc.plagHamincha19Point8Degrees,
+                plagHamincha26Degrees to javaCalc.plagHamincha26Degrees,
+                plagHamincha18Degrees to javaCalc.plagHamincha18Degrees,
+                plagAlosToSunset to javaCalc.plagAlosToSunset,
+                plagAlos16Point1ToTzaisGeonim7Point083Degrees to javaCalc.plagAlos16Point1ToTzaisGeonim7Point083Degrees,
+                plagAhavatShalom to javaCalc.plagAhavatShalom,
+                bainHashmashosRT13Point24Degrees to javaCalc.bainHashmashosRT13Point24Degrees,
+                bainHashmashosRT58Point5Minutes to javaCalc.bainHashmashosRT58Point5Minutes,
+                bainHashmashosRT13Point5MinutesBefore7Point083Degrees to javaCalc.bainHashmashosRT13Point5MinutesBefore7Point083Degrees,
+                bainHashmashosRT2Stars to javaCalc.bainHashmashosRT2Stars,
+                bainHashmashosYereim18Minutes to javaCalc.bainHashmashosYereim18Minutes,
+                bainHashmashosYereim3Point05Degrees to javaCalc.bainHashmashosYereim3Point05Degrees,
+                bainHashmashosYereim16Point875Minutes to javaCalc.bainHashmashosYereim16Point875Minutes,
+                bainHashmashosYereim2Point8Degrees to javaCalc.bainHashmashosYereim2Point8Degrees,
+                bainHashmashosYereim13Point5Minutes to javaCalc.bainHashmashosYereim13Point5Minutes,
+                bainHashmashosYereim2Point1Degrees to javaCalc.bainHashmashosYereim2Point1Degrees,
+                tzaisGeonim3Point7Degrees to javaCalc.tzaisGeonim3Point7Degrees,
+                tzaisGeonim3Point8Degrees to javaCalc.tzaisGeonim3Point8Degrees,
+                tzaisGeonim5Point95Degrees to javaCalc.tzaisGeonim5Point95Degrees,
+                tzaisGeonim3Point65Degrees to javaCalc.tzaisGeonim3Point65Degrees,
+                tzaisGeonim3Point676Degrees to javaCalc.tzaisGeonim3Point676Degrees,
+                tzaisGeonim4Point61Degrees to javaCalc.tzaisGeonim4Point61Degrees,
+                tzaisGeonim4Point37Degrees to javaCalc.tzaisGeonim4Point37Degrees,
+                tzaisGeonim5Point88Degrees to javaCalc.tzaisGeonim5Point88Degrees,
+                tzaisGeonim4Point8Degrees to javaCalc.tzaisGeonim4Point8Degrees,
+                tzaisGeonim6Point45Degrees to javaCalc.tzaisGeonim6Point45Degrees,
+                tzaisGeonim7Point083Degrees to javaCalc.tzaisGeonim7Point083Degrees,
+                tzaisGeonim7Point67Degrees to javaCalc.tzaisGeonim7Point67Degrees,
+                tzaisGeonim8Point5Degrees to javaCalc.tzaisGeonim8Point5Degrees,
+                tzaisGeonim9Point3Degrees to javaCalc.tzaisGeonim9Point3Degrees,
+                tzaisGeonim9Point75Degrees to javaCalc.tzaisGeonim9Point75Degrees,
+                tzais60 to javaCalc.tzais60,
+                tzaisAteretTorah to javaCalc.tzaisAteretTorah,
+                tzais90Zmanis to javaCalc.tzais90Zmanis,
+                tzais96Zmanis to javaCalc.tzais96Zmanis,
+                tzais90 to javaCalc.tzais90,
+                tzais120 to javaCalc.tzais120,
+                tzais120Zmanis to javaCalc.tzais120Zmanis,
+                tzais16Point1Degrees to javaCalc.tzais16Point1Degrees,
+                tzais26Degrees to javaCalc.tzais26Degrees,
+                tzais18Degrees to javaCalc.tzais18Degrees,
+                tzais19Point8Degrees to javaCalc.tzais19Point8Degrees,
+                tzais96 to javaCalc.tzais96,
+                fixedLocalChatzos to javaCalc.fixedLocalChatzos,
+                sofZmanKidushLevanaBetweenMoldos to javaCalc.sofZmanKidushLevanaBetweenMoldos,
+                sofZmanKidushLevana15Days to javaCalc.sofZmanKidushLevana15Days,
+                zmanMolad to javaCalc.zmanMolad,
+                sofZmanBiurChametzGRA to javaCalc.sofZmanBiurChametzGRA,
+                getSofZmanBiurChametzMGA72Minutes to javaCalc.getSofZmanBiurChametzMGA72Minutes(),
+                sofZmanBiurChametzMGA16Point1Degrees to javaCalc.sofZmanBiurChametzMGA16Point1Degrees,
+                solarMidnight to javaCalc.solarMidnight,
+                sofZmanShmaBaalHatanya to javaCalc.sofZmanShmaBaalHatanya,
+                sofZmanTfilaBaalHatanya to javaCalc.sofZmanTfilaBaalHatanya,
+                sofZmanBiurChametzBaalHatanya to javaCalc.sofZmanBiurChametzBaalHatanya,
+                minchaGedolaBaalHatanya to javaCalc.minchaGedolaBaalHatanya,
+                minchaGedolaBaalHatanyaGreaterThan30 to javaCalc.minchaGedolaBaalHatanyaGreaterThan30,
+                minchaKetanaBaalHatanya to javaCalc.minchaKetanaBaalHatanya,
+                plagHaminchaBaalHatanya to javaCalc.plagHaminchaBaalHatanya,
+                tzaisBaalHatanya to javaCalc.tzaisBaalHatanya,
+                sofZmanShmaMGA18DegreesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA18DegreesToFixedLocalChatzos,
+                sofZmanShmaMGA16Point1DegreesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA16Point1DegreesToFixedLocalChatzos,
+                sofZmanShmaMGA90MinutesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA90MinutesToFixedLocalChatzos,
+                sofZmanShmaMGA72MinutesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA72MinutesToFixedLocalChatzos,
+                sofZmanShmaGRASunriseToFixedLocalChatzos to javaCalc.sofZmanShmaGRASunriseToFixedLocalChatzos,
+                sofZmanTfilaGRASunriseToFixedLocalChatzos to javaCalc.sofZmanTfilaGRASunriseToFixedLocalChatzos,
+                minchaGedolaGRAFixedLocalChatzos30Minutes to javaCalc.minchaGedolaGRAFixedLocalChatzos30Minutes,
+                minchaKetanaGRAFixedLocalChatzosToSunset to javaCalc.minchaKetanaGRAFixedLocalChatzosToSunset,
+                plagHaminchaGRAFixedLocalChatzosToSunset to javaCalc.plagHaminchaGRAFixedLocalChatzosToSunset,
+                tzais50 to javaCalc.tzais50,
+                samuchLeMinchaKetanaGRA to javaCalc.samuchLeMinchaKetanaGRA,
+                samuchLeMinchaKetana16Point1Degrees to javaCalc.samuchLeMinchaKetana16Point1Degrees,
+            )
+            testValues(values) { it }
+            testValues(listOfZmanim) {
+                it?.toDate()
+            }
+        }
+    }
+
+    private fun <T, R> testValues(listOfZmanim: List<Pair<T, R>>, transform: (t: T) -> R) {
+        for ((index, pair) in listOfZmanim.withIndex()) {
+            val (kotlin, java) = pair
+            runCatching {
+                assertEquals(java, transform(kotlin))
+            }.getOrElse {
+                println("Error on index $index")
+                throw it
+            }
+        }
+    }
+
+    /*fun testAllTimes() {
         val delimiter = "\t"
         val location = GeoLocation(
             "Lakewood, NJ",
@@ -70,6 +260,15 @@ class RegressionTest {
             TimeZone.of("America/New_York")
         )
         val calc = ComplexZmanimCalendar(location)
+        val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(
+            com.kosherjava.zmanim.java.zmanim.util.GeoLocation(
+                location.locationName,
+                location.latitude,
+                location.longitude,
+                java.util.TimeZone.getTimeZone(location.timeZone.toJavaZoneId())
+            )
+        )
+
 //        calc.isUseElevation = true
         println("Time zone of calc.calendar: ${calc.geoLocation.timeZone}")
         val lines = Files.readAllLines(File("./zmanim_Lakewood_NJ.tsv").toPath()).drop(1)
@@ -279,7 +478,7 @@ class RegressionTest {
                 continue
             }
         }
-    }
+    }*/
 
     private fun assertYomTovOrParshaMatches(
         jewishDate: JewishDate,
