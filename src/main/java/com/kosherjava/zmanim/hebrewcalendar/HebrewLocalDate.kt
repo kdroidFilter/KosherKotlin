@@ -138,7 +138,7 @@ data class HebrewLocalDate(
                     nextMonthInYear
                 }
                 newDayOfMonth -= daysInMonth
-                } else break
+            } else break
         }
         return HebrewLocalDate(newYear, newMonth, newDayOfMonth.toInt())
     }
@@ -210,7 +210,7 @@ data class HebrewLocalDate(
             if (STARTING_DATE_GREGORIAN == targetGregorianDate || STARTING_DATE_HEBREW == targetHebrewDate) return STARTING_DATE_HEBREW to STARTING_DATE_GREGORIAN
             require((targetGregorianDate != null) xor (targetHebrewDate != null)) { "Target date must not be null, and only one target can be chosen." }
             //ensure target after start so we don't have to deal with negative numbers and walking backwards
-            if(targetGregorianDate != null) require(
+            if (targetGregorianDate != null) require(
                 targetGregorianDate >= STARTING_DATE_GREGORIAN
             ) { "Target date must be after $STARTING_DATE_GREGORIAN ($STARTING_DATE_HEBREW). This requirement will hopefully be removed in a future release." }
             else require(
@@ -284,7 +284,7 @@ data class HebrewLocalDate(
                 currentGregorianDateInstant = newStartOfHebrewYear
                 currentGregorianDateTime = currentGregorianDateInstant.toLocalDateTime(tz)
                 currentHebrewDate = newHebrewYear
-                }
+            }
             //year is either right, and now we only need to worry about the month and dayOfMonth,
             // or target is between current and current plus 1 year, but crosses the year boundary
             // (e.g. current is last day of month, and target is 1st day of next month).
@@ -313,7 +313,7 @@ data class HebrewLocalDate(
                 currentGregorianDateTime = currentGregorianDateInstant.toLocalDateTime(tz)
 
                 currentHebrewDate = newHebrewDate
-                }
+            }
             //month is either right, and now we only need to worry about the dayOfMonth,
             // or target is between current and current plus 1 month but crosses the month boundary
             // (e.g. current is last day of month, and target is 1st day of next month).
