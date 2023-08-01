@@ -144,17 +144,15 @@ class ConvertBetweenGregorianAndHebrewTest {
     @Test
     fun regressionTest() {
         val success = LinkedList<String>()
-        val DISTANT_FUTURE = Instant.ofEpochSecond(3093527980800L);
-        val distantFutureDate = Date.from(DISTANT_FUTURE);
-        val distantFutureLocalDate = DISTANT_FUTURE
+        val DISTANT_FUTURE = LocalDate(
+            2239,
+            Month.SEPTEMBER,
+            30
+        ) //6000-1-1 hebrew
         val kotlinDistantFutureJewishDate = JewishDate(
-            kotlinx.datetime.LocalDate(
-                distantFutureDate.year,
-                distantFutureDate.month + 1,
-                distantFutureDate.date
-            )
+            DISTANT_FUTURE
         )
-        val distantFutureJewishDate = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(distantFutureDate);
+        val distantFutureJewishDate = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(DISTANT_FUTURE.toJavaLocalDate());
         var kotlinCurrentJewishDate = HebrewLocalDate(3761, HebrewMonth.TEVES, 18)
         val javaCurrentJewishDate = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(
             3761,
