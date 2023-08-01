@@ -214,6 +214,13 @@ data class HebrewLocalDate(
              * */
             if (STARTING_DATE_GREGORIAN == targetGregorianDate || STARTING_DATE_HEBREW == targetHebrewDate) return STARTING_DATE_HEBREW to STARTING_DATE_GREGORIAN
             require((targetGregorianDate != null) xor (targetHebrewDate != null)) { "Target date must not be null, and only one target can be chosen." }
+            //ensure target after start so we don't have to deal with negative numbers and walking backwards
+            if(targetGregorianDate != null) require(
+                targetGregorianDate >= STARTING_DATE_GREGORIAN
+            ) { "Target date must be after $STARTING_DATE_GREGORIAN ($STARTING_DATE_HEBREW). This requirement will hopefully be removed in a future release." }
+            else require(
+                targetHebrewDate!! >= STARTING_DATE_HEBREW
+            ) { "Target date must be after $STARTING_DATE_HEBREW ($STARTING_DATE_GREGORIAN). This requirement will hopefully be removed in a future release." }
             /*if(targetGregorianDate != null){
                 val daysUntilTarget = STARTING_DATE_GREGORIAN.daysUntil(targetGregorianDate).toLong()
                 val hebrewDate = STARTING_DATE_HEBREW.plusDays(daysUntilTarget)
@@ -392,12 +399,15 @@ data class HebrewLocalDate(
         /**
          * The start of the Hebrew calendar. Used as a reference point for converting between
          * Gregorian and Hebrew dates.
+         * This currently starts at Rosh Hashana of Gregorian year 1 so as not to deal with year 0.
+         * Certain edge cases related to year zero were not handled correctly by the library.
+         * TODO reimplement to handle those cases.
          * */
-        internal val STARTING_DATE_HEBREW = HebrewLocalDate(2, HebrewMonth.TISHREI, 1)
+        internal val STARTING_DATE_HEBREW = HebrewLocalDate(3762, HebrewMonth.TISHREI, 1)
 
         /**
          * @see STARTING_DATE_HEBREW; Does not account for The Gregorian Reformation.
          * */
-        internal val STARTING_DATE_GREGORIAN = LocalDate(-3760, Month.AUGUST, 28)
+        internal val STARTING_DATE_GREGORIAN = LocalDate(1, Month.SEPTEMBER, 6)
     }
 }

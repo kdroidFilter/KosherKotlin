@@ -128,14 +128,6 @@ class ConvertBetweenGregorianAndHebrewTest {
     }
 
     @Test
-    fun yearZero() {
-        val target = LocalDate(0, 1, 1)
-        val hebrew = HebrewLocalDate(3761, HebrewMonth.TEVES, 18)
-        assertEquals(hebrew, target.toHebrewDate())
-        assertEquals(target, hebrew.toLocalDateGregorian())
-    }
-
-    @Test
     fun twoWayConversion() {
         val now = LocalDate.now() //probably bad practice to use a value which can change between tests
         assertEquals(now, now.toHebrewDate().toLocalDateGregorian())
@@ -143,99 +135,47 @@ class ConvertBetweenGregorianAndHebrewTest {
 
     @Test
     fun regressionTest() {
-        val success = LinkedList<String>()
-        val DISTANT_FUTURE = LocalDate(
-            2239,
-            Month.SEPTEMBER,
-            30
-        ) //6000-1-1 hebrew
-        val kotlinDistantFutureJewishDate = JewishDate(
-            DISTANT_FUTURE
+        val distantFutureJewishDate =
+            com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(
+                java.time.LocalDate.of(
+                    2239,
+                    Month.SEPTEMBER,
+                    30
+                )
+            ) //6000-1-1 hebrew
+        var kotlinCurrentJewishDate = HebrewLocalDate(
+            3763,
+            HebrewMonth.TISHREI,
+            1
         )
-        val distantFutureJewishDate = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(DISTANT_FUTURE.toJavaLocalDate());
-        var kotlinCurrentJewishDate = HebrewLocalDate(3761, HebrewMonth.TEVES, 18)
         val javaCurrentJewishDate = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(
-            3761,
-            HebrewMonth.TEVES.value,
-            18
-        ); //start of hillel hazaken's calender
+            3763,
+            HebrewMonth.TISHREI.value,
+            1
+        ) //start of hillel hakatan's calender
 
         while (
-            javaCurrentJewishDate.getJewishYear() != distantFutureJewishDate.getJewishYear() ||
-            javaCurrentJewishDate.getJewishMonth() != distantFutureJewishDate.getJewishMonth() ||
-            javaCurrentJewishDate.getJewishDayOfMonth() != distantFutureJewishDate.getJewishDayOfMonth()
+            javaCurrentJewishDate.jewishYear != distantFutureJewishDate.jewishYear ||
+            javaCurrentJewishDate.jewishMonth != distantFutureJewishDate.jewishMonth ||
+            javaCurrentJewishDate.jewishDayOfMonth != distantFutureJewishDate.jewishDayOfMonth
         ) {
-            try {
-                val kotlinGregorian = kotlinCurrentJewishDate.toLocalDateGregorian()
-                if (
-                    javaCurrentJewishDate.getJewishYear() == kotlinCurrentJewishDate.year.toInt() &&
-                    javaCurrentJewishDate.getJewishMonth() == kotlinCurrentJewishDate.month.value &&
-                    javaCurrentJewishDate.getJewishDayOfMonth() == kotlinCurrentJewishDate.dayOfMonth
-                ) {
-                    success.add("${javaCurrentJewishDate.jewishYear}-${javaCurrentJewishDate.jewishMonth}-${javaCurrentJewishDate.jewishDayOfMonth}")
-                } else println("Failure: $javaCurrentJewishDate")
-                if (
-                    (javaCurrentJewishDate.getGregorianYear() == kotlinGregorian.year) &&
-                    ((javaCurrentJewishDate.getGregorianMonth() + 1) == kotlinGregorian.month.value) &&
-                    (javaCurrentJewishDate.getGregorianDayOfMonth() == kotlinGregorian.dayOfMonth)
-                ){} else println("Failure gregorian: $javaCurrentJewishDate")
-                javaCurrentJewishDate.forward(Calendar.DATE, 1);
-                val prev = kotlinCurrentJewishDate.copy()
-                kotlinCurrentJewishDate = kotlinCurrentJewishDate.plusDays(1)
-                if(prev.year != kotlinCurrentJewishDate.year) println("New year: ${kotlinCurrentJewishDate.year}")
-                /*val toHebrewDate = runCatching {
-                    localDate.toHebrewDate()
-                }.getOrNull()
-                if (
-                    hebrewLocalDate == toHebrewDate
-                ) {
-                    success.add(line)
-                    counter++
-                } else if (counter > 1) println("Failure: $javaCurrentJewishDate")*/
-            } catch (t: Throwable) {
-                println("Throwable at $javaCurrentJewishDate: ${t.stackTraceToString()}")
-//            System.out.println("Current: " + current);
-            }
+            assertEquals(javaCurrentJewishDate.jewishYear, kotlinCurrentJewishDate.year.toInt())
+            assertEquals(javaCurrentJewishDate.jewishMonth, kotlinCurrentJewishDate.month.value)
+            assertEquals(javaCurrentJewishDate.jewishDayOfMonth, kotlinCurrentJewishDate.dayOfMonth)
+
+            val kotlinGregorian = kotlinCurrentJewishDate.toLocalDateGregorian()
+            assertEquals(javaCurrentJewishDate.gregorianYear, kotlinGregorian.year)
+            assertEquals(javaCurrentJewishDate.gregorianMonth + 1, kotlinGregorian.month.value)
+            assertEquals(javaCurrentJewishDate.gregorianDayOfMonth, kotlinGregorian.dayOfMonth)
+
+            javaCurrentJewishDate.forward(Calendar.DATE, 1);
+            kotlinCurrentJewishDate = kotlinCurrentJewishDate.plusDays(1)
         }
-        println("Success: (${success.size}): \n${success.joinToString("\n")}")
-        /*File("output.csv").useLines {
-            var counter = 0
-            for (line in it) {
-                val (hebrew, gregorian) = line.split(",")
-                val (hebrewYear, hebrewMonth, hebrewDayOfMonth) = hebrew.split("-")
-                val hebrewLocalDate =
-                    HebrewLocalDate(
-                        hebrewYear.toInt(),
-                        HebrewMonth.getMonthForValue(hebrewMonth.toInt()),
-                        hebrewDayOfMonth.toInt()
-                    )
-                val gregorianYearIsNegative = gregorian.first() == '-'
-                val (gregorianYear, gregorianMonth, gregorianDayOfMonth) = (if (gregorianYearIsNegative) gregorian.drop(
-                    1
-                ) else gregorian).split("-")
-                val localDate = LocalDate(
-                    gregorianYear.toInt() * if (gregorianYearIsNegative) -1 else 1,
-                    gregorianMonth.toInt(),
-                    gregorianDayOfMonth.toInt()
-                )
-//                println("Target gregorian: $localDate")
-                val toHebrewDate = runCatching {
-                    localDate.toHebrewDate()
-                }.getOrNull()
-                if (
-                    hebrewLocalDate == toHebrewDate
-                ) {
-                    success.add(line)
-                    counter++
-                } else if (counter > 1) println("Failure: $line")
-            }
-        }*/
-        println("Success: (${success.size}): \n${success.joinToString("\n")}")
     }
 
     @Test
     fun `6th month doesn't work (for some reason)`() {
-        val hebrew = HebrewLocalDate(4483, HebrewMonth.getMonthForValue(6), 29)
+        val hebrew = HebrewLocalDate(4483, HebrewMonth.ELUL, 29)
         val gregorian = LocalDate(723, 9, 9)
         assertEquals(hebrew, gregorian.toHebrewDate())
         assertEquals(gregorian, hebrew.toLocalDateGregorian())
