@@ -194,6 +194,7 @@ enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {
         /**
          * Interpolates this [month]
          * */
-        fun getTishreiBasedMonth(month: HebrewMonth, jewishYear: Int) = getMonthForValue(getTishreiBasedValue(month.value, jewishYear))
+        fun getTishreiBasedMonth(month: HebrewMonth, jewishYear: Int) = getTishreiBasedMonth(month, jewishYear.toLong())
+        fun getTishreiBasedMonth(month: HebrewMonth, jewishYear: Long) = getMonthForValue(getTishreiBasedValue(month.value, jewishYear))
     }
 }
