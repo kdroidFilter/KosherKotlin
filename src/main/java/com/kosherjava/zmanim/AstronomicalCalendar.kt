@@ -469,7 +469,7 @@ open class AstronomicalCalendar(
         }
         var calculatedTime: Double = time
         val adjustedLocalDate = this.adjustedLocalDate
-        val timeZone = TimeZone.currentSystemDefault()
+        val timeZone = TimeZone.UTC
         var cal = adjustedLocalDate.toInstant(timeZone)
         val hours = calculatedTime.toInt() // retain only the hours
         calculatedTime -= hours.toDouble()
@@ -561,7 +561,7 @@ open class AstronomicalCalendar(
      * @see GeoLocation.antimeridianAdjustment
      * @return the adjusted LocalDate
      */
-    private val adjustedLocalDate: LocalDateTime
+    internal val adjustedLocalDate: LocalDateTime
         get() {
             val offset = geoLocation.antimeridianAdjustment
             return if (offset == 0) localDate
