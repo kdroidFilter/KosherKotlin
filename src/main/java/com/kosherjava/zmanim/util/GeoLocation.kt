@@ -19,9 +19,7 @@ import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toDegrees
 import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toRadians
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.asTimeZone
 import kotlinx.datetime.offsetAt
-import kotlinx.datetime.offsetIn
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -470,19 +468,15 @@ data class GeoLocation(
      * @see Object.hashCode
      */
     override fun hashCode(): Int {
-        var result = 17
         val latLong = latitude.toBits()
         val lonLong = longitude.toBits()
         val elevLong = elevation.toBits()
-        val latInt = (latLong xor (latLong ushr 32)).toInt()
-        val lonInt = (lonLong xor (lonLong ushr 32)).toInt()
-        val elevInt = (elevLong xor (elevLong ushr 32)).toInt()
-        result = 37 * result + this::class.hashCode()
-        result += 37 * result + latInt
-        result += 37 * result + lonInt
-        result += 37 * result + elevInt
-        result += 37 * result + locationName.hashCode()
-        result += 37 * result + timeZone.hashCode()
+        var result =    37 * 17     + this::class.hashCode()
+        result +=       37 * result + (latLong xor (latLong ushr 32)).toInt()
+        result +=       37 * result + (lonLong xor (lonLong ushr 32)).toInt()
+        result +=       37 * result + (elevLong xor (elevLong ushr 32)).toInt()
+        result +=       37 * result + locationName.hashCode()
+        result +=       37 * result + timeZone.hashCode()
         return result
     }
 

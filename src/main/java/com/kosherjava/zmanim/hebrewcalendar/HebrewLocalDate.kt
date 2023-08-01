@@ -282,6 +282,7 @@ data class HebrewLocalDate(
                 currentHebrewDate = newHebrewYear
                 if (logging) println("After adding year : $currentHebrewDate")
             }
+            if (logging) println("Year is either correct or target is less than a year away.")
             //year is either right, and now we only need to worry about the month and dayOfMonth,
             // or target is between current and current plus 1 year, but crosses the year boundary
             // (e.g. current is last day of month, and target is 1st day of next month).
@@ -319,6 +320,7 @@ data class HebrewLocalDate(
                 currentHebrewDate = newHebrewDate
                 if (logging) println("After adding month: $currentHebrewDate")
             }
+            if (logging) println("Month is either correct or target is less than a month away.")
             //month is either right, and now we only need to worry about the dayOfMonth,
             // or target is between current and current plus 1 month but crosses the month boundary
             // (e.g. current is last day of month, and target is 1st day of next month).

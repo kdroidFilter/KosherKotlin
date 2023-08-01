@@ -127,13 +127,15 @@ class ConvertBetweenGregorianAndHebrewTest {
 
     @Test
     fun yearZero() {
-        val target = LocalDate(1,1,1)
-        assertEquals(target, HebrewLocalDate(3762, HebrewMonth.TEVES, 18).toLocalDateGregorian())
+        val target = LocalDate(0,1,1)
+        val hebrew = HebrewLocalDate(3761, HebrewMonth.TEVES, 18)
+        assertEquals(hebrew, target.toHebrewDate())
+        assertEquals(target, hebrew.toLocalDateGregorian())
     }
 
     @Test
     fun twoWayConversion() {
-        val now = LocalDate.now() //probably bad practice to use this
+        val now = LocalDate.now() //probably bad practice to use a value which can change between tests
         assertEquals(now, now.toHebrewDate().toLocalDateGregorian())
     }
 
