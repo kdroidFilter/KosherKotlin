@@ -227,7 +227,7 @@ data class HebrewLocalDate(
                 else currentHebrewDate.year != targetHebrewDate!!.year
             ) {
                 if (currentGregorianDateTime.date.year == 0) { //if we're at the beginning of the Gregorian calendar, we need to skip year 0 - kotlinx-datetime/ISO-8601 uses year 0, but people normally don't - the world went from -1 BCE to 1 CE, not 0
-                    println("Jumping year 0")
+                    if(logging) println("Jumping year 0")
                     val timeInYear1 = LocalDateTime(
                         LocalDate(
                             currentGregorianDateTime.date.year + 1,
@@ -264,7 +264,7 @@ data class HebrewLocalDate(
                     }*/
                     continue
                 }
-                println("Gregorian date before adding days: $currentGregorianDateInstant")
+                if (logging) println("Gregorian date before adding days: $currentGregorianDateInstant")
                 val daysInYear = getNumDaysInHebrewYear(currentHebrewDate.year) //accounts for leap years
                 if (logging) println("Days in year ${currentHebrewDate.year}: $daysInYear")
                 if (logging) println("Before adding days: $currentGregorianDateInstant")
@@ -363,7 +363,7 @@ data class HebrewLocalDate(
          */
         const val JEWISH_EPOCH = -1_373_429
 
-        private const val logging = true
+        private const val logging = false
 
         /**
          * The start of the Hebrew calendar. Used as a reference point for converting between
