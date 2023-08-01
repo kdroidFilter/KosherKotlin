@@ -46,7 +46,7 @@ class RegressionTest {
         val year = mYear + 1
         val jd = JewishDate(mYear, HebrewMonth.getMonthForValue(mMonth), mDay)
         jd.setJewishYear(year)
-        assertEquals(year, jd.hebrewLocalDate.year)
+        assertEquals(year, jd.hebrewLocalDate.year.toInt())
         assertEquals(mMonth, jd.hebrewLocalDate.month.value)
         assertEquals(mDay, jd.jewishDayOfMonth)
     }
@@ -55,7 +55,7 @@ class RegressionTest {
         val month = mMonth + 1
         val jd = JewishDate(mYear, HebrewMonth.getMonthForValue(mMonth), mDay)
         jd.setJewishMonth(HebrewMonth.getMonthForValue(month))
-        assertEquals(mYear, jd.hebrewLocalDate.year)
+        assertEquals(mYear, jd.hebrewLocalDate.year.toInt())
         assertEquals(month, jd.hebrewLocalDate.month.value)
         assertEquals(mDay, jd.jewishDayOfMonth)
     }
