@@ -44,13 +44,13 @@ class UT_JewishLeapYear {
 
     private fun shouldBeLeapYear(year: Int) {
         val jewishDate = JewishDate()
-        jewishDate.setJewishYear(year)
+        jewishDate.jewishYear = (year.toLong())
         Assert.assertTrue(jewishDate.isJewishLeapYear)
     }
 
     private fun shouldNotBeLeapYear(year: Int) {
         val jewishDate = JewishDate()
-        jewishDate.setJewishYear(year)
+        jewishDate.jewishYear = (year.toLong())
         Assert.assertFalse(jewishDate.isJewishLeapYear)
     }
 } // End of UT_JewishLeapYear class

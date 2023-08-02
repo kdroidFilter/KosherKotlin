@@ -29,7 +29,7 @@ class UT_GregorianDateNavigation {
             null,
             null,
             5771 to { jewishYear.toInt() },
-            11 to { jewishMonth },
+            11 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             26 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             setDateBeforeAssert = false,
@@ -39,7 +39,7 @@ class UT_GregorianDateNavigation {
             null,
             1 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            11 to { jewishMonth },
+            11 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             27 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = true,
             setDateBeforeAssert = false,
@@ -49,7 +49,7 @@ class UT_GregorianDateNavigation {
             28,
             1 to { gregorianLocalDate.monthNumber - 1 },
             28 to { gregorianLocalDate.dayOfMonth },
-            12 to { jewishMonth },
+            12 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             24 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false
         )
@@ -58,7 +58,7 @@ class UT_GregorianDateNavigation {
             null,
             2 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            12 to { jewishMonth },
+            12 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             25 to { jewishDayOfMonth },
             setDateBeforeAssert = false
         )
@@ -68,7 +68,7 @@ class UT_GregorianDateNavigation {
             31,
             3 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            13 to { jewishMonth },
+            13 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             26 to { jewishDayOfMonth },
         )
         assertProperties(
@@ -76,7 +76,7 @@ class UT_GregorianDateNavigation {
             30,
             4 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            1 to { jewishMonth },
+            1 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             27 to { jewishDayOfMonth },
         )
         assertProperties(
@@ -84,7 +84,7 @@ class UT_GregorianDateNavigation {
             31,
             5 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            2 to { jewishMonth },
+            2 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             28 to { jewishDayOfMonth },
         )
         assertProperties(
@@ -92,7 +92,7 @@ class UT_GregorianDateNavigation {
             30,
             6 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            3 to { jewishMonth },
+            3 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             29 to { jewishDayOfMonth },
         )
         assertProperties(
@@ -100,7 +100,7 @@ class UT_GregorianDateNavigation {
             31,
             7 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            5 to { jewishMonth },
+            5 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             1 to { jewishDayOfMonth },
         )
         assertProperties(
@@ -108,7 +108,7 @@ class UT_GregorianDateNavigation {
             31,
             8 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            6 to { jewishMonth },
+            6 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             2 to { jewishDayOfMonth },
         )
         assertProperties(
@@ -116,7 +116,7 @@ class UT_GregorianDateNavigation {
             30,
             9 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            7 to { jewishMonth },
+            7 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             3 to { jewishDayOfMonth }
         )
         assertProperties(
@@ -125,7 +125,7 @@ class UT_GregorianDateNavigation {
             5772 to { jewishYear.toInt() },
             10 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            8 to { jewishMonth },
+            8 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             4 to { jewishDayOfMonth }
         )
         assertProperties(
@@ -133,7 +133,7 @@ class UT_GregorianDateNavigation {
             30,
             11 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            9 to { jewishMonth },
+            9 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             5 to { jewishDayOfMonth }
         )
         assertProperties(
@@ -142,7 +142,7 @@ class UT_GregorianDateNavigation {
             2012 to { gregorianLocalDate.year },
             0 to { gregorianLocalDate.monthNumber - 1 },
             1 to { gregorianLocalDate.dayOfMonth },
-            10 to { jewishMonth },
+            10 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             6 to { jewishDayOfMonth }
         )
     }
@@ -160,7 +160,7 @@ class UT_GregorianDateNavigation {
             2010 to { gregorianLocalDate.year },
             11 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
-            10 to { jewishMonth },
+            10 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             24 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -172,7 +172,7 @@ class UT_GregorianDateNavigation {
             1,
             10 to { gregorianLocalDate.monthNumber - 1 },
             30 to { gregorianLocalDate.dayOfMonth },
-            9 to { jewishMonth },
+            9 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             23 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -182,7 +182,7 @@ class UT_GregorianDateNavigation {
             1,
             9 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
-            8 to { jewishMonth },
+            8 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             23 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -192,7 +192,7 @@ class UT_GregorianDateNavigation {
             1,
             8 to { gregorianLocalDate.monthNumber - 1 },
             30 to { gregorianLocalDate.dayOfMonth },
-            7 to { jewishMonth },
+            7 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             22 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -203,7 +203,7 @@ class UT_GregorianDateNavigation {
             7 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
             5770 to { jewishYear.toInt() },
-            6 to { jewishMonth },
+            6 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
         )
@@ -212,7 +212,7 @@ class UT_GregorianDateNavigation {
             1,
             6 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
-            5 to { jewishMonth },
+            5 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             20 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -222,7 +222,7 @@ class UT_GregorianDateNavigation {
             1,
             5 to { gregorianLocalDate.monthNumber - 1 },
             30 to { gregorianLocalDate.dayOfMonth },
-            4 to { jewishMonth },
+            4 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             18 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -232,7 +232,7 @@ class UT_GregorianDateNavigation {
             1,
             4 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
-            3 to { jewishMonth },
+            3 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             18 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -243,7 +243,7 @@ class UT_GregorianDateNavigation {
             1,
             3 to { gregorianLocalDate.monthNumber - 1 },
             30 to { gregorianLocalDate.dayOfMonth },
-            2 to { jewishMonth },
+            2 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             16 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -254,7 +254,7 @@ class UT_GregorianDateNavigation {
             1,
             2 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
-            1 to { jewishMonth },
+            1 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             16 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -264,7 +264,7 @@ class UT_GregorianDateNavigation {
             1,
             1 to { gregorianLocalDate.monthNumber - 1 },
             28 to { gregorianLocalDate.dayOfMonth },
-            12 to { jewishMonth },
+            12 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             14 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true
@@ -274,7 +274,7 @@ class UT_GregorianDateNavigation {
             1,
             0 to { gregorianLocalDate.monthNumber - 1 },
             31 to { gregorianLocalDate.dayOfMonth },
-            11 to { jewishMonth },
+            11 to { jewishMonth.getTishreiBasedValueInYear(jewishYear) },
             16 to { jewishDayOfMonth },
             moveDateForwardBeforeAssert = false,
             moveDateBackwardBeforeAssert = true

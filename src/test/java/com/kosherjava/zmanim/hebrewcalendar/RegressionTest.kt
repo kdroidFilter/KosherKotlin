@@ -1,5 +1,6 @@
 package com.kosherjava.zmanim.hebrewcalendar
 
+import com.kosherjava.zmanim.AstronomicalCalendar
 import com.kosherjava.zmanim.ComplexZmanimCalendar
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
@@ -8,14 +9,12 @@ import kotlinx.datetime.TimeZone
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
-import java.nio.file.Files
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
 
 class RegressionTest {
+    companion object {
+        fun Instant?.toDate(): java.util.Date? = this?.let { java.util.Date.from(it.toJavaInstant()) }
+    }
     val hdf = HebrewDateFormatter()
 
     val mYear = 3762
@@ -47,7 +46,7 @@ class RegressionTest {
     fun assertSetYearWorks() {
         val year = mYear + 1
         val jd = JewishDate(mYear, HebrewMonth.getMonthForValue(mMonth), mDay)
-        jd.setJewishYear(year)
+        jd.jewishYear = year.toLong()
         assertEquals(year, jd.hebrewLocalDate.year.toInt())
         assertEquals(mMonth, jd.hebrewLocalDate.month.value)
         assertEquals(mDay, jd.jewishDayOfMonth)
@@ -62,7 +61,6 @@ class RegressionTest {
         assertEquals(mDay, jd.jewishDayOfMonth)
     }
 
-    fun Instant?.toDate(): Date? = this?.let { Date.from(it.toJavaInstant()) }
 
     @Test
     fun testJavaCompatibility() {
@@ -79,172 +77,209 @@ class RegressionTest {
                 location.locationName,
                 location.latitude,
                 location.longitude,
+                location.elevation,
                 java.util.TimeZone.getTimeZone(location.timeZone.toJavaZoneId())
             )
         )
+//        assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.toDate()?.time)
         assertEquals(javaCalc.geoLocation.timeZone.rawOffset, calc.geoLocation.timeZone.rawOffset)
+        assertEquals(
+            javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
+            calc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
+            1E-8
+        )
         assertEquals(javaCalc.sunrise, calc.sunrise?.toDate())
         assertEquals(javaCalc.alos60, calc.alos60?.toDate())
         assertEquals(javaCalc.tzais60, calc.tzais60?.toDate())
+        assertEquals(javaCalc.alos90Zmanis, calc.alos90Zmanis?.toDate())
+        assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis?.toDate())
+        assertEquals(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time, JewishCalendar().moladAsInstant.toDate()!!.time)
+        assertEquals(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time, JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time)
+        assertEquals(javaCalc.sofZmanKidushLevanaBetweenMoldos?.time?.toDouble() ?: 0.0, calc.sofZmanKidushLevanaBetweenMoldos?.toDate()?.time?.toDouble() ?: 0.0, 1_000.0)
+        assertEquals(javaCalc.sofZmanKidushLevana15Days?.time?.toDouble() ?: 0.0, (calc.sofZmanKidushLevana15Days?.toDate()?.time?.toDouble() ?: 0.0), 1_000.0)
+        assertEquals(
+            javaCalc.getTemporalHour(javaCalc.alos90Zmanis, javaCalc.tzais90Zmanis),
+            calc.getTemporalHour(calc.alos90Zmanis, calc.tzais90Zmanis)
+        )
         calc.apply {
             val values = listOf(
-                shaahZmanis19Point8Degrees to  javaCalc.shaahZmanis19Point8Degrees,
-                shaahZmanis18Degrees to  javaCalc.shaahZmanis18Degrees,
-                shaahZmanis26Degrees to  javaCalc.shaahZmanis26Degrees,
-                shaahZmanis16Point1Degrees to  javaCalc.shaahZmanis16Point1Degrees,
-                shaahZmanis60Minutes to  javaCalc.shaahZmanis60Minutes,
-                shaahZmanis72MinutesZmanis to  javaCalc.shaahZmanis72MinutesZmanis,
-                shaahZmanis90Minutes to  javaCalc.shaahZmanis90Minutes,
-                shaahZmanis90MinutesZmanis to  javaCalc.shaahZmanis90MinutesZmanis,
-                shaahZmanis96MinutesZmanis to  javaCalc.shaahZmanis96MinutesZmanis,
-                shaahZmanisAteretTorah to  javaCalc.shaahZmanisAteretTorah,
-                shaahZmanisAlos16Point1ToTzais3Point8 to  javaCalc.shaahZmanisAlos16Point1ToTzais3Point8,
-                shaahZmanisAlos16Point1ToTzais3Point7 to  javaCalc.shaahZmanisAlos16Point1ToTzais3Point7,
-                shaahZmanis96Minutes to  javaCalc.shaahZmanis96Minutes,
-                shaahZmanis120Minutes to  javaCalc.shaahZmanis120Minutes,
-                shaahZmanis120MinutesZmanis to javaCalc.shaahZmanis120MinutesZmanis,
-            )
+                Triple(javaCalc.shaahZmanis19Point8Degrees, shaahZmanis19Point8Degrees, "shaahZmanis19Point8Degrees"),
+                Triple(javaCalc.shaahZmanis18Degrees, shaahZmanis18Degrees, "shaahZmanis18Degrees"),
+                Triple(javaCalc.shaahZmanis26Degrees, shaahZmanis26Degrees, "shaahZmanis26Degrees"),
+                Triple(javaCalc.shaahZmanis16Point1Degrees, shaahZmanis16Point1Degrees, "shaahZmanis16Point1Degrees"),
+                Triple(javaCalc.shaahZmanis60Minutes, shaahZmanis60Minutes, "shaahZmanis60Minutes"),
+                Triple(javaCalc.shaahZmanis72MinutesZmanis, shaahZmanis72MinutesZmanis, "shaahZmanis72MinutesZmanis"),
+                Triple(javaCalc.shaahZmanis90Minutes, shaahZmanis90Minutes, "shaahZmanis90Minutes"),
+                Triple(javaCalc.shaahZmanis90MinutesZmanis, shaahZmanis90MinutesZmanis, "shaahZmanis90MinutesZmanis"),
+                Triple(javaCalc.shaahZmanis96MinutesZmanis, shaahZmanis96MinutesZmanis, "shaahZmanis96MinutesZmanis"),
+                Triple(javaCalc.shaahZmanisAteretTorah, shaahZmanisAteretTorah, "shaahZmanisAteretTorah"),
+                Triple(javaCalc.shaahZmanisAlos16Point1ToTzais3Point8, shaahZmanisAlos16Point1ToTzais3Point8, "shaahZmanisAlos16Point1ToTzais3Point8"),
+                Triple(javaCalc.shaahZmanisAlos16Point1ToTzais3Point7, shaahZmanisAlos16Point1ToTzais3Point7, "shaahZmanisAlos16Point1ToTzais3Point7"),
+                Triple(javaCalc.shaahZmanis96Minutes, shaahZmanis96Minutes, "shaahZmanis96Minutes"),
+                Triple(javaCalc.shaahZmanis120Minutes, shaahZmanis120Minutes, "shaahZmanis120Minutes"),
+                Triple(javaCalc.shaahZmanis120MinutesZmanis, shaahZmanis120MinutesZmanis, "shaahZmanis120MinutesZmanis"),
+            );
+
+
+
+
             val listOfZmanim = listOf(
-                plagHamincha120MinutesZmanis to javaCalc.plagHamincha120MinutesZmanis,
-                plagHamincha120Minutes to javaCalc.plagHamincha120Minutes,
-                alos60 to javaCalc.alos60,
-                alos72Zmanis to javaCalc.alos72Zmanis,
-                alos96 to javaCalc.alos96,
-                alos90Zmanis to javaCalc.alos90Zmanis,
-                alos96Zmanis to javaCalc.alos96Zmanis,
-                alos90 to javaCalc.alos90,
-                alos120 to javaCalc.alos120,
-                alos120Zmanis to javaCalc.alos120Zmanis,
-                alos26Degrees to javaCalc.alos26Degrees,
-                alos18Degrees to javaCalc.alos18Degrees,
-                alos19Degrees to javaCalc.alos19Degrees,
-                alos19Point8Degrees to javaCalc.alos19Point8Degrees,
-                alos16Point1Degrees to javaCalc.alos16Point1Degrees,
-                misheyakir11Point5Degrees to javaCalc.misheyakir11Point5Degrees,
-                misheyakir11Degrees to javaCalc.misheyakir11Degrees,
-                misheyakir10Point2Degrees to javaCalc.misheyakir10Point2Degrees,
-                misheyakir7Point65Degrees to javaCalc.misheyakir7Point65Degrees,
-                misheyakir9Point5Degrees to javaCalc.misheyakir9Point5Degrees,
-                sofZmanShmaMGA19Point8Degrees to javaCalc.sofZmanShmaMGA19Point8Degrees,
-                sofZmanShmaMGA16Point1Degrees to javaCalc.sofZmanShmaMGA16Point1Degrees,
-                sofZmanShmaMGA18Degrees to javaCalc.sofZmanShmaMGA18Degrees,
-                sofZmanShmaMGA72MinutesZmanis to javaCalc.sofZmanShmaMGA72MinutesZmanis,
-                sofZmanShmaMGA90Minutes to javaCalc.sofZmanShmaMGA90Minutes,
-                sofZmanShmaMGA90MinutesZmanis to javaCalc.sofZmanShmaMGA90MinutesZmanis,
-                sofZmanShmaMGA96Minutes to javaCalc.sofZmanShmaMGA96Minutes,
-                sofZmanShmaMGA96MinutesZmanis to javaCalc.sofZmanShmaMGA96MinutesZmanis,
-                sofZmanShma3HoursBeforeChatzos to javaCalc.sofZmanShma3HoursBeforeChatzos,
-                sofZmanShmaMGA120Minutes to javaCalc.sofZmanShmaMGA120Minutes,
-                sofZmanShmaAlos16Point1ToSunset to javaCalc.sofZmanShmaAlos16Point1ToSunset,
-                sofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees to javaCalc.sofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees,
-                sofZmanTfilaMGA19Point8Degrees to javaCalc.sofZmanTfilaMGA19Point8Degrees,
-                sofZmanTfilaMGA16Point1Degrees to javaCalc.sofZmanTfilaMGA16Point1Degrees,
-                sofZmanTfilaMGA18Degrees to javaCalc.sofZmanTfilaMGA18Degrees,
-                sofZmanTfilaMGA72MinutesZmanis to javaCalc.sofZmanTfilaMGA72MinutesZmanis,
-                sofZmanTfilaMGA90MinutesZmanis to javaCalc.sofZmanTfilaMGA90MinutesZmanis,
-                sofZmanTfilaMGA96MinutesZmanis to javaCalc.sofZmanTfilaMGA96MinutesZmanis,
-                sofZmanTfila2HoursBeforeChatzos to javaCalc.sofZmanTfila2HoursBeforeChatzos,
-                minchaGedola30Minutes to javaCalc.minchaGedola30Minutes,
-                minchaGedola16Point1Degrees to javaCalc.minchaGedola16Point1Degrees,
-                minchaGedolaAhavatShalom to javaCalc.minchaGedolaAhavatShalom,
-                minchaGedolaGreaterThan30 to javaCalc.minchaGedolaGreaterThan30,
-                minchaKetana16Point1Degrees to javaCalc.minchaKetana16Point1Degrees,
-                minchaKetanaAhavatShalom to javaCalc.minchaKetanaAhavatShalom,
-                minchaKetana72Minutes to javaCalc.minchaKetana72Minutes,
-                plagHamincha60Minutes to javaCalc.plagHamincha60Minutes,
-                plagHamincha72Minutes to javaCalc.plagHamincha72Minutes,
-                plagHamincha90Minutes to javaCalc.plagHamincha90Minutes,
-                plagHamincha96Minutes to javaCalc.plagHamincha96Minutes,
-                plagHamincha96MinutesZmanis to javaCalc.plagHamincha96MinutesZmanis,
-                plagHamincha90MinutesZmanis to javaCalc.plagHamincha90MinutesZmanis,
-                plagHamincha72MinutesZmanis to javaCalc.plagHamincha72MinutesZmanis,
-                plagHamincha16Point1Degrees to javaCalc.plagHamincha16Point1Degrees,
-                plagHamincha19Point8Degrees to javaCalc.plagHamincha19Point8Degrees,
-                plagHamincha26Degrees to javaCalc.plagHamincha26Degrees,
-                plagHamincha18Degrees to javaCalc.plagHamincha18Degrees,
-                plagAlosToSunset to javaCalc.plagAlosToSunset,
-                plagAlos16Point1ToTzaisGeonim7Point083Degrees to javaCalc.plagAlos16Point1ToTzaisGeonim7Point083Degrees,
-                plagAhavatShalom to javaCalc.plagAhavatShalom,
-                bainHashmashosRT13Point24Degrees to javaCalc.bainHashmashosRT13Point24Degrees,
-                bainHashmashosRT58Point5Minutes to javaCalc.bainHashmashosRT58Point5Minutes,
-                bainHashmashosRT13Point5MinutesBefore7Point083Degrees to javaCalc.bainHashmashosRT13Point5MinutesBefore7Point083Degrees,
-                bainHashmashosRT2Stars to javaCalc.bainHashmashosRT2Stars,
-                bainHashmashosYereim18Minutes to javaCalc.bainHashmashosYereim18Minutes,
-                bainHashmashosYereim3Point05Degrees to javaCalc.bainHashmashosYereim3Point05Degrees,
-                bainHashmashosYereim16Point875Minutes to javaCalc.bainHashmashosYereim16Point875Minutes,
-                bainHashmashosYereim2Point8Degrees to javaCalc.bainHashmashosYereim2Point8Degrees,
-                bainHashmashosYereim13Point5Minutes to javaCalc.bainHashmashosYereim13Point5Minutes,
-                bainHashmashosYereim2Point1Degrees to javaCalc.bainHashmashosYereim2Point1Degrees,
-                tzaisGeonim3Point7Degrees to javaCalc.tzaisGeonim3Point7Degrees,
-                tzaisGeonim3Point8Degrees to javaCalc.tzaisGeonim3Point8Degrees,
-                tzaisGeonim5Point95Degrees to javaCalc.tzaisGeonim5Point95Degrees,
-                tzaisGeonim3Point65Degrees to javaCalc.tzaisGeonim3Point65Degrees,
-                tzaisGeonim3Point676Degrees to javaCalc.tzaisGeonim3Point676Degrees,
-                tzaisGeonim4Point61Degrees to javaCalc.tzaisGeonim4Point61Degrees,
-                tzaisGeonim4Point37Degrees to javaCalc.tzaisGeonim4Point37Degrees,
-                tzaisGeonim5Point88Degrees to javaCalc.tzaisGeonim5Point88Degrees,
-                tzaisGeonim4Point8Degrees to javaCalc.tzaisGeonim4Point8Degrees,
-                tzaisGeonim6Point45Degrees to javaCalc.tzaisGeonim6Point45Degrees,
-                tzaisGeonim7Point083Degrees to javaCalc.tzaisGeonim7Point083Degrees,
-                tzaisGeonim7Point67Degrees to javaCalc.tzaisGeonim7Point67Degrees,
-                tzaisGeonim8Point5Degrees to javaCalc.tzaisGeonim8Point5Degrees,
-                tzaisGeonim9Point3Degrees to javaCalc.tzaisGeonim9Point3Degrees,
-                tzaisGeonim9Point75Degrees to javaCalc.tzaisGeonim9Point75Degrees,
-                tzais60 to javaCalc.tzais60,
-                tzaisAteretTorah to javaCalc.tzaisAteretTorah,
-                tzais90Zmanis to javaCalc.tzais90Zmanis,
-                tzais96Zmanis to javaCalc.tzais96Zmanis,
-                tzais90 to javaCalc.tzais90,
-                tzais120 to javaCalc.tzais120,
-                tzais120Zmanis to javaCalc.tzais120Zmanis,
-                tzais16Point1Degrees to javaCalc.tzais16Point1Degrees,
-                tzais26Degrees to javaCalc.tzais26Degrees,
-                tzais18Degrees to javaCalc.tzais18Degrees,
-                tzais19Point8Degrees to javaCalc.tzais19Point8Degrees,
-                tzais96 to javaCalc.tzais96,
-                fixedLocalChatzos to javaCalc.fixedLocalChatzos,
-                sofZmanKidushLevanaBetweenMoldos to javaCalc.sofZmanKidushLevanaBetweenMoldos,
-                sofZmanKidushLevana15Days to javaCalc.sofZmanKidushLevana15Days,
-                zmanMolad to javaCalc.zmanMolad,
-                sofZmanBiurChametzGRA to javaCalc.sofZmanBiurChametzGRA,
-                getSofZmanBiurChametzMGA72Minutes to javaCalc.getSofZmanBiurChametzMGA72Minutes(),
-                sofZmanBiurChametzMGA16Point1Degrees to javaCalc.sofZmanBiurChametzMGA16Point1Degrees,
-                solarMidnight to javaCalc.solarMidnight,
-                sofZmanShmaBaalHatanya to javaCalc.sofZmanShmaBaalHatanya,
-                sofZmanTfilaBaalHatanya to javaCalc.sofZmanTfilaBaalHatanya,
-                sofZmanBiurChametzBaalHatanya to javaCalc.sofZmanBiurChametzBaalHatanya,
-                minchaGedolaBaalHatanya to javaCalc.minchaGedolaBaalHatanya,
-                minchaGedolaBaalHatanyaGreaterThan30 to javaCalc.minchaGedolaBaalHatanyaGreaterThan30,
-                minchaKetanaBaalHatanya to javaCalc.minchaKetanaBaalHatanya,
-                plagHaminchaBaalHatanya to javaCalc.plagHaminchaBaalHatanya,
-                tzaisBaalHatanya to javaCalc.tzaisBaalHatanya,
-                sofZmanShmaMGA18DegreesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA18DegreesToFixedLocalChatzos,
-                sofZmanShmaMGA16Point1DegreesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA16Point1DegreesToFixedLocalChatzos,
-                sofZmanShmaMGA90MinutesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA90MinutesToFixedLocalChatzos,
-                sofZmanShmaMGA72MinutesToFixedLocalChatzos to javaCalc.sofZmanShmaMGA72MinutesToFixedLocalChatzos,
-                sofZmanShmaGRASunriseToFixedLocalChatzos to javaCalc.sofZmanShmaGRASunriseToFixedLocalChatzos,
-                sofZmanTfilaGRASunriseToFixedLocalChatzos to javaCalc.sofZmanTfilaGRASunriseToFixedLocalChatzos,
-                minchaGedolaGRAFixedLocalChatzos30Minutes to javaCalc.minchaGedolaGRAFixedLocalChatzos30Minutes,
-                minchaKetanaGRAFixedLocalChatzosToSunset to javaCalc.minchaKetanaGRAFixedLocalChatzosToSunset,
-                plagHaminchaGRAFixedLocalChatzosToSunset to javaCalc.plagHaminchaGRAFixedLocalChatzosToSunset,
-                tzais50 to javaCalc.tzais50,
-                samuchLeMinchaKetanaGRA to javaCalc.samuchLeMinchaKetanaGRA,
-                samuchLeMinchaKetana16Point1Degrees to javaCalc.samuchLeMinchaKetana16Point1Degrees,
-            )
-            testValues(values) { it }
-            testValues(listOfZmanim) {
-                it?.toDate()
-            }
+                Triple(javaCalc.plagHamincha120MinutesZmanis, plagHamincha120MinutesZmanis, "plagHamincha120MinutesZmanis"),
+                Triple(javaCalc.plagHamincha120Minutes, plagHamincha120Minutes, "plagHamincha120Minutes"),
+                Triple(javaCalc.alos60, alos60, "alos60"),
+                Triple(javaCalc.alos72Zmanis, alos72Zmanis, "alos72Zmanis"),
+                Triple(javaCalc.alos96, alos96, "alos96"),
+                Triple(javaCalc.alos90Zmanis, alos90Zmanis, "alos90Zmanis"),
+                Triple(javaCalc.alos96Zmanis, alos96Zmanis, "alos96Zmanis"),
+                Triple(javaCalc.alos90, alos90, "alos90"),
+                Triple(javaCalc.alos120, alos120, "alos120"),
+                Triple(javaCalc.alos120Zmanis, alos120Zmanis, "alos120Zmanis"),
+                Triple(javaCalc.alos26Degrees, alos26Degrees, "alos26Degrees"),
+                Triple(javaCalc.alos18Degrees, alos18Degrees, "alos18Degrees"),
+                Triple(javaCalc.alos19Degrees, alos19Degrees, "alos19Degrees"),
+                Triple(javaCalc.alos19Point8Degrees, alos19Point8Degrees, "alos19Point8Degrees"),
+                Triple(javaCalc.alos16Point1Degrees, alos16Point1Degrees, "alos16Point1Degrees"),
+                Triple(javaCalc.misheyakir11Point5Degrees, misheyakir11Point5Degrees, "misheyakir11Point5Degrees"),
+                Triple(javaCalc.misheyakir11Degrees, misheyakir11Degrees, "misheyakir11Degrees"),
+                Triple(javaCalc.misheyakir10Point2Degrees, misheyakir10Point2Degrees, "misheyakir10Point2Degrees"),
+                Triple(javaCalc.misheyakir7Point65Degrees, misheyakir7Point65Degrees, "misheyakir7Point65Degrees"),
+                Triple(javaCalc.misheyakir9Point5Degrees, misheyakir9Point5Degrees, "misheyakir9Point5Degrees"),
+                Triple(javaCalc.sofZmanShmaMGA19Point8Degrees, sofZmanShmaMGA19Point8Degrees, "sofZmanShmaMGA19Point8Degrees"),
+                Triple(javaCalc.sofZmanShmaMGA16Point1Degrees, sofZmanShmaMGA16Point1Degrees, "sofZmanShmaMGA16Point1Degrees"),
+                Triple(javaCalc.sofZmanShmaMGA18Degrees, sofZmanShmaMGA18Degrees, "sofZmanShmaMGA18Degrees"),
+                Triple(javaCalc.sofZmanShmaMGA72MinutesZmanis, sofZmanShmaMGA72MinutesZmanis, "sofZmanShmaMGA72MinutesZmanis"),
+                Triple(javaCalc.sofZmanShmaMGA90Minutes, sofZmanShmaMGA90Minutes, "sofZmanShmaMGA90Minutes"),
+                Triple(javaCalc.sofZmanShmaMGA90MinutesZmanis, sofZmanShmaMGA90MinutesZmanis, "sofZmanShmaMGA90MinutesZmanis"),
+                Triple(javaCalc.sofZmanShmaMGA96Minutes, sofZmanShmaMGA96Minutes, "sofZmanShmaMGA96Minutes"),
+                Triple(javaCalc.sofZmanShmaMGA96MinutesZmanis, sofZmanShmaMGA96MinutesZmanis, "sofZmanShmaMGA96MinutesZmanis"),
+                Triple(javaCalc.sofZmanShma3HoursBeforeChatzos, sofZmanShma3HoursBeforeChatzos, "sofZmanShma3HoursBeforeChatzos"),
+                Triple(javaCalc.sofZmanShmaMGA120Minutes, sofZmanShmaMGA120Minutes, "sofZmanShmaMGA120Minutes"),
+                Triple(javaCalc.sofZmanShmaAlos16Point1ToSunset, sofZmanShmaAlos16Point1ToSunset, "sofZmanShmaAlos16Point1ToSunset"),
+                Triple(javaCalc.sofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees, sofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees, "sofZmanShmaAlos16Point1ToTzaisGeonim7Point083Degrees"),
+                Triple(javaCalc.sofZmanTfilaMGA19Point8Degrees, sofZmanTfilaMGA19Point8Degrees, "sofZmanTfilaMGA19Point8Degrees"),
+                Triple(javaCalc.sofZmanTfilaMGA16Point1Degrees, sofZmanTfilaMGA16Point1Degrees, "sofZmanTfilaMGA16Point1Degrees"),
+                Triple(javaCalc.sofZmanTfilaMGA18Degrees, sofZmanTfilaMGA18Degrees, "sofZmanTfilaMGA18Degrees"),
+                Triple(javaCalc.sofZmanTfilaMGA72MinutesZmanis, sofZmanTfilaMGA72MinutesZmanis, "sofZmanTfilaMGA72MinutesZmanis"),
+                Triple(javaCalc.sofZmanTfilaMGA90MinutesZmanis, sofZmanTfilaMGA90MinutesZmanis, "sofZmanTfilaMGA90MinutesZmanis"),
+                Triple(javaCalc.sofZmanTfilaMGA96MinutesZmanis, sofZmanTfilaMGA96MinutesZmanis, "sofZmanTfilaMGA96MinutesZmanis"),
+                Triple(javaCalc.sofZmanTfila2HoursBeforeChatzos, sofZmanTfila2HoursBeforeChatzos, "sofZmanTfila2HoursBeforeChatzos"),
+                Triple(javaCalc.minchaGedola30Minutes, minchaGedola30Minutes, "minchaGedola30Minutes"),
+                Triple(javaCalc.minchaGedola16Point1Degrees, minchaGedola16Point1Degrees, "minchaGedola16Point1Degrees"),
+                Triple(javaCalc.minchaGedolaAhavatShalom, minchaGedolaAhavatShalom, "minchaGedolaAhavatShalom"),
+                Triple(javaCalc.minchaGedolaGreaterThan30, minchaGedolaGreaterThan30, "minchaGedolaGreaterThan30"),
+                Triple(javaCalc.minchaKetana16Point1Degrees, minchaKetana16Point1Degrees, "minchaKetana16Point1Degrees"),
+                Triple(javaCalc.minchaKetanaAhavatShalom, minchaKetanaAhavatShalom, "minchaKetanaAhavatShalom"),
+                Triple(javaCalc.minchaKetana72Minutes, minchaKetana72Minutes, "minchaKetana72Minutes"),
+                Triple(javaCalc.plagHamincha60Minutes, plagHamincha60Minutes, "plagHamincha60Minutes"),
+                Triple(javaCalc.plagHamincha72Minutes, plagHamincha72Minutes, "plagHamincha72Minutes"),
+                Triple(javaCalc.plagHamincha90Minutes, plagHamincha90Minutes, "plagHamincha90Minutes"),
+                Triple(javaCalc.plagHamincha96Minutes, plagHamincha96Minutes, "plagHamincha96Minutes"),
+                Triple(javaCalc.plagHamincha96MinutesZmanis, plagHamincha96MinutesZmanis, "plagHamincha96MinutesZmanis"),
+                Triple(javaCalc.plagHamincha90MinutesZmanis, plagHamincha90MinutesZmanis, "plagHamincha90MinutesZmanis"),
+                Triple(javaCalc.plagHamincha72MinutesZmanis, plagHamincha72MinutesZmanis, "plagHamincha72MinutesZmanis"),
+                Triple(javaCalc.plagHamincha16Point1Degrees, plagHamincha16Point1Degrees, "plagHamincha16Point1Degrees"),
+                Triple(javaCalc.plagHamincha19Point8Degrees, plagHamincha19Point8Degrees, "plagHamincha19Point8Degrees"),
+                Triple(javaCalc.plagHamincha26Degrees, plagHamincha26Degrees, "plagHamincha26Degrees"),
+                Triple(javaCalc.plagHamincha18Degrees, plagHamincha18Degrees, "plagHamincha18Degrees"),
+                Triple(javaCalc.plagAlosToSunset, plagAlosToSunset, "plagAlosToSunset"),
+                Triple(javaCalc.plagAlos16Point1ToTzaisGeonim7Point083Degrees, plagAlos16Point1ToTzaisGeonim7Point083Degrees, "plagAlos16Point1ToTzaisGeonim7Point083Degrees"),
+                Triple(javaCalc.plagAhavatShalom, plagAhavatShalom, "plagAhavatShalom"),
+                Triple(javaCalc.bainHashmashosRT13Point24Degrees, bainHashmashosRT13Point24Degrees, "bainHashmashosRT13Point24Degrees"),
+                Triple(javaCalc.bainHashmashosRT58Point5Minutes, bainHashmashosRT58Point5Minutes, "bainHashmashosRT58Point5Minutes"),
+                Triple(javaCalc.bainHashmashosRT13Point5MinutesBefore7Point083Degrees, bainHashmashosRT13Point5MinutesBefore7Point083Degrees, "bainHashmashosRT13Point5MinutesBefore7Point083Degrees"),
+                Triple(javaCalc.bainHashmashosRT2Stars, bainHashmashosRT2Stars, "bainHashmashosRT2Stars"),
+                Triple(javaCalc.bainHashmashosYereim18Minutes, bainHashmashosYereim18Minutes, "bainHashmashosYereim18Minutes"),
+                Triple(javaCalc.bainHashmashosYereim3Point05Degrees, bainHashmashosYereim3Point05Degrees, "bainHashmashosYereim3Point05Degrees"),
+                Triple(javaCalc.bainHashmashosYereim16Point875Minutes, bainHashmashosYereim16Point875Minutes, "bainHashmashosYereim16Point875Minutes"),
+                Triple(javaCalc.bainHashmashosYereim2Point8Degrees, bainHashmashosYereim2Point8Degrees, "bainHashmashosYereim2Point8Degrees"),
+                Triple(javaCalc.bainHashmashosYereim13Point5Minutes, bainHashmashosYereim13Point5Minutes, "bainHashmashosYereim13Point5Minutes"),
+                Triple(javaCalc.bainHashmashosYereim2Point1Degrees, bainHashmashosYereim2Point1Degrees, "bainHashmashosYereim2Point1Degrees"),
+                Triple(javaCalc.tzaisGeonim3Point7Degrees, tzaisGeonim3Point7Degrees, "tzaisGeonim3Point7Degrees"),
+                Triple(javaCalc.tzaisGeonim3Point8Degrees, tzaisGeonim3Point8Degrees, "tzaisGeonim3Point8Degrees"),
+                Triple(javaCalc.tzaisGeonim5Point95Degrees, tzaisGeonim5Point95Degrees, "tzaisGeonim5Point95Degrees"),
+                Triple(javaCalc.tzaisGeonim3Point65Degrees, tzaisGeonim3Point65Degrees, "tzaisGeonim3Point65Degrees"),
+                Triple(javaCalc.tzaisGeonim3Point676Degrees, tzaisGeonim3Point676Degrees, "tzaisGeonim3Point676Degrees"),
+                Triple(javaCalc.tzaisGeonim4Point61Degrees, tzaisGeonim4Point61Degrees, "tzaisGeonim4Point61Degrees"),
+                Triple(javaCalc.tzaisGeonim4Point37Degrees, tzaisGeonim4Point37Degrees, "tzaisGeonim4Point37Degrees"),
+                Triple(javaCalc.tzaisGeonim5Point88Degrees, tzaisGeonim5Point88Degrees, "tzaisGeonim5Point88Degrees"),
+                Triple(javaCalc.tzaisGeonim4Point8Degrees, tzaisGeonim4Point8Degrees, "tzaisGeonim4Point8Degrees"),
+                Triple(javaCalc.tzaisGeonim6Point45Degrees, tzaisGeonim6Point45Degrees, "tzaisGeonim6Point45Degrees"),
+                Triple(javaCalc.tzaisGeonim7Point083Degrees, tzaisGeonim7Point083Degrees, "tzaisGeonim7Point083Degrees"),
+                Triple(javaCalc.tzaisGeonim7Point67Degrees, tzaisGeonim7Point67Degrees, "tzaisGeonim7Point67Degrees"),
+                Triple(javaCalc.tzaisGeonim8Point5Degrees, tzaisGeonim8Point5Degrees, "tzaisGeonim8Point5Degrees"),
+                Triple(javaCalc.tzaisGeonim9Point3Degrees, tzaisGeonim9Point3Degrees, "tzaisGeonim9Point3Degrees"),
+                Triple(javaCalc.tzaisGeonim9Point75Degrees, tzaisGeonim9Point75Degrees, "tzaisGeonim9Point75Degrees"),
+                Triple(javaCalc.tzais60, tzais60, "tzais60"),
+                Triple(javaCalc.tzaisAteretTorah, tzaisAteretTorah, "tzaisAteretTorah"),
+                Triple(javaCalc.tzais90Zmanis, tzais90Zmanis, "tzais90Zmanis"),
+                Triple(javaCalc.tzais96Zmanis, tzais96Zmanis, "tzais96Zmanis"),
+                Triple(javaCalc.tzais90, tzais90, "tzais90"),
+                Triple(javaCalc.tzais120, tzais120, "tzais120"),
+                Triple(javaCalc.tzais120Zmanis, tzais120Zmanis, "tzais120Zmanis"),
+                Triple(javaCalc.tzais16Point1Degrees, tzais16Point1Degrees, "tzais16Point1Degrees"),
+                Triple(javaCalc.tzais26Degrees, tzais26Degrees, "tzais26Degrees"),
+                Triple(javaCalc.tzais18Degrees, tzais18Degrees, "tzais18Degrees"),
+                Triple(javaCalc.tzais19Point8Degrees, tzais19Point8Degrees, "tzais19Point8Degrees"),
+                Triple(javaCalc.tzais96, tzais96, "tzais96"),
+                Triple(javaCalc.fixedLocalChatzos, fixedLocalChatzos, "fixedLocalChatzos"),
+                Triple(javaCalc.sofZmanKidushLevanaBetweenMoldos, sofZmanKidushLevanaBetweenMoldos, "sofZmanKidushLevanaBetweenMoldos"),
+                Triple(javaCalc.sofZmanKidushLevana15Days, sofZmanKidushLevana15Days, "sofZmanKidushLevana15Days"),
+                Triple(javaCalc.zmanMolad, zmanMolad, "zmanMolad"),
+                Triple(javaCalc.sofZmanBiurChametzGRA, sofZmanBiurChametzGRA, "sofZmanBiurChametzGRA"),
+                Triple(javaCalc.sofZmanBiurChametzMGA72Minutes, sofZmanBiurChametzMGA72Minutes, "sofZmanBiurChametzMGA72Minutes"),
+                Triple(javaCalc.sofZmanBiurChametzMGA16Point1Degrees, sofZmanBiurChametzMGA16Point1Degrees, "sofZmanBiurChametzMGA16Point1Degrees"),
+                Triple(javaCalc.solarMidnight, solarMidnight, "solarMidnight"),
+                Triple(javaCalc.sofZmanShmaBaalHatanya, sofZmanShmaBaalHatanya, "sofZmanShmaBaalHatanya"),
+                Triple(javaCalc.sofZmanTfilaBaalHatanya, sofZmanTfilaBaalHatanya, "sofZmanTfilaBaalHatanya"),
+                Triple(javaCalc.sofZmanBiurChametzBaalHatanya, sofZmanBiurChametzBaalHatanya, "sofZmanBiurChametzBaalHatanya"),
+                Triple(javaCalc.minchaGedolaBaalHatanya, minchaGedolaBaalHatanya, "minchaGedolaBaalHatanya"),
+                Triple(javaCalc.minchaGedolaBaalHatanyaGreaterThan30, minchaGedolaBaalHatanyaGreaterThan30, "minchaGedolaBaalHatanyaGreaterThan30"),
+                Triple(javaCalc.minchaKetanaBaalHatanya, minchaKetanaBaalHatanya, "minchaKetanaBaalHatanya"),
+                Triple(javaCalc.plagHaminchaBaalHatanya, plagHaminchaBaalHatanya, "plagHaminchaBaalHatanya"),
+                Triple(javaCalc.tzaisBaalHatanya, tzaisBaalHatanya, "tzaisBaalHatanya"),
+                Triple(javaCalc.sofZmanShmaMGA18DegreesToFixedLocalChatzos, sofZmanShmaMGA18DegreesToFixedLocalChatzos, "sofZmanShmaMGA18DegreesToFixedLocalChatzos"),
+                Triple(javaCalc.sofZmanShmaMGA16Point1DegreesToFixedLocalChatzos, sofZmanShmaMGA16Point1DegreesToFixedLocalChatzos, "sofZmanShmaMGA16Point1DegreesToFixedLocalChatzos"),
+                Triple(javaCalc.sofZmanShmaMGA90MinutesToFixedLocalChatzos, sofZmanShmaMGA90MinutesToFixedLocalChatzos, "sofZmanShmaMGA90MinutesToFixedLocalChatzos"),
+                Triple(javaCalc.sofZmanShmaMGA72MinutesToFixedLocalChatzos, sofZmanShmaMGA72MinutesToFixedLocalChatzos, "sofZmanShmaMGA72MinutesToFixedLocalChatzos"),
+                Triple(javaCalc.sofZmanShmaGRASunriseToFixedLocalChatzos, sofZmanShmaGRASunriseToFixedLocalChatzos, "sofZmanShmaGRASunriseToFixedLocalChatzos"),
+                Triple(javaCalc.sofZmanTfilaGRASunriseToFixedLocalChatzos, sofZmanTfilaGRASunriseToFixedLocalChatzos, "sofZmanTfilaGRASunriseToFixedLocalChatzos"),
+                Triple(javaCalc.minchaGedolaGRAFixedLocalChatzos30Minutes, minchaGedolaGRAFixedLocalChatzos30Minutes, "minchaGedolaGRAFixedLocalChatzos30Minutes"),
+                Triple(javaCalc.minchaKetanaGRAFixedLocalChatzosToSunset, minchaKetanaGRAFixedLocalChatzosToSunset, "minchaKetanaGRAFixedLocalChatzosToSunset"),
+                Triple(javaCalc.plagHaminchaGRAFixedLocalChatzosToSunset, plagHaminchaGRAFixedLocalChatzosToSunset, "plagHaminchaGRAFixedLocalChatzosToSunset"),
+                Triple(javaCalc.tzais50, tzais50, "tzais50"),
+                Triple(javaCalc.samuchLeMinchaKetanaGRA, samuchLeMinchaKetanaGRA, "samuchLeMinchaKetanaGRA"),
+                Triple(javaCalc.samuchLeMinchaKetana16Point1Degrees, samuchLeMinchaKetana16Point1Degrees, "samuchLeMinchaKetana16Point1Degrees")
+            ).map { Triple(it.first?.time?.toDouble(), it.second?.toDate()?.time?.toDouble(), it.third) }
+            testValues(values)
+            testValues(listOfZmanim, 1_000.0/*one second off is ok*/)
         }
     }
 
-    private fun <T, R> testValues(listOfZmanim: List<Pair<T, R>>, transform: (t: T) -> R) {
-        for ((index, pair) in listOfZmanim.withIndex()) {
-            val (kotlin, java) = pair
+    private fun <E, A> testValues(
+        values: List<Triple<E, A, String>>,
+        transformExpected: (e: E) -> A = { it as A },
+        transformActual: (a: A) -> A = { it },
+    ) {
+        for ((index, triple) in values.withIndex()) {
+            val (expected, actual, label) = triple
             runCatching {
-                assertEquals(java, transform(kotlin))
+                assertEquals(transformExpected(expected), transformActual(actual))
             }.getOrElse {
-                println("Error on index $index")
+                println("Error on $label index $index")
+                throw it
+            }
+        }
+    }
+    private fun testValues(
+        values: List<Triple<Double?, Double?, String>>,
+        delta: Double
+    ) {
+        for ((index, pair) in values.withIndex()) {
+            val (expected, actual, label) = pair
+            runCatching {
+                assertEquals(expected ?: 0.0, actual ?: 0.0, delta)
+            }.getOrElse {
+                println("Error on $label at index $index")
                 throw it
             }
         }
