@@ -11,6 +11,8 @@ import kotlin.math.floor
  * TODO this is debateably an anti-pattern. Figure out where to put these functinos.
  * */
 object DateUtils {
+    fun Instant?.toDate(): java.util.Date? = this?.let { java.util.Date.from(it.toJavaInstant()) }
+
     /**
      * Return the [Julian day](http://en.wikipedia.org/wiki/Julian_day) from a Java LocalDate.
      *
