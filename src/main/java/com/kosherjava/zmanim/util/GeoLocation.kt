@@ -17,10 +17,7 @@ package com.kosherjava.zmanim.util
 
 import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toDegrees
 import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toRadians
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.offsetAt
-import kotlin.time.Duration.Companion.seconds
 
 
 import kotlin.math.*
