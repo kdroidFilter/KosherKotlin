@@ -2,6 +2,7 @@ package com.kosherjava.zmanim.hebrewcalendar
 
 import com.kosherjava.zmanim.AstronomicalCalendar
 import com.kosherjava.zmanim.ComplexZmanimCalendar
+import com.kosherjava.zmanim.Zman
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
 import kotlinx.datetime.*
@@ -13,7 +14,8 @@ import java.util.*
 
 class RegressionTest {
     companion object {
-        fun Instant?.toDate(): java.util.Date? = this?.let { java.util.Date.from(it.toJavaInstant()) }
+        fun Instant.toDate(): java.util.Date = this.let { java.util.Date.from(it.toJavaInstant()) }
+        fun Zman.DateBased.toDate(): java.util.Date? = this.momentOfOccurrence?.let { java.util.Date.from(it.toJavaInstant()) }
     }
     val hdf = HebrewDateFormatter()
 
@@ -86,16 +88,16 @@ class RegressionTest {
         val javaAstroCal = com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar(javaLocation)
         val kotlinAstroCal = AstronomicalCalendar(location)
         javaAstroCal.apply {
-            assertEquals(sunrise, kotlinAstroCal.sunrise.toDate())
-            assertEquals(seaLevelSunrise, kotlinAstroCal.seaLevelSunrise.toDate())
-            assertEquals(beginCivilTwilight, kotlinAstroCal.beginCivilTwilight.toDate())
-            assertEquals(beginNauticalTwilight, kotlinAstroCal.beginNauticalTwilight.toDate())
-            assertEquals(beginAstronomicalTwilight, kotlinAstroCal.beginAstronomicalTwilight.toDate())
-            assertEquals(sunset, kotlinAstroCal.sunset.toDate())
-            assertEquals(seaLevelSunset, kotlinAstroCal.seaLevelSunset.toDate())
-            assertEquals(endCivilTwilight, kotlinAstroCal.endCivilTwilight.toDate())
-            assertEquals(endNauticalTwilight, kotlinAstroCal.endNauticalTwilight.toDate())
-            assertEquals(endAstronomicalTwilight, kotlinAstroCal.endAstronomicalTwilight.toDate())
+            assertEquals(sunrise, kotlinAstroCal.sunrise?.toDate())
+            assertEquals(seaLevelSunrise, kotlinAstroCal.seaLevelSunrise?.toDate())
+            assertEquals(beginCivilTwilight, kotlinAstroCal.beginCivilTwilight?.toDate())
+            assertEquals(beginNauticalTwilight, kotlinAstroCal.beginNauticalTwilight?.toDate())
+            assertEquals(beginAstronomicalTwilight, kotlinAstroCal.beginAstronomicalTwilight?.toDate())
+            assertEquals(sunset, kotlinAstroCal.sunset?.toDate())
+            assertEquals(seaLevelSunset, kotlinAstroCal.seaLevelSunset?.toDate())
+            assertEquals(endCivilTwilight, kotlinAstroCal.endCivilTwilight?.toDate())
+            assertEquals(endNauticalTwilight, kotlinAstroCal.endNauticalTwilight?.toDate())
+            assertEquals(endAstronomicalTwilight, kotlinAstroCal.endAstronomicalTwilight?.toDate())
 //            getTimeOffset
 //            getTimeOffset
 //            getSunriseOffsetByDegrees()
@@ -106,7 +108,7 @@ class RegressionTest {
 //            getUTCSeaLevelSunset()
             assertEquals(temporalHour, kotlinAstroCal.temporalHour)
             getTemporalHour()
-            assertEquals(sunTransit, kotlinAstroCal.sunTransit.toDate())
+            assertEquals(sunTransit, kotlinAstroCal.sunTransit?.toDate())
             getSunTransit()
 //            getSunriseSolarDipFromOffset()
 //            getSunsetSolarDipFromOffset()
@@ -119,17 +121,17 @@ class RegressionTest {
             0.0
         )
         assertEquals(javaCalc.sunrise, calc.sunrise?.toDate())
-        assertEquals(javaCalc.alos60, calc.alos60?.toDate())
-        assertEquals(javaCalc.tzais60, calc.tzais60?.toDate())
-        assertEquals(javaCalc.alos90Zmanis, calc.alos90Zmanis?.toDate())
-        assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis?.toDate())
+        assertEquals(javaCalc.alos60, calc.alos60.toDate())
+        assertEquals(javaCalc.tzais60, calc.tzais60.toDate())
+        assertEquals(javaCalc.alos90Zmanis, calc.alos90Zmanis.toDate())
+        assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis.toDate())
         assertEquals(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time, JewishCalendar().moladAsInstant.toDate()!!.time)
         assertEquals(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time, JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time)
         assertEquals(javaCalc.sofZmanKidushLevanaBetweenMoldos?.time?.toDouble() ?: 0.0, calc.sofZmanKidushLevanaBetweenMoldos?.toDate()?.time?.toDouble() ?: 0.0, 0.0)
         assertEquals(javaCalc.sofZmanKidushLevana15Days?.time?.toDouble() ?: 0.0, (calc.sofZmanKidushLevana15Days?.toDate()?.time?.toDouble() ?: 0.0), 0.0)
         assertEquals(
             javaCalc.getTemporalHour(javaCalc.alos90Zmanis, javaCalc.tzais90Zmanis),
-            calc.getTemporalHour(calc.alos90Zmanis, calc.tzais90Zmanis)
+            calc.getTemporalHour(calc.alos90Zmanis.momentOfOccurrence, calc.tzais90Zmanis.momentOfOccurrence)
         )
         calc.apply {
             val values = listOf(
@@ -277,15 +279,15 @@ class RegressionTest {
                 Triple(javaCalc.samuchLeMinchaKetanaGRA, samuchLeMinchaKetanaGRA, "samuchLeMinchaKetanaGRA"),
                 Triple(javaCalc.samuchLeMinchaKetana16Point1Degrees, samuchLeMinchaKetana16Point1Degrees, "samuchLeMinchaKetana16Point1Degrees")
             ).map { Triple(it.first?.time?.toDouble(), it.second?.toDate()?.time?.toDouble(), it.third) }
-            testValues(values)
+            testValues(values, transformActual = { it.duration.inWholeMilliseconds })
             testValues(listOfZmanim, 0.0)
         }
     }
 
     private fun <E, A> testValues(
         values: List<Triple<E, A, String>>,
-        transformExpected: (e: E) -> A = { it as A },
-        transformActual: (a: A) -> A = { it },
+        transformExpected: (e: E) -> E = { it },
+        transformActual: (a: A) -> E = { it as E },
     ) {
         for ((index, triple) in values.withIndex()) {
             val (expected, actual, label) = triple
