@@ -556,7 +556,6 @@ open class AstronomicalCalendar(
     internal val adjustedLocalDate: LocalDateTime
         get() {
             val offset = geoLocation.antimeridianAdjustment
-            //println("Offset: $offset")
             return if (offset == 0) localDateTime
             else localDateTime
                 .toInstant(geoLocation.timeZone)

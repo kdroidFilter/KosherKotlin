@@ -24,7 +24,6 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
@@ -2660,7 +2659,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     fun getSofZmanKidushLevana15Days(alos: Instant?, tzais: Instant?): Instant? {
         val jewishCalendar = JewishCalendar(localDateTime.date)
-        //println(jewishCalendar)
         // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in
         // French Polynesia on Dec 2027 when kiddush Levana 3 days can be said on <em>Rosh Chodesh</em>, the sof zman Kiddush
         // Levana will be on the 12th of the Teves. in the case of Anadyr, Russia on Jan, 2071, sof zman kiddush levana will
@@ -2971,17 +2969,15 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() {
             val clonedCal = ZmanimCalendar(geoLocation)
             val tz = geoLocation.timeZone
-            //println("Before add: ${clonedCal.localDateTime}")
-            clonedCal.localDateTime =
-                clonedCal
-                    .localDateTime
+            clonedCal.localDateTime = this.localDateTime
                     .toInstant(tz)
                     .plus(DatePeriod(days = 1), tz)
                     .toLocalDateTime(tz)
-            val chatzos = clonedCal.chatzos ?: return null
+            val tomorrowChatzos = clonedCal.chatzos ?: return null
+            val thisChatzos = this.chatzos ?: return null
             return getTimeOffset(
-                chatzos,
-                (chatzos - chatzos).div(2).inWholeMilliseconds
+                thisChatzos,
+                (tomorrowChatzos - thisChatzos).div(2).inWholeMilliseconds
             )
         }
 
