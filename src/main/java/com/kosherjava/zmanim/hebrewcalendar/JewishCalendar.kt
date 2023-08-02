@@ -1455,7 +1455,7 @@ class JewishCalendar : JewishDate {
             // The raw molad Instant (point in time) must be generated using standard time. Using "Asia/Jerusalem" timezone will result in the time
             // being incorrectly off by an hour in the summer due to DST. Proper adjustment for the actual time in DST will be done by the date
             // formatter class used to display the Instant.
-            val yerushalayimStandardTZ = TimeZone.of("GMT+2")
+            val yerushalayimStandardTZ = TimeZone.of("Etc/GMT+2")
             val geo = GeoLocation(locationName, latitude, longitude, yerushalayimStandardTZ)
             val localDate = molad.gregorianLocalDate
             val moladSeconds = molad.moladChalakim * 10 / 3.0
