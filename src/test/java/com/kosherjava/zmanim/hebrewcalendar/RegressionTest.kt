@@ -116,7 +116,7 @@ class RegressionTest {
         assertEquals(
             javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
             calc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
-            1E-8
+            0.0
         )
         assertEquals(javaCalc.sunrise, calc.sunrise?.toDate())
         assertEquals(javaCalc.alos60, calc.alos60?.toDate())
@@ -125,8 +125,8 @@ class RegressionTest {
         assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis?.toDate())
         assertEquals(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time, JewishCalendar().moladAsInstant.toDate()!!.time)
         assertEquals(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time, JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time)
-        assertEquals(javaCalc.sofZmanKidushLevanaBetweenMoldos?.time?.toDouble() ?: 0.0, calc.sofZmanKidushLevanaBetweenMoldos?.toDate()?.time?.toDouble() ?: 0.0, 1_000.0)
-        assertEquals(javaCalc.sofZmanKidushLevana15Days?.time?.toDouble() ?: 0.0, (calc.sofZmanKidushLevana15Days?.toDate()?.time?.toDouble() ?: 0.0), 1_000.0)
+        assertEquals(javaCalc.sofZmanKidushLevanaBetweenMoldos?.time?.toDouble() ?: 0.0, calc.sofZmanKidushLevanaBetweenMoldos?.toDate()?.time?.toDouble() ?: 0.0, 0.0)
+        assertEquals(javaCalc.sofZmanKidushLevana15Days?.time?.toDouble() ?: 0.0, (calc.sofZmanKidushLevana15Days?.toDate()?.time?.toDouble() ?: 0.0), 0.0)
         assertEquals(
             javaCalc.getTemporalHour(javaCalc.alos90Zmanis, javaCalc.tzais90Zmanis),
             calc.getTemporalHour(calc.alos90Zmanis, calc.tzais90Zmanis)
@@ -149,9 +149,6 @@ class RegressionTest {
                 Triple(javaCalc.shaahZmanis120Minutes, shaahZmanis120Minutes, "shaahZmanis120Minutes"),
                 Triple(javaCalc.shaahZmanis120MinutesZmanis, shaahZmanis120MinutesZmanis, "shaahZmanis120MinutesZmanis"),
             );
-
-
-
 
             val listOfZmanim = listOf(
                 Triple(javaCalc.plagHamincha120MinutesZmanis, plagHamincha120MinutesZmanis, "plagHamincha120MinutesZmanis"),
@@ -281,7 +278,7 @@ class RegressionTest {
                 Triple(javaCalc.samuchLeMinchaKetana16Point1Degrees, samuchLeMinchaKetana16Point1Degrees, "samuchLeMinchaKetana16Point1Degrees")
             ).map { Triple(it.first?.time?.toDouble(), it.second?.toDate()?.time?.toDouble(), it.third) }
             testValues(values)
-            testValues(listOfZmanim, 1_000.0/*one second off is ok*/)
+            testValues(listOfZmanim, 0.0)
         }
     }
 
