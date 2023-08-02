@@ -129,7 +129,7 @@ enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {
                 else NISSAN
             else nextMonth
 
-    fun toTishreiBasedValueInYear(jewishYear: Long) = getTishreiBasedValue(value, jewishYear)
+    fun getTishreiBasedValueInYear(jewishYear: Long) = getTishreiBasedValue(value, jewishYear)
     fun toTishreiBasedMonthInYear(jewishYear: Int) = getTishreiBasedMonth(this, jewishYear)
 
     /**
