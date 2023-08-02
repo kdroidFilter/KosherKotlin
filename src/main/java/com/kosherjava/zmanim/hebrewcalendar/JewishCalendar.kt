@@ -362,7 +362,7 @@ class JewishCalendar : JewishDate {
      * @param date
      * the `Date` to set the calendar to
      */
-    constructor(date: Instant) : super(date.toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    constructor(date: Instant, tz: TimeZone) : super(date.toLocalDateTime(tz).date)
 
     /**
      * A constructor that initializes the date to the [date] parameter.
