@@ -1465,7 +1465,7 @@ class JewishCalendar : JewishDate {
                     molad.moladHours,
                     molad.moladMinutes,
                     moladSeconds.toInt(),
-                    (1000 * (moladSeconds - moladSeconds.toInt())).toInt()
+                    (1000 * (moladSeconds - moladSeconds.toInt())).toInt().milliseconds.inWholeNanoseconds.toInt()
                 )
             )
                 .toInstant(yerushalayimStandardTZ)
