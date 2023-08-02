@@ -258,7 +258,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * and one where it does not set, a null will be returned. See the detailed explanation on top of the [         ] documentation.
      */
     val sofZmanShmaGRA: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.SOF_ZMAN_KRIAS_SHEMA, getSofZmanShma(elevationAdjustedSunrise, elevationAdjustedSunset))
+        get() = Zman.DateBased(
+            ZmanType.SOF_ZMAN_KRIAS_SHEMA,
+            getSofZmanShma(elevationAdjustedSunrise, elevationAdjustedSunset)
+        )
 
     /**
      * This method returns the latest *zman krias shema* (time to recite shema in the morning) that is 3 *
@@ -276,7 +279,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see ComplexZmanimCalendar.getSofZmanShmaMGA72Minutes
      */
     val sofZmanShmaMGA: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.SOF_ZMAN_KRIAS_SHEMA, getSofZmanShma(alos72.momentOfOccurrence, tzais72.momentOfOccurrence))
+        get() = Zman.DateBased(
+            ZmanType.SOF_ZMAN_KRIAS_SHEMA,
+            getSofZmanShma(alos72.momentOfOccurrence, tzais72.momentOfOccurrence)
+        )
 
     /**
      * This method returns the *tzais* (nightfall) based on the opinion of *Rabbeinu Tam* that
@@ -312,7 +318,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .setCandleLightingOffset
      */
     val candleLighting: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.CANDLE_LIGHTING, getTimeOffset(seaLevelSunset, -candleLightingOffset * MINUTE_MILLIS))
+        get() = Zman.DateBased(
+            ZmanType.CANDLE_LIGHTING,
+            getTimeOffset(seaLevelSunset, -candleLightingOffset * MINUTE_MILLIS)
+        )
 
     /**
      * A generic method for calculating the latest *zman tfilah* (time to recite the morning prayers)
@@ -354,7 +363,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * documentation.
      */
     val sofZmanTfilaGRA: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.SOF_ZMAN_TEFILLAH, getSofZmanTfila(elevationAdjustedSunrise, elevationAdjustedSunset))
+        get() = Zman.DateBased(
+            ZmanType.SOF_ZMAN_TEFILLAH,
+            getSofZmanTfila(elevationAdjustedSunrise, elevationAdjustedSunset)
+        )
 
     /**
      * This method returns the latest *zman tfila* (time to recite shema in the morning) that is 4 *
@@ -371,7 +383,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .getAlos72
      */
     val sofZmanTfilaMGA: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.SOF_ZMAN_TEFILLAH, getSofZmanTfila(alos72.momentOfOccurrence, tzais72.momentOfOccurrence))
+        get() = Zman.DateBased(
+            ZmanType.SOF_ZMAN_TEFILLAH,
+            getSofZmanTfila(alos72.momentOfOccurrence, tzais72.momentOfOccurrence)
+        )
 
     /**
      * A generic method for calculating the latest *mincha gedola* (the earliest time to recite the mincha  prayers)
@@ -418,7 +433,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * documentation.
      */
     val minchaGedola: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.MINCHA_GEDOLAH, getMinchaGedola(elevationAdjustedSunrise, elevationAdjustedSunset))
+        get() = Zman.DateBased(
+            ZmanType.MINCHA_GEDOLAH,
+            getMinchaGedola(elevationAdjustedSunrise, elevationAdjustedSunset)
+        )
 
     /**
      * A generic method for calculating *samuch lemincha ketana*, / near *mincha ketana* time that is half
@@ -494,7 +512,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * documentation.
      */
     val minchaKetana: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.MINCHA_KETANAH, getMinchaKetana(elevationAdjustedSunrise, elevationAdjustedSunset))
+        get() = Zman.DateBased(
+            ZmanType.MINCHA_KETANAH,
+            getMinchaKetana(elevationAdjustedSunrise, elevationAdjustedSunset)
+        )
 
     /**
      * A generic method for calculating *plag hamincha* (the earliest time that Shabbos can be started) that is
@@ -533,7 +554,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * [AstronomicalCalendar] documentation.
      */
     val plagHamincha: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.PLAG_HAMINCHA, getPlagHamincha(elevationAdjustedSunrise, elevationAdjustedSunset))
+        get() = Zman.DateBased(
+            ZmanType.PLAG_HAMINCHA,
+            getPlagHamincha(elevationAdjustedSunrise, elevationAdjustedSunset)
+        )
 
     /**
      * A method that returns a *shaah zmanis* ([temporal hour][.getTemporalHour]) according to
@@ -570,7 +594,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * [AstronomicalCalendar] documentation.
      */
     val shaahZmanisMGA: Zman.ValueBased
-        get() = Zman.ValueBased(ZmanType.SHAA_ZMANIS, getTemporalHour(alos72.momentOfOccurrence, tzais72.momentOfOccurrence).milliseconds)
+        get() = Zman.ValueBased(
+            ZmanType.SHAA_ZMANIS,
+            getTemporalHour(alos72.momentOfOccurrence, tzais72.momentOfOccurrence).milliseconds
+        )
 
     /**
      * This is a utility method to determine if the current Date (date-time) passed in has a *melacha* (work) prohibition.
@@ -588,12 +615,12 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see JewishCalendar.hasCandleLighting
      * @see JewishCalendar.setInIsrael
      */
-    fun isAssurBemlacha(currentTime: Instant, tzais: Instant?, inIsrael: Boolean): Boolean {
-        val jewishCalendar = JewishCalendar(localDateTime.date)
-        jewishCalendar.inIsrael = inIsrael
-        return jewishCalendar.hasCandleLighting() && currentTime >= elevationAdjustedSunset!! || //erev shabbos, YT or YT sheni and after shkiah
-                jewishCalendar.isAssurBemelacha && currentTime <= tzais!! //is shabbos or YT and it is before tzais
-    }
+    fun isAssurBemlacha(currentTime: Instant, tzais: Instant, inIsrael: Boolean): Boolean =
+        JewishCalendar(localDateTime.date, inIsrael)
+            .run {
+                hasCandleLighting && currentTime >= elevationAdjustedSunset!! || //erev shabbos, YT or YT sheni and after shkiah
+                        isAssurBemelacha && currentTime <= tzais //is shabbos or YT and it is before tzais
+            }
 
     /**
      * A generic utility method for calculating any *shaah zmanis* (temporal hour) based *zman* with the

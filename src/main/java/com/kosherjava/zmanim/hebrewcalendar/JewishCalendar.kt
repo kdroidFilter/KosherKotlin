@@ -368,9 +368,30 @@ class JewishCalendar : JewishDate {
      * A constructor that initializes the date to the [date] parameter.
      *
      * @param date
-     * the `LocalDate` to set the LocalDate to
+     * the `LocalDate` to set the [gregorianLocalDate] to
      */
     constructor(date: LocalDate) : super(date)
+    /**
+     * A constructor that initializes the date to the [date] parameter.
+     *
+     * @param date
+     * the `LocalDate` to set the [gregorianLocalDate] to
+     * @param isInIsrael whether this class should calculate religious events with the rules of someone in israel
+     */
+    constructor(date: LocalDate, isInIsrael: Boolean) : super(date) {
+        inIsrael = isInIsrael
+    }
+    /**
+     * A constructor that initializes the date to the [date] parameter.
+     *
+     * @param date
+     * the `LocalDate` to set the [gregorianLocalDate] to
+     * @param isInIsrael whether this class should calculate religious events with the rules of someone in israel
+     */
+    constructor(date: LocalDate, isInIsrael: Boolean, shouldUseModernHolidays: Boolean) : super(date) {
+        isUseModernHolidays = shouldUseModernHolidays
+        inIsrael = isInIsrael
+    }
 
     /**
      * Creates a Jewish date based on a Jewish year, month and day of month.
@@ -1066,7 +1087,7 @@ class JewishCalendar : JewishDate {
      *
      * @see isTomorrowShabbosOrYomTov
      */
-    fun hasCandleLighting(): Boolean = isTomorrowShabbosOrYomTov
+    val hasCandleLighting: Boolean get() = isTomorrowShabbosOrYomTov
 
     /**
      * Returns true if tomorrow is *Shabbos* or *Yom Tov*. This will return true on *Erev Shabbos*,

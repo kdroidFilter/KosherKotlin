@@ -10,7 +10,6 @@ import kotlinx.datetime.TimeZone
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.util.*
 
 class RegressionTest {
     companion object {
@@ -22,6 +21,21 @@ class RegressionTest {
     val mYear = 3762
     val mMonth = 1
     val mDay = 1
+    val kotlinLocation = GeoLocation(
+        "Lakewood, NJ",
+        40.096,
+        -74.222,
+        29.02,
+        TimeZone.of("America/New_York")
+    )
+
+    val javaLocation = com.kosherjava.zmanim.java.zmanim.util.GeoLocation(
+        kotlinLocation.locationName,
+        kotlinLocation.latitude,
+        kotlinLocation.longitude,
+        kotlinLocation.elevation,
+        java.util.TimeZone.getTimeZone(kotlinLocation.timeZone.toJavaZoneId())
+    )
 
     fun Int.toHrMinSec(): Triple<Int, Int, Int> {
         var hour = 0
@@ -63,58 +77,93 @@ class RegressionTest {
         assertEquals(mDay, jd.jewishDayOfMonth)
     }
 
+    @Test
+    fun testRawOffset() {
+        assertEquals(javaLocation.timeZone.rawOffset, kotlinLocation.timeZone.rawOffset)
+    }
 
     @Test
-    fun testJavaCompatibility() {
-        val location = GeoLocation(
-            "Lakewood, NJ",
-            40.096,
-            -74.222,
-            29.02,
-            TimeZone.of("America/New_York")
-        )
-        val calc = ComplexZmanimCalendar(location)
-        val javaLocation = com.kosherjava.zmanim.java.zmanim.util.GeoLocation(
-            location.locationName,
-            location.latitude,
-            location.longitude,
-            location.elevation,
-            java.util.TimeZone.getTimeZone(location.timeZone.toJavaZoneId())
-        )
-        val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(
-            javaLocation
-        )
+    fun testJewishCalendar() {
+        val kotlin = JewishCalendar()
+        val java = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar()
+        kotlin.chalakimSinceMoladTohu
+        kotlin.cheshvanKislevKviah
+        kotlin.dafYomiBavli
+        kotlin.dafYomiYerushalmi
+        kotlin.dayOfChanukah
+        kotlin.dayOfOmer
+        kotlin.daysInJewishMonth
+        kotlin.daysInJewishYear
+        kotlin.daysSinceStartOfJewishYear
+        kotlin.gregorianDayOfMonth
+        kotlin.gregorianMonth
+        kotlin.gregorianYear
+        kotlin.hasCandleLighting
+
+        kotlin.inIsrael
+
+        kotlin.isAseresYemeiTeshuva
+        kotlin.isAssurBemelacha
+        kotlin.isBeHaB
+        kotlin.isBirkasHachamah
+        kotlin.isChanukah
+        kotlin.isCheshvanLong
+        kotlin.isCholHamoed
+        kotlin.isCholHamoedPesach
+        kotlin.isCholHamoedSuccos
+        kotlin.isErevRoshChodesh
+        kotlin.isErevYomTov
+        kotlin.isErevYomTovSheni
+        kotlin.isHoshanaRabba
+        kotlin.isIsruChag
+        kotlin.isJewishLeapYear
+        kotlin.isKislevShort
+        kotlin.isMacharChodesh
+        kotlin.isMukafChoma
+        kotlin.isPesach
+        kotlin.isPurim
+        kotlin.isRoshChodesh
+        kotlin.isRoshHashana
+        kotlin.isShabbosMevorchim
+        kotlin.isShavuos
+        kotlin.isShminiAtzeres
+        kotlin.isSimchasTorah
+        kotlin.isSuccos
+        kotlin.isTaanis
+        kotlin.isTaanisBechoros
+        kotlin.isTishaBav
+        kotlin.isTomorrowShabbosOrYomTov
+
+        kotlin.isUseModernHolidays
+
+        kotlin.isYomKippur
+        kotlin.isYomKippurKatan
+        kotlin.isYomTov
+        kotlin.isYomTovAssurBemelacha
+        kotlin.jewishDayOfMonth
+        kotlin.jewishMonth
+        kotlin.jewishYear
+        kotlin.molad
+        kotlin.moladAsInstant
+        kotlin.moladChalakim
+        kotlin.moladHours
+        kotlin.moladMinutes
+        kotlin.parshah
+        kotlin.sofZmanKidushLevana15Days
+        kotlin.sofZmanKidushLevanaBetweenMoldos
+        kotlin.specialShabbos
+        kotlin.tchilasZmanKidushLevana3Days
+        kotlin.tchilasZmanKidushLevana7Days
+        kotlin.tekufasTishreiElapsedDays
+        kotlin.upcomingParshah
+        kotlin.yomTovIndex
+    }
+
+    @Test
+    fun testComplexZmanimCalendar() {
+        val calc = ComplexZmanimCalendar(kotlinLocation)
+        val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(javaLocation)
         assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.toDate()?.time)
-        val javaAstroCal = com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar(javaLocation)
-        val kotlinAstroCal = AstronomicalCalendar(location)
-        javaAstroCal.apply {
-            assertEquals(sunrise, kotlinAstroCal.sunrise?.toDate())
-            assertEquals(seaLevelSunrise, kotlinAstroCal.seaLevelSunrise?.toDate())
-            assertEquals(beginCivilTwilight, kotlinAstroCal.beginCivilTwilight?.toDate())
-            assertEquals(beginNauticalTwilight, kotlinAstroCal.beginNauticalTwilight?.toDate())
-            assertEquals(beginAstronomicalTwilight, kotlinAstroCal.beginAstronomicalTwilight?.toDate())
-            assertEquals(sunset, kotlinAstroCal.sunset?.toDate())
-            assertEquals(seaLevelSunset, kotlinAstroCal.seaLevelSunset?.toDate())
-            assertEquals(endCivilTwilight, kotlinAstroCal.endCivilTwilight?.toDate())
-            assertEquals(endNauticalTwilight, kotlinAstroCal.endNauticalTwilight?.toDate())
-            assertEquals(endAstronomicalTwilight, kotlinAstroCal.endAstronomicalTwilight?.toDate())
-//            getTimeOffset
-//            getTimeOffset
-//            getSunriseOffsetByDegrees()
-//            getSunsetOffsetByDegrees()
-//            getUTCSunrise()
-//            getUTCSeaLevelSunrise()
-//            getUTCSunset()
-//            getUTCSeaLevelSunset()
-            assertEquals(temporalHour, kotlinAstroCal.temporalHour)
-            getTemporalHour()
-            assertEquals(sunTransit, kotlinAstroCal.sunTransit?.toDate())
-            getSunTransit()
-//            getSunriseSolarDipFromOffset()
-//            getSunsetSolarDipFromOffset()
-            assertEquals(calendar.toInstant().toKotlinInstant().toEpochMilliseconds(), kotlinAstroCal.localDateTime.toInstant(kotlinAstroCal.geoLocation.timeZone).toEpochMilliseconds())
-        }
-        assertEquals(javaCalc.geoLocation.timeZone.rawOffset, calc.geoLocation.timeZone.rawOffset)
         assertEquals(
             javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
             calc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
@@ -281,6 +330,42 @@ class RegressionTest {
             ).map { Triple(it.first?.time?.toDouble(), it.second?.toDate()?.time?.toDouble(), it.third) }
             testValues(values, transformActual = { it.duration.inWholeMilliseconds })
             testValues(listOfZmanim, 0.0)
+        }
+    }
+
+    @Test
+    fun testAstronomicalCalendar() {
+        val javaAstroCal = com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar(javaLocation)
+        val kotlinAstroCal = AstronomicalCalendar(kotlinLocation)
+        javaAstroCal.apply {
+            assertEquals(sunrise, kotlinAstroCal.sunrise?.toDate())
+            assertEquals(seaLevelSunrise, kotlinAstroCal.seaLevelSunrise?.toDate())
+            assertEquals(beginCivilTwilight, kotlinAstroCal.beginCivilTwilight?.toDate())
+            assertEquals(beginNauticalTwilight, kotlinAstroCal.beginNauticalTwilight?.toDate())
+            assertEquals(beginAstronomicalTwilight, kotlinAstroCal.beginAstronomicalTwilight?.toDate())
+            assertEquals(sunset, kotlinAstroCal.sunset?.toDate())
+            assertEquals(seaLevelSunset, kotlinAstroCal.seaLevelSunset?.toDate())
+            assertEquals(endCivilTwilight, kotlinAstroCal.endCivilTwilight?.toDate())
+            assertEquals(endNauticalTwilight, kotlinAstroCal.endNauticalTwilight?.toDate())
+            assertEquals(endAstronomicalTwilight, kotlinAstroCal.endAstronomicalTwilight?.toDate())
+    //            getTimeOffset
+    //            getTimeOffset
+    //            getSunriseOffsetByDegrees()
+    //            getSunsetOffsetByDegrees()
+    //            getUTCSunrise()
+    //            getUTCSeaLevelSunrise()
+    //            getUTCSunset()
+    //            getUTCSeaLevelSunset()
+            assertEquals(temporalHour, kotlinAstroCal.temporalHour)
+            getTemporalHour()
+            assertEquals(sunTransit, kotlinAstroCal.sunTransit?.toDate())
+            getSunTransit()
+    //            getSunriseSolarDipFromOffset()
+    //            getSunsetSolarDipFromOffset()
+            assertEquals(
+                calendar.toInstant().toKotlinInstant().toEpochMilliseconds(),
+                kotlinAstroCal.localDateTime.toInstant(kotlinAstroCal.geoLocation.timeZone).toEpochMilliseconds()
+            )
         }
     }
 
