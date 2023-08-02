@@ -37,7 +37,7 @@ data class GeoLocation(
     /**
      * If this is ever set after the GeoLocation is set in the
      * [com.kosherjava.zmanim.AstronomicalCalendar], it is critical that
-     * [com.kosherjava.zmanim.AstronomicalCalendar.localDate].[setTimeZone(TimeZone)][java.util.Calendar.setTimeZone] be called in order for the
+     * [com.kosherjava.zmanim.AstronomicalCalendar.localDateTime].[setTimeZone(TimeZone)][java.util.Calendar.setTimeZone] be called in order for the
      * AstronomicalCalendar to output times in the expected offset. This situation will arise if the
      * AstronomicalCalendar is ever [cloned][com.kosherjava.zmanim.AstronomicalCalendar.clone].
      */

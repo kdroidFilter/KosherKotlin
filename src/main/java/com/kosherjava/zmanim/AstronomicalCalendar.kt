@@ -94,7 +94,7 @@ open class AstronomicalCalendar(
     /**
      * The Java Calendar encapsulated by this class to track the current date used by the class
      */
-    var localDate: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
+    var localDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
 
     /**
      * The internal [AstronomicalCalculator] used for calculating solar based times.
@@ -564,8 +564,9 @@ open class AstronomicalCalendar(
     internal val adjustedLocalDate: LocalDateTime
         get() {
             val offset = geoLocation.antimeridianAdjustment
-            return if (offset == 0) localDate
-            else localDate
+            //println("Offset: $offset")
+            return if (offset == 0) localDateTime
+            else localDateTime
                 .toInstant(geoLocation.timeZone)
                 .plus(DatePeriod(days = offset), geoLocation.timeZone)
                 .toLocalDateTime(geoLocation.timeZone)
@@ -593,7 +594,7 @@ open class AstronomicalCalendar(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is AstronomicalCalendar) return false
-        return localDate == other.localDate &&
+        return localDateTime == other.localDateTime &&
                 geoLocation == other.geoLocation &&
                 astronomicalCalculator == other.astronomicalCalculator
     }
@@ -605,7 +606,7 @@ open class AstronomicalCalendar(
         var result = 17
         result =
             37 * result + this::class.hashCode() // needed or this and subclasses will return identical hash
-        result += 37 * result + localDate.hashCode()
+        result += 37 * result + localDateTime.hashCode()
         result += 37 * result + geoLocation.hashCode()
         result += 37 * result + astronomicalCalculator.hashCode()
         return result
