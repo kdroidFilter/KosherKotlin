@@ -3050,7 +3050,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getTchilasZmanKidushLevana7Days
      * @see .getTchilasZmanKidushLevana3Days
      */
-    val tchilasZmanKidushLevana7Days: Instant? get() = getTchilasZmanKidushLevana7Days(null, null)
+    val tchilasZmanKidushLevana7Days: Zman.DateBased
+        get() = Zman.DateBased(ZmanType.EARLIEST_KIDDUSH_LEVANA, getTchilasZmanKidushLevana7Days(null, null))
 
     /**
      * This method returns the latest time one is allowed eating *chametz* on *Erev Pesach* according to
