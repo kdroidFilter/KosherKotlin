@@ -72,16 +72,46 @@ class RegressionTest {
             TimeZone.of("America/New_York")
         )
         val calc = ComplexZmanimCalendar(location)
-        val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(
-            com.kosherjava.zmanim.java.zmanim.util.GeoLocation(
-                location.locationName,
-                location.latitude,
-                location.longitude,
-                location.elevation,
-                java.util.TimeZone.getTimeZone(location.timeZone.toJavaZoneId())
-            )
+        val javaLocation = com.kosherjava.zmanim.java.zmanim.util.GeoLocation(
+            location.locationName,
+            location.latitude,
+            location.longitude,
+            location.elevation,
+            java.util.TimeZone.getTimeZone(location.timeZone.toJavaZoneId())
         )
-//        assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.toDate()?.time)
+        val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(
+            javaLocation
+        )
+        assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.toDate()?.time)
+        val javaAstroCal = com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar(javaLocation)
+        val kotlinAstroCal = AstronomicalCalendar(location)
+        javaAstroCal.apply {
+            assertEquals(sunrise, kotlinAstroCal.sunrise.toDate())
+            assertEquals(seaLevelSunrise, kotlinAstroCal.seaLevelSunrise.toDate())
+            assertEquals(beginCivilTwilight, kotlinAstroCal.beginCivilTwilight.toDate())
+            assertEquals(beginNauticalTwilight, kotlinAstroCal.beginNauticalTwilight.toDate())
+            assertEquals(beginAstronomicalTwilight, kotlinAstroCal.beginAstronomicalTwilight.toDate())
+            assertEquals(sunset, kotlinAstroCal.sunset.toDate())
+            assertEquals(seaLevelSunset, kotlinAstroCal.seaLevelSunset.toDate())
+            assertEquals(endCivilTwilight, kotlinAstroCal.endCivilTwilight.toDate())
+            assertEquals(endNauticalTwilight, kotlinAstroCal.endNauticalTwilight.toDate())
+            assertEquals(endAstronomicalTwilight, kotlinAstroCal.endAstronomicalTwilight.toDate())
+//            getTimeOffset
+//            getTimeOffset
+//            getSunriseOffsetByDegrees()
+//            getSunsetOffsetByDegrees()
+//            getUTCSunrise()
+//            getUTCSeaLevelSunrise()
+//            getUTCSunset()
+//            getUTCSeaLevelSunset()
+            assertEquals(temporalHour, kotlinAstroCal.temporalHour)
+            getTemporalHour()
+            assertEquals(sunTransit, kotlinAstroCal.sunTransit.toDate())
+            getSunTransit()
+//            getSunriseSolarDipFromOffset()
+//            getSunsetSolarDipFromOffset()
+            assertEquals(calendar.toInstant().toKotlinInstant().toEpochMilliseconds(), kotlinAstroCal.localDateTime.toInstant(kotlinAstroCal.geoLocation.timeZone).toEpochMilliseconds())
+        }
         assertEquals(javaCalc.geoLocation.timeZone.rawOffset, calc.geoLocation.timeZone.rawOffset)
         assertEquals(
             javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
