@@ -2684,9 +2684,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @return the Date representing the moment 15 days after the *molad*. If the time occurs between
      * *alos* and *tzais*, *alos* will be returned
      *
-     * @see .getSofZmanKidushLevana15Days
-     * @see .getSofZmanKidushLevanaBetweenMoldos
-     * @see JewishCalendar.getSofZmanKidushLevana15Days
+     * @see getSofZmanKidushLevana15Days
+     * @see getSofZmanKidushLevanaBetweenMoldos
+     * @see JewishCalendar.sofZmanKidushLevana15Days
      */
     val sofZmanKidushLevana15Days: Instant?
         get() = getSofZmanKidushLevana15Days(null, null)
@@ -2699,7 +2699,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @return the Date representing the moment 3 days after the molad.
      * @see .getTchilasZmanKidushLevana3Days
      * @see .getTchilasZmanKidushLevana7Days
-     * @see JewishCalendar.getTchilasZmanKidushLevana3Days
+     * @see JewishCalendar.tchilasZmanKidushLevana3Days
      */
     val tchilasZmanKidushLevana3Days: Instant? get() = getTchilasZmanKidushLevana3Days(null, null)
 
@@ -2932,7 +2932,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see .getShaahZmanisMGA
      * @see .getAlos72
      */
-    val getSofZmanBiurChametzMGA72Minutes: Instant?
+    val sofZmanBiurChametzMGA72Minutes: Instant?
         get() = getTimeOffset(
             alos72,
             shaahZmanisMGA * 5
