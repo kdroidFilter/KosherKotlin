@@ -145,9 +145,8 @@ object YerushalmiYomiCalculator {
 
         // Go over the years and find special dates
         for (i in startYear..endYear) {
-            yom_kippur.setJewishYear(i)
-            tisha_beav.setJewishYear(i)
-            val timeZone = TimeZone.currentSystemDefault()
+            yom_kippur.jewishYear = i
+            tisha_beav.jewishYear = i
             val startToEnd = start..end
             if (yom_kippur.gregorianLocalDate.atStartOfDayIn(timeZone) in startToEnd) specialDays++
             if (tisha_beav.gregorianLocalDate.atStartOfDayIn(timeZone) in startToEnd) specialDays++
