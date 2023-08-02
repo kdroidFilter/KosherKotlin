@@ -2608,7 +2608,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         tzais: Instant?,
         techila: Boolean,
     ): Instant? {
-        val tz = TimeZone.currentSystemDefault()
+        val tz = geoLocation.timeZone
         return if (!(moladBasedTime < midnightLastNight.toInstant(tz) || moladBasedTime > midnightTonight.toInstant(tz)))
             if (alos != null || tzais != null)
                 if (techila && !(tzais != null && moladBasedTime < tzais || alos != null && moladBasedTime > alos)) tzais
