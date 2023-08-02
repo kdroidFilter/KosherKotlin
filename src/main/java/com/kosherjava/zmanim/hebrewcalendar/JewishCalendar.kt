@@ -679,9 +679,9 @@ class JewishCalendar : JewishDate {
         get() {
             val day = jewishDayOfMonth
             val dayOfWeek = gregorianLocalDate.dayOfWeek
-            when (hebrewLocalDate.month) {
+            return when (hebrewLocalDate.month) {
                 HebrewMonth.NISSAN -> {
-                    return when {
+                    when {
                         day == 14 -> EREV_PESACH
                         day == 15 || day == 21 || !inIsrael && (day == 16 || day == 22) -> PESACH
                         day in (16.takeIf { inIsrael } ?: 17)..20 -> CHOL_HAMOED_PESACH
@@ -700,7 +700,7 @@ class JewishCalendar : JewishDate {
                 }
 
                 HebrewMonth.IYAR -> {
-                    return when {
+                    when {
                         isUseModernHolidays &&
                                 (
                                         (day in 2..3 && dayOfWeek == DayOfWeek.WEDNESDAY) ||
@@ -724,7 +724,7 @@ class JewishCalendar : JewishDate {
                 }
 
                 HebrewMonth.SIVAN -> {
-                    return when {
+                    when {
                         day == 5 -> EREV_SHAVUOS
                         day == 6 || day == 7 && !inIsrael -> SHAVUOS
                         day == 7 && inIsrael || day == 8 && !inIsrael -> ISRU_CHAG
@@ -743,12 +743,13 @@ class JewishCalendar : JewishDate {
                     if (
                         (day == 17 && dayOfWeek != DayOfWeek.SATURDAY) ||
                         (day == 18 && dayOfWeek == DayOfWeek.SUNDAY)
-                    ) return SEVENTEEN_OF_TAMMUZ
+                    ) SEVENTEEN_OF_TAMMUZ
+                    else NO_HOLIDAY
                 }
 
                 HebrewMonth.AV -> {
                     // if Tisha B'av falls on Shabbos, push off until Sunday
-                    return when {
+                    when {
                         day == 10 && dayOfWeek == DayOfWeek.SUNDAY || day == 9 && dayOfWeek != DayOfWeek.SATURDAY -> TISHA_BEAV
                         day == 15 -> TU_BEAV
                         else -> NO_HOLIDAY
@@ -768,6 +769,7 @@ class JewishCalendar : JewishDate {
                     // Thursday. If it falls on Monday it is moved to Tuesday
                 {
                     if (day == 29) return EREV_ROSH_HASHANA
+                    else NO_HOLIDAY
                 }
 
                 HebrewMonth.TISHREI -> {
@@ -786,7 +788,7 @@ class JewishCalendar : JewishDate {
                         else -> NO_HOLIDAY
                     }
                 }
-
+                HebrewMonth.CHESHVAN -> NO_HOLIDAY // :(
                 HebrewMonth.KISLEV ->            // if (day == 24) {
                     // return EREV_CHANUKAH;
                     // } else// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
@@ -812,12 +814,16 @@ class JewishCalendar : JewishDate {
                     // if (day == 24) {
                     // return EREV_CHANUKAH;
                     // } else
-                    if (day >= 25) return CHANUKAH
+                    if (day >= 25) CHANUKAH
+                    else NO_HOLIDAY
                 }
 
                 HebrewMonth.TEVES -> {
-                    if (day in 1..(if (isKislevShort) 3 else 2)) return CHANUKAH
-                    if (day == 10) return TENTH_OF_TEVES
+                    when (day) {
+                        in 1..(if (isKislevShort) 3 else 2) -> CHANUKAH
+                        10 -> TENTH_OF_TEVES
+                        else -> NO_HOLIDAY
+                    }
                 }
 
                 HebrewMonth.SHEVAT ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
@@ -864,7 +870,8 @@ class JewishCalendar : JewishDate {
                     // if 5 Iyar falls on Wed, Yom Haatzmaut is that day. If it fal1s on Friday or Shabbos, it is moved back to
                     // Thursday. If it falls on Monday it is moved to Tuesday
                 {
-                    if (day == 15) return TU_BESHVAT
+                    if (day == 15) TU_BESHVAT
+                    else NO_HOLIDAY
                 }
 
                 HebrewMonth.ADAR ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
@@ -956,7 +963,7 @@ class JewishCalendar : JewishDate {
                 {
                     if (!isJewishLeapYear) {
                         // if 13th Adar falls on Friday or Shabbos, push back to Thursday
-                        return when {
+                        when {
 
                             day in 11..12 && dayOfWeek == DayOfWeek.THURSDAY ||
                                     day == 13 && dayOfWeek !in DayOfWeek.FRIDAY..DayOfWeek.SATURDAY
@@ -967,14 +974,17 @@ class JewishCalendar : JewishDate {
                             else -> NO_HOLIDAY
                         }
                     } else { // else if a leap year
-                        if (day == 14) return PURIM_KATAN
-                        if (day == 15) return SHUSHAN_PURIM_KATAN
+                        when (day) {
+                            14 -> return PURIM_KATAN
+                            15 -> return SHUSHAN_PURIM_KATAN
+                            else -> NO_HOLIDAY
+                        }
                     }
                 }
 
                 HebrewMonth.ADAR_II -> {
                     // if 13th Adar falls on Friday or Shabbos, push back to Thursday
-                    return when {
+                    when {
                         (day in 11..12 && dayOfWeek == DayOfWeek.THURSDAY) ||
                                 (day == 13 && !(dayOfWeek == DayOfWeek.FRIDAY || dayOfWeek == DayOfWeek.SATURDAY)) ->
                             FAST_OF_ESTHER
@@ -985,9 +995,8 @@ class JewishCalendar : JewishDate {
                     }
                 }
             }
-            // if we get to this stage, then there are no holidays for the given date return -1
-            return NO_HOLIDAY
         }
+
 
     /**
      * Returns true if the current day is *Yom Tov*. The method returns true even for holidays such as [CHANUKAH]
