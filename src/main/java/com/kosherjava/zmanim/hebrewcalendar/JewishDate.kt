@@ -150,7 +150,7 @@ open class JewishDate : Comparable<JewishDate> {
         var month = 1 // Search forward month by month from January
         while (absDate > gregorianDateToAbsDate(LocalDate(year, month, getLastDayOfGregorianMonth(month, year)))) month++
         val dayOfMonth = absDate - gregorianDateToAbsDate(LocalDate(year, month, 1)) + 1
-        setInternalGregorianDate(year, month, dayOfMonth)
+        setGregorianDate(year, month, dayOfMonth)
     }
 
     /**
@@ -285,39 +285,19 @@ open class JewishDate : Comparable<JewishDate> {
      * @param year
      * the Gregorian year
      * @param month
-     * the Gregorian month. Like the Java Calendar, this class expects 0 for January
+     * the Gregorian month. Between 1 and 12.
      * @param dayOfMonth
-     * the Gregorian day of month. If this is > the number of days in the month/year, the last valid date of
+     * the Gregorian day of month - 1 for January, 12 for December. If this is > the number of days in the month/year, the last valid date of
      * the month will be set
      * @throws IllegalArgumentException
-     * if a year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in
+     * if a year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in.
+     *
+     * **Note:** This setter will correct the [dayOfMonth] if passed in an invalid number given the [year] and [month]
+     * (e.g. February 29 in a leap year)
      */
     fun setGregorianDate(year: Int, month: Int, dayOfMonth: Int): JewishDate {
-        validateGregorianDate(year, month, dayOfMonth)
-        setInternalGregorianDate(year, month + 1, dayOfMonth)
-        return this
-    }
-
-    /**
-     * Sets the hidden internal representation of the Gregorian date , and updates the Jewish date accordingly. While
-     * public getters and setters have 0 based months matching the Java Calendar classes, This class internally
-     * represents the Gregorian month starting at 1. When this is called it will not adjust the month to match the Java
-     * Calendar classes.
-     *
-     * @param year the year
-     * @param month the month
-     * @param dayOfMonth the day of month
-     */
-    private fun setInternalGregorianDate(year: Int, month: Int, dayOfMonth: Int): JewishDate {
-        // make sure date is a valid date for the given month, if not, set to last day of month
-        /*var dom = dayOfMonth
-        if (dom > getLastDayOfGregorianMonth(month, year)) {
-            dom = getLastDayOfGregorianMonth(month, year)
-        }*/ 
-        val date = LocalDate(year, month, dayOfMonth) //will throw exception if illegal gregorian date
-        gregorianLocalDate = date
-        hebrewLocalDate = date.toHebrewDate()
-        
+        gregorianLocalDate = LocalDate(year, month, dayOfMonth.coerceAtMost(getLastDayOfGregorianMonth(month, year)))
+        hebrewLocalDate = gregorianLocalDate.toHebrewDate()
         return this
     }
 
@@ -370,15 +350,18 @@ open class JewishDate : Comparable<JewishDate> {
      * chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
      */
     fun setJewishDate(year: Long, month: HebrewMonth, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int): JewishDate {
-        var dom = dayOfMonth
         validateJewishDate(hours, minutes, chalakim)
+        val date = HebrewLocalDate(
+            year,
+            month,
+            dayOfMonth
+                .coerceAtMost(
 
-        // if 30 is passed for a month that only has 29 days (for example by rolling the month from a month that had 30
-        // days to a month that only has 29) set the date to 29th
-        if (dom > getDaysInJewishMonth(month, year)) {
-            dom = getDaysInJewishMonth(month, year)
-        }
-        val date = HebrewLocalDate(year, month, dom)
+                    // if 30 is passed for a month that only has 29 days (for example by rolling the month from a month that had 30
+                    // days to a month that only has 29) set the date to 29th
+                    getDaysInJewishMonth(month, year)
+                )
+        )
         hebrewLocalDate = date
         moladHours = hours
         moladMinutes = minutes
@@ -434,7 +417,7 @@ open class JewishDate : Comparable<JewishDate> {
      * @see Calendar.add
      * @see Calendar.roll
      */
-    fun forward(field: DateTimeUnit.DateBased, amount: Int): JewishDate {
+    fun forward(field: DateTimeUnit, amount: Int): JewishDate {
         require(field == DateTimeUnit.DAY || field == DateTimeUnit.MONTH || field == DateTimeUnit.YEAR) { "Unsupported field was passed to Forward. Only DateTimeUnit.DATE, DateTimeUnit.MONTH or DateTimeUnit.YEAR are supported." }
         require(amount >= 1) { "JewishDate.forward() does not support amounts less than 1. See JewishDate.back()" }
         when (field) {
@@ -457,7 +440,7 @@ open class JewishDate : Comparable<JewishDate> {
                 }
             }
             DateTimeUnit.MONTH -> forwardJewishMonth(amount)
-            DateTimeUnit.YEAR -> setJewishYear(hebrewLocalDate.year + amount)
+            DateTimeUnit.YEAR -> jewishYear = hebrewLocalDate.year + amount
             else -> {
                 throw IllegalArgumentException("Unsupported field was passed to Forward. Only DateTimeUnit.DATE, DateTimeUnit.MONTH or DateTimeUnit.YEAR are supported.")
             }
@@ -478,7 +461,7 @@ open class JewishDate : Comparable<JewishDate> {
         for (i in 0 until amount) {
             if (hebrewLocalDate.month == HebrewMonth.ELUL) {
                 setJewishMonth(HebrewMonth.TISHREI)
-                setJewishYear(hebrewLocalDate.year + 1)
+                jewishYear = hebrewLocalDate.year + 1
             } else if (
                 (!isJewishLeapYear && hebrewLocalDate.month == HebrewMonth.ADAR) ||
                 (isJewishLeapYear && hebrewLocalDate.month == HebrewMonth.ADAR_II)
@@ -490,8 +473,8 @@ open class JewishDate : Comparable<JewishDate> {
     /**
      * Rolls the date back by 1 day. It modifies both the Gregorian and Jewish dates accordingly. The API does not
      * currently offer the ability to forward more than one day at a time, or to forward by month or year. If such
-     * manipulation is required use the [Calendar] class [Calendar.add] or
-     * [Calendar.roll] methods in the following manner.
+     * manipulation is required use the [java.util.Calendar] class [java.util.Calendar.add] or
+     * [java.util.Calendar.roll] methods in the following manner.
      *
      * <pre>
      * `
@@ -502,8 +485,8 @@ open class JewishDate : Comparable<JewishDate> {
     </pre> *
      *
      * @see back
-     * @see Calendar.add
-     * @see Calendar.roll
+     * @see java.util.Calendar.add
+     * @see java.util.Calendar.roll
      */
     fun back(): JewishDate {
         // Change Gregorian date
@@ -540,55 +523,89 @@ open class JewishDate : Comparable<JewishDate> {
      */
     override fun compareTo(other: JewishDate): Int = gregorianLocalDate.compareTo(other.gregorianLocalDate)
 
+    var jewishYear: Long
+        /**
+         * Returns the jewish year
+         * */
+        get() = hebrewLocalDate.year
+        /**
+         * Sets the Jewish year.
+         *
+         * @param value
+         * the Jewish year
+         * @throws IllegalArgumentException
+         * (in the current implementation) if a year of < [HebrewLocalDate.STARTING_DATE_HEBREW]
+         * (Tishrei 1, 0002/Sep. 6, 1 AD in current implementation) is passed in. TODO
+         */
+        set(value) { setJewishDate(value, hebrewLocalDate.month, hebrewLocalDate.dayOfMonth) }
+
+    var jewishMonth: HebrewMonth
+        set(value) { setJewishDate(hebrewLocalDate.year, value, hebrewLocalDate.dayOfMonth) }
+        get() = hebrewLocalDate.month
     /**
-     * Returns the Jewish day of month.
-     *
-     * @return the Jewish day of the month
-     */
-    /**
-     * sets the Jewish day of month.
-     *
-     * @param dayOfMonth
-     * the Jewish day of month
-     * @throws IllegalArgumentException
-     * if the day of month is < 1 or > 30 is passed in
+     * The Jewish day of month.
      */
     var jewishDayOfMonth: Int
         get() = hebrewLocalDate.dayOfMonth
-        set(dayOfMonth) {
-            setJewishDate(hebrewLocalDate.year, hebrewLocalDate.month, dayOfMonth)
-        }
-    val jewishYear get() = hebrewLocalDate.year
-    val jewishMonth get() = hebrewLocalDate.month.value
+        /**
+         * Sets the jewish day of month.
+         * @param dayOfMonth
+         * the Jewish day of month
+         * @throws IllegalArgumentException
+         * if the day of month is < 1 or > 30 is passed in.
+         * **Note:** If [jewishMonth] does not have [dayOfMonth] days in the current [jewishYear], this setter will
+         * correct the value instead of throwing an error.
+         * */
+        set(dayOfMonth) { setJewishDate(hebrewLocalDate.year, hebrewLocalDate.month, dayOfMonth) }
 
+    var gregorianYear
 
-    /**
-     * sets the Gregorian year.
-     *
-     * @param year
-     * the Gregorian year.
-     * @throws IllegalArgumentException
-     * if a year of < 1 is passed in
-     */
-    fun setGregorianYear(year: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
-        validateGregorianYear(year)
-        setInternalGregorianDate(year, gregorianLocalDate.monthNumber, gregorianLocalDate.dayOfMonth)
-        return this
-    }
+        /**
+         * sets the Gregorian year.
+         *
+         * @param value
+         * the Gregorian year.
+         * @throws IllegalArgumentException
+         * (in current implementation) if a year of < [HebrewLocalDate.STARTING_DATE_GREGORIAN].year. TODO
+         *
+         * **Note:** This setter will correct the [dayOfMonth] if passed in an invalid number given the [year] and [month]
+         * (e.g. February 29 in a leap year)
+         */
+        set(value) { setGregorianDate(value, gregorianLocalDate.monthNumber, gregorianLocalDate.dayOfMonth) }
+        get() = gregorianLocalDate.year
 
-    /**
-     * sets the Gregorian Day of month.
-     *
-     * @param dayOfMonth
-     * the Gregorian Day of month.
-     * @throws IllegalArgumentException
-     * if the day of month of < 1 is passed in
-     */
-    fun setGregorianDayOfMonth(dayOfMonth: Int): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
-        validateGregorianDayOfMonth(dayOfMonth)
-        setInternalGregorianDate(gregorianLocalDate.year, gregorianLocalDate.monthNumber, dayOfMonth)
-        return this
-    }
+    var gregorianMonth
+        /**
+         * sets the Gregorian month.
+         *
+         * @param value
+         * the Gregorian Day of month.
+         * @throws IllegalArgumentException
+         * if the day of month of < 1 is passed in, or (in the current implementation) if a dayOfMonth of < [HebrewLocalDate.STARTING_DATE_GREGORIAN].dayOfMonth
+         * (Sep. 6, 1 AD/Tishrei 1, 0002 in current implementation) is passed in. TODO
+         *
+         * **Note:** This setter will correct the [value] if passed in an invalid number given the [gregorianYear] and [gregorianMonth]
+         * (e.g. February 29 in a leap year)
+         */
+        set(value) { setGregorianDate(gregorianLocalDate.year, value, gregorianLocalDate.dayOfMonth) }
+        get() = gregorianLocalDate.monthNumber
+
+    var gregorianDayOfMonth
+        /**
+         * sets the Gregorian Day of month.
+         *
+         * @param value
+         * the Gregorian Day of month.
+         * @throws IllegalArgumentException
+         * if the day of month of < 1 is passed in, or (in the current implementation) if a dayOfMonth of < [HebrewLocalDate.STARTING_DATE_GREGORIAN].dayOfMonth
+         * (Sep. 6, 1 AD/Tishrei 1, 0002 in current implementation) is passed in. TODO
+         *
+         * **Note:** This setter will correct the [value] if passed in an invalid number given the [gregorianYear] and [gregorianMonth]
+         * (e.g. February 29 in a leap year)
+         */
+        set(value) { setGregorianDate(gregorianLocalDate.year, gregorianLocalDate.monthNumber, value) }
+        get() = gregorianLocalDate.dayOfMonth
+
 
     /**
      * sets the Jewish month.
@@ -604,20 +621,6 @@ open class JewishDate : Comparable<JewishDate> {
         return this
     }
 
-    /**
-     * sets the Jewish year.
-     *
-     * @param year
-     * the Jewish year
-     * @throws IllegalArgumentException
-     * if a year of < 3761 is passed in. The same will happen if the year is 3761 and the month and day
-     * previously set are < 18 Teves (preior to Jan 1, 1 AD)
-     */
-    fun setJewishYear(year: Int): JewishDate = setJewishYear(year.toLong()) //can't make this a setter because it has side effects and would cause a recursive StackOverflow
-    fun setJewishYear(year: Long): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
-        setJewishDate(year, hebrewLocalDate.month, hebrewLocalDate.dayOfMonth)
-        return this
-    }
     val Int.lastDayOfGregorianMonth get() = getLastDayOfGregorianMonth(this, gregorianLocalDate.year)
 
     /**
@@ -904,64 +907,6 @@ open class JewishDate : Comparable<JewishDate> {
             require(!(hours < 0 || hours > 23)) { "Hours < 0 or > 23 can't be set. $hours is invalid." }
             require(!(minutes < 0 || minutes > 59)) { "Minutes < 0 or > 59 can't be set. $minutes is invalid." }
             require(!(chalakim < 0 || chalakim > 17)) { "Chalakim/parts < 0 or > 17 can't be set. $chalakim is invalid. For larger numbers such as 793 (TaShTzaG) break the chalakim into minutes (18 chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG)" }
-        }
-
-        /**
-         * Validates the components of a Gregorian date for validity. It will throw an [IllegalArgumentException] if a
-         * year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in.
-         *
-         * @param year
-         * the Gregorian year to validate. It will reject any year < 1.
-         * @param month
-         * the Gregorian month number to validate. It will enforce that the month is between 0 - 11 like a
-         * [GregorianCalendar], where [Calendar.JANUARY] has a value of 0.
-         * @param dayOfMonth
-         * the day of the Gregorian month to validate. It will reject any value < 1, but will allow values > 31
-         * since calling methods will simply set it to the maximum for that month. TODO: check calling methods to
-         * see if there is any reason that the class needs days > the maximum.
-         * @throws IllegalArgumentException
-         * if a year of < 1, a month < 0 or > 11 or a day of month < 1 is passed in
-         * @see validateGregorianYear
-         * @see validateGregorianMonth
-         * @see validateGregorianDayOfMonth
-         */
-        private fun validateGregorianDate(year: Int, month: Int, dayOfMonth: Int) {
-            validateGregorianMonth(month)
-            validateGregorianDayOfMonth(dayOfMonth)
-            validateGregorianYear(year)
-        }
-
-        /**
-         * Validates a Gregorian month for validity.
-         *
-         * @param month
-         * the Gregorian month number to validate. It will enforce that the month is between 0 - 11 like a
-         * [GregorianCalendar], where [Calendar.JANUARY] has a value of 0.
-         */
-        private fun validateGregorianMonth(month: Int) {
-            require(!(month > 11 || month < 0)) { "The Gregorian month has to be between 0 - 11. $month is invalid." }
-        }
-
-        /**
-         * Validates a Gregorian day of month for validity.
-         *
-         * @param dayOfMonth
-         * the day of the Gregorian month to validate. It will reject any value < 1, but will allow values > 31
-         * since calling methods will simply set it to the maximum for that month. TODO: check calling methods to
-         * see if there is any reason that the class needs days > the maximum.
-         */
-        private fun validateGregorianDayOfMonth(dayOfMonth: Int) {
-            require(dayOfMonth > 0) { "The day of month can't be less than 1. $dayOfMonth is invalid." }
-        }
-
-        /**
-         * Validates a Gregorian year for validity.
-         *
-         * @param year
-         * the Gregorian year to validate. It will reject any year < 1.
-         */
-        private fun validateGregorianYear(year: Int) {
-            require(year >= 1) { "Years < 1 can't be calculated. $year is invalid." }
         }
 
         /**
