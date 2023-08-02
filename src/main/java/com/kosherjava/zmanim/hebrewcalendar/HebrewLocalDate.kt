@@ -24,6 +24,9 @@ data class HebrewLocalDate(
         require(year != 0L) { "year must not be 0 - year was skipped" }
 //        require(year > 0) { "year must be positive: $year" } // leaving this out to make the calendar proleptic
         require(dayOfMonth in 1..30) { "dayOfMonth must be between 1 and 30: $dayOfMonth" }
+        if(month == HebrewMonth.ADAR_II) require(year.isJewishLeapYear) { "$year was not leap year - month cannot be set to $month" }
+        val daysInJewishMonth = JewishDate.getDaysInJewishMonth(month, year)
+        require(daysInJewishMonth >= dayOfMonth) { "Cannot set dayOfMonth to $dayOfMonth; $month only had $daysInJewishMonth in the year $year" }
     }
 
     constructor(year: Int, month: HebrewMonth, dayOfMonth: Int) : this(year.toLong(), month, dayOfMonth)
