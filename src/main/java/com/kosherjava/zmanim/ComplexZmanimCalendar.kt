@@ -2569,12 +2569,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getSofZmanKidushLevanaBetweenMoldos
      */
     fun getSofZmanKidushLevanaBetweenMoldos(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar = JewishCalendar()
-        jewishCalendar.setGregorianDate(
-            localDate.year,
-            localDate.monthNumber,
-            localDate.dayOfMonth
-        )
+        val jewishCalendar = JewishCalendar(localDateTime.date)
 
         // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in French
         // Polynesia on Dec 2027 when kiddush Levana 3 days can be said on <em>Rosh Chodesh</em>, the sof zman Kiddush Levana
@@ -2667,11 +2662,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getSofZmanKidushLevana15Days
      */
     fun getSofZmanKidushLevana15Days(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar = JewishCalendar()
-        jewishCalendar.setGregorianDate(
-            localDate.year, localDate.monthNumber,
-            localDate.dayOfMonth
-        )
+        val jewishCalendar = JewishCalendar(localDateTime.date)
+        //println(jewishCalendar)
         // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in
         // French Polynesia on Dec 2027 when kiddush Levana 3 days can be said on <em>Rosh Chodesh</em>, the sof zman Kiddush
         // Levana will be on the 12th of the Teves. in the case of Anadyr, Russia on Jan, 2071, sof zman kiddush levana will
@@ -2736,12 +2728,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getTchilasZmanKidushLevana3Days
      */
     fun getTchilasZmanKidushLevana3Days(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar: JewishCalendar = JewishCalendar()
-        jewishCalendar.setGregorianDate(
-            localDate.year, localDate.monthNumber,
-            localDate.dayOfMonth
-        )
-
+        val jewishCalendar = JewishCalendar(localDateTime.date)
         // Do not calculate for impossible dates, but account for extreme cases. Tchilas zman kiddush Levana 3 days for
         // the extreme case of Rapa Iti in French Polynesia on Dec 2027 when kiddush Levana 3 days can be said on the evening
         // of the 30th, the second night of Rosh Chodesh. The 3rd day after the <em>molad</em> will be on the 4th of the month.
@@ -2777,8 +2764,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() {
             val jewishCalendar: JewishCalendar = JewishCalendar()
             jewishCalendar.setGregorianDate(
-                localDate.year, localDate.monthNumber,
-                localDate.dayOfMonth
+                localDateTime.year, localDateTime.monthNumber,
+                localDateTime.dayOfMonth
             )
 
             // Optimize to not calculate for impossible dates, but account for extreme cases. The molad in the extreme case of Rapa
@@ -2803,7 +2790,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @return previous midnight
      */
     private val midnightLastNight: LocalDateTime
-        get() = LocalDateTime(localDate.date, MIDNIGHT)
+        get() = LocalDateTime(localDateTime.date, MIDNIGHT)
 
     /**
      * Used by Molad based *zmanim* to determine if *zmanim* occur during the current day.
@@ -2812,7 +2799,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     private val midnightTonight: LocalDateTime
         get() = LocalDateTime(
-            localDate.date + DatePeriod(days = 1)/*roll to tonight*/,
+            localDateTime.date + DatePeriod(days = 1)/*roll to tonight*/,
             MIDNIGHT
         )
 
@@ -2838,11 +2825,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getTchilasZmanKidushLevana7Days
      */
     fun getTchilasZmanKidushLevana7Days(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar: JewishCalendar = JewishCalendar()
-        jewishCalendar.setGregorianDate(
-            localDate.year, localDate.monthNumber,
-            localDate.dayOfMonth
-        )
+        val jewishCalendar = JewishCalendar(localDateTime.date)
 
         // Optimize to not calculate for impossible dates, but account for extreme cases. Tchilas zman kiddush Levana 7 days for
         // the extreme case of Rapa Iti in French Polynesia on Jan 2028 (when kiddush Levana 3 days can be said on the evening
@@ -2991,9 +2974,10 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() {
             val clonedCal = ZmanimCalendar(geoLocation)
             val tz = geoLocation.timeZone
-            clonedCal.localDate =
+            //println("Before add: ${clonedCal.localDateTime}")
+            clonedCal.localDateTime =
                 clonedCal
-                    .localDate
+                    .localDateTime
                     .toInstant(tz)
                     .plus(DatePeriod(days = 1), tz)
                     .toLocalDateTime(tz)

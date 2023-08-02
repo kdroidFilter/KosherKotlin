@@ -622,12 +622,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see JewishCalendar.setInIsrael
      */
     fun isAssurBemlacha(currentTime: Instant, tzais: Instant?, inIsrael: Boolean): Boolean {
-        val jewishCalendar = JewishCalendar()
-        jewishCalendar.setGregorianDate(
-            localDate.year,
-            localDate.monthNumber,
-            localDate.dayOfMonth
-        )
+        val jewishCalendar = JewishCalendar(localDateTime.date)
         jewishCalendar.inIsrael = inIsrael
         return jewishCalendar.hasCandleLighting() && currentTime >= elevationAdjustedSunset!! || //erev shabbos, YT or YT sheni and after shkiah
                 jewishCalendar.isAssurBemelacha && currentTime <= tzais!! //is shabbos or YT and it is before tzais
