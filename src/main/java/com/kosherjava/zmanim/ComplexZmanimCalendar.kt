@@ -27,7 +27,6 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -1089,7 +1088,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see .getSofZmanTfila2HoursBeforeChatzos
      */
     val sofZmanShma3HoursBeforeChatzos: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.SOF_ZMAN_KRIAS_SHEMA, getTimeOffset(chatzos, -180 * MINUTE_MILLIS))
+        get() = Zman.DateBased(ZmanType.SOF_ZMAN_KRIAS_SHEMA, getTimeOffset(chatzos.momentOfOccurrence, -180 * MINUTE_MILLIS))
 
     /**
      * This method returns the latest *zman krias shema* (time to recite Shema in the morning) according to the
@@ -1392,7 +1391,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see .getSofZmanShma3HoursBeforeChatzos
      */
     val sofZmanTfila2HoursBeforeChatzos: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.SOF_ZMAN_TEFILLAH, getTimeOffset(chatzos, -120 * MINUTE_MILLIS))
+        get() = Zman.DateBased(ZmanType.SOF_ZMAN_TEFILLAH, getTimeOffset(chatzos.momentOfOccurrence, -120 * MINUTE_MILLIS))
 
     /**
      * This method returns *mincha gedola* calculated as 30 minutes after [<em>chatzos</em>][.getChatzos]
@@ -1412,7 +1411,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see .getMinchaGedolaGreaterThan30
      */
     val minchaGedola30Minutes: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.MINCHA_GEDOLAH, getTimeOffset(chatzos, MINUTE_MILLIS * 30))
+        get() = Zman.DateBased(ZmanType.MINCHA_GEDOLAH, getTimeOffset(chatzos.momentOfOccurrence, MINUTE_MILLIS * 30))
 
     /**
      * This method returns the time of *mincha gedola* according to the Magen Avraham with the day starting 72
@@ -1431,7 +1430,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * documentation.
      */
     val minchaGedola72Minutes: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.MINCHA_GEDOLAH, getMinchaGedola(alos72, tzais72))
+        get() = Zman.DateBased(ZmanType.MINCHA_GEDOLAH, getMinchaGedola(alos72.momentOfOccurrence, tzais72.momentOfOccurrence))
 
     /**
      * This method returns the time of *mincha gedola* according to the Magen Avraham with the day starting and
@@ -1478,11 +1477,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.MINCHA_GEDOLAH,
             if (minchaGedola30Minutes.momentOfOccurrence == null || minchaGedola.momentOfOccurrence == null) null
             else if (minchaGedola30Minutes.momentOfOccurrence!! > getTimeOffset(
-                    chatzos,
+                    chatzos.momentOfOccurrence,
                     shaahZmanisAlos16Point1ToTzais3Point7.duration.div(2).inWholeMilliseconds
                 )!!
             ) minchaGedola30Minutes.momentOfOccurrence
-            else getTimeOffset(chatzos, shaahZmanisAlos16Point1ToTzais3Point7.duration.inWholeMilliseconds / 2)
+            else getTimeOffset(chatzos.momentOfOccurrence, shaahZmanisAlos16Point1ToTzais3Point7.duration.inWholeMilliseconds / 2)
         )
 
     /**
@@ -1568,7 +1567,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * documentation.
      */
     val minchaKetana72Minutes: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.MINCHA_KETANAH, getMinchaKetana(alos72, tzais72))
+        get() = Zman.DateBased(ZmanType.MINCHA_KETANAH, getMinchaKetana(alos72.momentOfOccurrence, tzais72.momentOfOccurrence))
 
     /**
      * This method returns the time of *plag hamincha* according to the Magen Avraham with the day starting 60
@@ -1606,7 +1605,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     @Deprecated("This method should be used <em>lechumra</em> only since it returns a very late time, and if used\n" + "	          <em>lekula</em> can result in <em>chillul Shabbos</em> etc. There is no current plan to remove this\n" + "	          method from the API, and this deprecation is intended to alert developers of the danger of using it.\n" + "	  \n" + "	  ")  // (forRemoval=false) // add back once Java 9 is the minimum supported version
     val plagHamincha72Minutes: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.PLAG_HAMINCHA, getPlagHamincha(alos72, tzais72))
+        get() = Zman.DateBased(ZmanType.PLAG_HAMINCHA, getPlagHamincha(alos72.momentOfOccurrence, tzais72.momentOfOccurrence))
 
     /**
      * This method should be used *lechumra* only and returns the time of *plag hamincha* according to the
@@ -3146,7 +3145,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
     val sofZmanBiurChametzMGA72Minutes: Zman.DateBased
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_BIUR_CHAMETZ, getTimeOffset(
-                alos72,
+                alos72.momentOfOccurrence,
                 (shaahZmanisMGA.duration * 5).inWholeMilliseconds
             )
         )
@@ -3198,8 +3197,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             val thisChatzos = this.chatzos ?: return Zman.DateBased(ZmanType.CHATZOS_HALAYLAH, null)
             return Zman.DateBased(
                 ZmanType.CHATZOS_HALAYLAH, getTimeOffset(
-                    thisChatzos,
-                    (tomorrowChatzos - thisChatzos).div(2).inWholeMilliseconds
+                    thisChatzos.momentOfOccurrence,
+                    (tomorrowChatzos.momentOfOccurrence!! - thisChatzos.momentOfOccurrence!!).div(2).inWholeMilliseconds
                 )
             )
         }
@@ -3599,7 +3598,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
     val sofZmanShmaMGA72MinutesToFixedLocalChatzos: Zman.DateBased
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-            getFixedLocalChatzosBasedZmanim(alos72, fixedLocalChatzos.momentOfOccurrence, 3.0)
+            getFixedLocalChatzosBasedZmanim(alos72.momentOfOccurrence, fixedLocalChatzos.momentOfOccurrence, 3.0)
         )
 
     /**
@@ -3783,7 +3782,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
     val samuchLeMinchaKetana72Minutes: Zman.DateBased
         get() = Zman.DateBased(
             ZmanType.SAMUCH_LEMINCHA_KETANA,
-            getSamuchLeMinchaKetana(alos72, tzais72)
+            getSamuchLeMinchaKetana(alos72.momentOfOccurrence, tzais72.momentOfOccurrence)
         )
 
     companion object {

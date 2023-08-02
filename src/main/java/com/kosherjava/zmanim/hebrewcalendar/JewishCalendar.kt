@@ -372,6 +372,13 @@ class JewishCalendar : JewishDate {
      */
     constructor(date: LocalDate) : super(date)
     /**
+     * A constructor that initializes the hebrew date to the [date] parameter.
+     *
+     * @param date
+     * the `LocalDate` to set the [gregorianLocalDate] to
+     */
+    constructor(date: HebrewLocalDate) : super(date)
+    /**
      * A constructor that initializes the date to the [date] parameter.
      *
      * @param date
@@ -389,6 +396,27 @@ class JewishCalendar : JewishDate {
      * @param isInIsrael whether this class should calculate religious events with the rules of someone in israel
      */
     constructor(date: LocalDate, isInIsrael: Boolean, shouldUseModernHolidays: Boolean) : super(date) {
+        isUseModernHolidays = shouldUseModernHolidays
+        inIsrael = isInIsrael
+    }
+    /**
+     * A constructor that initializes the hebrew date to the [date] parameter.
+     *
+     * @param date
+     * the `LocalDate` to set the [gregorianLocalDate] to
+     * @param isInIsrael whether this class should calculate religious events with the rules of someone in israel
+     */
+    constructor(date: HebrewLocalDate, isInIsrael: Boolean) : super(date) {
+        inIsrael = isInIsrael
+    }
+    /**
+     * A constructor that initializes the heberew date to the [date] parameter.
+     *
+     * @param date
+     * the `LocalDate` to set the [gregorianLocalDate] to
+     * @param isInIsrael whether this class should calculate religious events with the rules of someone in israel
+     */
+    constructor(date: HebrewLocalDate, isInIsrael: Boolean, shouldUseModernHolidays: Boolean) : super(date) {
         isUseModernHolidays = shouldUseModernHolidays
         inIsrael = isInIsrael
     }
@@ -508,9 +536,8 @@ class JewishCalendar : JewishDate {
      */
     val isBirkasHachamah: Boolean
         get() {
-            val elapsedDays =
-                getJewishCalendarElapsedDays(hebrewLocalDate.year) + //elapsed days since molad ToHu
-                daysSinceStartOfJewishYear //elapsed days to the current LocalDate date
+            var elapsedDays = getJewishCalendarElapsedDays(hebrewLocalDate.year) //elapsed days since molad ToHu
+            elapsedDays += daysSinceStartOfJewishYear //elapsed days to the current LocalDate date
 
             /* Molad Nissan year 1 was 177 days after molad tohu of Tishrei. We multiply 29.5 days * 6 months from Tishrei
               * to Nissan = 177. Subtract 7 days since tekufas Nissan was 7 days and 9 hours before the molad as stated in the Rambam
@@ -518,7 +545,9 @@ class JewishCalendar : JewishDate {
               * Rosh Hashana as 1, we have to add 1 day for a total of 171. To this add a day since the tekufah is on a Tuesday
               * night and we push off the bracha to Wednesday AM resulting in the 172 used in the calculation.
               */
-            return elapsedDays % (28 * 365.25) == 172.0 // 28 years of 365.25 days + the offset from molad tohu mentioned above
+            val elapsedDaysModTwentyEightYears = elapsedDays % (28 * 365.25)
+            //println("Elapsed days ($elapsedDays) mod 28 years kotlin: $elapsedDaysModTwentyEightYears")
+            return elapsedDaysModTwentyEightYears == 172.0 // 28 years of 365.25 days + the offset from molad tohu mentioned above
         }
     /**
      * Return the type of year for *parsha* calculations. The algorithm follows the
@@ -613,14 +642,18 @@ class JewishCalendar : JewishDate {
         get() {
             val copy = copy(jewishMonth = hebrewLocalDate.month, inIsrael = inIsrael) //force JewishCalendar.copy, not JewishDate.copy
             val daysToShabbos =
-                (DayOfWeek.SATURDAY.toJewishDayOfWeek() - gregorianLocalDate.dayOfWeek.toJewishDayOfWeek() + 7) % 7
-            if (gregorianLocalDate.dayOfWeek != DayOfWeek.SATURDAY) {
+                (DayOfWeek.SATURDAY.toJewishDayOfWeek() - copy.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek() + 7) % 7
+            //println("Days to shabbos kotlin: $daysToShabbos, gregorianLocalDate(${copy.gregorianLocalDate}).dayOfWeek = ${copy.gregorianLocalDate.dayOfWeek}")
+            if (copy.gregorianLocalDate.dayOfWeek != DayOfWeek.SATURDAY) {
                 copy.forward(DateTimeUnit.DAY, daysToShabbos)
             } else {
                 copy.forward(DateTimeUnit.DAY, 7)
             }
+            //println("New gregorianLocalDate(${copy.gregorianLocalDate}).dayOfWeek = ${copy.gregorianLocalDate.dayOfWeek}")
+
             while (copy.parshah == NONE) { //Yom Kippur / Sukkos or Pesach with 2 potential non-parsha Shabbosim in a row
                 copy.forward(DateTimeUnit.DAY, 7)
+                //println("New copy: ${copy.gregorianLocalDate}")
             }
             return copy.parshah
         }
@@ -1539,7 +1572,7 @@ class JewishCalendar : JewishDate {
      *
      * @return the Date representing the moment halfway between *molad* and *molad*.
      *
-     * @see .getSofZmanKidushLevana15Days
+     * @see sofZmanKidushLevana15Days
      * @see com.kosherjava.zmanim.ComplexZmanimCalendar.getSofZmanKidushLevanaBetweenMoldos
      * @see com.kosherjava.zmanim.ComplexZmanimCalendar.getSofZmanKidushLevanaBetweenMoldos
      */

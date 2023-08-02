@@ -97,6 +97,9 @@ open class JewishDate : Comparable<JewishDate> {
     constructor(localDate: LocalDate) {
         setDate(localDate)
     }
+    constructor(hebrewLocalDate: HebrewLocalDate) {
+        setJewishDate(hebrewLocalDate)
+    }
 
     /**
      * Default constructor will set a default date to the current system date.
@@ -238,6 +241,7 @@ open class JewishDate : Comparable<JewishDate> {
     val molad: JewishDate
         get() {
             val moladDate = JewishDate(chalakimSinceMoladTohu)
+            //println("Molad date kotlin: $moladDate")
             if (moladDate.moladHours >= 6) moladDate.forward(DateTimeUnit.DAY, 1)
             moladDate.moladHours = (moladDate.moladHours + 18) % 24
             return moladDate
@@ -317,6 +321,11 @@ open class JewishDate : Comparable<JewishDate> {
      * if a A Jewish date earlier than 18 Teves, 3761 (1/1/1 Gregorian), a month < 1 or > 12 (or 13 on a
      * leap year) or the day of month is < 1 or > 30 is passed in
      */
+    fun setJewishDate(hebrewLocalDate: HebrewLocalDate): JewishDate = setJewishDate(
+        hebrewLocalDate.year,
+        hebrewLocalDate.month,
+        hebrewLocalDate.dayOfMonth
+    )
     fun setJewishDate(year: Long, month: HebrewMonth, dayOfMonth: Int): JewishDate {
         setJewishDate(year, month, dayOfMonth, 0, 0, 0)
         return this
