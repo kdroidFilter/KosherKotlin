@@ -3272,7 +3272,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         val startInEpochMilli = startOfHalfDay.toEpochMilliseconds()
         val endMinusStart = endOfHalfDay.toEpochMilliseconds() - startInEpochMilli
         val shaahZmanis = endMinusStart.div(6)
-        return Instant.fromEpochMilliseconds(startInEpochMilli + (shaahZmanis * hours).roundToLong())
+        return Instant.fromEpochMilliseconds((startInEpochMilli + shaahZmanis * hours).toLong())
     }
 
     /**
