@@ -215,10 +215,10 @@ data class HebrewLocalDate(
             //ensure target after start so we don't have to deal with negative numbers and walking backwards
             if (targetGregorianDate != null) require(
                 targetGregorianDate >= STARTING_DATE_GREGORIAN
-            ) { "Target date must be after $STARTING_DATE_GREGORIAN ($STARTING_DATE_HEBREW). This requirement will hopefully be removed in a future release." }
+            ) { "Target date ($targetGregorianDate) must be after $STARTING_DATE_GREGORIAN ($STARTING_DATE_HEBREW). This requirement will hopefully be removed in a future release." }
             else require(
                 targetHebrewDate!! >= STARTING_DATE_HEBREW
-            ) { "Target date must be after $STARTING_DATE_HEBREW ($STARTING_DATE_GREGORIAN). This requirement will hopefully be removed in a future release." }
+            ) { "Target date ($targetHebrewDate) must be after $STARTING_DATE_HEBREW ($STARTING_DATE_GREGORIAN). This requirement will hopefully be removed in a future release." }
             /*if(targetGregorianDate != null){
                 val daysUntilTarget = STARTING_DATE_GREGORIAN.daysUntil(targetGregorianDate).toLong()
                 val hebrewDate = STARTING_DATE_HEBREW.plusDays(daysUntilTarget)
