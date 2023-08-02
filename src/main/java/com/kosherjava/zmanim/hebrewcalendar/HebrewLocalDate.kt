@@ -344,7 +344,6 @@ data class HebrewLocalDate(
             else { //target is next month (e.g. numDaysLeft = 30 but numDaysInHebrewMonth = 29)
                 val nextMonth = currentHebrewDate.month.getNextMonthInYear(currentHebrewDate.year)
                 if (nextMonth == null) {
-                    System.err.println("Crossed year boundary when adding days!!")
                     HebrewLocalDate(
                         currentHebrewDate.year + 1,
                         HebrewMonth.TISHREI,
