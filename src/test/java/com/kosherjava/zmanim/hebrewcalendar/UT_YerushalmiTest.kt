@@ -6,10 +6,19 @@ import org.junit.Test
 class UT_YerushalmiTest {
     @Test
     fun testCorrectDaf1() {
-        val jewishCalendar = JewishCalendar(5777, HebrewMonth.ELUL, 10)
-        Assert.assertEquals(8, jewishCalendar.dafYomiYerushalmi!!.daf.toLong())
-        Assert.assertEquals(29, jewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong())
-        println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
+        val javaJewishCalendar = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(5777, HebrewMonth.ELUL.value, 10)
+        val kotlinJewishCalendar = JewishCalendar(5777, HebrewMonth.ELUL, 10)
+        Assert.assertEquals(
+            javaJewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong(),
+            kotlinJewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong()
+        )
+        Assert.assertEquals(
+            javaJewishCalendar.dafYomiYerushalmi!!.daf.toLong(),
+            kotlinJewishCalendar.dafYomiYerushalmi!!.daf.toLong()
+        )
+        Assert.assertEquals(8, kotlinJewishCalendar.dafYomiYerushalmi!!.daf.toLong())
+        Assert.assertEquals(29, kotlinJewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong())
+        println(hdf.formatDafYomiYerushalmi(kotlinJewishCalendar.dafYomiYerushalmi))
     }
 
     @Test

@@ -76,16 +76,15 @@ object YerushalmiYomiCalculator {
     fun getDafYomiYerushalmi(calendar: JewishCalendar): Daf? {
         val requested = LocalDateTime(
             calendar.gregorianLocalDate,
-            LocalTime(0, 0, 0)
+            LocalTime(1, 0, 0)
         )
-            .toInstant(timeZone)
+            .toInstant(timeZone)// + 1.days/*to account for year 0?*/
         var masechta = 0
         var dafYomi: Daf? = null
 
         // There isn't Daf Yomi on Yom Kippur or Tisha B'Av.
-        if (calendar.yomTovIndex == JewishCalendar.YOM_KIPPUR ||
-            calendar.yomTovIndex == JewishCalendar.TISHA_BEAV
-        ) {
+        val yomTovIndex = calendar.yomTovIndex
+        if (yomTovIndex == JewishCalendar.YOM_KIPPUR || yomTovIndex == JewishCalendar.TISHA_BEAV) {
             return null
         }
         require(requested >= DAF_YOMI_START_DAY) { "$requested is prior to organized Daf Yomi Yerushalmi cycles that started on $DAF_YOMI_START_DAY" }
