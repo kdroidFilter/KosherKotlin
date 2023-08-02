@@ -1,14 +1,17 @@
 package com.kosherjava.zmanim
 
 import com.kosherjava.zmanim.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
+import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
 import com.kosherjava.zmanim.util.DateUtils.now
+//import com.kosherjava.zmanim.util.DateUtils.toDate
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaInstant
+import java.util.*
 
 fun main() {
-    println(LocalDate(-1,1,1).toHebrewDate()) // HebrewLocalDate(year=3760, month=SHEVAT, dayOfMonth=8)
-    println(LocalDate(0,1,1).toHebrewDate()) // HebrewLocalDate(year=3761, month=TEVES, dayOfMonth=17)
-    println(LocalDate(1,1,1).toHebrewDate()) // HebrewLocalDate(year=3762, month=SHEVAT, dayOfMonth=1)
-    val now = LocalDate.now()
-    println(now) // 2023-08-01
-    println(now.toHebrewDate()) // HebrewLocalDate(year=5783, month=AV, dayOfMonth=14)
+    println("Calendar: ${Calendar.getInstance()}")
+    println(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time)
+//    println(JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time)
+
 }
