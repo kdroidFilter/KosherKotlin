@@ -10,7 +10,7 @@ enum class ZmanType(
     ALOS("Dawn", "עלות השחר"),
     MISHEYAKIR("Earliest Tallis and Teffillin (Misheyakir)", " (משיכיר)טלית ותפילין הכי מוקדם"),
     HANAITZ("Sunrise", "הנץ החמה"),
-    CHATZOS_HAYOM("Midday", "חצות היום"),
+    CHATZOS_HAYOM("Halachic midday", "חצות היום"),
     MINCHA_GEDOLAH("Greater Mincha", "מנחה גדולה"),
     MINCHA_KETANAH("Lesser Mincha", "מנחה קטנה"),
     PLAG_HAMINCHA("Plag Hamincha", "פלג המנחה"),

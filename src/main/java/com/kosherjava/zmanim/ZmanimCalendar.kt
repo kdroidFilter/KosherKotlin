@@ -149,7 +149,7 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
         get() = if (isUseElevation) super.sunset else seaLevelSunset
 
     /**
-     * A method that returns *tzais* (nightfall) when the sun is [8.5&amp;deg;][.ZENITH_8_POINT_5] below the
+     * A method that returns *tzais* (nightfall) when the sun is [8.5˚][.ZENITH_8_POINT_5] below the
      * [geometric horizon][.GEOMETRIC_ZENITH] (90) after [sunset][.getSunset], a time that Rabbi Meir
      * Posen in his the *[Ohr Meir](https://www.worldcat.org/oclc/29283612)* calculated that 3 small
      * stars are visible, which is later than the required 3 medium stars. See the [.ZENITH_8_POINT_5] constant.
@@ -164,11 +164,11 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .ZENITH_8_POINT_5
      * ComplexZmanimCalendar.getTzaisGeonim8Point5Degrees
      */
-    val tzais: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.TZAIS, getSunsetOffsetByDegrees(ZENITH_8_POINT_5))
+    val tzais: Zman.DateBased<ZmanOpinion.Degrees, Float>
+        get() = Zman.DateBased(ZmanType.TZAIS, ZmanOpinion.Degrees(8.5F)/*TODO Degrees.format currently doesn't support talking about the horizon*/, getSunsetOffsetByDegrees(ZENITH_8_POINT_5))
 
     /**
-     * Returns *alos* (dawn) based on the time when the sun is [16.1&amp;deg;][.ZENITH_16_POINT_1] below the
+     * Returns *alos* (dawn) based on the time when the sun is [16.1˚][.ZENITH_16_POINT_1] below the
      * eastern [geometric horizon][.GEOMETRIC_ZENITH] before [sunrise][.getSunrise]. This is based on the
      * calculation that the time between dawn and sunrise (and sunset to nightfall) is 72 minutes, the time that is
      * takes to walk 4 *mil* at 18 minutes a mil (*[Rambam](https://en.wikipedia.org/wiki/Maimonides)* and others). The sun's position at 72 minutes before [sunrise][.getSunrise] in Jerusalem
@@ -183,8 +183,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * low enough below the horizon for this calculation, a null will be returned. See detailed explanation on
      * top of the [AstronomicalCalendar] documentation.
      */
-    val alosHashachar: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.ALOS, getSunriseOffsetByDegrees(ZENITH_16_POINT_1))
+    val alosHashachar: Zman.DateBased<ZmanOpinion.Degrees, Float>
+        get() = Zman.DateBased(ZmanType.ALOS, ZmanOpinion.Degrees(16.1F), getSunriseOffsetByDegrees(ZENITH_16_POINT_1))
 
     /**
      * Method to return *alos* (dawn) calculated using 72 minutes before [sunrise][.getSunrise] or
@@ -199,8 +199,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val alos72: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.ALOS, getTimeOffset(elevationAdjustedSunrise, -72 * MINUTE_MILLIS))
+    val alos72: Zman.DateBased<ZmanOpinion.FixedMinutes, Int>
+        get() = Zman.DateBased(ZmanType.ALOS, ZmanOpinion.FixedMinutes(72), getTimeOffset(elevationAdjustedSunrise, -72 * MINUTE_MILLIS))
 
     /**
      * This method returns *chatzos* (midday) following most opinions that *chatzos* is the midpoint
@@ -214,8 +214,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * where there is at least one day where the sun does not rise, and one where it does not set, a null will
      * be returned. See detailed explanation on top of the [AstronomicalCalendar] documentation.
      */
-    val chatzos: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.CHATZOS_HAYOM, sunTransit)
+    val chatzos: Zman.DateBased<ZmanOpinion.Unanimous, Any?>
+        get() = Zman.DateBased(ZmanType.CHATZOS_HAYOM, ZmanOpinion.Unanimous, sunTransit)
 
     /**
      * A generic method for calculating the latest *zman krias shema* (time to recite shema in the morning)
@@ -257,9 +257,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * computed such as in the Arctic Circle where there is at least one day a year where the sun does not rise,
      * and one where it does not set, a null will be returned. See the detailed explanation on top of the [         ] documentation.
      */
-    val sofZmanShmaGRA: Zman.DateBased
+    val sofZmanShmaGRA: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_KRIAS_SHEMA,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
             getSofZmanShma(elevationAdjustedSunrise, elevationAdjustedSunset)
         )
 
@@ -278,9 +279,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see ComplexZmanimCalendar.getAlos72
      * @see ComplexZmanimCalendar.getSofZmanShmaMGA72Minutes
      */
-    val sofZmanShmaMGA: Zman.DateBased
+    val sofZmanShmaMGA: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_KRIAS_SHEMA,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.MGA),
             getSofZmanShma(alos72.momentOfOccurrence, tzais72.momentOfOccurrence)
         )
 
@@ -299,8 +301,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * and one where it does not set, a null will be returned See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val tzais72: Zman.DateBased
-        get() = Zman.DateBased(ZmanType.TZAIS, getTimeOffset(elevationAdjustedSunset, 72 * MINUTE_MILLIS))
+    val tzais72: Zman.DateBased<ZmanOpinion.FixedMinutes, Int>
+        get() = Zman.DateBased(ZmanType.TZAIS, ZmanOpinion.FixedMinutes(72), getTimeOffset(elevationAdjustedSunset, 72 * MINUTE_MILLIS))
 
     /**
      * A method to return candle lighting time, calculated as [.getCandleLightingOffset] minutes before
@@ -317,9 +319,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .getCandleLightingOffset
      * @see .setCandleLightingOffset
      */
-    val candleLighting: Zman.DateBased
+    val candleLighting: Zman.DateBased<ZmanOpinion.Unanimous, Any?>
         get() = Zman.DateBased(
             ZmanType.CANDLE_LIGHTING,
+            ZmanOpinion.Unanimous,
             getTimeOffset(seaLevelSunset, -candleLightingOffset * MINUTE_MILLIS)
         )
 
@@ -362,9 +365,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * does not set, a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val sofZmanTfilaGRA: Zman.DateBased
+    val sofZmanTfilaGRA: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_TEFILLAH,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
             getSofZmanTfila(elevationAdjustedSunrise, elevationAdjustedSunset)
         )
 
@@ -382,9 +386,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * @see .getShaahZmanisMGA
      * @see .getAlos72
      */
-    val sofZmanTfilaMGA: Zman.DateBased
+    val sofZmanTfilaMGA: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_TEFILLAH,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.MGA),
             getSofZmanTfila(alos72.momentOfOccurrence, tzais72.momentOfOccurrence)
         )
 
@@ -432,9 +437,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * not set, a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val minchaGedola: Zman.DateBased
+    val minchaGedola: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.MINCHA_GEDOLAH,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
             getMinchaGedola(elevationAdjustedSunrise, elevationAdjustedSunset)
         )
 
@@ -511,9 +517,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * not set, a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val minchaKetana: Zman.DateBased
+    val minchaKetana: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.MINCHA_KETANAH,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
             getMinchaKetana(elevationAdjustedSunrise, elevationAdjustedSunset)
         )
 
@@ -553,9 +560,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * does not set, a null will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val plagHamincha: Zman.DateBased
+    val plagHamincha: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.PLAG_HAMINCHA,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
             getPlagHamincha(elevationAdjustedSunrise, elevationAdjustedSunset)
         )
 
@@ -593,9 +601,10 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * where it does not set, [Long.MIN_VALUE] will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val shaahZmanisMGA: Zman.ValueBased
+    val shaahZmanisMGA: Zman.ValueBased<ZmanOpinion.Authority, String>
         get() = Zman.ValueBased(
             ZmanType.SHAA_ZMANIS,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.MGA),
             getTemporalHour(alos72.momentOfOccurrence, tzais72.momentOfOccurrence).milliseconds
         )
 

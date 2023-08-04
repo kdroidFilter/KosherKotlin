@@ -3,6 +3,7 @@ package com.kosherjava.zmanim.hebrewcalendar
 import com.kosherjava.zmanim.AstronomicalCalendar
 import com.kosherjava.zmanim.ComplexZmanimCalendar
 import com.kosherjava.zmanim.Zman
+import com.kosherjava.zmanim.ZmanOpinion
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
 import kotlinx.datetime.*
@@ -17,7 +18,7 @@ import java.util.*
 class RegressionTest {
     companion object {
         fun Instant.toDate(): java.util.Date = this.let { java.util.Date.from(it.toJavaInstant()) }
-        fun Zman.DateBased.toDate(): java.util.Date? =
+        fun <T: ZmanOpinion<A>, A> Zman.DateBased<T, A>.toDate(): java.util.Date? =
             this.momentOfOccurrence?.let { java.util.Date.from(it.toJavaInstant()) }
     }
 

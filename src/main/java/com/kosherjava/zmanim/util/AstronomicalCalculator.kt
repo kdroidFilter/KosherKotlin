@@ -223,9 +223,9 @@ abstract class AstronomicalCalculator {
      * person at an elevation can see blow the horizon of a person at sea level, this will also adjust the zenith to
      * account for elevation if available. Note that this will only adjust the value if the zenith is exactly 90 degrees.
      * For values below and above this no correction is done. As an example, astronomical twilight is when the sun is
-     * 18 below the horizon or [108&amp;deg;][com.kosherjava.zmanim.AstronomicalCalendar.ASTRONOMICAL_ZENITH]. This is traditionally calculated with none of the above mentioned adjustments. The same goes
+     * 18 below the horizon or [108˚][com.kosherjava.zmanim.AstronomicalCalendar.ASTRONOMICAL_ZENITH]. This is traditionally calculated with none of the above mentioned adjustments. The same goes
      * for various *tzais* and *alos* times such as the
-     * [16.1&amp;deg;][com.kosherjava.zmanim.ZmanimCalendar.ZENITH_16_POINT_1] dip used in
+     * [16.1˚][com.kosherjava.zmanim.ZmanimCalendar.ZENITH_16_POINT_1] dip used in
      * [com.kosherjava.zmanim.ComplexZmanimCalendar.getAlos16Point1Degrees].
      *
      * @param zenith
