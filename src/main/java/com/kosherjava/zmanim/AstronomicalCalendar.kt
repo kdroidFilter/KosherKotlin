@@ -104,7 +104,7 @@ open class AstronomicalCalendar(
      * for the calculation uses [geometric zenith][.GEOMETRIC_ZENITH] of 90 plus
      * [AstronomicalCalculator.getElevationAdjustment]. This is adjusted by the
      * [AstronomicalCalculator] to add approximately 50/60 of a degree to account for 34 archminutes of refraction
-     * and 16 archminutes for the sun's radius for a total of [90.83333&amp;deg;][AstronomicalCalculator.adjustZenith].
+     * and 16 archminutes for the sun's radius for a total of [90.83333˚][AstronomicalCalculator.adjustZenith].
      * See documentation for the specific implementation of the [AstronomicalCalculator] that you are using.
      *
      * @return null if sunrise can't be computed (see [getUTCSunrise]).
@@ -143,7 +143,7 @@ open class AstronomicalCalendar(
 
     /**
      * A method that returns the beginning of [civil twilight](https://en.wikipedia.org/wiki/Twilight#Civil_twilight)
-     * (dawn) using a zenith of [96&amp;deg;][.CIVIL_ZENITH].
+     * (dawn) using a zenith of [96˚][.CIVIL_ZENITH].
      *
      * @return The `Date` of the beginning of civil twilight using a zenith of 96. If the calculation
      * can't be computed, null will be returned. See detailed explanation on top of the page.
@@ -164,7 +164,7 @@ open class AstronomicalCalendar(
 
     /**
      * A method that returns the beginning of [astronomical twilight](https://en.wikipedia.org/wiki/Twilight#Astronomical_twilight) using a zenith of
-     * [108&amp;deg;][.ASTRONOMICAL_ZENITH].
+     * [108˚][.ASTRONOMICAL_ZENITH].
      *
      * @return The `Date` of the beginning of astronomical twilight using a zenith of 108. If the
      * calculation can't be computed, null will be returned. See detailed explanation on top of the page.
@@ -179,7 +179,7 @@ open class AstronomicalCalendar(
      * the calculation uses [geometric zenith][.GEOMETRIC_ZENITH] of 90 plus
      * [AstronomicalCalculator.getElevationAdjustment]. This is adjusted by the
      * [AstronomicalCalculator] to add approximately 50/60 of a degree to account for 34 archminutes of refraction
-     * and 16 archminutes for the sun's radius for a total of [90.83333&amp;deg;][AstronomicalCalculator.adjustZenith].
+     * and 16 archminutes for the sun's radius for a total of [90.83333˚][AstronomicalCalculator.adjustZenith].
      * See documentation for the specific implementation of the [AstronomicalCalculator] that you are using. Note:
      * In certain cases the calculates sunset will occur before sunrise. This will typically happen when a timezone
      * other than the local timezone is used (calculating Los Angeles sunset using a GMT timezone for example). In this
@@ -218,9 +218,9 @@ open class AstronomicalCalendar(
 
     /**
      * A method that returns the end of [civil twilight](https://en.wikipedia.org/wiki/Twilight#Civil_twilight)
-     * using a zenith of [96&amp;deg;][.CIVIL_ZENITH].
+     * using a zenith of [96˚][.CIVIL_ZENITH].
      *
-     * @return The `Date` of the end of civil twilight using a zenith of [96&amp;deg;][.CIVIL_ZENITH]. If
+     * @return The `Date` of the end of civil twilight using a zenith of [96˚][.CIVIL_ZENITH]. If
      * the calculation can't be computed, null will be returned. See detailed explanation on top of the page.
      * @see CIVIL_ZENITH
      */
@@ -228,9 +228,9 @@ open class AstronomicalCalendar(
         get() = getSunsetOffsetByDegrees(CIVIL_ZENITH)
 
     /**
-     * A method that returns the end of nautical twilight using a zenith of [102&amp;deg;][.NAUTICAL_ZENITH].
+     * A method that returns the end of nautical twilight using a zenith of [102˚][.NAUTICAL_ZENITH].
      *
-     * @return The `Date` of the end of nautical twilight using a zenith of [102&amp;deg;][.NAUTICAL_ZENITH]
+     * @return The `Date` of the end of nautical twilight using a zenith of [102˚][.NAUTICAL_ZENITH]
      * . If the calculation can't be computed, null will be returned. See detailed explanation on top of the
      * page.
      * @see NAUTICAL_ZENITH
@@ -239,9 +239,9 @@ open class AstronomicalCalendar(
         get() = getSunsetOffsetByDegrees(NAUTICAL_ZENITH)
 
     /**
-     * A method that returns the end of astronomical twilight using a zenith of [108&amp;deg;][.ASTRONOMICAL_ZENITH].
+     * A method that returns the end of astronomical twilight using a zenith of [108˚][.ASTRONOMICAL_ZENITH].
      *
-     * @return the `Date` of the end of astronomical twilight using a zenith of [         108&amp;deg;][.ASTRONOMICAL_ZENITH]. If the calculation can't be computed, null will be returned. See detailed explanation on top
+     * @return the `Date` of the end of astronomical twilight using a zenith of [         108˚][.ASTRONOMICAL_ZENITH]. If the calculation can't be computed, null will be returned. See detailed explanation on top
      * of the page.
      * @see .ASTRONOMICAL_ZENITH
      */
