@@ -2004,10 +2004,10 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * not set, a null will be returned. See detailed explanation on top of the [AstronomicalCalendar]
      * documentation.
      */
-    val bainHashmashosRT58Point5Minutes: Zman.DateBased<ZmanOpinion.FixedMinutes, Int>
+    val bainHashmashosRT58Point5Minutes: Zman.DateBased<ZmanOpinion.FixedMinutesFloat, Float>
         get() = Zman.DateBased(
             ZmanType.BAIN_HASHMASHOS,
-            ZmanOpinion.FixedMinutes(5),
+            ZmanOpinion.FixedMinutesFloat(58.5F),
             getTimeOffset(elevationAdjustedSunset, 58.5 * MINUTE_MILLIS)
         )
 
@@ -2120,9 +2120,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      *
      * @see .getBainHashmashosYereim2Point8Degrees
      */
-    val bainHashmashosYereim16Point875Minutes: Zman.DateBased<ZmanOpinion.FixedMinutes, Int>
+    val bainHashmashosYereim16Point875Minutes: Zman.DateBased<ZmanOpinion.FixedMinutesFloat, Float>
         get() = Zman.DateBased(
-            ZmanType.BAIN_HASHMASHOS, ZmanOpinion.FixedMinutes(875),
+            ZmanType.BAIN_HASHMASHOS, ZmanOpinion.FixedMinutesFloat(16.875F),
             getTimeOffset(
                 elevationAdjustedSunset,
                 -16.875 * MINUTE_MILLIS
@@ -2167,9 +2167,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      *
      * @see .getBainHashmashosYereim2Point1Degrees
      */
-    val bainHashmashosYereim13Point5Minutes: Zman.DateBased<ZmanOpinion.FixedMinutes, Int>
+    val bainHashmashosYereim13Point5Minutes: Zman.DateBased<ZmanOpinion.FixedMinutesFloat, Float>
         get() = Zman.DateBased(
-            ZmanType.BAIN_HASHMASHOS, ZmanOpinion.FixedMinutes(5), getTimeOffset(
+            ZmanType.BAIN_HASHMASHOS, ZmanOpinion.FixedMinutesFloat(13.5F), getTimeOffset(
                 elevationAdjustedSunset,
                 -13.5 * MINUTE_MILLIS
             )
@@ -4104,6 +4104,10 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             bainHashmashosYereim2Point8Degrees,
             bainHashmashosYereim13Point5Minutes,
             bainHashmashosYereim2Point1Degrees,
+            Zman.DateBased(ZmanType.SHKIAH, ZmanOpinion.Unanimous, sunset),
+            Zman.DateBased(ZmanType.SHKIAH, ZmanOpinion.Unanimous, seaLevelSunset),
+            Zman.DateBased(ZmanType.HANAITZ, ZmanOpinion.Unanimous, sunrise),
+            Zman.DateBased(ZmanType.HANAITZ, ZmanOpinion.Unanimous, seaLevelSunrise),
             tzaisGeonim3Point7Degrees,
             tzaisGeonim3Point8Degrees,
             tzaisGeonim5Point95Degrees,

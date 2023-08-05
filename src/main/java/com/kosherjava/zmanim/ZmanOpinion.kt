@@ -11,6 +11,9 @@ sealed class ZmanOpinion<T>(val value: T) {
     data class FixedMinutes(val minutes: Int): ZmanOpinion<Int>(minutes) {
         override fun format() = "Day is $minutes minutes before sunrise / after sunset"
     }
+    data class FixedMinutesFloat(val minutes: Float): ZmanOpinion<Float>(minutes) {
+        override fun format() = "Day is $minutes minutes before sunrise / after sunset"
+    }
     data class ZmaniyosMinutes(val minutes: Int): ZmanOpinion<Int>(minutes) {
         override fun format(inEnglish: Boolean) = buildString {
             append("Day is ")
@@ -37,7 +40,7 @@ sealed class ZmanOpinion<T>(val value: T) {
             const val RABEINU_TAM = "Rabeinu Tam"
             const val RABEINU_YONAH = "Rabeinu Yonah"
             const val RABEINU_TAM_DIVREI_YOSEF = "Rabeinu Tam acc. to Divrei Yosef"
-            const val ATERET_TORAH = "ATERET_TORAH"
+            const val ATERET_TORAH = "Ateret Torah"
             const val FEINSTEIN = "Rabbi Moshe Feinstein"
             const val ARUCH_HASHULCHAN = "Aruch Hashulchan"
             const val SHULCHAN_ARUCH = "Shulchan Aruch"
