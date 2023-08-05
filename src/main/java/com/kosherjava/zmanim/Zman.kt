@@ -2,6 +2,8 @@ package com.kosherjava.zmanim
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 
 /**
@@ -13,7 +15,7 @@ import kotlin.time.Duration
 sealed class Zman<T: ZmanOpinion<A>, A>(
     open val type: ZmanType,
     open val opinion: T
-) {
+): Comparable<Zman<T, A>> {
     /**
      * This class represents a zman that has a moment in which it occurs.
      * @param momentOfOccurrence null if zman never occurs or does not apply (e.g. time to say kiddush levana after time
@@ -23,7 +25,21 @@ sealed class Zman<T: ZmanOpinion<A>, A>(
         override val type: ZmanType,
         override val opinion: T,
         val momentOfOccurrence: Instant?
-    ) : Zman<T, A>(type, opinion)
+    ) : Zman<T, A>(type, opinion) {
+        override fun compareTo(other: Zman<T, A>): Int {
+            if(this === other) return 0
+//            if(this.type != other.type) return this.type.compareTo(other.type)
+            if(other is ValueBased<*, *>) return 1 //not sure why DateBased should go after ValueBased, but why are you comparing them?
+            other as DateBased<*, *>
+            return when {
+                //null goes at the beginning
+                this.momentOfOccurrence == null && other.momentOfOccurrence == null -> 0
+                this.momentOfOccurrence == null && other.momentOfOccurrence != null -> -1
+                this.momentOfOccurrence != null && other.momentOfOccurrence == null -> 1
+                else -> this.momentOfOccurrence!!.compareTo(other.momentOfOccurrence!!)
+            }
+        }
+    }
 
     /**
      * This class represents a zman which simply carries a datetime-less value.
@@ -36,26 +52,33 @@ sealed class Zman<T: ZmanOpinion<A>, A>(
         override val type: ZmanType,
         override val opinion: T,
         val duration: Duration
-    ) : Zman<T, A>(type, opinion)
-
-    companion object {
-        fun <T: ZmanOpinion<A>, A> Zman<T, A>.formatted() = formatted(opinion.format())
-        fun <T: ZmanOpinion<A>, A> Zman<T, A>.formatted(inEnglish: Boolean) = formatted(opinion.format(inEnglish))
-        private fun <T: ZmanOpinion<A>, A> Zman<T, A>.formatted(opinion: String) = opinion +
-                if (this is ValueBased) this.duration.toString()
-                else {
-                    (this as DateBased)
-                        .momentOfOccurrence
-                        ?.toString()
-                        ?.let {
-                            LocalDateTime
-                                .parse(it)
-                                .time
-                                .let {
-                                    "${it.hour}:${it.minute}:${it.second} ${if (it.hour >= 12) "PM" else "AM"}"
-                                }
-                        }
-                        ?: "N/A"
-                }
+    ) : Zman<T, A>(type, opinion) {
+        override fun compareTo(other: Zman<T, A>): Int {
+            if(this === other) return 0
+            if(this.type != other.type) return this.type.compareTo(other.type)
+            if(other is DateBased<*, *>) return -1  //not sure why DateBased should go after ValueBased, but why are you comparing them?
+            other as ValueBased<*, *>
+            return when {
+                duration.isInfinite() && other.duration.isInfinite() -> 0
+                duration.isInfinite() && other.duration.isFinite() -> -1
+                duration.isFinite()   && other.duration.isInfinite() -> 1
+                else -> duration.compareTo(other.duration)
+            }
+        }
     }
+    fun formatted(tz: TimeZone) = formatted(tz, opinion.format())
+    fun formatted(tz: TimeZone, inEnglish: Boolean) = formatted(tz, opinion.format(inEnglish))
+    private fun Int.pad() = toString().padStart(2,'0')
+    fun formatted(tz: TimeZone, opinion: String) = opinion +
+            if (this is ValueBased) this.duration.toString()
+            else {
+                (this as DateBased)
+                    .momentOfOccurrence
+                    ?.toLocalDateTime(tz)
+                    ?.time
+                    ?.let {
+                        "${(if(it.hour <= 12) it.hour else it.hour - 12).pad()}:${it.minute.pad()}:${it.second.pad()} ${if (it.hour >= 12) "PM" else "AM"}"
+                    }
+                    ?: "N/A"
+            }
 }
