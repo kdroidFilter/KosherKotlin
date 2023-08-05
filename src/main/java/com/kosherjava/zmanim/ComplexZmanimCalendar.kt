@@ -3235,9 +3235,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * not rise, and one where it does not set, a null will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val getSofZmanAchilasChametzGRA: Zman.DateBased<ZmanOpinion.Authority, String>
+    val sofZmanAchilasChametzGRA: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
-            ZmanType.SOF_ZMAN_TEFILLAH,
+            ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
             sofZmanTfilaGRA.momentOfOccurrence
         )
@@ -4147,7 +4147,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             tchilasZmanKidushLevana3Days,
             zmanMolad,
             tchilasZmanKidushLevana7Days,
-            getSofZmanAchilasChametzGRA,
+            sofZmanAchilasChametzGRA,
             sofZmanAchilasChametzMGA72Minutes,
             sofZmanAchilasChametzMGA16Point1Degrees,
             sofZmanBiurChametzGRA,
