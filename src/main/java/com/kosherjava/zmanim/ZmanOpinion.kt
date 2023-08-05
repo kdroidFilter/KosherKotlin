@@ -28,9 +28,7 @@ sealed class ZmanOpinion<T>(val value: T) {
     data class Degrees(val degrees: Float): ZmanOpinion<Float>(degrees) {
         override fun format(): String = "Day is ${degrees}˚ below sunrise / sunset"
     }
-    data class Authority(
-        val name: String
-        ): ZmanOpinion<String>(name) {
+    data class Authority(val name: String): ZmanOpinion<String>(name) {
         override fun format() = "According to $name"
         companion object {
 
