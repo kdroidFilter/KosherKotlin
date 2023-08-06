@@ -9,10 +9,8 @@ import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
 import org.junit.Assert
-import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.time.ZoneOffset
 import java.util.*
 
 class RegressionTest {
@@ -524,13 +522,17 @@ class RegressionTest {
                 ),
                 Triple(javaCalc.sofZmanKidushLevana15Days, sofZmanKidushLevana15Days, "sofZmanKidushLevana15Days"),
                 Triple(javaCalc.zmanMolad, zmanMolad, "zmanMolad"),
-                Triple(javaCalc.sofZmanBiurChametzGRA, sofZmanBiurChametzGRA, "sofZmanBiurChametzGRA"),
-                Triple(
+                nullIfKotlinNull(
+                    javaCalc.sofZmanBiurChametzGRA,
+                    sofZmanBiurChametzGRA,
+                    "sofZmanBiurChametzGRA"
+                ),
+                nullIfKotlinNull(
                     javaCalc.sofZmanBiurChametzMGA72Minutes,
                     sofZmanBiurChametzMGA72Minutes,
                     "sofZmanBiurChametzMGA72Minutes"
                 ),
-                Triple(
+                nullIfKotlinNull(
                     javaCalc.sofZmanBiurChametzMGA16Point1Degrees,
                     sofZmanBiurChametzMGA16Point1Degrees,
                     "sofZmanBiurChametzMGA16Point1Degrees"
@@ -538,7 +540,7 @@ class RegressionTest {
                 Triple(javaCalc.solarMidnight, solarMidnight, "solarMidnight"),
                 Triple(javaCalc.sofZmanShmaBaalHatanya, sofZmanShmaBaalHatanya, "sofZmanShmaBaalHatanya"),
                 Triple(javaCalc.sofZmanTfilaBaalHatanya, sofZmanTfilaBaalHatanya, "sofZmanTfilaBaalHatanya"),
-                Triple(
+                nullIfKotlinNull(
                     javaCalc.sofZmanBiurChametzBaalHatanya,
                     sofZmanBiurChametzBaalHatanya,
                     "sofZmanBiurChametzBaalHatanya"
@@ -608,6 +610,19 @@ class RegressionTest {
             testValues(values, transformActual = { it.duration.inWholeMilliseconds })
             testValues(listOfZmanim, 0.0)
         }
+    }
+
+    private fun <T : ZmanOpinion<A>, A> nullIfKotlinNull(
+        java: java.util.Date,
+        kotlin: Zman.DateBased<T, A>,
+        label: String
+    ): Triple<Date?, Zman.DateBased<T, A>, String> {
+        return Triple(
+            if (kotlin.momentOfOccurrence == null) null
+            else java,
+            kotlin,
+            label,
+        )
     }
 
     @Test
