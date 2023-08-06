@@ -6,8 +6,6 @@ import com.kosherjava.zmanim.util.DateUtils.now
 import kotlinx.datetime.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
-import java.time.Instant
 import java.util.*
 
 class ConvertBetweenGregorianAndHebrewTest {
@@ -133,16 +131,17 @@ class ConvertBetweenGregorianAndHebrewTest {
         assertEquals(now, now.toHebrewDate().toLocalDateGregorian())
     }
 
-    /*@Test //takes too long to complete
+    @Test
     fun regressionTest() {
+        val newGregorianDate = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(years = 1, months = 1))
         val distantFutureJewishDate =
             com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(
                 java.time.LocalDate.of(
-                    2239,
-                    Month.SEPTEMBER,
-                    30
+                    newGregorianDate.year,
+                    newGregorianDate.month,
+                    newGregorianDate.dayOfMonth
                 )
-            ) //6000-1-1 hebrew
+            ) //java.time.LocalDate.of(2239, Month.SEPTEMBER, 30) == 6000-1-1 hebrew, but takes too long to complete
         var kotlinCurrentJewishDate = HebrewLocalDate(
             3763,
             HebrewMonth.TISHREI,
@@ -159,6 +158,7 @@ class ConvertBetweenGregorianAndHebrewTest {
             javaCurrentJewishDate.jewishMonth != distantFutureJewishDate.jewishMonth ||
             javaCurrentJewishDate.jewishDayOfMonth != distantFutureJewishDate.jewishDayOfMonth
         ) {
+//            println(javaCurrentJewishDate.toString() + " " + kotlinCurrentJewishDate.toString())
             assertEquals(javaCurrentJewishDate.jewishYear, kotlinCurrentJewishDate.year.toInt())
             assertEquals(javaCurrentJewishDate.jewishMonth, kotlinCurrentJewishDate.month.value)
             assertEquals(javaCurrentJewishDate.jewishDayOfMonth, kotlinCurrentJewishDate.dayOfMonth)
@@ -171,7 +171,7 @@ class ConvertBetweenGregorianAndHebrewTest {
             javaCurrentJewishDate.forward(Calendar.DATE, 1);
             kotlinCurrentJewishDate = kotlinCurrentJewishDate.plusDays(1)
         }
-    }*/
+    }
 
     @Test
     fun `6th month doesn't work (for some reason)`() {
