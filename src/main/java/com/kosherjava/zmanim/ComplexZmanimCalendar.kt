@@ -19,14 +19,7 @@ import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
 import com.kosherjava.zmanim.util.AstronomicalCalculator
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.plus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.*
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -124,6 +117,18 @@ import kotlin.time.Duration.Companion.milliseconds
  * @author  Eliyahu Hershfeld 2004 - 2023
  */
 class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalendar(location) {
+
+    override var localDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
+        set(value) {
+            field = value
+            jewishCalendar = JewishCalendar(value.date)
+        }
+    var jewishCalendar: JewishCalendar = JewishCalendar(localDateTime.date)
+        set(value) {
+            field = value
+            localDateTime = LocalDateTime(value.gregorianLocalDate, localDateTime.time)
+        }
+
     /**
      * The offset in minutes after sunset used to calculate *tzais* based on the calculations of
      * *Chacham* Yosef Harari-Raful of Yeshivat Ateret Torah calculations. The default value is 40 minutes.
@@ -2923,7 +2928,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getSofZmanKidushLevanaBetweenMoldos
      */
     fun getSofZmanKidushLevanaBetweenMoldos(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar = JewishCalendar(localDateTime.date)
 
         // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in French
         // Polynesia on Dec 2027 when kiddush Levana 3 days can be said on <em>Rosh Chodesh</em>, the sof zman Kiddush Levana
@@ -3024,7 +3028,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getSofZmanKidushLevana15Days
      */
     fun getSofZmanKidushLevana15Days(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar = JewishCalendar(localDateTime.date)
         // Do not calculate for impossible dates, but account for extreme cases. In the extreme case of Rapa Iti in
         // French Polynesia on Dec 2027 when kiddush Levana 3 days can be said on <em>Rosh Chodesh</em>, the sof zman Kiddush
         // Levana will be on the 12th of the Teves. in the case of Anadyr, Russia on Jan, 2071, sof zman kiddush levana will
@@ -3098,13 +3101,12 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getTchilasZmanKidushLevana3Days
      */
     fun getTchilasZmanKidushLevana3Days(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar = JewishCalendar(localDateTime.date)
         // Do not calculate for impossible dates, but account for extreme cases. Tchilas zman kiddush Levana 3 days for
         // the extreme case of Rapa Iti in French Polynesia on Dec 2027 when kiddush Levana 3 days can be said on the evening
         // of the 30th, the second night of Rosh Chodesh. The 3rd day after the <em>molad</em> will be on the 4th of the month.
         // In the case of Anadyr, Russia on Jan, 2071, when sof zman kiddush levana is on the 17th of the month, the 3rd day
         // from the molad will be on the 5th day of Shevat. See Rabbi Dovid Heber's Shaarei Zmanim chapter 4 (pages 28 and 32).
-        if (jewishCalendar.jewishDayOfMonth > 5 && jewishCalendar.jewishDayOfMonth < 30) {
+        if (jewishCalendar.jewishDayOfMonth in 6..29) {
             return null
         }
         var zman: Instant? =
@@ -3132,8 +3134,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val zmanMolad: Zman.DateBased<ZmanOpinion.Unanimous, Any?>
         get() {
-            val jewishCalendar = JewishCalendar(localDateTime.date)
-
             // Optimize to not calculate for impossible dates, but account for extreme cases. The molad in the extreme case of Rapa
             // Iti in French Polynesia on Dec 2027 occurs on the night of the 27th of Kislev. In the case of Anadyr, Russia on
             // Jan 2071, the molad will be on the 2nd day of Shevat. See Rabbi Dovid Heber's Shaarei Zmanim chapter 4 (pages 28 and 32).
@@ -3152,7 +3152,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
 
     /**
      * Used by Molad based *zmanim* to determine if *zmanim* occur during the current day.
-     * @see .getMoladBasedTime
+     * @see moladBasedTime
      * @return previous midnight
      */
     private val midnightLastNight: LocalDateTime
@@ -3191,8 +3191,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see JewishCalendar.getTchilasZmanKidushLevana7Days
      */
     fun getTchilasZmanKidushLevana7Days(alos: Instant?, tzais: Instant?): Instant? {
-        val jewishCalendar = JewishCalendar(localDateTime.date)
-
         // Optimize to not calculate for impossible dates, but account for extreme cases. Tchilas zman kiddush Levana 7 days for
         // the extreme case of Rapa Iti in French Polynesia on Jan 2028 (when kiddush Levana 3 days can be said on the evening
         // of the 30th, the second night of Rosh Chodesh), the 7th day after the molad will be on the 4th of the month.
@@ -3239,7 +3237,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
-            sofZmanTfilaGRA.momentOfOccurrence
+            if(jewishCalendar.isErevPesach) sofZmanTfilaGRA.momentOfOccurrence 
+            else null
         )
 
     /**
@@ -3258,7 +3257,13 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see .getAlos72
      * @see .getSofZmanTfilaMGA72Minutes
      */
-    val sofZmanAchilasChametzMGA72Minutes: Zman.DateBased<ZmanOpinion.Authority, String> get() = sofZmanTfilaMGA72Minutes
+    val sofZmanAchilasChametzMGA72Minutes: Zman.DateBased<ZmanOpinion.Authority, String>
+        get() = Zman.DateBased(
+            ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ, 
+            ZmanOpinion.Authority(sofZmanTfilaMGA72Minutes.opinion.name), 
+            if (jewishCalendar.isErevPesach) sofZmanTfilaMGA72Minutes.momentOfOccurrence
+            else null
+        )
 
     /**
      * This method returns the latest time one is allowed eating *chametz* on *Erev Pesach* according to the
@@ -3281,7 +3286,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
             ZmanOpinion.Degrees(16.1F),
-            sofZmanTfilaMGA16Point1Degrees.momentOfOccurrence
+            if(jewishCalendar.isErevPesach) sofZmanTfilaMGA16Point1Degrees.momentOfOccurrence
+            else null
         )
 
     /**
@@ -3300,10 +3306,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
-            getTimeOffset(
+            if(jewishCalendar.isErevPesach) getTimeOffset(
                 elevationAdjustedSunrise,
                 shaahZmanisGra * 5
-            )
+            ) 
+            else null
         )
 
     /**
@@ -3322,10 +3329,13 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val sofZmanBiurChametzMGA72Minutes: Zman.DateBased<ZmanOpinion.FixedMinutes, Int>
         get() = Zman.DateBased(
-            ZmanType.SOF_ZMAN_BIUR_CHAMETZ, ZmanOpinion.FixedMinutes(72), getTimeOffset(
+            ZmanType.SOF_ZMAN_BIUR_CHAMETZ, 
+            ZmanOpinion.FixedMinutes(72), 
+            if(jewishCalendar.isErevPesach) getTimeOffset(
                 alos72.momentOfOccurrence,
                 (shaahZmanisMGA.duration * 5).inWholeMilliseconds
             )
+            else null
         )
 
     /**
@@ -3348,10 +3358,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() =
             Zman.DateBased(
                 ZmanType.SOF_ZMAN_BIUR_CHAMETZ, ZmanOpinion.Degrees(16.1F),
-                getTimeOffset(
+                if(jewishCalendar.isErevPesach) getTimeOffset(
                     alos16Point1Degrees.momentOfOccurrence,
                     (shaahZmanis16Point1Degrees.duration * 5).inWholeMilliseconds
                 )
+                else null
             )
 
     /**
@@ -3372,15 +3383,16 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 .plus(DatePeriod(days = 1), tz)
                 .toLocalDateTime(tz)
             val tomorrowChatzos = clonedCal.chatzos
-            if(tomorrowChatzos.momentOfOccurrence == null)  return Zman.DateBased(ZmanType.CHATZOS_HALAYLAH, ZmanOpinion.Unanimous, null)
             val thisChatzos = this.chatzos
-            if(thisChatzos.momentOfOccurrence == null)      return Zman.DateBased(ZmanType.CHATZOS_HALAYLAH, ZmanOpinion.Unanimous, null)
             return Zman.DateBased(
                 ZmanType.CHATZOS_HALAYLAH,
                 ZmanOpinion.Unanimous,
-                getTimeOffset(
+                if (tomorrowChatzos.momentOfOccurrence == null || thisChatzos.momentOfOccurrence == null) null
+                else getTimeOffset(
                     thisChatzos.momentOfOccurrence,
-                    (tomorrowChatzos.momentOfOccurrence!! - thisChatzos.momentOfOccurrence!!).div(2).inWholeMilliseconds
+                    (tomorrowChatzos.momentOfOccurrence - thisChatzos.momentOfOccurrence)
+                        .div(2)
+                        .inWholeMilliseconds
                 )
             )
         }
@@ -3548,7 +3560,13 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * and one where it does not set, a null will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val sofZmanAchilasChametzBaalHatanya: Zman.DateBased<ZmanOpinion.Authority, String> get() = sofZmanTfilaBaalHatanya
+    val sofZmanAchilasChametzBaalHatanya: Zman.DateBased<ZmanOpinion.Authority, String> 
+        get() = Zman.DateBased(
+            ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA),
+            if(jewishCalendar.isErevPesach) sofZmanTfilaBaalHatanya.momentOfOccurrence
+            else null
+        )
 
     /**
      * This method returns the latest time for burning *chametz* on *Erev Pesach* according to the opinion of
@@ -3566,10 +3584,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA),
-            getTimeOffset(
+            if(jewishCalendar.isErevPesach) getTimeOffset(
                 sunriseBaalHatanya,
                 shaahZmanisBaalHatanya * 5
             )
+            else null
         )
 
     /**
@@ -3635,7 +3654,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * documentation.
      */
     val minchaKetanaBaalHatanya: Zman.DateBased<ZmanOpinion.Authority, String>
-        get() = Zman.DateBased(ZmanType.MINCHA_KETANAH, ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA), getMinchaKetana(sunriseBaalHatanya, sunsetBaalHatanya))
+        get() = Zman.DateBased(
+            ZmanType.MINCHA_KETANAH,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA),
+            getMinchaKetana(sunriseBaalHatanya, sunsetBaalHatanya)
+        )
 
     /**
      * This method returns the time of *plag hamincha*. This is calculated as 10.75 hours after sunrise. This
@@ -3650,7 +3673,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * [AstronomicalCalendar] documentation.
      */
     val plagHaminchaBaalHatanya: Zman.DateBased<ZmanOpinion.Authority, String>
-        get() = Zman.DateBased(ZmanType.MINCHA_KETANAH, ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA), getPlagHamincha(sunriseBaalHatanya, sunsetBaalHatanya))
+        get() = Zman.DateBased(
+            ZmanType.MINCHA_KETANAH,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA),
+            getPlagHamincha(sunriseBaalHatanya, sunsetBaalHatanya)
+        )
 
     /**
      * A method that returns *tzais* (nightfall) when the sun is 6 below the western geometric horizon
@@ -3664,7 +3691,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see .ZENITH_6_DEGREES
      */
     val tzaisBaalHatanya: Zman.DateBased<ZmanOpinion.Authority, String>
-        get() = Zman.DateBased(ZmanType.MINCHA_KETANAH, ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA), getSunsetOffsetByDegrees(ZENITH_6_DEGREES))
+        get() = Zman.DateBased(
+            ZmanType.MINCHA_KETANAH,
+            ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA),
+            getSunsetOffsetByDegrees(ZENITH_6_DEGREES)
+        )
 
     /**
      * A utility methos to calculate zmanim based on [Rav Moshe

@@ -15,6 +15,7 @@
  */
 package com.kosherjava.zmanim
 
+import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
 import com.kosherjava.zmanim.util.AstronomicalCalculator
 import com.kosherjava.zmanim.util.GeoLocation
 import kotlinx.datetime.*
@@ -86,8 +87,7 @@ open class AstronomicalCalendar(
     /**
      * The Java Calendar encapsulated by this class to track the current date used by the class
      */
-    var localDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
-
+    open var localDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
     /**
      * The internal [AstronomicalCalculator] used for calculating solar based times.
      * A method to set the [AstronomicalCalculator] used for astronomical calculations. The Zmanim package ships
