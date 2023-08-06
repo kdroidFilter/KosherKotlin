@@ -1336,6 +1336,12 @@ class JewishCalendar : JewishDate {
                     (holidayIndex == HOSHANA_RABBA) ||
                     (holidayIndex == CHOL_HAMOED_PESACH && jewishDayOfMonth == 20)
         }// Erev Rosh Hashana is not Erev Rosh Chodesh.
+    val isErevPesach: Boolean get() = jewishMonth == HebrewMonth.NISSAN && yomTovIndex == EREV_PESACH //include "2nd days"? (i.e. holiday == CHOL_HAMOED_PESACH and jewishDayOfMonth == 20). Not sure people call that "erev pesach", but thye might call it "erev yom tov" because it is assur bemelacha
+    val isErevSuccos: Boolean get() = jewishMonth == HebrewMonth.TISHREI && yomTovIndex == EREV_SUCCOS
+    val isErevSheminiAtzeres: Boolean get() = jewishMonth == HebrewMonth.TISHREI && yomTovIndex == HOSHANA_RABBA
+    val isErevShavuos: Boolean get() = jewishMonth == HebrewMonth.SIVAN && yomTovIndex == EREV_SHAVUOS
+    val isErevRoshHashana: Boolean get() = jewishMonth == HebrewMonth.ELUL && yomTovIndex == EREV_ROSH_HASHANA
+    val isErevYomKippur: Boolean get() = jewishMonth == HebrewMonth.TISHREI && yomTovIndex == EREV_YOM_KIPPUR
 
     /**
      * Returns true if the current day is *Erev Rosh Chodesh*. Returns false for *Erev Rosh Hashana*.
