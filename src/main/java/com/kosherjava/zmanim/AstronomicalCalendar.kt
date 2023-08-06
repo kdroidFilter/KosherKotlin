@@ -403,7 +403,7 @@ open class AstronomicalCalendar(
         if (startOfday == null || endOfDay == null) {
             return Long.MIN_VALUE
         }
-        return (endOfDay - startOfday).div(12).inWholeMilliseconds
+        return (endOfDay.toEpochMilliseconds() - startOfday.toEpochMilliseconds()) / 12
     }
 
     /**
