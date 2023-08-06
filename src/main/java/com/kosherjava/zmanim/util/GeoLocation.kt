@@ -141,6 +141,11 @@ data class GeoLocation(
         longitude = 0.0 // added for clarity
         latitude = 51.4772
     }
+    constructor(location: Location): this(location.tz ?: TimeZone.currentSystemDefault(), location.name ?: "") {
+        this.latitude = location.latitude
+        this.longitude = location.longitude
+        if(location.elevation != null) this.elevation = location.elevation
+    }
 
     /**
      * Method to set the latitude in degrees, minutes and seconds.
