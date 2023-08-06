@@ -121,12 +121,16 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
     override var localDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
         set(value) {
             field = value
-            jewishCalendar = JewishCalendar(value.date)
+            if (value.date != jewishCalendar.gregorianLocalDate) {
+                jewishCalendar = JewishCalendar(value.date)
+            }
         }
     var jewishCalendar: JewishCalendar = JewishCalendar(localDateTime.date)
         set(value) {
             field = value
-            localDateTime = LocalDateTime(value.gregorianLocalDate, localDateTime.time)
+            if (value.gregorianLocalDate != localDateTime.date) {
+                localDateTime = LocalDateTime(value.gregorianLocalDate, localDateTime.time)
+            }
         }
 
     /**
@@ -3237,7 +3241,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
-            if(jewishCalendar.isErevPesach) sofZmanTfilaGRA.momentOfOccurrence 
+            if (jewishCalendar.isErevPesach) sofZmanTfilaGRA.momentOfOccurrence
             else null
         )
 
@@ -3259,8 +3263,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val sofZmanAchilasChametzMGA72Minutes: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
-            ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ, 
-            ZmanOpinion.Authority(sofZmanTfilaMGA72Minutes.opinion.name), 
+            ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
+            ZmanOpinion.Authority(sofZmanTfilaMGA72Minutes.opinion.name),
             if (jewishCalendar.isErevPesach) sofZmanTfilaMGA72Minutes.momentOfOccurrence
             else null
         )
@@ -3286,7 +3290,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
             ZmanOpinion.Degrees(16.1F),
-            if(jewishCalendar.isErevPesach) sofZmanTfilaMGA16Point1Degrees.momentOfOccurrence
+            if (jewishCalendar.isErevPesach) sofZmanTfilaMGA16Point1Degrees.momentOfOccurrence
             else null
         )
 
@@ -3306,10 +3310,10 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.GRA),
-            if(jewishCalendar.isErevPesach) getTimeOffset(
+            if (jewishCalendar.isErevPesach) getTimeOffset(
                 elevationAdjustedSunrise,
                 shaahZmanisGra * 5
-            ) 
+            )
             else null
         )
 
@@ -3329,9 +3333,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val sofZmanBiurChametzMGA72Minutes: Zman.DateBased<ZmanOpinion.FixedMinutes, Int>
         get() = Zman.DateBased(
-            ZmanType.SOF_ZMAN_BIUR_CHAMETZ, 
-            ZmanOpinion.FixedMinutes(72), 
-            if(jewishCalendar.isErevPesach) getTimeOffset(
+            ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
+            ZmanOpinion.FixedMinutes(72),
+            if (jewishCalendar.isErevPesach) getTimeOffset(
                 alos72.momentOfOccurrence,
                 (shaahZmanisMGA.duration * 5).inWholeMilliseconds
             )
@@ -3358,7 +3362,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() =
             Zman.DateBased(
                 ZmanType.SOF_ZMAN_BIUR_CHAMETZ, ZmanOpinion.Degrees(16.1F),
-                if(jewishCalendar.isErevPesach) getTimeOffset(
+                if (jewishCalendar.isErevPesach) getTimeOffset(
                     alos16Point1Degrees.momentOfOccurrence,
                     (shaahZmanis16Point1Degrees.duration * 5).inWholeMilliseconds
                 )
@@ -3560,11 +3564,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * and one where it does not set, a null will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val sofZmanAchilasChametzBaalHatanya: Zman.DateBased<ZmanOpinion.Authority, String> 
+    val sofZmanAchilasChametzBaalHatanya: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA),
-            if(jewishCalendar.isErevPesach) sofZmanTfilaBaalHatanya.momentOfOccurrence
+            if (jewishCalendar.isErevPesach) sofZmanTfilaBaalHatanya.momentOfOccurrence
             else null
         )
 
@@ -3584,7 +3588,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         get() = Zman.DateBased(
             ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
             ZmanOpinion.Authority(ZmanOpinion.Authority.BAAL_HATANYA),
-            if(jewishCalendar.isErevPesach) getTimeOffset(
+            if (jewishCalendar.isErevPesach) getTimeOffset(
                 sunriseBaalHatanya,
                 shaahZmanisBaalHatanya * 5
             )
