@@ -371,6 +371,7 @@ class JewishCalendar : JewishDate {
      * the `LocalDate` to set the [gregorianLocalDate] to
      */
     constructor(date: LocalDate) : super(date)
+
     /**
      * A constructor that initializes the hebrew date to the [date] parameter.
      *
@@ -378,6 +379,7 @@ class JewishCalendar : JewishDate {
      * the `LocalDate` to set the [gregorianLocalDate] to
      */
     constructor(date: HebrewLocalDate) : super(date)
+
     /**
      * A constructor that initializes the date to the [date] parameter.
      *
@@ -388,6 +390,7 @@ class JewishCalendar : JewishDate {
     constructor(date: LocalDate, isInIsrael: Boolean) : super(date) {
         inIsrael = isInIsrael
     }
+
     /**
      * A constructor that initializes the date to the [date] parameter.
      *
@@ -399,6 +402,7 @@ class JewishCalendar : JewishDate {
         isUseModernHolidays = shouldUseModernHolidays
         inIsrael = isInIsrael
     }
+
     /**
      * A constructor that initializes the hebrew date to the [date] parameter.
      *
@@ -409,6 +413,7 @@ class JewishCalendar : JewishDate {
     constructor(date: HebrewLocalDate, isInIsrael: Boolean) : super(date) {
         inIsrael = isInIsrael
     }
+
     /**
      * A constructor that initializes the heberew date to the [date] parameter.
      *
@@ -442,14 +447,24 @@ class JewishCalendar : JewishDate {
         HebrewMonth.getMonthForValue(jewishMonth),
         jewishDayOfMonth
     )
+
     constructor(jewishYear: Long, jewishMonth: Int, jewishDayOfMonth: Int) : super(
         jewishYear,
         HebrewMonth.getMonthForValue(jewishMonth),
         jewishDayOfMonth
     )
 
-    constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(hebrewYear, hebrewMonth, hebrewDayOfMonth)
-    constructor(hebrewYear: Long, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(hebrewYear, hebrewMonth, hebrewDayOfMonth)
+    constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(
+        hebrewYear,
+        hebrewMonth,
+        hebrewDayOfMonth
+    )
+
+    constructor(hebrewYear: Long, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(
+        hebrewYear,
+        hebrewMonth,
+        hebrewDayOfMonth
+    )
 
     /**
      * Creates a Jewish date based on a Jewish date and whether in Israel
@@ -472,7 +487,8 @@ class JewishCalendar : JewishDate {
         jewishMonth: Int,
         jewishDayOfMonth: Int,
         inIsrael: Boolean,
-    ): this(jewishYear.toLong(), jewishMonth, jewishDayOfMonth, inIsrael)
+    ) : this(jewishYear.toLong(), jewishMonth, jewishDayOfMonth, inIsrael)
+
     constructor(
         jewishYear: Long,
         jewishMonth: Int,
@@ -485,6 +501,7 @@ class JewishCalendar : JewishDate {
     ) {
         this.inIsrael = inIsrael
     }
+
     /**
      * Creates a Jewish date based on a Jewish date and whether in Israel
      *
@@ -506,7 +523,8 @@ class JewishCalendar : JewishDate {
         jewishMonth: HebrewMonth,
         jewishDayOfMonth: Int,
         inIsrael: Boolean,
-    ): this(jewishYear.toLong(), jewishMonth, jewishDayOfMonth, inIsrael)
+    ) : this(jewishYear.toLong(), jewishMonth, jewishDayOfMonth, inIsrael)
+
     constructor(
         jewishYear: Long,
         jewishMonth: HebrewMonth,
@@ -549,6 +567,7 @@ class JewishCalendar : JewishDate {
             //println("Elapsed days ($elapsedDays) mod 28 years kotlin: $elapsedDaysModTwentyEightYears")
             return elapsedDaysModTwentyEightYears == 172.0 // 28 years of 365.25 days + the offset from molad tohu mentioned above
         }
+
     /**
      * Return the type of year for *parsha* calculations. The algorithm follows the
      * [&amp;&amp;Luach Arba'ah Shearim](http://hebrewbooks.org/pdfpager.aspx?req=14268&amp;st=&amp;pgnum=222) in the Tur Ohr Hachaim.
@@ -640,7 +659,10 @@ class JewishCalendar : JewishDate {
      */
     val upcomingParshah: Parsha
         get() {
-            val copy = copy(jewishMonth = hebrewLocalDate.month, inIsrael = inIsrael) //force JewishCalendar.copy, not JewishDate.copy
+            val copy = copy(
+                jewishMonth = hebrewLocalDate.month,
+                inIsrael = inIsrael
+            ) //force JewishCalendar.copy, not JewishDate.copy
             val daysToShabbos =
                 (DayOfWeek.SATURDAY.toJewishDayOfWeek() - copy.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek() + 7) % 7
             //println("Days to shabbos kotlin: $daysToShabbos, gregorianLocalDate(${copy.gregorianLocalDate}).dayOfWeek = ${copy.gregorianLocalDate.dayOfWeek}")
@@ -738,8 +760,8 @@ class JewishCalendar : JewishDate {
                     when {
                         day == 14 -> EREV_PESACH
                         day == 15 || day == 21 || !inIsrael && (day == 16 || day == 22) -> PESACH
-                        day in (16.takeIf { inIsrael } ?: 17)..20 -> CHOL_HAMOED_PESACH
-                        (day == 22 && inIsrael) || (day == 23 && !inIsrael) -> ISRU_CHAG
+                        day in (if (inIsrael) 16 else 17)..20 -> CHOL_HAMOED_PESACH
+                        day == if (inIsrael) 22 else 23 -> ISRU_CHAG
                         isUseModernHolidays && (
                                 (
                                         (day == 26 && dayOfWeek == DayOfWeek.THURSDAY) ||
@@ -754,34 +776,27 @@ class JewishCalendar : JewishDate {
                 }
 
                 HebrewMonth.IYAR -> {
-                    when {
-                        isUseModernHolidays &&
-                                (
-                                        (day in 2..3 && dayOfWeek == DayOfWeek.WEDNESDAY) ||
-                                                (day == 4 && dayOfWeek == DayOfWeek.TUESDAY) ||
-                                                (day == 5 && dayOfWeek == DayOfWeek.MONDAY)
 
-                                        ) -> YOM_HAZIKARON
-
-                        isUseModernHolidays &&
-                                (
-                                        (day in 3..4 && dayOfWeek == DayOfWeek.THURSDAY) ||
-                                                (day == 5 && dayOfWeek == DayOfWeek.WEDNESDAY) ||
-                                                (day == 6 && dayOfWeek == DayOfWeek.TUESDAY)
-                                        ) -> YOM_HAATZMAUT
-
-                        day == 14 -> PESACH_SHENI
-                        day == 18 -> LAG_BAOMER
-                        isUseModernHolidays && day == 28 -> YOM_YERUSHALAYIM
+                    if (day == 14) PESACH_SHENI
+                    else if (day == 18) LAG_BAOMER
+                    else if (isUseModernHolidays) when {
+                        (day in 2..3 && dayOfWeek === DayOfWeek.WEDNESDAY) ||
+                                (day == 4 && dayOfWeek === DayOfWeek.TUESDAY) ||
+                                (day == 5 && dayOfWeek === DayOfWeek.MONDAY) -> YOM_HAZIKARON
+                        (day in 3..4 && dayOfWeek === DayOfWeek.THURSDAY) ||
+                                (day == 5 && dayOfWeek === DayOfWeek.WEDNESDAY) ||
+                                (day == 6 && dayOfWeek === DayOfWeek.TUESDAY) -> YOM_HAATZMAUT
+                        day == 28 -> YOM_YERUSHALAYIM
                         else -> NO_HOLIDAY
                     }
+                    else NO_HOLIDAY
                 }
 
                 HebrewMonth.SIVAN -> {
                     when {
                         day == 5 -> EREV_SHAVUOS
                         day == 6 || day == 7 && !inIsrael -> SHAVUOS
-                        day == 7 && inIsrael || day == 8 && !inIsrael -> ISRU_CHAG
+                        day == if(inIsrael) 7 else 8 -> ISRU_CHAG
                         else -> NO_HOLIDAY
                     }
                 }
@@ -827,19 +842,22 @@ class JewishCalendar : JewishDate {
                 }
 
                 HebrewMonth.TISHREI -> {
-                    return when {
-                        day == 1 || day == 2 -> ROSH_HASHANA
-                        day == 3 && dayOfWeek != DayOfWeek.SATURDAY || day == 4 && dayOfWeek == DayOfWeek.SUNDAY -> FAST_OF_GEDALYAH // push off Tzom Gedalia if it falls on Shabbos
-                        day == 9 -> EREV_YOM_KIPPUR
-                        day == 10 -> YOM_KIPPUR
-                        day == 14 -> EREV_SUCCOS
-                        day == 15 || day == 16 && !inIsrael -> SUCCOS
-                        day in 17..20 || day == 16 && inIsrael -> CHOL_HAMOED_SUCCOS
-                        day == 21 -> HOSHANA_RABBA
-                        day == 22 -> SHEMINI_ATZERES
-                        day == 23 && !inIsrael -> SIMCHAS_TORAH
-                        day == 23 && inIsrael || day == 24 && !inIsrael -> ISRU_CHAG
-                        else -> NO_HOLIDAY
+                    return when(day) {
+                        1 -> ROSH_HASHANA
+                        2 -> ROSH_HASHANA
+                        9 -> EREV_YOM_KIPPUR
+                        10 -> YOM_KIPPUR
+                        14 -> EREV_SUCCOS
+                        21 -> HOSHANA_RABBA
+                        22 -> SHEMINI_ATZERES
+                        23 -> if(inIsrael) ISRU_CHAG else SIMCHAS_TORAH
+                        else -> when {
+                            day == 3 && dayOfWeek != DayOfWeek.SATURDAY || day == 4 && dayOfWeek == DayOfWeek.SUNDAY -> FAST_OF_GEDALYAH // push off Tzom Gedalia if it falls on Shabbos
+                            day in 17..20 || day == 16 && inIsrael -> CHOL_HAMOED_SUCCOS
+                            day == 15 || day == 16 && !inIsrael -> SUCCOS
+                            day == 24 && !inIsrael -> ISRU_CHAG
+                            else -> NO_HOLIDAY
+                        }
                     }
                 }
                 HebrewMonth.CHESHVAN -> NO_HOLIDAY // :(
@@ -1040,7 +1058,7 @@ class JewishCalendar : JewishDate {
                     // if 13th Adar falls on Friday or Shabbos, push back to Thursday
                     when {
                         (day in 11..12 && dayOfWeek == DayOfWeek.THURSDAY) ||
-                                (day == 13 && !(dayOfWeek == DayOfWeek.FRIDAY || dayOfWeek == DayOfWeek.SATURDAY)) ->
+                                (day == 13 && dayOfWeek !in DayOfWeek.FRIDAY..DayOfWeek.SATURDAY) ->
                             FAST_OF_ESTHER
 
                         day == 14 -> PURIM
@@ -1684,6 +1702,7 @@ class JewishCalendar : JewishDate {
         result += (37 * result) + gregorianLocalDate.hashCode() + (if (inIsrael) 1 else 3)
         return result
     }
+
     fun copy(
         jewishYear: Long = this.hebrewLocalDate.year,
         jewishMonth: Int = this.hebrewLocalDate.month.value,
