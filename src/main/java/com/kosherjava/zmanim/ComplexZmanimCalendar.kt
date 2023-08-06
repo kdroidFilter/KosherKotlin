@@ -1908,10 +1908,10 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see .getSeaLevelSunset
      */
     @Deprecated("This method should be used <em>lechumra</em> only since it returns a very late time, and if used\n" + "	          <em>lekula</em> can result in <em>chillul Shabbos</em> etc. There is no current plan to remove this\n" + "	          method from the API, and this deprecation is intended to alert developers of the danger of using it.\n" + "	  \n" + "	  ")  // (forRemoval=false) // add back once Java 9 is the minimum supported version
-    val plagAlosToSunset: Zman.DateBased<Nothing, Nothing>
+    val plagAlosToSunset: Zman.DateBased<ZmanOpinion.Authority, String>
         get() = Zman.DateBased(
             ZmanType.PLAG_HAMINCHA,
-            TODO(),
+            ZmanOpinion.Authority("Day starts at dawn 16.1˚ and ends at sunset"), //TODO fix
             getPlagHamincha(alos16Point1Degrees.momentOfOccurrence, elevationAdjustedSunset)
         )
 
