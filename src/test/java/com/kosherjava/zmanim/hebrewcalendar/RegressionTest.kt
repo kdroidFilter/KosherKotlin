@@ -16,7 +16,7 @@ import java.util.*
 class RegressionTest {
     companion object {
         fun Instant.toDate(): java.util.Date = this.let { java.util.Date.from(it.toJavaInstant()) }
-        fun <T: ZmanCalculationMethod<A>, A> Zman.DateBased.toDate(): java.util.Date? =
+        fun Zman.DateBased.toDate(): java.util.Date? =
             this.momentOfOccurrence?.let { java.util.Date.from(it.toJavaInstant()) }
     }
 
