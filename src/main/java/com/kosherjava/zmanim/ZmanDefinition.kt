@@ -229,7 +229,7 @@ data class ZmanDefinition(
             )
         }
     }
-    enum class UsesElevation : ZmanCalculationRule {
+    enum class UsesElevation {
         IF_SET,
         NEVER,
         ALWAYS,

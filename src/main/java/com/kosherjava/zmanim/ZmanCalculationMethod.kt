@@ -73,32 +73,28 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
              * @see ZmanAuthority.MAHARIK
              * @see ZmanAuthority.HISACHDUS_HARABONIM
              *
-             * @see ZmanCalculationRule.MilLengthRule._15_Minutes
              * */
             val _30 = FixedDuration(30.minutes)
             val _60 = FixedDuration(60.minutes)
 
             /**
              * A mil takes 18 minutes to walk; 4 mil * 18 minutes/mil = 72 minutes
-             * @see ZmanCalculationRule.MilLengthRule._18_Minutes
+             * @see ZmanAuthority.RAAVAN (disputed - see [ComplexZmanimCalendar.alos60])
              * */
             val _72 = FixedDuration(72.minutes)
 
             /**
              * A mil takes 22.5 minutes to walk; 4 mil * 22.5 minutes/mil = 90 minutes
-             * @see ZmanCalculationRule.MilLengthRule._22_5_Minutes
              * */
             val _90 = FixedDuration(90.minutes)
 
             /**
              * A mil takes 24 minutes to walk; 4 mil * 24 minutes/mil = 96 minutes
-             * @see ZmanCalculationRule.MilLengthRule._24_Minutes
              * */
             val _96 = FixedDuration(96.minutes)
 
             /**
              * A mil takes 24 minutes to walk; 5 mil * 24 minutes/mil = 120 minutes
-             * @see ZmanCalculationRule.MilLengthRule._24_Minutes
              * */
             val _120 = FixedDuration(120.minutes)
         }
