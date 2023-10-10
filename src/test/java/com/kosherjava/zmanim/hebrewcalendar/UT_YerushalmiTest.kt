@@ -6,7 +6,11 @@ import org.junit.Test
 class UT_YerushalmiTest {
     @Test
     fun testCorrectDaf1() {
-        val javaJewishCalendar = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(5777, HebrewMonth.ELUL.value, 10)
+        val javaJewishCalendar = com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
+            5777,
+            HebrewMonth.ELUL.value,
+            10
+        )
         val kotlinJewishCalendar = JewishCalendar(5777, HebrewMonth.ELUL, 10)
         Assert.assertEquals(
             javaJewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong(),

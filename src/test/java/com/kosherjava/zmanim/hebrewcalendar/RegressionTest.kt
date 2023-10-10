@@ -3,7 +3,6 @@ package com.kosherjava.zmanim.hebrewcalendar
 import com.kosherjava.zmanim.AstronomicalCalendar
 import com.kosherjava.zmanim.ComplexZmanimCalendar
 import com.kosherjava.zmanim.Zman
-import com.kosherjava.zmanim.ZmanCalculationMethod
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
 import kotlinx.datetime.*
@@ -33,7 +32,7 @@ class RegressionTest {
         TimeZone.of("America/New_York")
     )
 
-    val javaLocation = com.kosherjava.zmanim.java.zmanim.util.GeoLocation(
+    val javaLocation = com.kosherjava.java.zmanim.util.GeoLocation(
         kotlinLocation.locationName,
         kotlinLocation.latitude,
         kotlinLocation.longitude,
@@ -94,9 +93,24 @@ class RegressionTest {
         val hebrewStart = HebrewLocalDate.STARTING_DATE_HEBREW //start of hillel hakatan's calender - java upstream doesn't support earlier
         val distantFutureJewishDate = JewishDate(gregorianEnd) //6000-1-1 hebrew
 
-        val javaCurrentJewishCalendar = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(hebrewStart.year.toInt(), hebrewStart.month.value, hebrewStart.dayOfMonth)
-        val javaCurrentJewishCalendarIsraeli = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(hebrewStart.year.toInt(), hebrewStart.month.value, hebrewStart.dayOfMonth, true)
-        val javaCurrentJewishCalendarIsraeliUseModernHolidays = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(hebrewStart.year.toInt(), hebrewStart.month.value, hebrewStart.dayOfMonth, true).apply {
+        val javaCurrentJewishCalendar = com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
+            hebrewStart.year.toInt(),
+            hebrewStart.month.value,
+            hebrewStart.dayOfMonth
+        )
+        val javaCurrentJewishCalendarIsraeli =
+            com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
+                hebrewStart.year.toInt(),
+                hebrewStart.month.value,
+                hebrewStart.dayOfMonth,
+                true
+            )
+        val javaCurrentJewishCalendarIsraeliUseModernHolidays = com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
+            hebrewStart.year.toInt(),
+            hebrewStart.month.value,
+            hebrewStart.dayOfMonth,
+            true
+        ).apply {
             isUseModernHolidays = true
         }
 
@@ -125,7 +139,7 @@ class RegressionTest {
 
     private fun assertAllValues(
         kotlin: JewishCalendar, 
-        java: com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar
+        java: com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar
     ) {
         assertEquals(java.chalakimSinceMoladTohu,kotlin.chalakimSinceMoladTohu,)
         assertEquals(java.cheshvanKislevKviah,kotlin.cheshvanKislevKviah,)
@@ -200,7 +214,7 @@ class RegressionTest {
         //assertEquals(java.tekufasTishreiElapsedDays,//kotlin.tekufasTishreiElapsedDays,)
         //assertEquals(java.upcomingParshah.name,//kotlin.upcomingParshah.name,)
     }
-    private fun getAllValues(java: com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar): Array<Any?> {
+    private fun getAllValues(java: com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar): Array<Any?> {
         val moladAsKotlinLocalDate = java.molad.localDate.atStartOfDay(javaLocation.timeZone.toZoneId()).toLocalDate()
             .toKotlinLocalDate()
         val molad = if (moladAsKotlinLocalDate < HebrewLocalDate.STARTING_DATE_GREGORIAN
@@ -215,7 +229,7 @@ class RegressionTest {
     @Test
     fun testComplexZmanimCalendar() {
         val calc = ComplexZmanimCalendar(kotlinLocation)
-        val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(javaLocation)
+        val javaCalc = com.kosherjava.java.zmanim.ComplexZmanimCalendar(javaLocation)
         assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.momentOfOccurrence?.toDate()?.time)
         assertEquals(
             javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
@@ -228,11 +242,11 @@ class RegressionTest {
         assertEquals(javaCalc.alos90Zmanis, calc.alos90Zmanis.momentOfOccurrence?.toDate())
         assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis.momentOfOccurrence?.toDate())
         assertEquals(
-            com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time,
+            com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time,
             JewishCalendar().moladAsInstant.toDate()!!.time
         )
         assertEquals(
-            com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time,
+            com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time,
             JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time
         )
         assertEquals(
@@ -630,7 +644,7 @@ class RegressionTest {
         val kotlinAstroCal = AstronomicalCalendar(kotlinLocation).apply {
             localDateTime = LocalDateTime(localDateTime.date, LocalTime(1,0,0))
         }
-        val javaAstroCal = com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar(javaLocation).apply {
+        val javaAstroCal = com.kosherjava.java.zmanim.AstronomicalCalendar(javaLocation).apply {
             val cal = Calendar.getInstance()
             cal.set(Calendar.YEAR, kotlinAstroCal.localDateTime.year)
             cal.set(Calendar.MONTH, kotlinAstroCal.localDateTime.monthNumber - 1)
