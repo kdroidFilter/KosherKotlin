@@ -16,4 +16,4 @@
  * </ul>
  * @author &copy; Eliyahu Hershfeld 2011 - 2022
  */
-package com.kosherjava.zmanim.java.zmanim.hebrewcalendar;
+package com.kosherjava.java.zmanim.hebrewcalendar;

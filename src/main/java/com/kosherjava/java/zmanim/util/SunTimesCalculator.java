@@ -13,11 +13,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.util;
-
-import com.kosherjava.zmanim.java.zmanim.util.AstronomicalCalculator;
-import com.kosherjava.zmanim.java.zmanim.util.GeoLocation;
-import com.kosherjava.zmanim.java.zmanim.util.NOAACalculator;
+package com.kosherjava.java.zmanim.util;
 
 import java.util.Calendar;
 
@@ -27,7 +23,7 @@ import java.util.Calendar;
  * Boone</a> that is based on the <a href = "https://aa.usno.navy.mil/">US Naval Observatory's</a><a
  * href="https://aa.usno.navy.mil/publications/asa">Astronomical Almanac</a> and used with his permission. Added to Kevin's
  * code is adjustment of the zenith to account for elevation. This algorithm returns the same time every year and does not
- * account for leap years. It is not as accurate as the Jean Meeus based {@link com.kosherjava.zmanim.java.zmanim.util.NOAACalculator} that is the default calculator
+ * account for leap years. It is not as accurate as the Jean Meeus based {@link NOAACalculator} that is the default calculator
  * use by the KosherJava <em>zmanim</em> library.
  * 
  * @author &copy; Eliyahu Hershfeld 2004 - 2023
@@ -43,9 +39,9 @@ public class SunTimesCalculator extends AstronomicalCalculator {
 	}
 
 	/**
-	 * @see AstronomicalCalculator#getUTCSunrise(Calendar, com.kosherjava.zmanim.java.zmanim.util.GeoLocation, double, boolean)
+	 * @see AstronomicalCalculator#getUTCSunrise(Calendar, GeoLocation, double, boolean)
 	 */
-	public double getUTCSunrise(Calendar calendar, com.kosherjava.zmanim.java.zmanim.util.GeoLocation geoLocation, double zenith, boolean adjustForElevation) {
+	public double getUTCSunrise(Calendar calendar, GeoLocation geoLocation, double zenith, boolean adjustForElevation) {
 		double doubleTime = Double.NaN;
 		double elevation = adjustForElevation ? geoLocation.getElevation() : 0;
 		double adjustedZenith = adjustZenith(zenith, elevation);
@@ -54,9 +50,9 @@ public class SunTimesCalculator extends AstronomicalCalculator {
 	}
 
 	/**
-	 * @see AstronomicalCalculator#getUTCSunset(Calendar, com.kosherjava.zmanim.java.zmanim.util.GeoLocation, double, boolean)
+	 * @see AstronomicalCalculator#getUTCSunset(Calendar, GeoLocation, double, boolean)
 	 */
-	public double getUTCSunset(Calendar calendar, com.kosherjava.zmanim.java.zmanim.util.GeoLocation geoLocation, double zenith, boolean adjustForElevation) {
+	public double getUTCSunset(Calendar calendar, GeoLocation geoLocation, double zenith, boolean adjustForElevation) {
 		double doubleTime = Double.NaN;
 		double elevation = adjustForElevation ? geoLocation.getElevation() : 0;
 		double adjustedZenith = adjustZenith(zenith, elevation);
@@ -230,7 +226,7 @@ public class SunTimesCalculator extends AstronomicalCalculator {
 	 *         (expected behavior for some locations such as near the poles,
 	 *         {@link Double#NaN} will be returned.
 	 */
-	private static double getTimeUTC(Calendar calendar, com.kosherjava.zmanim.java.zmanim.util.GeoLocation geoLocation, double zenith, boolean isSunrise) {
+	private static double getTimeUTC(Calendar calendar, GeoLocation geoLocation, double zenith, boolean isSunrise) {
 		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 		double sunMeanAnomaly = getMeanAnomaly(dayOfYear, geoLocation.getLongitude(), isSunrise);
 		double sunTrueLong = getSunTrueLongitude(sunMeanAnomaly);
@@ -264,7 +260,7 @@ public class SunTimesCalculator extends AstronomicalCalculator {
 	 * Other calculators may return true solar noon. See <a href=
 	 * "https://kosherjava.com/2020/07/02/definition-of-chatzos/">The Definition of Chatzos</a> for details on solar
 	 * noon calculations.
-	 * @see AstronomicalCalculator#getUTCNoon(Calendar, com.kosherjava.zmanim.java.zmanim.util.GeoLocation)
+	 * @see AstronomicalCalculator#getUTCNoon(Calendar, GeoLocation)
 	 * @see NOAACalculator
 	 * 
 	 * @param calendar

@@ -13,13 +13,12 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA,
  * or connect to: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim;
+package com.kosherjava.java.zmanim;
 
-import com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar;
-import com.kosherjava.zmanim.java.zmanim.ZmanimCalendar;
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar;
-import com.kosherjava.zmanim.java.zmanim.util.AstronomicalCalculator;
-import com.kosherjava.zmanim.java.zmanim.util.GeoLocation;
+import com.kosherjava.java.zmanim.hebrewcalendar.HebrewDateFormatter;
+import com.kosherjava.java.zmanim.util.GeoLocation;
+import com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar;
+import com.kosherjava.java.zmanim.util.AstronomicalCalculator;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -96,7 +95,7 @@ import java.util.Date;
  * </ol>
  * <br>
  * <pre style="background: #FEF0C9; display: inline-block;">
- * long shaahZmanis = czc.getTemporalHour(czc.getSunriseOffsetByDegrees({@link AstronomicalCalendar#GEOMETRIC_ZENITH} + 12),
+ * long shaahZmanis = czc.temporalHour(czc.getSunriseOffsetByDegrees({@link AstronomicalCalendar#GEOMETRIC_ZENITH} + 12),
  * 						czc.getSunsetOffsetByDegrees({@link AstronomicalCalendar#GEOMETRIC_ZENITH} + ZENITH_7_POINT_083));
  * Date sofZmanAchila = getTimeOffset(czc.getSunriseOffsetByDegrees({@link AstronomicalCalendar#GEOMETRIC_ZENITH} + 12),
  * 					shaahZmanis * 9);</pre>
@@ -3556,7 +3555,7 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	/**
 	 * Returns the point in time of <em>Molad</em> as a <code>Date</code> Object. For the traditional day of week, hour,
 	 * minute and chalakim, {@link JewishCalendar#getMoladAsDate()} and the not yet completed
-	 * {@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.HebrewDateFormatter} that will have formatting for this.
+	 * {@link HebrewDateFormatter} that will have formatting for this.
 	 * 
 	 * @return the Date representing the moment of the molad. If the molad does not occur on this day, a null will be returned.
 	 * 

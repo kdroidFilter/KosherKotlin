@@ -13,14 +13,16 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.util;
+package com.kosherjava.java.zmanim.util;
+
+import com.kosherjava.java.zmanim.AstronomicalCalendar;
 
 import java.util.TimeZone;
 
 /**
  * A class that represents a numeric time. Times that represent a time of day are stored as {@link java.util.Date}s in
  * this API. The time class is used to represent numeric time such as the time in hours, minutes, seconds and
- * milliseconds of a {@link com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar#getTemporalHour() temporal hour}.
+ * milliseconds of a {@link AstronomicalCalendar#getTemporalHour() temporal hour}.
  * 
  * @author &copy; Eliyahu Hershfeld 2004 - 2020
  */

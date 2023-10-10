@@ -13,9 +13,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.util;
-
-import com.kosherjava.zmanim.java.zmanim.util.GeoLocation;
+package com.kosherjava.java.zmanim.util;
 
 /**
  * A class for various location calculations

@@ -13,11 +13,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.hebrewcalendar;
-
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf;
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar;
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.YerushalmiYomiCalculator;
+package com.kosherjava.java.zmanim.hebrewcalendar;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -44,13 +40,13 @@ public class YomiCalculator {
 	private static final Calendar shekalimChangeDay = new GregorianCalendar(1975, Calendar.JUNE, 24);
 	
 	/** The Julian date that the cycle for Shekalim changed.
-	 * @see #getDafYomiBavli(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar) for details.
+	 * @see #getDafYomiBavli(JewishCalendar) for details.
 	 */
 	private static final int shekalimJulianChangeDay = getJulianDay(shekalimChangeDay);
 
 	/**
 	 * Returns the <a href="http://en.wikipedia.org/wiki/Daf_yomi">Daf Yomi</a> <a
-	 * href="http://en.wikipedia.org/wiki/Talmud">Bavli</a> {@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf} for a given date. The first Daf Yomi cycle
+	 * href="http://en.wikipedia.org/wiki/Talmud">Bavli</a> {@link Daf} for a given date. The first Daf Yomi cycle
 	 * started on Rosh Hashana 5684 (September 11, 1923) and calculations prior to this date will result in an
 	 * IllegalArgumentException thrown. For historical calculations (supported by this method), it is important to note
 	 * that a change in length of the cycle was instituted starting in the eighth Daf Yomi cycle beginning on June 24,
@@ -67,12 +63,12 @@ public class YomiCalculator {
 	 * @param jewishCalendar
 	 *            The JewishCalendar date for calculation. TODO: this can be changed to use a regular GregorianCalendar since
 	 *            there is nothing specific to the JewishCalendar in this class.
-	 * @return the {@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf}.
+	 * @return the {@link Daf}.
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if the date is prior to the September 11, 1923 start date of the first Daf Yomi cycle
 	 */
-	public static com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf getDafYomiBavli(JewishCalendar jewishCalendar) {
+	public static Daf getDafYomiBavli(JewishCalendar jewishCalendar) {
 		/*
 		 * The number of daf per masechta. Since the number of blatt in Shekalim changed on the 8th Daf Yomi cycle
 		 * beginning on June 24, 1975 from 13 to 22, the actual calculation for blattPerMasechta[4] will later be
@@ -82,7 +78,7 @@ public class YomiCalculator {
 				119, 119, 176, 113, 24, 49, 76, 14, 120, 110, 142, 61, 34, 34, 28, 22, 4, 9, 5, 73 };
 		Calendar calendar = jewishCalendar.getGregorianCalendar();
 
-		com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf dafYomi = null;
+		Daf dafYomi = null;
 		int julianDay = getJulianDay(calendar);
 		int cycleNo = 0;
 		int dafNo = 0;
