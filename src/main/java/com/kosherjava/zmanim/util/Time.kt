@@ -22,7 +22,7 @@ import kotlin.math.abs
 /**
  * A class that represents a numeric time. Times that represent a time of day are stored as [java.util.Date]s in
  * this API. The time class is used to represent numeric time such as the time in hours, minutes, seconds and
- * milliseconds of a [temporal hour][com.kosherjava.zmanim.AstronomicalCalendar.getTemporalHour].
+ * milliseconds of a [temporal hour][com.kosherjava.zmanim.AstronomicalCalendar.temporalHour].
  *
  * This is a data class so that it inherits the [copy] method, and to semantically signify it is a data holder.
  * @author  Eliyahu Hershfeld 2004 - 2020

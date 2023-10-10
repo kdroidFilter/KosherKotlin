@@ -88,7 +88,7 @@ class NOAACalculator : AstronomicalCalculator() {
      * Other calculators may return a more simplified calculation of halfway between sunrise and sunset. See [The Definition of *Chatzos*](https://kosherjava.com/2020/07/02/definition-of-chatzos/) for details on
      * solar noon calculations.
      * @see com.kosherjava.zmanim.util.AstronomicalCalculator.getUTCNoon
-     * @see .getSolarNoonUTC
+     * @see solarNoonUTC
      * @param calendar
      * The Calendar representing the date to calculate solar noon for
      * @param geoLocation
@@ -323,7 +323,7 @@ class NOAACalculator : AstronomicalCalculator() {
 
         /**
          * Returns the [hour angle](https://en.wikipedia.org/wiki/Hour_angle) of the sun in [radians](https://en.wikipedia.org/wiki/Radian)at sunset for the latitude.
-         * @todo use - [.getSunHourAngleAtSunrise] implementation to avoid
+         * @todo use - [sunHourAngleAtSunrise] implementation to avoid
          * duplication of code.
          *
          * @param lat

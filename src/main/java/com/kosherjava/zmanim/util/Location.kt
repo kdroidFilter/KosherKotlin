@@ -6,7 +6,7 @@ import kotlinx.datetime.TimeZone
  * Represents a coordinate on the globe. In contrast to [GeoLocation] which has an associated timezone and place name,
  * [Location] may not. This is to accommodate various platforms, which may not expose as rich information as [GeoLocation]
  * requires.
- * 
+ *
  * @param timestamp epoch milliseconds when the location was last updated.
  * On some platforms (e.g. Kotlin/JS) this can be significantly delayed (I think e.g. if the user is offline, etc.)
  * compared to when the location flow is updated.

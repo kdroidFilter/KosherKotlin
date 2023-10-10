@@ -102,7 +102,7 @@ class JewishCalendar : JewishDate {
     var isMukafChoma: Boolean = false
     /**
      * Is this calendar set to return modern Israeli national holidays. By default this value is false. The holidays
-     * are [<em>Yom HaShoah</em>][.YOM_HASHOAH], [<em>Yom Hazikaron</em>][.YOM_HAZIKARON], [YOM_HAATZMAUT] and [<em>Yom Yerushalayim</em>][.YOM_YERUSHALAYIM].
+     * are [*Yom HaShoah*][.YOM_HASHOAH], [*Yom Hazikaron*][.YOM_HAZIKARON], [YOM_HAATZMAUT] and [*Yom Yerushalayim*][.YOM_YERUSHALAYIM].
      *
      * @return the useModernHolidays true if set to return modern Israeli national holidays
      *
@@ -110,7 +110,7 @@ class JewishCalendar : JewishDate {
      */
     /**
      * Sets the calendar to return modern Israeli national holidays. By default this value is false. The holidays are:
-     * [<em>Yom HaShoah</em>][.YOM_HASHOAH], [<em>Yom Hazikaron</em>][.YOM_HAZIKARON], [ ][.YOM_HAATZMAUT] and [<em>Yom Yerushalayim</em>][.YOM_YERUSHALAYIM].
+     * [*Yom HaShoah*][.YOM_HASHOAH], [*Yom Hazikaron*][.YOM_HAZIKARON], [][.YOM_HAATZMAUT] and [*Yom Yerushalayim*][.YOM_YERUSHALAYIM].
      *
      * @param useModernHolidays
      * the useModernHolidays to set
@@ -630,7 +630,7 @@ class JewishCalendar : JewishDate {
         }// negative year should be impossible, but let's cover all bases
     //keep the compiler happy
     /**
-     * Returns this week's [<em>Parsha</em>][Parsha] if it is *Shabbos*. It returns [Parsha.NONE] if the date
+     * Returns this week's [*Parsha*][Parsha] if it is *Shabbos*. It returns [Parsha.NONE] if the date
      * is a weekday or if there is no *parsha* that week (for example *Yom Tov* that falls on a *Shabbos*).
      *
      * @return the current *parsha*.
@@ -650,7 +650,7 @@ class JewishCalendar : JewishDate {
         }//Yom Kippur / Sukkos or Pesach with 2 potential non-parsha Shabbosim in a row
 
     /**
-     * Returns the upcoming [<em>Parsha</em>][Parsha] regardless of if it is the weekday or *Shabbos* (where next
+     * Returns the upcoming [*Parsha*][Parsha] regardless of if it is the weekday or *Shabbos* (where next
      * Shabbos's *Parsha* will be returned. This is unlike [.getParshah] that returns [Parsha.NONE] if
      * the date is not *Shabbos*. If the upcoming Shabbos is a *Yom Tov* and has no *Parsha*, the
      * following week's *Parsha* will be returned.
@@ -681,9 +681,9 @@ class JewishCalendar : JewishDate {
         }
 
     /**
-     * Returns a [<em>Parsha</em>][Parsha] enum if the *Shabbos* is one of the four *parshiyos* of [Parsha.SHKALIM], [<em>Zachor</em>][Parsha.ZACHOR], [<em>Para</em>][Parsha.PARA], [Parsha.HACHODESH] or [Parsha.NONE] for a regular *Shabbos* (or any weekday).
+     * Returns a [*Parsha*][Parsha] enum if the *Shabbos* is one of the four *parshiyos* of [Parsha.SHKALIM], [*Zachor*][Parsha.ZACHOR], [*Para*][Parsha.PARA], [Parsha.HACHODESH] or [Parsha.NONE] for a regular *Shabbos* (or any weekday).
      *
-     * @return one of the four *parshiyos* of [<em>Shkalim</em>][Parsha.SHKALIM] [         <em>Zachor</em>][Parsha.ZACHOR], [<em>Para</em>][Parsha.PARA], [<em>Hachdesh</em>][Parsha.HACHODESH] or [Parsha.NONE].
+     * @return one of the four *parshiyos* of [*Shkalim*][Parsha.SHKALIM] [*Zachor*][Parsha.ZACHOR], [*Para*][Parsha.PARA], [*Hachdesh*][Parsha.HACHODESH] or [Parsha.NONE].
      */
     val specialShabbos: Parsha
         get() {
@@ -1375,8 +1375,8 @@ class JewishCalendar : JewishDate {
         }
 
     /**
-     * The Monday, Thursday and Monday after the first *Shabbos* after [<em>Rosh Chodesh</em>][isRoshChodesh]
-     * [<em>Cheshvan</em>][HebrewMonth.CHESHVAN] and [<em>Iyar</em>][HebrewMonth.IYAR] are [*BeHaB*](https://outorah.org/p/41334/) days.
+     * The Monday, Thursday and Monday after the first *Shabbos* after [*Rosh Chodesh*][isRoshChodesh]
+     * [*Cheshvan*][HebrewMonth.CHESHVAN] and [*Iyar*][HebrewMonth.IYAR] are [*BeHaB*](https://outorah.org/p/41334/) days.
      * If the last Monday of Iyar's BeHaB coincides with [PESACH_SHENI], the method currently considers it both *Pesach Sheni* and *BeHaB*.
      * As seen in an Ohr Sameach  article on the subject [The unknown Days: BeHaB Vs. Pesach Sheini?](https://ohr.edu/this_week/insights_into_halacha/9340)
      * there are some customs that delay the day to various points in the future.
@@ -1611,7 +1611,7 @@ class JewishCalendar : JewishDate {
      * Returns the latest time of *Kiddush Levana* calculated as 15 days after the *molad.* This is the
      * opinion brought down in the Shulchan Aruch (Orach Chaim 426). It should be noted that some opinions hold that
      * the [Rema](http://en.wikipedia.org/wiki/Moses_Isserles) who brings down the the [Maharil's](http://en.wikipedia.org/wiki/Yaakov_ben_Moshe_Levi_Moelin) opinion of calculating it as
-     * [half way between <em>molad</em> and <em>molad</em>][sofZmanKidushLevanaBetweenMoldos] is of the
+     * [half way between *molad* and *molad*][sofZmanKidushLevanaBetweenMoldos] is of the
      * opinion of the Mechaber as well. Also see the Aruch Hashulchan. For additional details on the subject, See Rabbi
      * Dovid Heber's very detailed writeup in Siman Daled (chapter 4) of [Shaarei Zmanim](http://www.worldcat.org/oclc/461326125). This method returns the time even if it is during
      * the day when *Kiddush Levana* can't be said. Callers of this method should consider displaying *alos*
