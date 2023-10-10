@@ -64,6 +64,14 @@ import kotlin.time.Duration.Companion.minutes
  * <h2>Disclaimer:</h2> I did my best to get accurate results, but please double-check before relying on these
  * *zmanim* for *halacha lema'aseh*.
  *
+ * **Glossary**
+ * *Alos* - Dawn. The time when the sun is 16.1&deg; below the eastern geometric horizon before sunrise.
+ * Sunrise - Netz/Haneitz
+ * Sunset - Shkiah
+ * Dusk/Nightfall:  This is the same as *Tzais*.
+ * Candle lighting - The time when Shabbos candles are lit. This is usually 18 minutes before sunset.
+ * *Chatzos* - Midday/Midnight. The time when the sun is at its highest point in the sky. This is usually 6 hours after *Alos*.
+ *
  *
  * @author  Eliyahu Hershfeld 2004 - 2022
  */
