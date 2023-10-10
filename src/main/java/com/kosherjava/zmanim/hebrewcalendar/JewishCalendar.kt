@@ -429,9 +429,9 @@ class JewishCalendar : JewishDate {
     /**
      * Creates a Jewish date based on a Jewish year, month and day of month.
      *
-     * @param hebrewLocalDate.year
+     * @param jewishYear
      * the Jewish year
-     * @param hebrewLocalDate.month
+     * @param jewishMonth
      * the Jewish month. The method expects a 1 for Nissan ... 12 for Adar and 13 for Adar II. Use the
      * constants [.NISSAN] ... [.ADAR] (or [.ADAR_II] for a leap year Adar II) to avoid any
      * confusion.
@@ -469,9 +469,9 @@ class JewishCalendar : JewishDate {
     /**
      * Creates a Jewish date based on a Jewish date and whether in Israel
      *
-     * @param hebrewLocalDate.year
+     * @param jewishYear
      * the Jewish year
-     * @param hebrewLocalDate.month
+     * @param jewishMonth
      * the Jewish month. The method expects a 1 for *Nissan* ... 12 for *Adar* and 13 for
      * *Adar II*. Use the constants [.NISSAN] ... [.ADAR] (or [.ADAR_II] for a
      * leap year Adar II) to avoid any confusion.
@@ -505,9 +505,9 @@ class JewishCalendar : JewishDate {
     /**
      * Creates a Jewish date based on a Jewish date and whether in Israel
      *
-     * @param hebrewLocalDate.year
+     * @param jewishYear
      * the Jewish year
-     * @param hebrewLocalDate.month
+     * @param jewishMonth
      * the Jewish month. The method expects a 1 for *Nissan* ... 12 for *Adar* and 13 for
      * *Adar II*. Use the constants [.NISSAN] ... [.ADAR] (or [.ADAR_II] for a
      * leap year Adar II) to avoid any confusion.
@@ -842,20 +842,22 @@ class JewishCalendar : JewishDate {
                 }
 
                 HebrewMonth.TISHREI -> {
-                    return when(day) {
+                    return when (day) {
                         1 -> ROSH_HASHANA
                         2 -> ROSH_HASHANA
                         9 -> EREV_YOM_KIPPUR
                         10 -> YOM_KIPPUR
                         14 -> EREV_SUCCOS
+                        15 -> SUCCOS
+                        16 -> if (inIsrael) CHOL_HAMOED_SUCCOS else SUCCOS
+                        17, 18, 19, 20 -> CHOL_HAMOED_SUCCOS
                         21 -> HOSHANA_RABBA
                         22 -> SHEMINI_ATZERES
-                        23 -> if(inIsrael) ISRU_CHAG else SIMCHAS_TORAH
-                        else -> when {
-                            day == 3 && dayOfWeek != DayOfWeek.SATURDAY || day == 4 && dayOfWeek == DayOfWeek.SUNDAY -> FAST_OF_GEDALYAH // push off Tzom Gedalia if it falls on Shabbos
-                            day in 17..20 || day == 16 && inIsrael -> CHOL_HAMOED_SUCCOS
-                            day == 15 || day == 16 && !inIsrael -> SUCCOS
-                            day == 24 && !inIsrael -> ISRU_CHAG
+                        23 -> if (inIsrael) ISRU_CHAG else SIMCHAS_TORAH
+                        else -> when (day) {
+                            3 -> if (dayOfWeek != DayOfWeek.SATURDAY) FAST_OF_GEDALYAH else NO_HOLIDAY
+                            4 -> if (dayOfWeek == DayOfWeek.SUNDAY) FAST_OF_GEDALYAH else NO_HOLIDAY// push off Tzom Gedalia if it falls on Shabbos
+                            24 -> if (!inIsrael) ISRU_CHAG else NO_HOLIDAY
                             else -> NO_HOLIDAY
                         }
                     }
@@ -892,7 +894,7 @@ class JewishCalendar : JewishDate {
 
                 HebrewMonth.TEVES -> {
                     when (day) {
-                        in 1..(if (isKislevShort) 3 else 2) -> CHANUKAH
+                        in 1..(if (isKislevShort) 3 else 2) -> CHANUKAH//TODO use constant comparison
                         10 -> TENTH_OF_TEVES
                         else -> NO_HOLIDAY
                     }
@@ -1035,14 +1037,11 @@ class JewishCalendar : JewishDate {
                 {
                     if (!isJewishLeapYear) {
                         // if 13th Adar falls on Friday or Shabbos, push back to Thursday
-                        when {
-
-                            day in 11..12 && dayOfWeek == DayOfWeek.THURSDAY ||
-                                    day == 13 && dayOfWeek !in DayOfWeek.FRIDAY..DayOfWeek.SATURDAY
-                            -> FAST_OF_ESTHER
-
-                            day == 14 -> PURIM
-                            day == 15 -> SHUSHAN_PURIM
+                        when (day) {
+                            11, 12 -> if (dayOfWeek == DayOfWeek.THURSDAY) FAST_OF_ESTHER else NO_HOLIDAY
+                            13 -> if (dayOfWeek !in DayOfWeek.FRIDAY..DayOfWeek.SATURDAY) FAST_OF_ESTHER else NO_HOLIDAY
+                            14 -> PURIM
+                            15 -> SHUSHAN_PURIM
                             else -> NO_HOLIDAY
                         }
                     } else { // else if a leap year
@@ -1056,13 +1055,11 @@ class JewishCalendar : JewishDate {
 
                 HebrewMonth.ADAR_II -> {
                     // if 13th Adar falls on Friday or Shabbos, push back to Thursday
-                    when {
-                        (day in 11..12 && dayOfWeek == DayOfWeek.THURSDAY) ||
-                                (day == 13 && dayOfWeek !in DayOfWeek.FRIDAY..DayOfWeek.SATURDAY) ->
-                            FAST_OF_ESTHER
-
-                        day == 14 -> PURIM
-                        day == 15 -> SHUSHAN_PURIM
+                    when (day) {
+                        11, 12 -> if (dayOfWeek == DayOfWeek.THURSDAY) FAST_OF_ESTHER else NO_HOLIDAY
+                        13 -> if (dayOfWeek != DayOfWeek.FRIDAY && dayOfWeek != DayOfWeek.SATURDAY) FAST_OF_ESTHER else NO_HOLIDAY
+                        14 -> PURIM
+                        15 -> SHUSHAN_PURIM
                         else -> NO_HOLIDAY
                     }
                 }
@@ -1110,15 +1107,14 @@ class JewishCalendar : JewishDate {
      * @return if the *Yom Tov* day has a *melacha* (work)  prohibition.
      */
     val isYomTovAssurBemelacha: Boolean
-        get() {
-            val holidayIndex = yomTovIndex
-            return holidayIndex == PESACH ||
-                    holidayIndex == SHAVUOS ||
-                    holidayIndex == SUCCOS ||
-                    holidayIndex == SHEMINI_ATZERES ||
-                    holidayIndex == SIMCHAS_TORAH ||
-                    holidayIndex == ROSH_HASHANA ||
-                    holidayIndex == YOM_KIPPUR
+        get() = yomTovIndex.let {
+            it == PESACH ||
+                    it == SHAVUOS ||
+                    it == SUCCOS ||
+                    it == SHEMINI_ATZERES ||
+                    it == SIMCHAS_TORAH ||
+                    it == ROSH_HASHANA ||
+                    it == YOM_KIPPUR
         }
 
     /**
@@ -1190,9 +1186,8 @@ class JewishCalendar : JewishDate {
      * @see CHOL_HAMOED_PESACH
      */
     val isPesach: Boolean
-        get() {
-            val holidayIndex = yomTovIndex
-            return holidayIndex == PESACH || holidayIndex == CHOL_HAMOED_PESACH
+        get() = yomTovIndex.let {
+            it == PESACH || it == CHOL_HAMOED_PESACH
         }
 
     /**
@@ -1251,9 +1246,8 @@ class JewishCalendar : JewishDate {
      * @see HOSHANA_RABBA
      */
     val isSuccos: Boolean
-        get() {
-            val holidayIndex = yomTovIndex
-            return (holidayIndex == SUCCOS) || (holidayIndex == CHOL_HAMOED_SUCCOS) || (holidayIndex == HOSHANA_RABBA)
+        get() = yomTovIndex.let {
+            it == SUCCOS || it == CHOL_HAMOED_SUCCOS || it == HOSHANA_RABBA
         }
 
     /**
@@ -1296,9 +1290,8 @@ class JewishCalendar : JewishDate {
      * @see CHOL_HAMOED_SUCCOS
      */
     val isCholHamoedSuccos: Boolean
-        get() {
-            val holidayIndex = yomTovIndex
-            return holidayIndex == CHOL_HAMOED_SUCCOS || holidayIndex == HOSHANA_RABBA
+        get() = yomTovIndex.let {
+            it == CHOL_HAMOED_SUCCOS || it == HOSHANA_RABBA
         }
 
     /**
@@ -1311,9 +1304,7 @@ class JewishCalendar : JewishDate {
      * @see CHOL_HAMOED_SUCCOS
      */
     val isCholHamoed: Boolean
-        get() {
-            return isCholHamoedPesach || isCholHamoedSuccos
-        }
+        get() = isCholHamoedPesach || isCholHamoedSuccos
 
     /**
      * Returns true if the current day is *Erev Yom Tov*. The method returns true for *Erev* - *Pesach*
@@ -1326,15 +1317,14 @@ class JewishCalendar : JewishDate {
      * @see isErevYomTovSheni
      */
     val isErevYomTov: Boolean
-        get() {
-            val holidayIndex = yomTovIndex
-            return (holidayIndex == EREV_PESACH) ||
-                    (holidayIndex == EREV_SHAVUOS) ||
-                    (holidayIndex == EREV_ROSH_HASHANA) ||
-                    (holidayIndex == EREV_YOM_KIPPUR) ||
-                    (holidayIndex == EREV_SUCCOS) ||
-                    (holidayIndex == HOSHANA_RABBA) ||
-                    (holidayIndex == CHOL_HAMOED_PESACH && jewishDayOfMonth == 20)
+        get() = yomTovIndex.let {
+            it == EREV_PESACH ||
+                    it == EREV_SHAVUOS ||
+                    it == EREV_ROSH_HASHANA ||
+                    it == EREV_YOM_KIPPUR ||
+                    it == EREV_SUCCOS ||
+                    it == HOSHANA_RABBA ||
+                    it == CHOL_HAMOED_PESACH && jewishDayOfMonth == 20
         }// Erev Rosh Hashana is not Erev Rosh Chodesh.
     val isErevPesach: Boolean get() = jewishMonth == HebrewMonth.NISSAN && yomTovIndex == EREV_PESACH //include "2nd days"? (i.e. holiday == CHOL_HAMOED_PESACH and jewishDayOfMonth == 20). Not sure people call that "erev pesach", but thye might call it "erev yom tov" because it is assur bemelacha
     val isErevSuccos: Boolean get() = jewishMonth == HebrewMonth.TISHREI && yomTovIndex == EREV_SUCCOS
@@ -1401,15 +1391,15 @@ class JewishCalendar : JewishDate {
      * @return true if today is a fast day
      */
     val isTaanis: Boolean
-        get() {
-            val holidayIndex = yomTovIndex
-            return holidayIndex == SEVENTEEN_OF_TAMMUZ ||
-                    holidayIndex == TISHA_BEAV ||
-                    holidayIndex == YOM_KIPPUR ||
-                    holidayIndex == FAST_OF_GEDALYAH ||
-                    holidayIndex == TENTH_OF_TEVES ||
-                    holidayIndex == FAST_OF_ESTHER
+        get() = yomTovIndex.let {
+            it == SEVENTEEN_OF_TAMMUZ ||
+                    it == TISHA_BEAV ||
+                    it == YOM_KIPPUR ||
+                    it == FAST_OF_GEDALYAH ||
+                    it == TENTH_OF_TEVES ||
+                    it == FAST_OF_ESTHER
         }// on 14 Nissan unless that is Shabbos where the fast is moved back to Thursday
+
 
     /**
      * Return true if the day is *Taanis Bechoros* (on *Erev Pesach*). It will return true for the 14th
@@ -1435,10 +1425,12 @@ class JewishCalendar : JewishDate {
      * @see isChanukah
      */
     val dayOfChanukah: Int
-        get() = if (isChanukah)
-            if (hebrewLocalDate.month == HebrewMonth.KISLEV) jewishDayOfMonth - 24
-            else /*teves*/ if (isKislevShort) jewishDayOfMonth + 5 else jewishDayOfMonth + 6
-        else -1
+        get() =
+            if (isChanukah)
+                if (hebrewLocalDate.month == HebrewMonth.KISLEV) jewishDayOfMonth - 24
+                else /*teves*/ if (isKislevShort) jewishDayOfMonth + 5 else jewishDayOfMonth + 6
+            else -1
+
 
     /**
      * Returns true if the current day is one of the 8 days of *Chanukah*.
@@ -1460,7 +1452,7 @@ class JewishCalendar : JewishDate {
     val isPurim: Boolean
         get() =
             if (isMukafChoma) yomTovIndex == SHUSHAN_PURIM
-            else yomTovIndex == PURIM// Rosh Hashana is not rosh chodesh. Elul never has 30 days
+            else yomTovIndex == PURIM
 
     /**
      * Returns if the day is Rosh Chodesh. Rosh Hashana will return false
@@ -1478,7 +1470,7 @@ class JewishCalendar : JewishDate {
      * @todo There is more to tweak in this method (it does not cover all cases and opinions), and it may be removed.
      */
     val isMacharChodesh: Boolean
-        get() = (gregorianLocalDate.dayOfWeek == DayOfWeek.SATURDAY && (jewishDayOfMonth == 30 || jewishDayOfMonth == 29))
+        get() = gregorianLocalDate.dayOfWeek == DayOfWeek.SATURDAY && (jewishDayOfMonth == 30 || jewishDayOfMonth == 29)
 
     /**
      * Returns if the day is *Shabbos Mevorchim*.

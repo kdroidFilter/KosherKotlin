@@ -1,5 +1,6 @@
 package com.kosherjava.zmanim.hebrewcalendar
 
+import com.kosherjava.java.zmanim.hebrewcalendar.JewishDate
 import com.kosherjava.zmanim.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
 import com.kosherjava.zmanim.hebrewcalendar.JewishDate.Companion.daysInJewishYear
 import com.kosherjava.zmanim.util.DateUtils.now
@@ -135,7 +136,7 @@ class ConvertBetweenGregorianAndHebrewTest {
     fun regressionTest() {
         val newGregorianDate = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(years = 1, months = 1))
         val distantFutureJewishDate =
-            com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(
+            JewishDate(
                 java.time.LocalDate.of(
                     newGregorianDate.year,
                     newGregorianDate.month,
@@ -147,7 +148,7 @@ class ConvertBetweenGregorianAndHebrewTest {
             HebrewMonth.TISHREI,
             1
         )
-        val javaCurrentJewishDate = com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(
+        val javaCurrentJewishDate = JewishDate(
             3763,
             HebrewMonth.TISHREI.value,
             1
