@@ -3,7 +3,7 @@ package com.kosherjava.zmanim.hebrewcalendar
 import com.kosherjava.zmanim.AstronomicalCalendar
 import com.kosherjava.zmanim.ComplexZmanimCalendar
 import com.kosherjava.zmanim.Zman
-import com.kosherjava.zmanim.ZmanOpinion
+import com.kosherjava.zmanim.ZmanCalculationMethod
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
 import kotlinx.datetime.*
@@ -16,7 +16,7 @@ import java.util.*
 class RegressionTest {
     companion object {
         fun Instant.toDate(): java.util.Date = this.let { java.util.Date.from(it.toJavaInstant()) }
-        fun <T: ZmanOpinion<A>, A> Zman.DateBased<T, A>.toDate(): java.util.Date? =
+        fun <T: ZmanCalculationMethod<A>, A> Zman.DateBased.toDate(): java.util.Date? =
             this.momentOfOccurrence?.let { java.util.Date.from(it.toJavaInstant()) }
     }
 
@@ -216,17 +216,17 @@ class RegressionTest {
     fun testComplexZmanimCalendar() {
         val calc = ComplexZmanimCalendar(kotlinLocation)
         val javaCalc = com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar(javaLocation)
-        assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.toDate()?.time)
+        assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.momentOfOccurrence?.toDate()?.time)
         assertEquals(
             javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
             calc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
             0.0
         )
         assertEquals(javaCalc.sunrise, calc.sunrise?.toDate())
-        assertEquals(javaCalc.alos60, calc.alos60.toDate())
-        assertEquals(javaCalc.tzais60, calc.tzais60.toDate())
-        assertEquals(javaCalc.alos90Zmanis, calc.alos90Zmanis.toDate())
-        assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis.toDate())
+        assertEquals(javaCalc.alos60, calc.alos60.momentOfOccurrence?.toDate())
+        assertEquals(javaCalc.tzais60, calc.tzais60.momentOfOccurrence?.toDate())
+        assertEquals(javaCalc.alos90Zmanis, calc.alos90Zmanis.momentOfOccurrence?.toDate())
+        assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis.momentOfOccurrence?.toDate())
         assertEquals(
             com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time,
             JewishCalendar().moladAsInstant.toDate()!!.time
@@ -237,12 +237,12 @@ class RegressionTest {
         )
         assertEquals(
             javaCalc.sofZmanKidushLevanaBetweenMoldos?.time?.toDouble() ?: 0.0,
-            calc.sofZmanKidushLevanaBetweenMoldos?.toDate()?.time?.toDouble() ?: 0.0,
+            calc.sofZmanKidushLevanaBetweenMoldos?.momentOfOccurrence?.toDate()?.time?.toDouble() ?: 0.0,
             0.0
         )
         assertEquals(
             javaCalc.sofZmanKidushLevana15Days?.time?.toDouble() ?: 0.0,
-            (calc.sofZmanKidushLevana15Days?.toDate()?.time?.toDouble() ?: 0.0),
+            (calc.sofZmanKidushLevana15Days?.momentOfOccurrence?.toDate()?.time?.toDouble() ?: 0.0),
             0.0
         )
         assertEquals(
@@ -606,17 +606,17 @@ class RegressionTest {
                     samuchLeMinchaKetana16Point1Degrees,
                     "samuchLeMinchaKetana16Point1Degrees"
                 )
-            ).map { Triple(it.first?.time?.toDouble(), it.second?.toDate()?.time?.toDouble(), it.third) }
+            ).map { Triple(it.first?.time?.toDouble(), it.second?.momentOfOccurrence?.toDate()?.time?.toDouble(), it.third) }
             testValues(values, transformActual = { it.duration.inWholeMilliseconds })
             testValues(listOfZmanim, 0.0)
         }
     }
 
-    private fun <T : ZmanOpinion<A>, A> nullIfKotlinNull(
+    private fun nullIfKotlinNull(
         java: java.util.Date,
-        kotlin: Zman.DateBased<T, A>,
+        kotlin: Zman.DateBased,
         label: String
-    ): Triple<Date?, Zman.DateBased<T, A>, String> {
+    ): Triple<Date?, Zman.DateBased, String> {
         return Triple(
             if (kotlin.momentOfOccurrence == null) null
             else java,
