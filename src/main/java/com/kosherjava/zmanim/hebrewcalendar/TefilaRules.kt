@@ -29,8 +29,8 @@ import kotlinx.datetime.DayOfWeek
  * in the [Minhag Yisrael Torah](https://www.nli.org.il/he/books/NNL_ALEPH001141272/NLI) on Orach
  * Chaim 131.
  * Dates used in specific communities such as specific *yahrzeits* or a holidays like Purim Mezhbizh
- * (Medzhybizh) celebrated on 11 [<em>Teves</em>][HebrewMonth.TEVES] or [Purim Saragossa](https://en.wikipedia.org/wiki/Second_Purim#Purim_Saragossa_(18_Shevat)) celebrated on
- * the (17th or) 18th of [<em>Shevat</em>][HebrewMonth.SHEVAT] are not (and likely will not be) supported by
+ * (Medzhybizh) celebrated on 11 [*Teves*][HebrewMonth.TEVES] or [Purim Saragossa](https://en.wikipedia.org/wiki/Second_Purim#Purim_Saragossa_(18_Shevat)) celebrated on
+ * the (17th or) 18th of [*Shevat*][HebrewMonth.SHEVAT] are not (and likely will not be) supported by
  * this class.
  *
  * Sample code:
@@ -59,14 +59,14 @@ import kotlinx.datetime.DayOfWeek
  */
 class TefilaRules {
     /**
-     * Is *tachanun* recited at the end Of [<em>Tishrei</em>][HebrewMonth.TISHREI].The Magen Avraham 669:1 and the Pri
+     * Is *tachanun* recited at the end Of [*Tishrei*][HebrewMonth.TISHREI].The Magen Avraham 669:1 and the Pri
      * Chadash 131:7 state that some places to not recite *tachanun* during this period. The Sh"UT Chasam Sofer on Choshen
      * Mishpat 77 writes that this is the *minhag* in Ashkenaz. The Shaarei Teshuva 131:19 quotes the Sheyarie Kneses
      * Hagdola who also states that it should not be recited. The Aderes wanted to institute saying *tachanun* during this
      * period, but was dissuaded from this by Rav Shmuel Salant who did not want to change the *minhag* in Yerushalayim.
      * The Aruch Hashulchan is of the opinion that that this *minhag* is incorrect, and it should be recited, and The Chazon
      * Ish also recited *tachanun* during this period. See the Dirshu edition of the Mishna Berurah for details.
-     * @return If *tachanun* is set to be recited at the end of [<em>Tishrei</em>][HebrewMonth.TISHREI].
+     * @return If *tachanun* is set to be recited at the end of [*Tishrei*][HebrewMonth.TISHREI].
      */
     var isTachanunRecitedEndOfTishrei: Boolean = true
 
@@ -81,7 +81,7 @@ class TefilaRules {
     var isTachanunRecitedWeekAfterShavuos: Boolean = false
 
     /**
-     * Is *tachanun* is recited on the 13th of [<em>Sivan</em>][HebrewMonth.SIVAN] ([*Yom Tov Sheni shel Galuyos*](https://en.wikipedia.org/wiki/Yom_tov_sheni_shel_galuyot) of the 7th
+     * Is *tachanun* is recited on the 13th of [*Sivan*][HebrewMonth.SIVAN] ([*Yom Tov Sheni shel Galuyos*](https://en.wikipedia.org/wiki/Yom_tov_sheni_shel_galuyot) of the 7th
      * day) outside Israel. This is brought down by the Shaarie Teshuva 131:19 quoting the [Sheyarei Kneses Hagedola 131:12](https://hebrewbooks.org/pdfpager.aspx?req=41295&st=&pgnum=39)that
      * *tachanun* should not be recited on this day. Rav Shlomo Zalman Orbach in Halichos Shlomo on
      * Shavuos 12:16:25 is of the opinion that even in *chutz laaretz* it should be recited since the *yemei
@@ -90,28 +90,28 @@ class TefilaRules {
      * only return false if the location is not set to [Israel][JewishCalendar.getInIsrael] and both
      * [isTachanunRecitedWeekAfterShavuos] and [isTachanunRecited13SivanOutOfIsrael] are set to false.
      *
-     * @return If *tachanun* is set to be recited on the 13th of [<em>Sivan</em>][HebrewMonth.SIVAN] out of Israel.
+     * @return If *tachanun* is set to be recited on the 13th of [*Sivan*][HebrewMonth.SIVAN] out of Israel.
      * @see isTachanunRecited13SivanOutOfIsrael
      * @see isTachanunRecitedWeekAfterShavuos
      */
     var isTachanunRecited13SivanOutOfIsrael: Boolean = true
 
     /**
-     * Is *tachanun* recited on [<em>Pesach Sheni</em>][JewishCalendar.PESACH_SHENI]. The Pri Chadash 131:7 states
+     * Is *tachanun* recited on [*Pesach Sheni*][JewishCalendar.PESACH_SHENI]. The Pri Chadash 131:7 states
      * that *tachanun* should not be recited. The Aruch Hashulchan states that this is the minhag of the *sephardim*.
      * the Shaarei Efraim 10:27 also mentions that it is not recited, as does the Siddur Yaavetz (Shaar Hayesod, Chodesh Iyar).
      * The Pri Megadim (Mishbetzes Hazahav 131:15) and the Chazon Ish (Erev Pesahc Shchal Beshabos, page 203 in [Rav Sheraya
  * Devlitzky's](https://he.wikipedia.org/wiki/%D7%A9%D7%A8%D7%99%D7%94_%D7%93%D7%91%D7%9C%D7%99%D7%A6%D7%A7%D7%99) comments).
      *
-     * @return If *tachanun* is recited on [<em>Pesach Sheni</em>][JewishCalendar.PESACH_SHENI].
+     * @return If *tachanun* is recited on [*Pesach Sheni*][JewishCalendar.PESACH_SHENI].
      */
     var isTachanunRecitedPesachSheni: Boolean = false
 
     /**
-     * Is *tachanun* recited on 15 [<em>Iyar</em>][HebrewMonth.IYAR] (*sfaika deyoma* of [<em>Pesach Sheni</em>][JewishCalendar.PESACH_SHENI]) out of Israel. If [isTachanunRecitedPesachSheni] is `true` this will be
+     * Is *tachanun* recited on 15 [*Iyar*][HebrewMonth.IYAR] (*sfaika deyoma* of [*Pesach Sheni*][JewishCalendar.PESACH_SHENI]) out of Israel. If [isTachanunRecitedPesachSheni] is `true` this will be
      * ignored even if `false`.
      *
-     * @return if *tachanun* is recited on 15 [<em>Iyar</em>][HebrewMonth.IYAR]  (*sfaika deyoma* of [<em>Pesach Sheni</em>][JewishCalendar.PESACH_SHENI] out of Israel. If [isTachanunRecitedPesachSheni]
+     * @return if *tachanun* is recited on 15 [*Iyar*][HebrewMonth.IYAR]  (*sfaika deyoma* of [*Pesach Sheni*][JewishCalendar.PESACH_SHENI] out of Israel. If [isTachanunRecitedPesachSheni]
      * is `true` this will be ignored even if `false`.
      * @see isTachanunRecited15IyarOutOfIsrael
      * @see isTachanunRecitedPesachSheni
@@ -122,41 +122,41 @@ class TefilaRules {
     /**
      * Is *tachanun* recited on *mincha* on *erev [Lag Baomer][JewishCalendar.LAG_BAOMER]*.
      * @return if *tachanun* is recited in *mincha* on *erev*
-     * [<em>Lag Baomer</em>][JewishCalendar.LAG_BAOMER].
+     * [*Lag Baomer*][JewishCalendar.LAG_BAOMER].
      * @see setTachanunRecitedMinchaErevLagBaomer
      */
     var isTachanunRecitedMinchaErevLagBaomer: Boolean = false
 
     /**
-     * Is *tachanun* recited during the *Shivas Yemei Hamiluim*, from the 23 of [HebrewMonth.ADAR] on a non-leap-year or [<em>Adar II</em>][HebrewMonth.ADAR_II] on a
+     * Is *tachanun* recited during the *Shivas Yemei Hamiluim*, from the 23 of [HebrewMonth.ADAR] on a non-leap-year or [*Adar II*][HebrewMonth.ADAR_II] on a
      * leap year to the end of the month. Some *chasidishe* communities do not say *tachanun*
      * during this week. See [Darkei Chaim Veshalom 191](https://hebrewbooks.org/pdfpager.aspx?req=4692&st=&pgnum=70).
-     * @return if *tachanun* is recited during the *Shivas Yemei Hamiluim*, from the 23 of [HebrewMonth.ADAR] on a non-leap-year or [<em>Adar II</em>][HebrewMonth.ADAR_II]
+     * @return if *tachanun* is recited during the *Shivas Yemei Hamiluim*, from the 23 of [HebrewMonth.ADAR] on a non-leap-year or [*Adar II*][HebrewMonth.ADAR_II]
      * on a leap year to the end of the month.
      * @see isTachanunRecitedShivasYemeiHamiluim
      */
     var isTachanunRecitedShivasYemeiHamiluim: Boolean = true
 
     /**
-     * Is *tachanun* recited during the *sefira* week of *Hod* (14 - 20 [<em>Iyar</em>][HebrewMonth.IYAR],
-     * or the 29th - 35th of the [<em>Omer</em>][JewishCalendar.getDayOfOmer]). Some *chasidishe* communities
+     * Is *tachanun* recited during the *sefira* week of *Hod* (14 - 20 [*Iyar*][HebrewMonth.IYAR],
+     * or the 29th - 35th of the [*Omer*][JewishCalendar.getDayOfOmer]). Some *chasidishe* communities
      * do not recite *tachanun* during this week. See Minhag Yisrael Torah 131:Iyar.
-     * @return If *tachanun* is set to be recited during the *sefira* week of *Hod* (14 - 20 [HebrewMonth.IYAR], or the 29th - 35th of the [<em>Omer</em>][JewishCalendar.dayOfOmer]).
+     * @return If *tachanun* is set to be recited during the *sefira* week of *Hod* (14 - 20 [HebrewMonth.IYAR], or the 29th - 35th of the [*Omer*][JewishCalendar.dayOfOmer]).
      * @see isTachanunRecitedWeekOfHod
      */
     var isTachanunRecitedWeekOfHod: Boolean = true
     /**
-     * Is *tachanun* recited during the week of Purim, from the 11th through the 17th of [HebrewMonth.ADAR] (on a non-leap year, or [<em>Adar II</em>][HebrewMonth.ADAR_II] on a leap year). Some
+     * Is *tachanun* recited during the week of Purim, from the 11th through the 17th of [HebrewMonth.ADAR] (on a non-leap year, or [*Adar II*][HebrewMonth.ADAR_II] on a leap year). Some
      * *chasidishe* communities do not recite *tachanun* during this period. See the [Minhag Yisrael Torah](https://www.nli.org.il/he/books/NNL_ALEPH001141272/NLI) 131 and [Darkei Chaim Veshalom 191](https://hebrewbooks.org/pdfpager.aspx?req=4692&st=&pgnum=70)who discuss the
      * *minhag* not to recite *tachanun*. Also see the [Mishmeres Shalom (Hadras Shalom)](https://hebrewbooks.org/pdfpager.aspx?req=8944&st=&pgnum=160) who discusses the
      * *minhag* of not reciting it on the 16th and 17th.
-     * @return If *tachanun* is set to be recited during the week of Purim from the 11th through the 17th of [HebrewMonth.ADAR] (on a non-leap year, or [<em>Adar II</em>][HebrewMonth.ADAR_II] on a leap year).
+     * @return If *tachanun* is set to be recited during the week of Purim from the 11th through the 17th of [HebrewMonth.ADAR] (on a non-leap year, or [*Adar II*][HebrewMonth.ADAR_II] on a leap year).
      * @see .setTachanunRecitedWeekOfPurim
      */
     /**
-     * Sets if *tachanun* should be recited during the week of Purim from the 11th through the 17th of [HebrewMonth.ADAR] (on a non-leap year), or [<em>Adar II</em>][HebrewMonth.ADAR_II] (on a leap year).
+     * Sets if *tachanun* should be recited during the week of Purim from the 11th through the 17th of [HebrewMonth.ADAR] (on a non-leap year), or [*Adar II*][HebrewMonth.ADAR_II] (on a leap year).
      * @param tachanunRecitedWeekOfPurim Sets if *tachanun* is to recited during the week of Purim from the 11th
-     * through the 17th of [<em>Adar</em>][HebrewMonth.ADAR] (on a non-leap year), or [         <em>Adar II</em>][HebrewMonth.ADAR_II] (on a leap year). Some *chasidishe* communities do not recite *tachanun*
+     * through the 17th of [*Adar*][HebrewMonth.ADAR] (on a non-leap year), or [*Adar II*][HebrewMonth.ADAR_II] (on a leap year). Some *chasidishe* communities do not recite *tachanun*
      * during this period.
      * @see .isTachanunRecitedWeekOfPurim
      */
@@ -308,7 +308,7 @@ class TefilaRules {
 
     /**
      * Returns if it is the Jewish day (starting the evening before) to start reciting *Vesein Tal Umatar Livracha*
-     * (*Sheailas Geshamim*). In Israel this is the 7th day of [<em>Marcheshvan</em>][HebrewMonth.CHESHVAN].
+     * (*Sheailas Geshamim*). In Israel this is the 7th day of [*Marcheshvan*][HebrewMonth.CHESHVAN].
      * Outside Israel recitation starts on the evening of December 4th (or 5th if it is the year before a civil leap year)
      * in the 21st century and shifts a day forward every century not evenly divisible by 400. This method will return true
      * if *vesein tal umatar* on the current Jewish date that starts on the previous night, so Dec 5/6 will be
@@ -333,7 +333,7 @@ class TefilaRules {
 
     /**
      * Returns if true if tonight is the first night to start reciting *Vesein Tal Umatar Livracha* (
-     * *Sheailas Geshamim*). In Israel this is the 7th day of [ <em>Marcheshvan</em>][HebrewMonth.CHESHVAN] (so the 6th will return true). Outside Israel recitation starts on the evening
+     * *Sheailas Geshamim*). In Israel this is the 7th day of [*Marcheshvan*][HebrewMonth.CHESHVAN] (so the 6th will return true). Outside Israel recitation starts on the evening
      * of December 4th (or 5th if it is the year before a civil leap year) in the 21st century and shifts a
      * day forward every century not evenly divisible by 400. *Vesein tal umatar* is not recited on
      * *Shabbos* and the start date will be delayed a day when the start day is on a *Shabbos*
@@ -379,8 +379,8 @@ class TefilaRules {
     }
 
     /**
-     * Returns if *Vesein Beracha* is recited. It is recited from 15 [<em>Nissan</em>][HebrewMonth.NISSAN] to the
-     * point that [<em>vesein tal umatar</em> is recited][.isVeseinTalUmatarRecited].
+     * Returns if *Vesein Beracha* is recited. It is recited from 15 [*Nissan*][HebrewMonth.NISSAN] to the
+     * point that [*vesein tal umatar* is recited][.isVeseinTalUmatarRecited].
      *
      * @param jewishCalendar the Jewish calendar day.
      * @return true if *Vesein Beracha* is recited.
@@ -390,7 +390,7 @@ class TefilaRules {
 
     /**
      * Returns if the date is the start date for reciting *Mashiv Haruach Umorid Hageshem*. The date is 22
-     * [<em>Tishrei</em>][HebrewMonth.TISHREI].
+     * [*Tishrei*][HebrewMonth.TISHREI].
      *
      * @param jewishCalendar the Jewish calendar day.
      * @return true if the date is the start date for reciting *Mashiv Haruach Umorid Hageshem*.
@@ -402,7 +402,7 @@ class TefilaRules {
 
     /**
      * Returns if the date is the end date for reciting *Mashiv Haruach Umorid Hageshem*. The date is 15
-     * [<em>Nissan</em>][HebrewMonth.NISSAN].
+     * [*Nissan*][HebrewMonth.NISSAN].
      *
      * @param jewishCalendar the Jewish calendar day.
      * @return true if the date is the end date for reciting *Mashiv Haruach Umorid Hageshem*.
@@ -413,7 +413,7 @@ class TefilaRules {
         jewishCalendar.hebrewLocalDate.month == HebrewMonth.NISSAN && jewishCalendar.jewishDayOfMonth == 15
 
     /**
-     * Returns if *Mashiv Haruach Umorid Hageshem* is recited. This period starts on 22 [HebrewMonth.TISHREI] and ends on the 15th day of [<em>Nissan</em>][HebrewMonth.NISSAN].
+     * Returns if *Mashiv Haruach Umorid Hageshem* is recited. This period starts on 22 [HebrewMonth.TISHREI] and ends on the 15th day of [*Nissan*][HebrewMonth.NISSAN].
      *
      * @param jewishCalendar the Jewish calendar day.
      * @return true if *Mashiv Haruach Umorid Hageshem* is recited.
@@ -432,7 +432,7 @@ class TefilaRules {
 
     /**
      * Returns if *Morid Hatal* (or the lack of reciting *Mashiv Haruach* following *nussach Ashkenaz*) is
-     * recited. This period starts on the 15th day of [<em>Nissan</em>][HebrewMonth.NISSAN] and ends on 22 [HebrewMonth.TISHREI].
+     * recited. This period starts on the 15th day of [*Nissan*][HebrewMonth.NISSAN] and ends on 22 [HebrewMonth.TISHREI].
      *
      * @param jewishCalendar the Jewish calendar day.
      *

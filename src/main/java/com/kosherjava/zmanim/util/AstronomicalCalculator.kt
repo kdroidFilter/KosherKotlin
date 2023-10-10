@@ -71,12 +71,12 @@ abstract class AstronomicalCalculator {
      *
      * @param solarRadius
      * The sun's radius in arc minutes.
-     * @see .getSolarRadius
+     * @see solarRadius
      */
     /**
      * The commonly used average solar radius in minutes of a degree.
      *
-     * @see .getSolarRadius
+     * @see solarRadius
      */
     var solarRadius: Double = 16 / 60.0
     /**
@@ -120,7 +120,7 @@ abstract class AstronomicalCalculator {
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
      * @param zenith
-     * the azimuth below the vertical zenith of 90 degrees. for sunrise typically the [            zenith][.adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
+     * the azimuth below the vertical zenith of 90 degrees. for sunrise typically the [zenith][.adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
      * this slightly to account for solar refraction and the sun's radius. Another example would be
      * [com.kosherjava.zmanim.AstronomicalCalendar.getBeginNauticalTwilight] that passes
      * [com.kosherjava.zmanim.AstronomicalCalendar.NAUTICAL_ZENITH] to this method.
@@ -145,7 +145,7 @@ abstract class AstronomicalCalculator {
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
      * @param zenith
-     * the azimuth below the vertical zenith of 90. For sunset typically the [            zenith][.adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
+     * the azimuth below the vertical zenith of 90. For sunset typically the [zenith][.adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
      * this slightly to account for solar refraction and the sun's radius. Another example would be
      * [com.kosherjava.zmanim.AstronomicalCalendar.getEndNauticalTwilight] that passes
      * [com.kosherjava.zmanim.AstronomicalCalendar.NAUTICAL_ZENITH] to this method.
@@ -229,13 +229,13 @@ abstract class AstronomicalCalculator {
      * [com.kosherjava.zmanim.ComplexZmanimCalendar.getAlos16Point1Degrees].
      *
      * @param zenith
-     * the azimuth below the vertical zenith of 90. For sunset typically the [            zenith][.adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
+     * the azimuth below the vertical zenith of 90. For sunset typically the [zenith][.adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
      * this slightly to account for solar refraction and the sun's radius. Another example would be
      * [com.kosherjava.zmanim.AstronomicalCalendar.getEndNauticalTwilight] that passes
      * [com.kosherjava.zmanim.AstronomicalCalendar.NAUTICAL_ZENITH] to this method.
      * @param elevation
      * elevation in Meters.
-     * @return The zenith adjusted to include the [sun&#39;s radius][.getSolarRadius], [         refraction][.getRefraction] and [elevation][.getElevationAdjustment] adjustment. This will only be adjusted for
+     * @return The zenith adjusted to include the [sun&#39;s radius][solarRadius], [refraction][.getRefraction] and [elevation][.getElevationAdjustment] adjustment. This will only be adjusted for
      * sunrise and sunset (if the zenith == 90)
      * @see .getElevationAdjustment
      */
