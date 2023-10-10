@@ -13,11 +13,13 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA,
  * or connect to: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim;
+package com.kosherjava.java.zmanim;
 
-import com.kosherjava.zmanim.java.zmanim.util.AstronomicalCalculator;
-import com.kosherjava.zmanim.java.zmanim.util.GeoLocation;
-import com.kosherjava.zmanim.java.zmanim.util.ZmanimFormatter;
+import com.kosherjava.java.zmanim.util.GeoLocation;
+import com.kosherjava.java.zmanim.util.NOAACalculator;
+import com.kosherjava.java.zmanim.util.SunTimesCalculator;
+import com.kosherjava.java.zmanim.util.AstronomicalCalculator;
+import com.kosherjava.java.zmanim.util.ZmanimFormatter;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -368,7 +370,7 @@ public class AstronomicalCalendar implements Cloneable {
 	/**
 	 * A constructor that takes in <a href="https://en.wikipedia.org/wiki/Geolocation">geolocation</a> information as a
 	 * parameter. The default {@link AstronomicalCalculator#getDefault() AstronomicalCalculator} used for solar
-	 * calculations is the the {@link com.kosherjava.zmanim.java.zmanim.util.NOAACalculator}.
+	 * calculations is the the {@link NOAACalculator}.
 	 * 
 	 * @param geoLocation
 	 *            The location information used for calculating astronomical sun times.
@@ -493,9 +495,9 @@ public class AstronomicalCalendar implements Cloneable {
 	 * "https://en.wikipedia.org/wiki/Transit_%28astronomy%29">transiting</a> the <a
 	 * href="https://en.wikipedia.org/wiki/Meridian_%28astronomy%29">celestial meridian</a>. The calculations used by
 	 * this class depend on the {@link AstronomicalCalculator} used. If this calendar instance is {@link
-	 * #setAstronomicalCalculator(AstronomicalCalculator) set} to use the {@link com.kosherjava.zmanim.java.zmanim.util.NOAACalculator}
+	 * #setAstronomicalCalculator(AstronomicalCalculator) set} to use the {@link NOAACalculator}
 	 * (the default) it will calculate astronomical noon. If the calendar instance is  to use the
-	 * {@link com.kosherjava.zmanim.java.zmanim.util.SunTimesCalculator}, that does not have code to calculate astronomical noon, the
+	 * {@link SunTimesCalculator}, that does not have code to calculate astronomical noon, the
 	 * sun transit is calculated as halfway between sea level sunrise and sea level sunset, which can be slightly off the
 	 * real transit time due to changes in declination (the lengthening or shortening day). See <a href=
 	 * "https://kosherjava.com/2020/07/02/definition-of-chatzos/">The Definition of Chatzos</a> for details on the proper
@@ -656,8 +658,8 @@ public class AstronomicalCalendar implements Cloneable {
 
 	/**
 	 * @return an XML formatted representation of the class. It returns the default output of the
-	 *         {@link com.kosherjava.zmanim.java.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar) toXML} method.
-	 * @see com.kosherjava.zmanim.java.zmanim.util.ZmanimFormatter#toXML(AstronomicalCalendar)
+	 *         {@link ZmanimFormatter#toXML(AstronomicalCalendar) toXML} method.
+	 * @see ZmanimFormatter#toXML(AstronomicalCalendar)
 	 * @see Object#toString()
 	 */
 	public String toString() {
@@ -666,8 +668,8 @@ public class AstronomicalCalendar implements Cloneable {
 	
 	/**
 	 * @return a JSON formatted representation of the class. It returns the default output of the
-	 *         {@link com.kosherjava.zmanim.java.zmanim.util.ZmanimFormatter#toJSON(AstronomicalCalendar) toJSON} method.
-	 * @see com.kosherjava.zmanim.java.zmanim.util.ZmanimFormatter#toJSON(AstronomicalCalendar)
+	 *         {@link ZmanimFormatter#toJSON(AstronomicalCalendar) toJSON} method.
+	 * @see ZmanimFormatter#toJSON(AstronomicalCalendar)
 	 * @see Object#toString()
 	 */
 	public String toJSON() {
@@ -737,9 +739,9 @@ public class AstronomicalCalendar implements Cloneable {
 	/**
 	 * A method to set the {@link AstronomicalCalculator} used for astronomical calculations. The Zmanim package ships
 	 * with a number of different implementations of the <code>abstract</code> {@link AstronomicalCalculator} based on
-	 * different algorithms, including the default {@link com.kosherjava.zmanim.java.zmanim.util.NOAACalculator} based on <a href=
+	 * different algorithms, including the default {@link NOAACalculator} based on <a href=
 	 * "https://noaa.gov">NOAA's</a> implementation of Jean Meeus's algorithms as well as {@link
-	 * com.kosherjava.zmanim.java.zmanim.util.SunTimesCalculator} based on the <a href = "https://www.cnmoc.usff.navy.mil/usno/">US
+	 * SunTimesCalculator} based on the <a href = "https://www.cnmoc.usff.navy.mil/usno/">US
 	 * Naval Observatory's</a> algorithm,. This allows easy runtime switching and comparison of different algorithms.
 	 * 
 	 * @param astronomicalCalculator
@@ -773,7 +775,7 @@ public class AstronomicalCalendar implements Cloneable {
 	 * A method that creates a <a href="https://en.wikipedia.org/wiki/Object_copy#Deep_copy">deep copy</a> of the object.
 	 * <b>Note:</b> If the {@link TimeZone} in the cloned {@link GeoLocation} will
 	 * be changed from the original, it is critical that
-	 * {@link com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar#getCalendar()}.
+	 * {@link AstronomicalCalendar#getCalendar()}.
 	 * {@link Calendar#setTimeZone(TimeZone) setTimeZone(TimeZone)} be called in order for the
 	 * AstronomicalCalendar to output times in the expected offset after being cloned.
 	 * 

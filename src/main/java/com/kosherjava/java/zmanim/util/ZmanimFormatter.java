@@ -13,11 +13,9 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.util;
+package com.kosherjava.java.zmanim.util;
 
-import com.kosherjava.zmanim.java.zmanim.AstronomicalCalendar;
-import com.kosherjava.zmanim.java.zmanim.util.Time;
-import com.kosherjava.zmanim.java.zmanim.util.Zman;
+import com.kosherjava.java.zmanim.AstronomicalCalendar;
 
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -130,7 +128,7 @@ public class ZmanimFormatter {
 	public static final int XSD_DURATION_FORMAT = 5;
 
 	/**
-	 * constructor that defaults to this will use the format "h:mm:ss" for dates and 00.00.00.0 for {@link com.kosherjava.zmanim.java.zmanim.util.Time}.
+	 * constructor that defaults to this will use the format "h:mm:ss" for dates and 00.00.00.0 for {@link Time}.
 	 * @param timeZone the TimeZone Object
 	 */
 	public ZmanimFormatter(TimeZone timeZone) {
@@ -235,17 +233,17 @@ public class ZmanimFormatter {
 	 * @return String The formatted <code>String</code>
 	 */
 	public String format(int millis) {
-		return format(new com.kosherjava.zmanim.java.zmanim.util.Time(millis));
+		return format(new Time(millis));
 	}
 
 	/**
-	 * A method that formats {@link com.kosherjava.zmanim.java.zmanim.util.Time}objects.
+	 * A method that formats {@link Time}objects.
 	 * 
 	 * @param time
 	 *            The time <code>Object</code> to be formatted.
 	 * @return String The formatted <code>String</code>
 	 */
-	public String format(com.kosherjava.zmanim.java.zmanim.util.Time time) {
+	public String format(Time time) {
 		if (this.timeFormat == XSD_DURATION_FORMAT) {
 			return formatXSDDurationTime(time);
 		}
@@ -343,7 +341,7 @@ public class ZmanimFormatter {
 	 * @return the xsd:duration formatted String
 	 */
 	public String formatXSDDurationTime(long millis) {
-		return formatXSDDurationTime(new com.kosherjava.zmanim.java.zmanim.util.Time(millis));
+		return formatXSDDurationTime(new Time(millis));
 	}
 
 	/**
@@ -454,8 +452,8 @@ public class ZmanimFormatter {
 		Method[] theMethods = astronomicalCalendar.getClass().getMethods();
 		String tagName = "";
 		Object value = null;
-		List<com.kosherjava.zmanim.java.zmanim.util.Zman> dateList = new ArrayList<com.kosherjava.zmanim.java.zmanim.util.Zman>();
-		List<com.kosherjava.zmanim.java.zmanim.util.Zman> durationList = new ArrayList<com.kosherjava.zmanim.java.zmanim.util.Zman>();
+		List<Zman> dateList = new ArrayList<Zman>();
+		List<Zman> durationList = new ArrayList<Zman>();
 		List<String> otherList = new ArrayList<String>();
 		for (int i = 0; i < theMethods.length; i++) {
 			if (includeMethod(theMethods[i])) {
@@ -468,14 +466,14 @@ public class ZmanimFormatter {
 						// TODO: instead of N/A, consider return proper xs:nil.
 						// otherList.add("<" + tagName + " xs:nil=\"true\" />");
 					} else if (value instanceof Date) {
-						dateList.add(new com.kosherjava.zmanim.java.zmanim.util.Zman((Date) value, tagName));
+						dateList.add(new Zman((Date) value, tagName));
 					} else if (value instanceof Long || value instanceof Integer) {// shaah zmanis
 						if (((Long) value).longValue() == Long.MIN_VALUE) {
 							otherList.add("<" + tagName + ">N/A</" + tagName + ">");
 							// TODO: instead of N/A, consider return proper xs:nil.
 							// otherList.add("<" + tagName + " xs:nil=\"true\" />");
 						} else {
-							durationList.add(new com.kosherjava.zmanim.java.zmanim.util.Zman((int) ((Long) value).longValue(), tagName));
+							durationList.add(new Zman((int) ((Long) value).longValue(), tagName));
 						}
 					} else { // will probably never enter this block, but is present to be future proof
 						otherList.add("<" + tagName + ">" + value + "</" + tagName + ">");
@@ -485,18 +483,18 @@ public class ZmanimFormatter {
 				}
 			}
 		}
-		com.kosherjava.zmanim.java.zmanim.util.Zman zman;
-		Collections.sort(dateList, com.kosherjava.zmanim.java.zmanim.util.Zman.DATE_ORDER);
+		Zman zman;
+		Collections.sort(dateList, Zman.DATE_ORDER);
 
 		for (int i = 0; i < dateList.size(); i++) {
-			zman = (com.kosherjava.zmanim.java.zmanim.util.Zman) dateList.get(i);
+			zman = (Zman) dateList.get(i);
 			sb.append("\t<").append(zman.getLabel()).append(">");
 			sb.append(formatter.formatDateTime(zman.getZman(), astronomicalCalendar.getCalendar()));
 			sb.append("</").append(zman.getLabel()).append(">\n");
 		}
-		Collections.sort(durationList, com.kosherjava.zmanim.java.zmanim.util.Zman.DURATION_ORDER);
+		Collections.sort(durationList, Zman.DURATION_ORDER);
 		for (int i = 0; i < durationList.size(); i++) {
-			zman = (com.kosherjava.zmanim.java.zmanim.util.Zman) durationList.get(i);
+			zman = (Zman) durationList.get(i);
 			sb.append("\t<" + zman.getLabel()).append(">");
 			sb.append(formatter.format((int) zman.getDuration())).append("</").append(zman.getLabel())
 					.append(">\n");
@@ -606,8 +604,8 @@ public class ZmanimFormatter {
 		Method[] theMethods = astronomicalCalendar.getClass().getMethods();
 		String tagName = "";
 		Object value = null;
-		List<com.kosherjava.zmanim.java.zmanim.util.Zman> dateList = new ArrayList<com.kosherjava.zmanim.java.zmanim.util.Zman>();
-		List<com.kosherjava.zmanim.java.zmanim.util.Zman> durationList = new ArrayList<com.kosherjava.zmanim.java.zmanim.util.Zman>();
+		List<Zman> dateList = new ArrayList<Zman>();
+		List<Zman> durationList = new ArrayList<Zman>();
 		List<String> otherList = new ArrayList<String>();
 		for (int i = 0; i < theMethods.length; i++) {
 			if (includeMethod(theMethods[i])) {
@@ -618,12 +616,12 @@ public class ZmanimFormatter {
 					if (value == null) {// TODO: Consider using reflection to determine the return type, not the value
 						otherList.add("\"" + tagName + "\":\"N/A\",");
 					} else if (value instanceof Date) {
-						dateList.add(new com.kosherjava.zmanim.java.zmanim.util.Zman((Date) value, tagName));
+						dateList.add(new Zman((Date) value, tagName));
 					} else if (value instanceof Long || value instanceof Integer) {// shaah zmanis
 						if (((Long) value).longValue() == Long.MIN_VALUE) {
 							otherList.add("\"" + tagName + "\":\"N/A\"");
 						} else {
-							durationList.add(new com.kosherjava.zmanim.java.zmanim.util.Zman((int) ((Long) value).longValue(), tagName));
+							durationList.add(new Zman((int) ((Long) value).longValue(), tagName));
 						}
 					} else { // will probably never enter this block, but is present to be future proof
 						otherList.add("\"" + tagName + "\":\"" + value + "\",");
@@ -633,15 +631,15 @@ public class ZmanimFormatter {
 				}
 			}
 		}
-		com.kosherjava.zmanim.java.zmanim.util.Zman zman;
-		Collections.sort(dateList, com.kosherjava.zmanim.java.zmanim.util.Zman.DATE_ORDER);
+		Zman zman;
+		Collections.sort(dateList, Zman.DATE_ORDER);
 		for (int i = 0; i < dateList.size(); i++) {
-			zman = (com.kosherjava.zmanim.java.zmanim.util.Zman) dateList.get(i);
+			zman = (Zman) dateList.get(i);
 			sb.append("\t\"").append(zman.getLabel()).append("\":\"");
 			sb.append(formatter.formatDateTime(zman.getZman(), astronomicalCalendar.getCalendar()));
 			sb.append("\",\n");
 		}
-		Collections.sort(durationList, com.kosherjava.zmanim.java.zmanim.util.Zman.DURATION_ORDER);
+		Collections.sort(durationList, Zman.DURATION_ORDER);
 		for (int i = 0; i < durationList.size(); i++) {
 			zman = (Zman) durationList.get(i);
 			sb.append("\t\"" + zman.getLabel()).append("\":\"");

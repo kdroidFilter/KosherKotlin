@@ -14,10 +14,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.hebrewcalendar;
-
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.HebrewDateFormatter;
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar;
+package com.kosherjava.java.zmanim.hebrewcalendar;
 
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -882,6 +879,7 @@ public class JewishDate implements Comparable<JewishDate>, Cloneable {
 	 */
 	public JewishDate getMolad() {
 		JewishDate moladDate = new JewishDate(getChalakimSinceMoladTohu());
+		System.out.println("Molad date java: " + moladDate);
 		if (moladDate.getMoladHours() >= 6) {
 			moladDate.forward(Calendar.DATE, 1);
 		}

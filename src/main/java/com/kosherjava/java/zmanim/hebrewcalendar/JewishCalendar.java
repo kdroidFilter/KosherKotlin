@@ -15,10 +15,10 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.hebrewcalendar;
+package com.kosherjava.java.zmanim.hebrewcalendar;
 
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate;
-import com.kosherjava.zmanim.java.zmanim.util.GeoLocation;
+import com.kosherjava.java.zmanim.ComplexZmanimCalendar;
+import com.kosherjava.java.zmanim.util.GeoLocation;
 
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -45,7 +45,7 @@ import java.util.TimeZone;
  * @author &copy; Avrom Finkelstien 2002
  * @author &copy; Eliyahu Hershfeld 2011 - 2023
  */
-public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate {
+public class JewishCalendar extends JewishDate {
 	/** The 14th day of Nissan, the day before of Pesach (Passover).*/
 	public static final int EREV_PESACH = 0;
 	/** The holiday of Pesach (Passover) on the 15th (and 16th out of Israel) day of Nissan.*/
@@ -388,7 +388,9 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 		 * Rosh Hashana as 1, we have to add 1 day for a total of 171. To this add a day since the tekufah is on a Tuesday
 		 * night and we push off the bracha to Wednesday AM resulting in the 172 used in the calculation.
 		 */
-		if (elapsedDays % (28 * 365.25) == 172) { // 28 years of 365.25 days + the offset from molad tohu mentioned above
+		double elapsedDaysMod28Years = elapsedDays % (28 * 365.25);
+		System.out.println("Elapsed days ("+elapsedDays+")mod 28 years java: " + elapsedDaysMod28Years);
+		if (elapsedDaysMod28Years == 172) { // 28 years of 365.25 days + the offset from molad tohu mentioned above
 			return true;
 		}
 		return false;
@@ -519,13 +521,16 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	public Parsha getUpcomingParshah() {
 		JewishCalendar clone = (JewishCalendar) clone();
 		int daysToShabbos = (Calendar.SATURDAY - getDayOfWeek()  + 7) % 7;
+		System.out.println("Days to shabbos java: "+daysToShabbos+", gregorianLocalDate("+clone.getGregorianCalendar().toInstant()+").dayOfWeek = "+clone.getGregorianCalendar().get(Calendar.DAY_OF_WEEK));
 		if (getDayOfWeek() != Calendar.SATURDAY) {
 			clone.forward(Calendar.DATE, daysToShabbos);
 		} else {
 			clone.forward(Calendar.DATE, 7);
 		}
+		System.out.println("New gregorianLocalDate("+clone.getGregorianCalendar().toInstant()+").dayOfWeek = "+clone.getGregorianCalendar().get(Calendar.DAY_OF_WEEK));
 		while(clone.getParshah() == Parsha.NONE) { //Yom Kippur / Sukkos or Pesach with 2 potential non-parsha Shabbosim in a row
 			clone.forward(Calendar.DATE, 7);
+			System.out.println("New copy: ("+clone.getGregorianCalendar().toInstant()+").dayOfWeek = "+clone.getGregorianCalendar().get(Calendar.DAY_OF_WEEK));
 		}
 		return clone.getParshah();
 	}
@@ -1058,7 +1063,7 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 		int dayOfWeek = getDayOfWeek();
 		int month = getJewishMonth();
 		int day = getJewishDayOfMonth();
-		if(month == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate.ELUL || month == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate.TISHREI || month == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate.KISLEV || month == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate.NISSAN) {
+		if(month == JewishDate.ELUL || month == JewishDate.TISHREI || month == JewishDate.KISLEV || month == JewishDate.NISSAN) {
 			return false;
 		}
 
@@ -1074,7 +1079,7 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	
 	/**
 	 * The Monday, Thursday and Monday after the first <em>Shabbos</em> after {@link #isRoshChodesh() <em>Rosh Chodesh</em>}
-	 * {@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate#CHESHVAN <em>Cheshvan</em>} and {@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate#IYAR <em>Iyar</em>} are <a href=
+	 * {@link JewishDate#CHESHVAN <em>Cheshvan</em>} and {@link JewishDate#IYAR <em>Iyar</em>} are <a href=
 	 * "https://outorah.org/p/41334/"> <em>BeHaB</em></a> days. If the last Monday of Iyar's BeHaB coincides with {@link
 	 * #PESACH_SHENI <em>Pesach Sheni</em>}, the method currently considers it both <em>Pesach Sheni</em> and <em>BeHaB</em>.
 	 * As seen in an Ohr Sameach  article on the subject <a href="https://ohr.edu/this_week/insights_into_halacha/9340">The
@@ -1086,7 +1091,7 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 		int month = getJewishMonth();
 		int day = getJewishDayOfMonth();
 		
-		if (month == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate.CHESHVAN || month == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate.IYAR) {
+		if (month == JewishDate.CHESHVAN || month == JewishDate.IYAR) {
 			if((dayOfWeek == Calendar.MONDAY && day > 4 && day < 18)
 					|| (dayOfWeek == Calendar.THURSDAY && day > 7 && day < 14)) {
 				return true;
@@ -1238,7 +1243,7 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	 * @return the Date representing the moment of the <em>molad</em> in Yerushalayim standard time (GMT + 2)
 	 */
 	public Date getMoladAsDate() {
-		com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate molad = getMolad();
+		JewishDate molad = getMolad();
 		String locationName = "Jerusalem, Israel";
 
 		double latitude = 31.778; // Har Habayis latitude
@@ -1267,8 +1272,8 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	 * 
 	 * @return the Date representing the moment 3 days after the molad.
 	 * 
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getTchilasZmanKidushLevana3Days()
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getTchilasZmanKidushLevana3Days(Date, Date)
+	 * @see ComplexZmanimCalendar#getTchilasZmanKidushLevana3Days()
+	 * @see ComplexZmanimCalendar#getTchilasZmanKidushLevana3Days(Date, Date)
 	 */
 	public Date getTchilasZmanKidushLevana3Days() {
 		Date molad = getMoladAsDate();
@@ -1287,8 +1292,8 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	 * 
 	 * @return the Date representing the moment 7 days after the molad.
 	 * 
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getTchilasZmanKidushLevana7Days()
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getTchilasZmanKidushLevana7Days(Date, Date)
+	 * @see ComplexZmanimCalendar#getTchilasZmanKidushLevana7Days()
+	 * @see ComplexZmanimCalendar#getTchilasZmanKidushLevana7Days(Date, Date)
 	 */
 	public Date getTchilasZmanKidushLevana7Days() {
 		Date molad = getMoladAsDate();
@@ -1310,8 +1315,8 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	 * @return the Date representing the moment halfway between <em>molad</em> and <em>molad</em>.
 	 * 
 	 * @see #getSofZmanKidushLevana15Days()
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getSofZmanKidushLevanaBetweenMoldos()
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getSofZmanKidushLevanaBetweenMoldos(Date, Date)
+	 * @see ComplexZmanimCalendar#getSofZmanKidushLevanaBetweenMoldos()
+	 * @see ComplexZmanimCalendar#getSofZmanKidushLevanaBetweenMoldos(Date, Date)
 	 */
 	public Date getSofZmanKidushLevanaBetweenMoldos() {
 		Date molad = getMoladAsDate();
@@ -1341,8 +1346,8 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	 * 
 	 * @return the Date representing the moment 15 days after the <em>molad</em>.
 	 * @see #getSofZmanKidushLevanaBetweenMoldos()
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getSofZmanKidushLevana15Days()
-	 * @see com.kosherjava.zmanim.java.zmanim.ComplexZmanimCalendar#getSofZmanKidushLevana15Days(Date, Date)
+	 * @see ComplexZmanimCalendar#getSofZmanKidushLevana15Days()
+	 * @see ComplexZmanimCalendar#getSofZmanKidushLevana15Days(Date, Date)
 	 */
 	public Date getSofZmanKidushLevana15Days() {
 		Date molad = getMoladAsDate();
@@ -1566,8 +1571,8 @@ public class JewishCalendar extends com.kosherjava.zmanim.java.zmanim.hebrewcale
 	 */
 	@Deprecated // (forRemoval=true) // add back once Java 9 is the minimum supported version
 	public boolean isMashivHaruachRecited() {
-		com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate startDate = new com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate(getJewishYear(), TISHREI, 22);
-		com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate endDate = new JewishDate(getJewishYear(), NISSAN, 15);
+		JewishDate startDate = new JewishDate(getJewishYear(), TISHREI, 22);
+		JewishDate endDate = new JewishDate(getJewishYear(), NISSAN, 15);
 		return compareTo(startDate) > 0 && compareTo(endDate) < 0;
 	}
 

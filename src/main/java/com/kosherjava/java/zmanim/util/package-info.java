@@ -5,4 +5,4 @@
  * 
  * @author &copy; Eliyahu Hershfeld 2004 - 2022
  */
-package com.kosherjava.zmanim.java.zmanim.util;
+package com.kosherjava.java.zmanim.util;

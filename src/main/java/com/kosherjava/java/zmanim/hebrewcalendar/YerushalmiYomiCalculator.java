@@ -13,10 +13,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA,
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.java.zmanim.hebrewcalendar;
-
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf;
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar;
+package com.kosherjava.java.zmanim.hebrewcalendar;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -24,7 +21,7 @@ import java.util.GregorianCalendar;
 
 /**
  * This class calculates the <a href="https://en.wikipedia.org/wiki/Jerusalem_Talmud">Talmud Yerusalmi</a> <a href=
- * "https://en.wikipedia.org/wiki/Daf_Yomi">Daf Yomi</a> page ({@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf}) for the a given date.
+ * "https://en.wikipedia.org/wiki/Daf_Yomi">Daf Yomi</a> page ({@link Daf}) for the a given date.
  * 
  * @author &copy; elihaidv
  * @author &copy; Eliyahu Hershfeld 2017 - 2023
@@ -46,29 +43,29 @@ public class YerushalmiYomiCalculator {
 
 	/**
 	 * Returns the <a href="https://en.wikipedia.org/wiki/Daf_Yomi">Daf Yomi</a>
-	 * <a href="https://en.wikipedia.org/wiki/Jerusalem_Talmud">Yerusalmi</a> page ({@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf}) for a given date.
+	 * <a href="https://en.wikipedia.org/wiki/Jerusalem_Talmud">Yerusalmi</a> page ({@link Daf}) for a given date.
 	 * The first Daf Yomi cycle started on 15 Shevat (Tu Bishvat), 5740 (February, 2, 1980) and calculations
 	 * prior to this date will result in an IllegalArgumentException thrown. A null will be returned on Tisha B'Av or
 	 * Yom Kippur.
 	 *
 	 * @param calendar
 	 *            the calendar date for calculation
-	 * @return the {@link com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf} or null if the date is on Tisha B'Av or Yom Kippur.
+	 * @return the {@link Daf} or null if the date is on Tisha B'Av or Yom Kippur.
 	 *
 	 * @throws IllegalArgumentException
 	 *             if the date is prior to the February 2, 1980, the start of the first Daf Yomi Yerushalmi cycle
 	 */
-	public static com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf getDafYomiYerushalmi(com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar calendar) {
+	public static Daf getDafYomiYerushalmi(JewishCalendar calendar) {
 		
 		Calendar nextCycle = new GregorianCalendar();
 		Calendar prevCycle = new GregorianCalendar();
 		Calendar requested = calendar.getGregorianCalendar();
 		int masechta = 0;
-		com.kosherjava.zmanim.java.zmanim.hebrewcalendar.Daf dafYomi = null;
+		Daf dafYomi = null;
 
 		// There isn't Daf Yomi on Yom Kippur or Tisha B'Av.
-		if ( calendar.getYomTovIndex() == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar.YOM_KIPPUR ||
-				calendar.getYomTovIndex() == com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar.TISHA_BEAV ) {
+		if ( calendar.getYomTovIndex() == JewishCalendar.YOM_KIPPUR ||
+				calendar.getYomTovIndex() == JewishCalendar.TISHA_BEAV ) {
 			return null;
 		}
 		
@@ -122,15 +119,15 @@ public class YerushalmiYomiCalculator {
 	private static int getNumOfSpecialDays(Calendar start, Calendar end) {
 		
 		// Find the start and end Jewish years
-		int startYear = new com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(start).getJewishYear();
-		int endYear = new com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(end).getJewishYear();
+		int startYear = new JewishCalendar(start).getJewishYear();
+		int endYear = new JewishCalendar(end).getJewishYear();
 		
 		// Value to return
 		int specialDays = 0;
 		
 		//Instant of special Dates
-		com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar yom_kippur = new com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar(5770, 7, 10);
-		com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishCalendar tisha_beav = new JewishCalendar(5770, 5, 9);
+		JewishCalendar yom_kippur = new JewishCalendar(5770, 7, 10);
+		JewishCalendar tisha_beav = new JewishCalendar(5770, 5, 9);
 
 		// Go over the years and find special dates
 		for (int i = startYear; i <= endYear; i++) {

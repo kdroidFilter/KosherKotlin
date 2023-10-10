@@ -1,13 +1,12 @@
-package com.kosherjava.zmanim.java.zmanim;
+package com.kosherjava.java.zmanim;
 
-import com.kosherjava.zmanim.java.zmanim.hebrewcalendar.JewishDate;
+import com.kosherjava.java.zmanim.hebrewcalendar.JewishDate;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.ZoneId;
 import java.util.Calendar;
 
 public class Main {

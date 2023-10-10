@@ -14,7 +14,7 @@
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
 
-package com.kosherjava.zmanim.java.zmanim.hebrewcalendar;
+package com.kosherjava.java.zmanim.hebrewcalendar;
 
 /**
  * An Object representing a <em>daf</em> (page) in the <a href="https://en.wikipedia.org/wiki/Daf_Yomi">Daf Yomi</a> cycle.

@@ -1,4 +1,4 @@
-package com.kosherjava.zmanim.java;
+package com.kosherjava.java;
 
 public class Main {
     public static void main(String[] args) {
