@@ -2724,7 +2724,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.BAIN_HASHMASHOS,
             getSunsetOffsetByDegrees(ZENITH_MINUS_3_POINT_05),
             ZmanDefinition(
-                ZmanCalculationMethod.Degrees(3.05F, ZmanType.SHKIAH),
+                ZmanCalculationMethod.Degrees(-3.05F, ZmanType.SHKIAH),
                 null,
                 ZmanDefinition.UsesElevation.ALWAYS
             ),
