@@ -227,6 +227,21 @@ data class ZmanDefinition(
                     UsesElevation.NEVER
                 )
             )
+            val DAWN_72_ZMANIS_TO_DUSK_ATERET_TORAH = DayDefinition(
+                ZmanDefinition(
+                    null,
+                    mapOf(
+                        ZmanType.ALOS to ZmanCalculationMethod.ZmaniyosDuration._72
+                    ),
+                    UsesElevation.IF_SET
+                ),
+                ZmanDefinition(
+                    null,
+                    mapOf(
+                        ZmanType.TZAIS to ZmanCalculationMethod.FixedDuration.AteretTorah() //TODO if the offset is changed, this format string will be wrong
+                    )
+                )
+            )
         }
     }
     enum class UsesElevation {

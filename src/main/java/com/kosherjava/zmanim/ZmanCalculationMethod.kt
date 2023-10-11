@@ -40,6 +40,9 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
     open fun format(): String = format(true)
     open fun format(inEnglish: Boolean): String = format()
 
+    open fun format(subjectZman:String, zmanRelativeTo: String) = format()
+    open fun valueToString() = format()
+
     object Unspecified : ZmanCalculationMethod<Unit>(Unit) {
         override fun format(): String = "Unspecified"
     }
@@ -56,14 +59,17 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      *
      * @param duration if negative, this zman is [duration] before [fromZman]. If positive, after. If [Duration.ZERO], this zman is equal to [fromZman].
      * */
-    data class FixedDuration(val duration: Duration, val fromZman: ZmanType? = null/*sunrise/set*/) :
+    open class FixedDuration(val duration: Duration, val fromZman: ZmanType? = null/*sunrise/set*/) :
         ZmanCalculationMethod<Duration>(duration) {
+        /**
+         * Ateret torah (which defaults to 40 minutes)
+         * */
+        data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET) :
+            FixedDuration(minutes.minutes) {
+            override fun valueToString(): String = ZmanDescriptionFormatter.formatAteretTorah(minutes)
+        }
         companion object {
-            /**
-             * Ateret torah (which defaults to 40 minutes)
-             * */
-            fun AteretTorah(offset: Int = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET) =
-                FixedDuration(offset.minutes)
+
 
             /**
              * A mil takes 15 minutes to walk; 4 mil * 15 minutes/mil = 60 minutes

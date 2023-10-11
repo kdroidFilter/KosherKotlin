@@ -148,7 +148,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      *
      * @return the number of minutes after sunset for *Tzait*.
      */
-    var ateretTorahSunsetOffset: Double = ATERET_TORAH_DEFAULT_OFFSET.toDouble()
+    var ateretTorahSunsetOffset: Double = ATERET_TORAH_DEFAULT_OFFSET
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) calculated using a 19.8 dip. This calculation
@@ -453,12 +453,10 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.SHAA_ZMANIS,
             getTemporalHour(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence).milliseconds,
             ZmanDefinition(
-                ZmanAuthority.ATERET_TORAH,
-                mapOf(
-                    ZmanType.ALOS to ZmanCalculationMethod.ZmaniyosDuration._72,
-                    ZmanType.TZAIS to ZmanAuthority.ATERET_TORAH,
-                ),
-                ZmanDefinition.UsesElevation.IF_SET
+                ZmanAuthority.AteretTorah(ateretTorahSunsetOffset),
+                null,
+                ZmanDefinition.UsesElevation.IF_SET,
+                ZmanDefinition.DayDefinition.DAWN_72_ZMANIS_TO_DUSK_ATERET_TORAH
             )
         )
 
@@ -3307,7 +3305,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.SOF_ZMAN_KRIAS_SHEMA,
             getSofZmanShma(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
-                ZmanAuthority.ATERET_TORAH,
+                ZmanAuthority.AteretTorah(ateretTorahSunsetOffset),
                 null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK
@@ -3336,7 +3334,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.SOF_ZMAN_TEFILLAH,
             getSofZmanTfila(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
-                ZmanAuthority.ATERET_TORAH,
+                ZmanAuthority.AteretTorah(ateretTorahSunsetOffset),
                 null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK
@@ -3369,7 +3367,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.MINCHA_GEDOLAH,
             getMinchaGedola(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
-                ZmanAuthority.ATERET_TORAH,
+                ZmanAuthority.AteretTorah(ateretTorahSunsetOffset),
                 null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK
@@ -3404,7 +3402,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.MINCHA_KETANAH,
             getMinchaKetana(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
-                ZmanAuthority.ATERET_TORAH,
+                ZmanAuthority.AteretTorah(ateretTorahSunsetOffset),
                 null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK
@@ -3433,7 +3431,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanType.PLAG_HAMINCHA,
             getPlagHamincha(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
-                ZmanAuthority.ATERET_TORAH,
+                ZmanAuthority.AteretTorah(ateretTorahSunsetOffset),
                 null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK
@@ -5197,7 +5195,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
 
     companion object {
 
-        const val ATERET_TORAH_DEFAULT_OFFSET = 40
+        const val ATERET_TORAH_DEFAULT_OFFSET = 40.0
 
         val MIDNIGHT = LocalTime(0, 0, 0)
 
