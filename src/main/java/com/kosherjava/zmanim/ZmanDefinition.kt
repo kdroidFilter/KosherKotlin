@@ -4,7 +4,7 @@ data class ZmanDefinition(
     val mainCalculationMethodUsed: ZmanCalculationMethod<*>? = null,
     val zmanToCalcMethodUsed: Map<ZmanType, ZmanCalculationMethod<*>>? = null,
     val isElevationUsed: UsesElevation = UsesElevation.UNSPECIFIED,
-    val definitionOfDayUsed: DayDefinition? = DayDefinition.DAWN_TO_DUSK
+    val definitionOfDayUsed: DayDefinition? = null
 ) {
     /**
      * - The [GR"A][ZmanAuthority.GRA] holds that the day starts at [sunrise][ZmanType.HANAITZ] and ends at [sunset][ZmanType.SHKIAH].
