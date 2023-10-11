@@ -490,11 +490,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ).milliseconds,
             ZmanDefinition(
                 ZmanAuthority.AHAVAT_SHALOM,
-                mapOf(
-                    ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1,
-                    ZmanType.TZAIS to ZmanCalculationMethod.Degrees._3_8,
-                ),
-                ZmanDefinition.UsesElevation.ALWAYS
+                null,
+                ZmanDefinition.UsesElevation.ALWAYS,
+                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_3_8
             )
         )
 
@@ -526,11 +524,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ).milliseconds,
             ZmanDefinition(
                 ZmanAuthority.AHAVAT_SHALOM,
-                mapOf(
-                    ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1,
-                    ZmanType.TZAIS to ZmanCalculationMethod.Degrees._3_7,
-                ),
-                ZmanDefinition.UsesElevation.ALWAYS
+                null,
+                ZmanDefinition.UsesElevation.ALWAYS,
+                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_3_7
             )
         )
 
