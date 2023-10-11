@@ -1119,6 +1119,7 @@ data class GeoLocation(
             "US/Pacific" to -28800000,
             "US/Samoa" to -39600000,
             "UTC" to 0,
+            "Z" to 0,
             "Universal" to 0,
             "W-SU" to 10800000,
             "WET" to 0,
