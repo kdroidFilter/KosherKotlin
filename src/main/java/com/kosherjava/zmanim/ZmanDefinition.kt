@@ -74,7 +74,8 @@ data class ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    )
+                    ),
+                    UsesElevation.ALWAYS
                 ),
                 ZmanDefinition(
                     null,
@@ -89,7 +90,8 @@ data class ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    )
+                    ),
+                    UsesElevation.ALWAYS
                 ),
                 ZmanDefinition(
                     null,
@@ -110,14 +112,15 @@ data class ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    )
+                    ),
+                    UsesElevation.ALWAYS
                 ),
                 ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.TZAIS to ZmanCalculationMethod.Degrees._7_083,
                     ),
-                    UsesElevation.NEVER
+                    UsesElevation.ALWAYS
                 )
             )
             val DAWN_16_1_TO_DUSK_3_8 = DayDefinition(
@@ -125,14 +128,15 @@ data class ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    )
+                    ),
+                    UsesElevation.ALWAYS
                 ),
                 ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.TZAIS to ZmanCalculationMethod.Degrees._3_8,
                     ),
-                    UsesElevation.NEVER
+                    UsesElevation.ALWAYS
                 )
             )
             val DAWN_72_MINUTES_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
@@ -194,7 +198,7 @@ data class ZmanDefinition(
                     mapOf(
                         ZmanType.TZAIS to ZmanCalculationMethod.Unspecified
                     ),
-                    UsesElevation.NEVER
+                    UsesElevation.ALWAYS
                 )
             )
             val DAWN_16_1_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
@@ -202,7 +206,8 @@ data class ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    )
+                    ),
+                    UsesElevation.ALWAYS
                 ),
                 ZmanDefinition(
                     null,
@@ -217,7 +222,8 @@ data class ZmanDefinition(
                     null,
                     mapOf(
                         ZmanType.ALOS to ZmanCalculationMethod.Degrees._18
-                    )
+                    ),
+                    UsesElevation.ALWAYS
                 ),
                 ZmanDefinition(
                     null,
