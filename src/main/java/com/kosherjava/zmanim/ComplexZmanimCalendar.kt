@@ -2703,11 +2703,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * hashmashos* starts 3/4 of a *Mil* before sunset and *tzais* or nightfall starts at sunset.
      * Note that *lechumra* (of about 14 seconds) a refraction value of 0.5166 as opposed to the traditional
      * 0.566 is used. This is more inline with the actual refraction in *Eretz Yisrael* and is brought down
-     * by [Rabbi
- * Yedidya Manet](http://beinenu.com/rabbis/%D7%94%D7%A8%D7%91-%D7%99%D7%93%D7%99%D7%93%D7%99%D7%94-%D7%9E%D7%A0%D7%AA) in his [Zmanei Halacha
- * Lema’aseh](https://www.nli.org.il/en/books/NNL_ALEPH002542826/NLI) (p. 11). That is the first source that I am aware of that calculates degree-based Yereim
-     * *zmanim*. The 0.5166 refraction is also used by the [Luach Itim
- * Lebinah](https://zmanim.online/). Calculating the Yereim's *bain hashmashos* using 18-minute based degrees is also suggested
+     * by [Rabbi Yedidya Manet](http://beinenu.com/rabbis/%D7%94%D7%A8%D7%91-%D7%99%D7%93%D7%99%D7%93%D7%99%D7%94-%D7%9E%D7%A0%D7%AA) in his [Zmanei Halacha Lema’aseh](https://www.nli.org.il/en/books/NNL_ALEPH002542826/NLI) (p. 11). That is the first source that I am aware of that calculates degree-based Yereim
+     * *zmanim*. The 0.5166 refraction is also used by the [Luach Itim Lebinah](https://zmanim.online/). Calculating the Yereim's *bain hashmashos* using 18-minute based degrees is also suggested
      * in the upcoming 8th edition of the zmanim Kehilchasam. For more details, see the article [The Yereim’s *Bein Hashmashos*](https://kosherjava.com/2020/12/07/the-yereims-bein-hashmashos/).
      *
      * @todo recalculate based on equinox/equilux
