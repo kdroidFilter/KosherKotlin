@@ -212,7 +212,7 @@ data class ZmanDefinition(
                 ZmanDefinition(
                     null,
                     mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.Unspecified
+                        ZmanType.SHKIAH to ZmanCalculationMethod.Unspecified
                     ),
                     UsesElevation.ALWAYS
                 )
