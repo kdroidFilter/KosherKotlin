@@ -3273,7 +3273,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 ateretTorahSunsetOffset * MINUTE_MILLIS
             ),
             ZmanDefinition(
-                ZmanCalculationMethod.FixedDuration.AteretTorah(),//ZmanAuthority.ATERET_TORAH,
+                ZmanCalculationMethod.FixedDuration.AteretTorah(ateretTorahSunsetOffset),//ZmanAuthority.AteretTorah(ateretTorahSunsetOffset),
                 null,
                 ZmanDefinition.UsesElevation.NEVER
             ),
