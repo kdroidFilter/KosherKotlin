@@ -329,11 +329,12 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
             ZmanType.SOF_ZMAN_KRIAS_SHEMA,
             getSofZmanShma(alos72.momentOfOccurrence, tzais72.momentOfOccurrence),
             ZmanDefinition(
-                ZmanAuthority.MGA,
+                ZmanCalculationMethod.FixedDuration._72,
                 null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK
-            )
+            ),
+            listOf(ZmanAuthority.MGA)
         )
 
     /**
@@ -456,11 +457,12 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
             ZmanType.SOF_ZMAN_TEFILLAH,
             getSofZmanTfila(alos72.momentOfOccurrence, tzais72.momentOfOccurrence),
             ZmanDefinition(
-                ZmanAuthority.MGA,
+                ZmanCalculationMethod.FixedDuration._72,
                 null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK
-            )
+            ),
+            listOf(ZmanAuthority.MGA)
         )
 
     /**
