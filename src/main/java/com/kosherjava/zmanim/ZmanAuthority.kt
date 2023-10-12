@@ -8,7 +8,7 @@ package com.kosherjava.zmanim
  * It is also more meaningful to the reader/end user that it uses the GRA's sha'ah zmanis rather than a calculation method.
  * */
 open class ZmanAuthority(val name: String): ZmanCalculationMethod<String>(name) {
-    data class AccordingTo(val authority: ZmanAuthority, val accordingTo: ZmanAuthority): ZmanAuthority("${authority.name} according to ${accordingTo.name}")
+    data class AccordingTo(val authority: ZmanAuthority? = null, val accordingTo: ZmanAuthority, val calculationMethod: ZmanCalculationMethod<*>? = null): ZmanAuthority("${authority?.name ?: calculationMethod?.valueToString()} according to ${accordingTo.name}")
     data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET): ZmanAuthority(ZmanDescriptionFormatter.formatAteretTorah(minutes))
 
     override fun format() = "According to $name"
