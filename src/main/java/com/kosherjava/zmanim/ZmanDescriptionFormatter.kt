@@ -165,6 +165,13 @@ class ZmanDescriptionFormatter {
 
             result.appendLine("Day is defined as when the sun is ")
         }*/
+        if(zman.supportingAuthorities.isNotEmpty()) {
+            result.append("Supporting authorities: ")
+            for(authority in zman.supportingAuthorities) {
+                result.append(authority.name)
+                result.append(", ")
+            }
+        }
         when (zman.rules.isElevationUsed) {
             ZmanDefinition.UsesElevation.IF_SET -> result.append("- affected by elevation if set")
             ZmanDefinition.UsesElevation.NEVER -> result.append("- unaffected by elevation")
@@ -202,6 +209,6 @@ class ZmanDescriptionFormatter {
         }
     }
     companion object {
-        fun formatAteretTorah(minuteOffset: Double) = "${ZmanAuthority.Strings.ATERET_TORAH} (${if(minuteOffset % 1 == 0.0) minuteOffset.toInt()/*don't add .0*/ else minuteOffset} minutes)"
+        fun shortDescriptionAteretTorah(minuteOffset: Double) = "${ZmanAuthority.Strings.ATERET_TORAH} (${if(minuteOffset % 1 == 0.0) minuteOffset.toInt()/*don't add .0*/ else minuteOffset} minutes)"
     }
 }

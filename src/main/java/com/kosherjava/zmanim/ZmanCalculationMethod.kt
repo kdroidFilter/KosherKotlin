@@ -43,6 +43,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
 
     open fun format(subjectZman:String, zmanRelativeTo: String) = format()
     open fun valueToString() = format()
+    open fun shortDescription() = valueToString()
 
     object Unspecified : ZmanCalculationMethod<Unit>(Unit) {
         override fun format(): String = "Unspecified"
@@ -68,7 +69,8 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
          * */
         data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET) :
             FixedDuration(minutes.minutes) {
-            override fun valueToString(): String = ZmanDescriptionFormatter.formatAteretTorah(minutes)
+            override fun shortDescription(): String = ZmanDescriptionFormatter.shortDescriptionAteretTorah(minutes)
+            override fun valueToString(): String = ZmanAuthority.Strings.ATERET_TORAH
         }
         companion object {
 
@@ -112,6 +114,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
         override fun format(subjectZman:String, zmanRelativeTo: String) = "$subjectZman is ${valueToString()} ${if (duration.isNegative()) "before" else "after"} $zmanRelativeTo"
 
         override fun valueToString(): String = duration.durationValueToString()
+        override fun shortDescription(): String = duration.durationValueToString()//TODO add relative to zman
     }
 
     internal fun Duration.durationValueToString(halachic: Boolean = false) = toComponents { hours, minutes, seconds, nanoseconds ->
@@ -164,6 +167,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
         }
 
         override fun valueToString(): String = duration.durationValueToString(true)
+        override fun shortDescription(): String = duration.durationValueToString(true)//TODO add relative to zman
     }
 
     /**

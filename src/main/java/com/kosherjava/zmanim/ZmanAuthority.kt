@@ -9,7 +9,7 @@ package com.kosherjava.zmanim
  * */
 open class ZmanAuthority(val name: String): ZmanCalculationMethod<String>(name) {
     data class AccordingTo(val authority: ZmanAuthority? = null, val accordingTo: ZmanAuthority, val calculationMethod: ZmanCalculationMethod<*>? = null): ZmanAuthority("${authority?.name ?: calculationMethod?.valueToString()} according to ${accordingTo.name}")
-    data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET): ZmanAuthority(ZmanDescriptionFormatter.formatAteretTorah(minutes))
+    data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET): ZmanAuthority(ZmanDescriptionFormatter.shortDescriptionAteretTorah(minutes))
 
     override fun format() = "According to $name"
     override fun valueToString(): String = name
