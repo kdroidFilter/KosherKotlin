@@ -4520,7 +4520,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 }
             },
             ZmanDefinition(
-                ZmanAuthority.AccordingTo(ZmanCalculationMethod.FixedDuration(30.minutes, ZmanType.CHATZOS_HAYOM), ZmanAuthority.BAAL_HATANYA)
+                ZmanAuthority.AccordingTo(null, ZmanAuthority.BAAL_HATANYA, ZmanCalculationMethod.FixedDuration(30.minutes, ZmanType.CHATZOS_HAYOM),)
             )
         )
 
@@ -4578,7 +4578,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val tzaisBaalHatanya: Zman.DateBased
         get() = Zman.DateBased(
-            ZmanType.TZA,
+            ZmanType.TZAIS,
             getSunsetOffsetByDegrees(ZENITH_6_DEGREES),
             ZmanDefinition(ZmanAuthority.BAAL_HATANYA)
         )
