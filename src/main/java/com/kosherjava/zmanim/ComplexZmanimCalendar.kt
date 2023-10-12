@@ -4501,11 +4501,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
         )
 
     /**
-     * This is a convenience method that returns the later of [.getMinchaGedolaBaalHatanya] and
-     * [.getMinchaGedola30Minutes]. In the winter when 1/2 of a [*shaah zmanis*][shaahZmanisBaalHatanya] is less than 30 minutes [.getMinchaGedola30Minutes] will be returned, otherwise
-     * [.getMinchaGedolaBaalHatanya] will be returned.
+     * This is a convenience method that returns the later of [minchaGedolaBaalHatanya] and
+     * [minchaGedola30Minutes]. In the winter when 1/2 of a [*shaah zmanis*][shaahZmanisBaalHatanya] is less than 30 minutes [minchaGedola30Minutes] will be returned, otherwise
+     * [minchaGedolaBaalHatanya] will be returned.
      *
-     * @return the `Date` of the later of [.getMinchaGedolaBaalHatanya] and [.getMinchaGedola30Minutes].
+     * @return the `Date` of the later of [minchaGedolaBaalHatanya] and [minchaGedola30Minutes].
      * If the calculation can't be computed such as in the Arctic Circle where there is at least one day a year
      * where the sun does not rise, and one where it does not set, a null will be returned. See detailed
      * explanation on top of the [AstronomicalCalendar] documentation.
@@ -4519,7 +4519,9 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                     //if (_minchaGedola30Minutes!! > _minchaGedolaBaalHatanya) _minchaGedola30Minutes else _minchaGedolaBaalHatanya
                 }
             },
-            ZmanDefinition(ZmanAuthority.BAAL_HATANYA)
+            ZmanDefinition(
+                ZmanAuthority.AccordingTo(ZmanCalculationMethod.FixedDuration(30.minutes, ZmanType.CHATZOS_HAYOM), ZmanAuthority.BAAL_HATANYA)
+            )
         )
 
     /**
@@ -4558,7 +4560,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val plagHaminchaBaalHatanya: Zman.DateBased
         get() = Zman.DateBased(
-            ZmanType.MINCHA_KETANAH,
+            ZmanType.PLAG_HAMINCHA,
             getPlagHamincha(sunriseBaalHatanya, sunsetBaalHatanya),
             ZmanDefinition(ZmanAuthority.BAAL_HATANYA)
         )
@@ -4576,7 +4578,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      */
     val tzaisBaalHatanya: Zman.DateBased
         get() = Zman.DateBased(
-            ZmanType.MINCHA_KETANAH,
+            ZmanType.TZA,
             getSunsetOffsetByDegrees(ZENITH_6_DEGREES),
             ZmanDefinition(ZmanAuthority.BAAL_HATANYA)
         )

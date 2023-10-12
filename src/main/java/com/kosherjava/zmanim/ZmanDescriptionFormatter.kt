@@ -57,11 +57,17 @@ class ZmanDescriptionFormatter {
         * */
         val startZman = definitionOfDayUsed?.dayStart?.zmanToCalcMethodUsed?.keys?.firstOrNull()
         val endZman = definitionOfDayUsed?.dayEnd?.zmanToCalcMethodUsed?.keys?.firstOrNull()
+        val mainCalculationMethod =
+            {
+                if (rules.mainCalculationMethodUsed != null) "${if (result.isNotBlank()) " - " else ""}${rules.mainCalculationMethodUsed.valueToString()}"
+                else null
+            }
+
         result.apply {
-            if(startZman != null && endZman != null) {
+            if (startZman != null && endZman != null) {
                 append(startZman.friendlyNameEnglish)
                 val startCalcMethod = definitionOfDayUsed.dayStart.zmanToCalcMethodUsed.values.firstOrNull()
-                if(startCalcMethod != null && startCalcMethod != ZmanCalculationMethod.Unspecified) {
+                if (startCalcMethod != null && startCalcMethod != ZmanCalculationMethod.Unspecified) {
                     append("(")
                     append(startCalcMethod.valueToString())
                     append(")")
@@ -69,15 +75,15 @@ class ZmanDescriptionFormatter {
                 append("-")
                 append(endZman.friendlyNameEnglish)
                 val endCalcMethod = definitionOfDayUsed.dayEnd.zmanToCalcMethodUsed.values.firstOrNull()
-                if(endCalcMethod != null && endCalcMethod != ZmanCalculationMethod.Unspecified) {
+                if (endCalcMethod != null && endCalcMethod != ZmanCalculationMethod.Unspecified) {
                     append("(")
                     append(endCalcMethod.valueToString())
                     append(")")
                 }
-                append(" - ")
             }
-            append(rules.mainCalculationMethodUsed?.valueToString())
-            if(includeElevationDescription) {
+            val string = mainCalculationMethod()
+            if (string != null) append(string)
+            if (includeElevationDescription) {
                 append(" - ")
                 append(
                     when (rules.isElevationUsed) {
