@@ -1,5 +1,7 @@
 package com.kosherjava.zmanim
 
+import kotlin.time.Duration
+
 enum class ZmanType(
     val friendlyNameEnglish: String,
     val friendlyNameHebrew: String
@@ -28,5 +30,17 @@ enum class ZmanType(
     EARLIEST_MINCHA("Earliest Mincha", "מנחה הכי מוקדם"),
     EARLIEST_KIDDUSH_LEVANA("Earliest time to sanctify the moon", "תחילת זמן קידוש לבנה"),
     SOF_ZMAN_KIDDUSH_LEVANA("Latest time to sanctify the moon", "סוף זמן קידוש לבנה"),
-    CANDLE_LIGHTING("Candle lighting", "הדלקת נרות"),
+    CANDLE_LIGHTING("Candle lighting", "הדלקת נרות");
+
+    infix fun occurs(time: Duration) = Occurence(this, ZmanCalculationMethod.FixedDuration(time))
+    infix fun occurs(time: ZmanCalculationMethod.ZmaniyosDuration) = Occurence(this, time)
+    infix fun occurs(time: ZmanCalculationMethod.FixedDuration) = Occurence(this, time)
+    infix fun occurs(time: ZmanCalculationMethod.Degrees) = Occurence(this, time)
+
+    val shaosZmaniyosIntoDay: Float? get() = when(this) {
+        SOF_ZMAN_KRIAS_SHEMA -> 3F
+        SOF_ZMAN_TEFILLAH -> 4F
+        MINCHA_GEDOLAH -> 6.5F
+        else -> null
+    }
 }

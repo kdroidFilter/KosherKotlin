@@ -11,26 +11,22 @@ import kotlin.time.Duration
  * Others, like [sunset][ZmanType.SHKIAH] happen at a specific moment in time.
  * @param T the type of zman opinion which this zman was calculated using. See [ZmanCalculationMethod] for options.
  * */
-sealed class Zman(
-    open val type: ZmanType,
+sealed class Zman<T>(
+    val value: T,
     open val rules: ZmanDefinition = ZmanDefinition.empty,
-    open val supportingAuthorities: List<ZmanAuthority> = listOf()
-): Comparable<Zman> {
+): Comparable<Zman<T>> {
     /**
      * This class represents a zman that has a moment in which it occurs.
      * @param momentOfOccurrence null if zman never occurs or does not apply (e.g. time to say kiddush levana after time
      * has passed). Some zmanim can occasionally not occur (e.g. sunrise in the Arctic Circle).
      * */
     data class DateBased(
-        override val type: ZmanType,
         val momentOfOccurrence: Instant?,
-        override val rules: ZmanDefinition = ZmanDefinition.empty,
-        override val supportingAuthorities: List<ZmanAuthority> = listOf()
-    ) : Zman(type, rules) {
-        override fun compareTo(other: Zman): Int {
+        override val rules: ZmanDefinition = ZmanDefinition.empty
+    ) : Zman<Instant?>(momentOfOccurrence, rules) {
+        override fun compareTo(other: Zman<Instant?>): Int {
             if(this === other) return 0
 //            if(this.type != other.type) return this.type.compareTo(other.type)
-            if(other is ValueBased) return 1 //not sure why DateBased should go after ValueBased, but why are you comparing them?
             other as DateBased
             return when {
                 //null goes at the beginning
@@ -50,15 +46,13 @@ sealed class Zman(
      * [*shaah Zmanis 16.1˚*][com.kosherjava.zmanim.ComplexZmanimCalendar.shaahZmanis16Point1Degrees]).
      * */
     data class ValueBased(
-        override val type: ZmanType,
         val duration: Duration,
         override val rules: ZmanDefinition = ZmanDefinition.empty,
-        override val supportingAuthorities: List<ZmanAuthority> = listOf()
-    ) : Zman(type, rules) {
-        override fun compareTo(other: Zman): Int {
+    ) : Zman<Duration>(duration, rules) {
+        override fun compareTo(other: Zman<Duration>): Int {
             if(this === other) return 0
-            if(this.type != other.type) return this.type.compareTo(other.type)
-            if(other is DateBased) return -1  //not sure why DateBased should go after ValueBased, but why are you comparing them?
+//            if(this.type != other.type) return this.type.compareTo(other.type)
+//            if(other is DateBased) return -1  //not sure why DateBased should go after ValueBased, but why are you comparing them?
             other as ValueBased
             return when {
                 duration.isInfinite() && other.duration.isInfinite() -> 0

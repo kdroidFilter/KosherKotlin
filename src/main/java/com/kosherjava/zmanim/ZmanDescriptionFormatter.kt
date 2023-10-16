@@ -1,7 +1,7 @@
 package com.kosherjava.zmanim
 
 class ZmanDescriptionFormatter {
-    fun formatShortDescription(zman: Zman, includeElevationDescription: Boolean): String {
+    fun formatShortDescription(zman: Zman<*>, includeElevationDescription: Boolean): String {
         val result = StringBuilder()
 //        "Alos-Tzais - 19.8˚ - affected by elevation"
         val rules = zman.rules
@@ -97,7 +97,7 @@ class ZmanDescriptionFormatter {
         }
     }
 
-    fun formatLongDescription(zman: Zman): String {
+    fun formatLongDescription(zman: Zman<*>): String {
         val result = StringBuilder()
         if (zman is Zman.DateBased) {
             val rules = zman.rules
@@ -165,9 +165,9 @@ class ZmanDescriptionFormatter {
 
             result.appendLine("Day is defined as when the sun is ")
         }*/
-        if(zman.supportingAuthorities.isNotEmpty()) {
+        if(zman.rules.supportingAuthorities.isNotEmpty()) {
             result.append("Supporting authorities: ")
-            for(authority in zman.supportingAuthorities) {
+            for(authority in zman.rules.supportingAuthorities) {
                 result.append(authority.name)
                 result.append(", ")
             }
