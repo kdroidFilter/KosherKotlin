@@ -37,6 +37,13 @@ import kotlin.time.Duration.Companion.minutes
  * */
 sealed class ZmanCalculationMethod<T>(val value: T) {
 
+    companion object{
+        val Duration.zmaniyos get() = ZmaniyosDuration(this)
+        val Float.degrees get() = Degrees(this)
+        val Int.degrees get() = Degrees(this.toFloat())
+        val Double.degrees get() = Degrees(this.toFloat())
+    }
+
     /* One or both of these must be implemented! */
     open fun format(): String = format(true)
     open fun format(inEnglish: Boolean): String = format()
@@ -47,6 +54,9 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
 
     object Unspecified : ZmanCalculationMethod<Unit>(Unit) {
         override fun format(): String = "Unspecified"
+    }
+    object DayDefinition : ZmanCalculationMethod<Unit>(Unit) {
+        override fun format(): String = "Based on definition of when day starts/ends"
     }
 
     /**

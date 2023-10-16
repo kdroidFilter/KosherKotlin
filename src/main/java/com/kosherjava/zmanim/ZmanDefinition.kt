@@ -1,10 +1,23 @@
 package com.kosherjava.zmanim
 
+import kotlin.time.Duration.Companion.minutes
+
+/**
+ *
+ * @param relationship
+ * ZmanType.TZAIS  occurs 45.minutes          after  ZmanType.SHKIAH
+ * ZmanType.SHKIAH occurs 45.minutes          before ZmanType.TZAIS
+ * ZmanType.SHKIAH occurs 45.minutes.zmaniyos before ZmanType.TZAIS
+ * ZmanType.SHKIAH occurs 16.1F.degrees       before ZmanType.TZAIS
+ * */
 data class ZmanDefinition(
+    val type: ZmanType,
     val mainCalculationMethodUsed: ZmanCalculationMethod<*>? = null,
     val zmanToCalcMethodUsed: Map<ZmanType, ZmanCalculationMethod<*>>? = null,
     val isElevationUsed: UsesElevation = UsesElevation.UNSPECIFIED,
-    val definitionOfDayUsed: DayDefinition? = null
+    val definitionOfDayUsed: DayDefinition? = null,
+    val supportingAuthorities: List<ZmanAuthority> = listOf(),
+    val relationship: ZmanRelationship<*>? = null,
 ) {
     /**
      * - The [GR"A][ZmanAuthority.GRA] holds that the day starts at [sunrise][ZmanType.HANAITZ] and ends at [sunset][ZmanType.SHKIAH].
@@ -15,6 +28,8 @@ data class ZmanDefinition(
     data class DayDefinition(
         val dayStart: ZmanDefinition,
         val dayEnd: ZmanDefinition,
+        val dayStartRelationship: ZmanRelationship<*>? = null,
+        val dayEndRelationship: ZmanRelationship<*>? = null,
     ) {
         companion object {
             fun fromCalculationMethod(
@@ -25,44 +40,41 @@ data class ZmanDefinition(
                 dayStartUsesElevation: UsesElevation = UsesElevation.UNSPECIFIED,
                 dayEndUsesElevation: UsesElevation = UsesElevation.UNSPECIFIED,
             ) = DayDefinition(
-                    ZmanDefinition(
-                        null,
-                        mapOf(dayStartsAtZman to dayStartCalculationMethod),
-                        dayStartUsesElevation
-                    ),
-                    ZmanDefinition(
-                        null,
-                        mapOf(dayEndsAtZman to  dayEndCalculationMethod),
-                        dayEndUsesElevation
-                    ),
-            )
-            val DAWN_TO_DUSK = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Unspecified,
-                    )
+                    dayStartsAtZman, dayStartCalculationMethod, null, dayStartUsesElevation
                 ),
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.Unspecified,
+                    dayEndsAtZman, dayEndCalculationMethod, null, dayEndUsesElevation
+                ),
+            )
+
+            fun DAWN_TO_DUSK(startMethod: ZmanCalculationMethod<*>, endMethod: ZmanCalculationMethod<*> = startMethod) =
+                DayDefinition(
+                    ZmanDefinition(
+                        ZmanType.ALOS, startMethod
+                    ), ZmanDefinition(
+                        ZmanType.TZAIS,
+                        endMethod,
                     )
+                )
+
+            val DAWN_TO_DUSK = DayDefinition(
+                ZmanDefinition(
+                    ZmanType.ALOS,
+                    ZmanCalculationMethod.Unspecified,
+                ), ZmanDefinition(
+                    ZmanType.TZAIS,
+                    ZmanCalculationMethod.Unspecified,
                 )
             )
             val SUNRISE_TO_SUNSET = DayDefinition(
 
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.HANAITZ to ZmanCalculationMethod.Unspecified,
-                    )
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.SHKIAH to ZmanCalculationMethod.Unspecified,
-                    )
+                    ZmanType.HANAITZ,
+                    ZmanCalculationMethod.Unspecified,
+                ), ZmanDefinition(
+                    ZmanType.SHKIAH,
+                    ZmanCalculationMethod.Unspecified,
                 )
             )
 
@@ -71,34 +83,19 @@ data class ZmanDefinition(
              * */
             val DAWN_16_1_TO_SEA_LEVEL_SUNSET = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    ),
-                    UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.SHKIAH to ZmanAuthority.Unanimous,
-                    ),
-                    UsesElevation.NEVER
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1, null, UsesElevation.ALWAYS
+
+                ), ZmanDefinition(
+                    ZmanType.SHKIAH, ZmanAuthority.Unanimous, null, UsesElevation.NEVER
                 )
             )
             val DAWN_16_1_TO_ELEVATION_ADJUSTED_SUNSET = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    ),
-                    UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.SHKIAH to ZmanAuthority.Unanimous,
-                    ),
-                    UsesElevation.IF_SET
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1, null, UsesElevation.ALWAYS
+
+                ), ZmanDefinition(
+                    ZmanType.SHKIAH, ZmanAuthority.Unanimous, null, UsesElevation.IF_SET
+
                 )
             )
 
@@ -109,170 +106,147 @@ data class ZmanDefinition(
              * */
             val DAWN_16_1_TO_DUSK_7_083 = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    ),
-                    UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.Degrees._7_083,
-                    ),
-                    UsesElevation.ALWAYS
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1, null, UsesElevation.ALWAYS
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.Degrees._7_083, null, UsesElevation.ALWAYS
+
                 )
             )
             val DAWN_16_1_TO_DUSK_3_8 = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    ),
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1, null,
+
                     UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.Degrees._3_8,
-                    ),
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.Degrees._3_8, null,
+
                     UsesElevation.ALWAYS
+
                 )
             )
             val DAWN_16_1_TO_DUSK_3_7 = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    ),
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1, null,
+
                     UsesElevation.ALWAYS
-                ),
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.Degrees._3_7, null, UsesElevation.ALWAYS
+
+                )
+            )
+            val DAWN_72_BEFORE_16_1_TO_DUSK_3_7 = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.Degrees._3_7,
-                    ),
-                    UsesElevation.ALWAYS
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1, null,
+
+                    UsesElevation.ALWAYS,
+
+                    relationship = ZmanType.ALOS occurs 72.minutes before ZmanDefinition(
+                        ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1
+                    )
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.Degrees._3_7, null, UsesElevation.ALWAYS
+
                 )
             )
             val DAWN_72_MINUTES_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.FixedDuration._72
-                    )
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.FixedLocalChatzos
-                    ),
+                    ZmanType.ALOS, ZmanCalculationMethod.FixedDuration._72
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.FixedLocalChatzos, null,
+
                     UsesElevation.NEVER
+
                 )
             )
             val DAWN_90_MINUTES_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.FixedDuration._90
-                    )
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.FixedLocalChatzos
-                    ),
+                    ZmanType.ALOS, ZmanCalculationMethod.FixedDuration._90
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.FixedLocalChatzos, null,
+
                     UsesElevation.NEVER
+
                 )
             )
             val SUNRISE_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.HANAITZ to ZmanCalculationMethod.Unspecified
-                    ),
+                    ZmanType.HANAITZ, ZmanCalculationMethod.Unspecified, null,
+
                     UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.FixedLocalChatzos
-                    ),
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.FixedLocalChatzos, null,
+
                     UsesElevation.NEVER
+
                 )
             )
             val FIXED_LOCAL_CHATZOS_TO_SUNSET = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.HANAITZ to ZmanCalculationMethod.FixedLocalChatzos
-                    ),
+                    ZmanType.HANAITZ, ZmanCalculationMethod.FixedLocalChatzos, null,
+
                     UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.SHKIAH to ZmanCalculationMethod.Unspecified
-                    ),
+
+                ), ZmanDefinition(
+                    ZmanType.SHKIAH, ZmanCalculationMethod.Unspecified, null,
+
                     UsesElevation.ALWAYS
+
                 )
             )
             val DAWN_16_1_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1
-                    ),
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._16_1, null,
+
                     UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.FixedLocalChatzos
-                    ),
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.FixedLocalChatzos, null,
+
                     UsesElevation.NEVER
+
                 )
             )
             val DAWN_18_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.Degrees._18
-                    ),
+                    ZmanType.ALOS, ZmanCalculationMethod.Degrees._18, null,
+
                     UsesElevation.ALWAYS
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.FixedLocalChatzos
-                    ),
+
+                ), ZmanDefinition(
+                    ZmanType.TZAIS, ZmanCalculationMethod.FixedLocalChatzos, null,
+
                     UsesElevation.NEVER
+
                 )
             )
-            val DAWN_72_ZMANIS_TO_DUSK_ATERET_TORAH = DayDefinition(
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.ALOS to ZmanCalculationMethod.ZmaniyosDuration._72
-                    ),
-                    UsesElevation.IF_SET
-                ),
-                ZmanDefinition(
-                    null,
-                    mapOf(
-                        ZmanType.TZAIS to ZmanCalculationMethod.FixedDuration.AteretTorah() //TODO if the offset is changed, this format string will be wrong
+
+            fun DAWN_72_ZMANIS_TO_DUSK_ATERET_TORAH(offset: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET) =
+                DayDefinition(
+                    ZmanDefinition(
+                        ZmanType.ALOS, ZmanCalculationMethod.ZmaniyosDuration._72, null,
+
+                        UsesElevation.IF_SET
+
+                    ), ZmanDefinition(
+                        ZmanType.TZAIS, ZmanCalculationMethod.FixedDuration.AteretTorah(offset)
+
                     )
                 )
-            )
         }
+
     }
+
     enum class UsesElevation {
-        IF_SET,
-        NEVER,
-        ALWAYS,
-        UNSPECIFIED
+        IF_SET, NEVER, ALWAYS, UNSPECIFIED
     }
+
     companion object {
-        val empty = ZmanDefinition(null, null, UsesElevation.UNSPECIFIED)
+        val empty = ZmanDefinition(ZmanType.MOLAD, null, null, UsesElevation.UNSPECIFIED)
     }
 }
