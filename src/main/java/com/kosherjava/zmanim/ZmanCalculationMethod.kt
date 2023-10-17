@@ -58,12 +58,15 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
     object DayDefinition : ZmanCalculationMethod<Unit>(Unit) {
         override fun format(): String = "Based on definition of when day starts/ends"
     }
-
     /**
      * @see ComplexZmanimCalendar.fixedLocalChatzos
      * */
     object FixedLocalChatzos : ZmanCalculationMethod<Unit>(Unit) {
         override fun format(): String = "Fixed Local Chatzos"
+    }
+
+    open class LaterOf(val zman1: ZmanDefinition, val zman2: ZmanDefinition): ZmanCalculationMethod<Unit>(Unit) {
+        override fun format(): String = "Later of ${zman1.mainCalculationMethodUsed?.format()} or ${zman2.mainCalculationMethodUsed?.format()}"
     }
 
     /**

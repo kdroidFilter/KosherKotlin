@@ -51,13 +51,24 @@ data class ZmanDefinition(
             fun DAWN_TO_DUSK(startMethod: ZmanCalculationMethod<*>, endMethod: ZmanCalculationMethod<*> = startMethod) =
                 DayDefinition(
                     ZmanDefinition(
-                        ZmanType.ALOS, startMethod
-                    ), ZmanDefinition(
+                        ZmanType.ALOS,
+                        startMethod,
+                    ),
+                    ZmanDefinition(
                         ZmanType.TZAIS,
                         endMethod,
                     )
                 )
 
+            fun SUNRISE_TO_SUNSET(startMethod: ZmanCalculationMethod<*>, endMethod: ZmanCalculationMethod<*> = startMethod) = DayDefinition(
+                ZmanDefinition(
+                    ZmanType.HANAITZ,
+                    startMethod,
+                ), ZmanDefinition(
+                    ZmanType.SHKIAH,
+                    endMethod,
+                )
+            )
             val DAWN_TO_DUSK = DayDefinition(
                 ZmanDefinition(
                     ZmanType.ALOS,
@@ -68,7 +79,6 @@ data class ZmanDefinition(
                 )
             )
             val SUNRISE_TO_SUNSET = DayDefinition(
-
                 ZmanDefinition(
                     ZmanType.HANAITZ,
                     ZmanCalculationMethod.Unspecified,

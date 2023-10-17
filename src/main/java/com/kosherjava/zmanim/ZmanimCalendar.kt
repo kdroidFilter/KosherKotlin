@@ -158,19 +158,19 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
         get() = if (isUseElevation) super.sunset else seaLevelSunset
 
     /**
-     * A method that returns *tzais* (nightfall) when the sun is [8.5˚][.ZENITH_8_POINT_5] below the
+     * A method that returns *tzais* (nightfall) when the sun is [8.5˚][ZENITH_8_POINT_5] below the
      * [geometric horizon][AstronomicalCalendar.GEOMETRIC_ZENITH] (90) after [sunset][sunset], a time that Rabbi Meir
      * Posen in his the *[Ohr Meir](https://www.worldcat.org/oclc/29283612)* calculated that 3 small
-     * stars are visible, which is later than the required 3 medium stars. See the [.ZENITH_8_POINT_5] constant.
+     * stars are visible, which is later than the required 3 medium stars. See the [ZENITH_8_POINT_5] constant.
      *
-     * @see .ZENITH_8_POINT_5
+     * @see ZENITH_8_POINT_5
      *
      *
      * @return The `Date` of nightfall. If the calculation can't be computed such as northern and southern
      * locations even south of the Arctic Circle and north of the Antarctic Circle where the sun may not reach
      * low enough below the horizon for this calculation, a null will be returned. See detailed explanation on
      * top of the [AstronomicalCalendar] documentation.
-     * @see .ZENITH_8_POINT_5
+     * @see ZENITH_8_POINT_5
      * ComplexZmanimCalendar.getTzaisGeonim8Point5Degrees
      */
     val tzais: Zman.DateBased
@@ -185,14 +185,14 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
         )
 
     /**
-     * Returns *alos* (dawn) based on the time when the sun is [16.1˚][.ZENITH_16_POINT_1] below the
+     * Returns *alos* (dawn) based on the time when the sun is [16.1˚][ZENITH_16_POINT_1] below the
      * eastern [geometric horizon][AstronomicalCalendar.GEOMETRIC_ZENITH] before [sunrise]. This is based on the
      * calculation that the time between dawn and sunrise (and sunset to nightfall) is 72 minutes, the time that is
      * takes to walk 4 *mil* at 18 minutes a mil (*[Rambam](https://en.wikipedia.org/wiki/Maimonides)* and others). The sun's position at 72 minutes before [sunrise] in Jerusalem
      * on the [around the equinox /
  * equilux](https://kosherjava.com/2022/01/12/equinox-vs-equilux-zmanim-calculations/) is 16.1 below [AstronomicalCalendar.GEOMETRIC_ZENITH].
      *
-     * @see .ZENITH_16_POINT_1
+     * @see ZENITH_16_POINT_1
      *
      * @see ComplexZmanimCalendar.getAlos16Point1Degrees
      * @return The `Date` of dawn. If the calculation can't be computed such as northern and southern

@@ -7,6 +7,9 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
     infix fun after(zmanType: ZmanType): ZmanRelationship<T> = ZmanRelationship(
         subject, +calculationMethod, zmanType
     )
+    infix fun after(zmanDefinition: ZmanDefinition): ZmanRelationship<T> = ZmanRelationship(
+        subject, +calculationMethod, relativeToZman = zmanDefinition
+    )
 
     infix fun before(zmanType: ZmanType): ZmanRelationship<T> = ZmanRelationship(
         subject, -calculationMethod, zmanType
@@ -26,6 +29,7 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(-(duration.absoluteValue))
             is ZmanCalculationMethod.FixedMinutesFloat -> ZmanCalculationMethod.FixedMinutesFloat(-(minutes.absoluteValue))
             is ZmanAuthority,
+            is ZmanCalculationMethod.LaterOf,
             ZmanCalculationMethod.FixedLocalChatzos,
             ZmanCalculationMethod.Unspecified,
             ZmanCalculationMethod.DayDefinition -> this
@@ -37,6 +41,7 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(duration.absoluteValue)
             is ZmanCalculationMethod.FixedMinutesFloat -> ZmanCalculationMethod.FixedMinutesFloat(minutes.absoluteValue)
             is ZmanAuthority,
+            is ZmanCalculationMethod.LaterOf,
             ZmanCalculationMethod.FixedLocalChatzos,
             ZmanCalculationMethod.Unspecified,
             ZmanCalculationMethod.DayDefinition -> this
