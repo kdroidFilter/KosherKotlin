@@ -40,7 +40,13 @@ enum class ZmanType(
     val shaosZmaniyosIntoDay: Float? get() = when(this) {
         SOF_ZMAN_KRIAS_SHEMA -> 3F
         SOF_ZMAN_TEFILLAH -> 4F
+        SOF_ZMAN_BIUR_CHAMETZ -> 5F
         MINCHA_GEDOLAH -> 6.5F
+        SAMUCH_LEMINCHA_KETANA -> 9F
+        MINCHA_KETANAH -> 9.5F
+        PLAG_HAMINCHA -> 10.75F
+//        SOF_ZMAN_KIDDUSH_LEVANA -> 3F
+//        SOF_ZMAN_ACHILAS_CHAMETZ -> 5F
         else -> null
     }
 }
