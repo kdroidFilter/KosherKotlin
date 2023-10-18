@@ -11,6 +11,7 @@ import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
+import kotlin.time.Duration.Companion.days
 
 class RegressionTest {
     companion object {
@@ -214,23 +215,43 @@ class RegressionTest {
         //assertEquals(java.tekufasTishreiElapsedDays,//kotlin.tekufasTishreiElapsedDays,)
         //assertEquals(java.upcomingParshah.name,//kotlin.upcomingParshah.name,)
     }
-    private fun getAllValues(java: com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar): Array<Any?> {
-        val moladAsKotlinLocalDate = java.molad.localDate.atStartOfDay(javaLocation.timeZone.toZoneId()).toLocalDate()
-            .toKotlinLocalDate()
-        val molad = if (moladAsKotlinLocalDate < HebrewLocalDate.STARTING_DATE_GREGORIAN
-        ) null else moladAsKotlinLocalDate
-        val moladAsKotlinLocalDateTime = java.moladAsDate.toInstant().toKotlinInstant()
-            .toLocalDateTime(kotlinLocation.timeZone)
-        val moladAsDate = if (moladAsKotlinLocalDateTime.date < HebrewLocalDate.STARTING_DATE_GREGORIAN
-        ) null else moladAsKotlinLocalDateTime
-        return arrayOf()
-    }
-
     @Test
-    fun testComplexZmanimCalendar() {
+    fun testComplexZmanimCalendarForAllLocations() {
+        for((kotlin, javaLoc) in TestHelper.allLocations.zip(TestHelper.allJavaLocations)) {
+            println("Testing ${kotlin.locationName}")
+            val startingDateGregorian = HebrewLocalDate.STARTING_DATE_GREGORIAN
+            val isoString =
+                "${startingDateGregorian.plus(DatePeriod(days = 1))}T00:00:00${kotlin.timeZone.offsetAt(Clock.System.now())}"
+            println("isoString: $isoString")
+            var kotlinDate = startingDateGregorian.atStartOfDayIn(kotlinx.datetime.TimeZone.UTC)
+            val endDate = Instant.DISTANT_FUTURE
+            var javaDate = java.time.LocalDate.of(startingDateGregorian.year, startingDateGregorian.month, startingDateGregorian.dayOfMonth)
+            while(kotlinDate <= endDate) {
+                testComplexZmanimCalendar(kotlin, javaLoc, javaDate, javaDate.toKotlinLocalDate())
+                kotlinDate += 1.days
+                javaDate = javaDate.plusDays(1)
+            }
+        }
+    }
+    private fun testComplexZmanimCalendar(
+        kotlinLocation: GeoLocation,
+        javaLocation: com.kosherjava.java.zmanim.util.GeoLocation,
+        javaDate: java.time.LocalDate,
+        kotlinDate: kotlinx.datetime.LocalDate
+    ) {
+        val javaInstant = javaDate.atStartOfDay(javaLocation.timeZone.toZoneId()).toInstant()
+        val instantAsDate = Date.from(javaInstant)
+        val javaCalendar = Calendar.getInstance(javaLocation.timeZone).apply { time = instantAsDate }
+        println("java instant:      $javaInstant")
+        println("java date:         $instantAsDate")
+        println("java calend.inst:  ${javaCalendar.toInstant()}")
+        println("kotlin time:       $kotlinDate")
+        println("java calendar:     $javaCalendar")
         val calc = ComplexZmanimCalendar(kotlinLocation)
         val javaCalc = com.kosherjava.java.zmanim.ComplexZmanimCalendar(javaLocation)
-        assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight?.momentOfOccurrence?.toDate()?.time)
+        calc.localDateTime = LocalDateTime(kotlinDate, LocalTime(0,0,0))
+        javaCalc.calendar = javaCalendar
+        assertEquals(javaCalc.solarMidnight.time, calc.solarMidnight.momentOfOccurrence?.toDate()?.time)
         assertEquals(
             javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
             calc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
@@ -294,6 +315,8 @@ class RegressionTest {
                 ),
             );
 
+            //            println("Ahavat shalom kotlin: $kotlinMGAhavatShalom")
+//            println("Ahavat shalom java: $javaMGAhavatShalom")
             val listOfZmanim = listOf(
                 Triple(
                     javaCalc.plagHamincha120MinutesZmanis,
@@ -620,14 +643,32 @@ class RegressionTest {
                     samuchLeMinchaKetana16Point1Degrees,
                     "samuchLeMinchaKetana16Point1Degrees"
                 )
-            ).map { Triple(it.first?.time?.toDouble(), it.second?.momentOfOccurrence?.toDate()?.time?.toDouble(), it.third) }
+            ).map {
+                Triple(
+                    it.first?.time?.toDouble(),
+                    it.second?.momentOfOccurrence?.toDate()?.time?.toDouble(),
+                    it.third
+                )
+            }
             testValues(values, transformActual = { it.duration.inWholeMilliseconds })
             testValues(listOfZmanim, 0.0)
         }
     }
 
+    private fun getAllValues(java: com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar): Array<Any?> {
+        val moladAsKotlinLocalDate = java.molad.localDate.atStartOfDay(javaLocation.timeZone.toZoneId()).toLocalDate()
+            .toKotlinLocalDate()
+        val molad = if (moladAsKotlinLocalDate < HebrewLocalDate.STARTING_DATE_GREGORIAN
+        ) null else moladAsKotlinLocalDate
+        val moladAsKotlinLocalDateTime = java.moladAsDate.toInstant().toKotlinInstant()
+            .toLocalDateTime(kotlinLocation.timeZone)
+        val moladAsDate = if (moladAsKotlinLocalDateTime.date < HebrewLocalDate.STARTING_DATE_GREGORIAN
+        ) null else moladAsKotlinLocalDateTime
+        return arrayOf()
+    }
+
     private fun nullIfKotlinNull(
-        java: java.util.Date,
+        java: java.util.Date?,
         kotlin: Zman.DateBased,
         label: String
     ): Triple<Date?, Zman.DateBased, String> {

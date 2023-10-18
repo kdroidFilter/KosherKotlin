@@ -461,8 +461,8 @@ open class AstronomicalCalendar(
         }
         var calculatedTime: Double = time
         val adjustedLocalDate = this.adjustedLocalDate
-        val timeZone = TimeZone.UTC//TODO use system default?
-        var cal = adjustedLocalDate.toInstant(timeZone)
+        val timeZone = TimeZone.UTC
+        var cal = LocalDateTime(adjustedLocalDate.date, LocalTime(0,0,0)).toInstant(timeZone)
         val hours = calculatedTime.toInt() // retain only the hours
         calculatedTime -= hours.toDouble()
 
@@ -483,8 +483,9 @@ open class AstronomicalCalendar(
             cal = cal.plus(DatePeriod(days = -1), timeZone)
         else if (!isSunrise && localTimeHours.plus(hours) < 6)
             cal = cal.plus(DatePeriod(days = 1), timeZone)
-        val dt = cal.toLocalDateTime(timeZone)
-        return LocalDateTime(dt.year, dt.month, dt.dayOfMonth, hours, minutes, seconds, (calculatedTime * 1000).milliseconds.inWholeNanoseconds.toInt()).toInstant(timeZone)
+//        println("Cal2: $cal")
+//        val dt = cal.toLocalDateTime(timeZone)
+        return cal.plus(DateTimePeriod(0,0,0, hours, minutes, seconds, (calculatedTime * 1000).milliseconds.inWholeNanoseconds), timeZone)
     }
 
     /**
