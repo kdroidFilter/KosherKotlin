@@ -58,7 +58,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
     open fun valueToString() = format()
     open fun shortDescription() = valueToString()
 
-    internal fun Duration.durationValueToString(halachic: Boolean = false) = toComponents { hours, minutes, seconds, nanoseconds ->
+    internal fun Duration.durationValueToString(halachic: Boolean = false) = absoluteValue.toComponents { hours, minutes, seconds, nanoseconds ->
         buildString {
             val totalMinutes = inWholeMinutes
             if(totalMinutes.absoluteValue <= 120) append("$totalMinutes${if(halachic) " Halachic "  else " "}minutes")
@@ -106,7 +106,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * Meaning that if [zman1] occurs at 6:00 AM and [zman2] occurs at 6:05 AM, this zman takes on the value of 6:00 AM.
      * */
     data class LaterOf(val zman1: ZmanDefinition, val zman2: ZmanDefinition): ZmanCalculationMethod<Unit>(Unit) {
-        override fun format(): String = "Later of ${zman1.mainCalculationMethodUsed?.format()} or ${zman2.mainCalculationMethodUsed?.format()}"
+        override fun format(): String = "Later of ${zman1.calculationMethod?.format()} or ${zman2.calculationMethod?.format()}"
     }
 
     /**
@@ -355,7 +355,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
             fun dawn72ZmanisToDuskAteretTorah(offset: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET) =
                 DayDefinition(
                     ZmanDefinition(
-                        ZmanType.ALOS, ZmaniyosDuration._72, ZmanDefinition.UsesElevation.IF_SET
+                        ZmanType.ALOS, Relationship(ZmanType.ALOS occurs 72.minutes.zmaniyos before ZmanType.HANAITZ), ZmanDefinition.UsesElevation.IF_SET
 
                     ), ZmanDefinition(
                         ZmanType.TZAIS, FixedDuration.AteretTorah(offset)
@@ -377,7 +377,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
             )*/
             val DAWN_72_MINUTES_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    ZmanType.ALOS, FixedDuration._72
+                    ZmanType.ALOS, Relationship(ZmanType.ALOS occurs 72.minutes before ZmanType.HANAITZ)
 
                 ), ZmanDefinition(
                     ZmanType.TZAIS, FixedLocalChatzos, ZmanDefinition.UsesElevation.NEVER
@@ -431,7 +431,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
             )
             val DAWN_90_MINUTES_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    ZmanType.ALOS, FixedDuration._90
+                    ZmanType.ALOS, Relationship(ZmanType.ALOS occurs 90.minutes before ZmanType.HANAITZ)
 
                 ), ZmanDefinition(
                     ZmanType.TZAIS, FixedLocalChatzos, ZmanDefinition.UsesElevation.NEVER
@@ -449,7 +449,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
             )
             val SUNRISE_TO_FIXED_LOCAL_CHATZOS = DayDefinition(
                 ZmanDefinition(
-                    ZmanType.HANAITZ, Unspecified, ZmanDefinition.UsesElevation.ALWAYS
+                    ZmanType.HANAITZ, ZmanAuthority.Unanimous, ZmanDefinition.UsesElevation.ALWAYS
 
                 ), ZmanDefinition(
                     ZmanType.TZAIS, FixedLocalChatzos, ZmanDefinition.UsesElevation.NEVER
@@ -461,7 +461,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
                     ZmanType.HANAITZ, FixedLocalChatzos, ZmanDefinition.UsesElevation.ALWAYS
 
                 ), ZmanDefinition(
-                    ZmanType.SHKIAH, Unspecified, ZmanDefinition.UsesElevation.ALWAYS
+                    ZmanType.SHKIAH, ZmanAuthority.Unanimous, ZmanDefinition.UsesElevation.ALWAYS
 
                 )
             )

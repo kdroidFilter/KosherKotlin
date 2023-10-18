@@ -4,13 +4,14 @@ import com.kosherjava.zmanim.metadata.ZmanAuthority
 import com.kosherjava.zmanim.metadata.ZmanCalculationMethod
 import com.kosherjava.zmanim.metadata.ZmanDefinition
 import com.kosherjava.zmanim.metadata.ZmanType
+import kotlin.time.Duration
 
 class ZmanDescriptionFormatter {
     fun formatShortDescription(zman: Zman<*>, includeElevationDescription: Boolean): String {
         val result = StringBuilder()
 //        "Alos-Tzais - 19.8˚ - affected by elevation"
         val rules = zman.rules
-        addShortDayDefinition(rules.mainCalculationMethodUsed as? ZmanCalculationMethod.DayDefinition, result, rules, includeElevationDescription)
+        addShortDayDefinition(rules.calculationMethod as? ZmanCalculationMethod.DayDefinition, result, rules, includeElevationDescription)
         /*if (rules.zmanToCalcMethodUsed == null && rules.mainCalculationMethodUsed == null) {
             addShortDayDefinition(rules.definitionOfDayUsed!!, result, rules)
         } else if (rules.mainCalculationMethodUsed != null && rules.zmanToCalcMethodUsed == null) {
@@ -64,14 +65,14 @@ class ZmanDescriptionFormatter {
         val endZman = mainCalculationMethodUsed?.dayEnd?.type
         val mainCalculationMethod =
             {
-                if (rules.mainCalculationMethodUsed != null) "${if (result.isNotBlank()) " - " else ""}${rules.mainCalculationMethodUsed.valueToString()}"
+                if (rules.calculationMethod != null) "${if (result.isNotBlank()) " - " else ""}${rules.calculationMethod.valueToString()}"
                 else null
             }
 
         result.apply {
             if (startZman != null && endZman != null) {
                 append(startZman.friendlyNameEnglish)
-                val startCalcMethod = mainCalculationMethodUsed.dayStart.mainCalculationMethodUsed
+                val startCalcMethod = mainCalculationMethodUsed.dayStart.calculationMethod
                 if (startCalcMethod != null && startCalcMethod != ZmanCalculationMethod.Unspecified) {
                     append("(")
                     append(startCalcMethod.valueToString())
@@ -79,7 +80,7 @@ class ZmanDescriptionFormatter {
                 }
                 append("-")
                 append(endZman.friendlyNameEnglish)
-                val endCalcMethod = mainCalculationMethodUsed.dayEnd.mainCalculationMethodUsed
+                val endCalcMethod = mainCalculationMethodUsed.dayEnd.calculationMethod
                 if (endCalcMethod != null && endCalcMethod != ZmanCalculationMethod.Unspecified) {
                     append("(")
                     append(endCalcMethod.valueToString())
@@ -102,88 +103,102 @@ class ZmanDescriptionFormatter {
         }
     }
 
-    fun formatLongDescription(zman: Zman<*>): String {
+    fun formatLongDescription(zman: Zman<*>): String = formatLongDescription(zman.rules)
+    fun formatLongDescription(zman: ZmanDefinition): String {
         val result = StringBuilder()
-        if (zman is Zman.DateBased) {
-            val rules = zman.rules
-            if (rules.mainCalculationMethodUsed != null) {
-                if (rules.mainCalculationMethodUsed is ZmanCalculationMethod.DayDefinition) {
-                    val startZman = rules.mainCalculationMethodUsed.dayStart.type
-                    val endZman = rules.mainCalculationMethodUsed.dayEnd.type
-                    result.appendLine("Day starts at ${startZman?.friendlyNameEnglish} and ends at ${endZman?.friendlyNameEnglish}")
-                    result.appendLine("${startZman?.friendlyNameEnglish} is defined as")
-                    if(rules.mainCalculationMethodUsed.dayStart.mainCalculationMethodUsed != null) {
-                        result.append(rules.mainCalculationMethodUsed.dayStart.mainCalculationMethodUsed.format())
-                    }else {
-                        result.append(rules.mainCalculationMethodUsed.format(startZman.friendlyNameEnglish, endZman.friendlyNameEnglish))
-                    }
-                    /*
-                    getTemporalHour(
-                        alos19Point8Degrees.momentOfOccurrence,
-                        tzais19Point8Degrees.momentOfOccurrence
-                    ).milliseconds,
-                    ZmanDefinition(
-                        ZmanCalculationMethod.Degrees._19_8,
-                        null,
-                        ZmanDefinition.UsesElevation.ALWAYS,
-                        ZmanDefinition.DayDefinition.DAWN_TO_DUSK,
+        result.append(getCalculationDescription(zman))
+        if (zman.calculationMethod is ZmanCalculationMethod.DayDefinition) {
+            /*val startZman = zman.calculationMethod.dayStart.type
+            val endZman = zman.calculationMethod.dayEnd.type
+            result.appendLine("Day starts at ${startZman?.friendlyNameEnglish} and ends at ${endZman?.friendlyNameEnglish}")
+            result.appendLine("${startZman?.friendlyNameEnglish} is defined as")
+            if (zman.calculationMethod.dayStart.calculationMethod != null) {
+                result.append(zman.calculationMethod.dayStart.calculationMethod.format())
+            } else {
+                result.append(
+                    zman.calculationMethod.format(
+                        startZman.friendlyNameEnglish,
+                        endZman.friendlyNameEnglish
                     )
-                ) //Long description:
-                  // "Day is defined as the time between Alos and Tzais.
-                  // "Alos is defined as when the sun is 19.8˚ below the eastern geometric horizon and Tzais when it is 19.8˚ below the western geometric horizon."
-                  //Short description:
-                  // "Alos-Tzais - 19.8˚ - affected by elevation"
-                */
-                    when (rules.mainCalculationMethodUsed) {
-                        ZmanCalculationMethod.Unspecified -> {
-
-                        }
-                        is ZmanCalculationMethod.Degrees -> {
-
-                        }
-                        is ZmanCalculationMethod.FixedDuration -> {
-//                            result.append(rules.mainCalculationMethodUsed.format(zman.type.friendlyNameEnglish))
-                        }
-                        ZmanCalculationMethod.FixedLocalChatzos -> {
-
-                        }
-                        is ZmanAuthority -> {
-
-                        }
-                        is ZmanCalculationMethod.ZmaniyosDuration -> {
-
-                        }
-                    }
-                    result.append(rules.mainCalculationMethodUsed.format())
-                }
-            }
+                )
+            }*/
+            /*
+            getTemporalHour(
+                alos19Point8Degrees.momentOfOccurrence,
+                tzais19Point8Degrees.momentOfOccurrence
+            ).milliseconds,
+            ZmanDefinition(
+                ZmanCalculationMethod.Degrees._19_8,
+                null,
+                ZmanDefinition.UsesElevation.ALWAYS,
+                ZmanDefinition.DayDefinition.DAWN_TO_DUSK,
+            )
+        ) //Long description:
+          // "Day is defined as the time between Alos and Tzais.
+          // "Alos is defined as when the sun is 19.8˚ below the eastern geometric horizon and Tzais when it is 19.8˚ below the western geometric horizon."
+          //Short description:
+          // "Alos-Tzais - 19.8˚ - affected by elevation"
+        */
+//            result.append(zman.calculationMethod.format())
         }/* else {
             zman as Zman.ValueBased
 
             result.appendLine("Day is defined as when the sun is ")
         }*/
-        if(zman.rules.supportingAuthorities.isNotEmpty()) {
-            result.append("Supporting authorities: ")
-            for(authority in zman.rules.supportingAuthorities) {
+        if(zman.supportingAuthorities.isNotEmpty()) {
+            result.append(" Supporting authorities: ")
+            for(authority in zman.supportingAuthorities) {
                 result.append(authority.name)
                 result.append(", ")
             }
         }
-        when (zman.rules.isElevationUsed) {
-            ZmanDefinition.UsesElevation.IF_SET -> result.append("- affected by elevation if set")
-            ZmanDefinition.UsesElevation.NEVER -> result.append("- unaffected by elevation")
-            ZmanDefinition.UsesElevation.ALWAYS -> result.append("- affected by elevation")
+        when (zman.isElevationUsed) {
+            ZmanDefinition.UsesElevation.IF_SET -> result.append(" This zman is affected by elevation if set")
+            ZmanDefinition.UsesElevation.NEVER -> result.append(" This zman is unaffected by elevation")
+            ZmanDefinition.UsesElevation.ALWAYS -> result.append(" This zman is affected by elevation")
             ZmanDefinition.UsesElevation.UNSPECIFIED -> {}
         }
         return result.toString()
     }
+
+    private fun getCalculationDescription(method: ZmanDefinition): String =
+        when (method.calculationMethod) {
+            is ZmanCalculationMethod.Degrees -> "Day starts when the sun is ${method.calculationMethod.degrees}˚ below the eastern geometric horizon and ends when it is ${method.calculationMethod.degrees}˚ below the western geometric horizon."
+            is ZmanAuthority -> "${method.type.friendlyNameEnglish} as calculated according to ${method.calculationMethod.name}."
+            is ZmanCalculationMethod.DayDefinition -> {
+                val shaosZmaniyos = ZmanType.shaosZmaniyosIntoDay[method.type]
+                var dayDefString = "${method.type.friendlyNameEnglish} as calculated based on the definition of when day starts and ends. Day starts at ${method.calculationMethod.dayStart.type.friendlyNameEnglish} and ends at ${method.calculationMethod.dayEnd.type.friendlyNameEnglish}."
+                dayDefString += if(method.calculationMethod.dayStart.calculationMethod != method.calculationMethod.dayEnd.calculationMethod) {
+                    " ${method.calculationMethod.dayStart.type.friendlyNameEnglish} is defined as \"${getCalculationDescription(method.calculationMethod.dayStart)}\"; and ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} is defined as \"${getCalculationDescription(method.calculationMethod.dayEnd)}\"."
+                } else " ${method.calculationMethod.dayStart.type.friendlyNameEnglish} and ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} are defined as follows: \"${getCalculationDescription(method.calculationMethod.dayStart)}\"."
+                if(shaosZmaniyos != null)
+                    dayDefString += "${method.type.friendlyNameEnglish} is $shaosZmaniyos Shao'os Zmaniyos (halachic hours) into the day. A Shaa Zmanis is 1/12th of the day, using the previously mentioned definition of day."
+                ;dayDefString
+            }
+            is ZmanCalculationMethod.LaterOf -> "${method.type.friendlyNameEnglish} occurs at the later of either of the following zmanim: ${getCalculationDescription(method.calculationMethod.zman1)}; or ${getCalculationDescription(method.calculationMethod.zman2)}."
+            is ZmanCalculationMethod.Relationship<*> -> "${method.type.friendlyNameEnglish} is calculated as follows: ${method.calculationMethod.relationship.subject.friendlyNameEnglish} occurs ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.value.let { it is Duration && it.isNegative() }) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
+            ZmanCalculationMethod.FixedLocalChatzos -> {
+                val shaosZmaniyos = ZmanType.shaosZmaniyosIntoDay[method.type]
+                var dayDefString = "${method.type.friendlyNameEnglish} is calculated based on the opinion of R' Moshe Feinstein that chatzos is calculated using what is known as \"Fixed Local Chatzos\". The 360˚ of the globe divided by 24 (hours) calculates to 15˚ per hour with 4 minutes per degree, so at a longitude of 0˚, 15˚, 30˚, etc., Chatzos is at exactly 12:00 noon."
+                if(shaosZmaniyos != null)
+                    dayDefString += "${method.type.friendlyNameEnglish} is $shaosZmaniyos Shao'os Zmaniyos (halachic hours) into the day. A Shaa Zmanis is 1/12th of the day, using the previously mentioned definition of day."
+                ;dayDefString
+
+            }
+            ZmanCalculationMethod.Unspecified -> "The calculation method for ${method.type.friendlyNameEnglish} is unspecified."
+
+            //never happens
+            is ZmanCalculationMethod.FixedDuration -> method.calculationMethod.valueToString()
+            is ZmanCalculationMethod.ZmaniyosDuration -> method.calculationMethod.valueToString()
+            is ZmanCalculationMethod.FixedDuration.AteretTorah -> method.calculationMethod.shortDescription()
+        }
 
     private fun tryAddDescription(start: ZmanDefinition?, result: StringBuilder) {
         val startPrefix = "Day starts at "
         val endPrefix = "and ends at"
         val tryAddDescription = { zman: ZmanType, string: StringBuilder, prefix: String ->
             //start?.type?.equals(zman) ?: null
-            val startCalculationMethod = start?.mainCalculationMethodUsed
+            val startCalculationMethod = start?.calculationMethod
             val notNuln = startCalculationMethod != null
             if (notNuln) {
                 string.append("$startPrefix${zman.friendlyNameEnglish} ${startCalculationMethod?.format()}")

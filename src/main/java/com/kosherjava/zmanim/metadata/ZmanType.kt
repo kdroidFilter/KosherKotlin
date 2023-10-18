@@ -37,16 +37,17 @@ enum class ZmanType(
     infix fun occurs(time: ZmanCalculationMethod.FixedDuration) = Occurence(this, time)
     infix fun occurs(time: ZmanCalculationMethod.Degrees) = Occurence(this, time)
 
-    val shaosZmaniyosIntoDay: Float? get() = when(this) {
-        SOF_ZMAN_KRIAS_SHEMA -> 3F
-        SOF_ZMAN_TEFILLAH -> 4F
-        SOF_ZMAN_BIUR_CHAMETZ -> 5F
-        MINCHA_GEDOLAH -> 6.5F
-        SAMUCH_LEMINCHA_KETANA -> 9F
-        MINCHA_KETANAH -> 9.5F
-        PLAG_HAMINCHA -> 10.75F
-//        SOF_ZMAN_KIDDUSH_LEVANA -> 3F
-//        SOF_ZMAN_ACHILAS_CHAMETZ -> 5F
-        else -> null
+    companion object {
+        val shaosZmaniyosIntoDay = mapOf(
+            SOF_ZMAN_KRIAS_SHEMA to 3F,
+            SOF_ZMAN_TEFILLAH to 4F,
+            SOF_ZMAN_BIUR_CHAMETZ to 5F,
+            MINCHA_GEDOLAH to 6.5F,
+            SAMUCH_LEMINCHA_KETANA to 9F,
+            MINCHA_KETANAH to 9.5F,
+            PLAG_HAMINCHA to 10.75F,
+//        SOF_ZMAN_KIDDUSH_LEVANA to 3F,
+//        SOF_ZMAN_ACHILAS_CHAMETZ to 5F,
+        )
     }
 }
