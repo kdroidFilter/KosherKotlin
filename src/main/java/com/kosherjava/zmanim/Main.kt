@@ -17,8 +17,7 @@ fun main(args: Array<String>) {
         .filter {
             val fromZman = (it.rules.mainCalculationMethodUsed as? ZmanCalculationMethod.FixedDuration)?.fromZman
             it.rules.mainCalculationMethodUsed is ZmanCalculationMethod.FixedDuration &&
-                    fromZman == null &&
-                    it.rules.relationship == null
+                    fromZman == null
         }
         .forEach {
             println("Index in allZmanim = ${allZmanim.indexOf(it)}")

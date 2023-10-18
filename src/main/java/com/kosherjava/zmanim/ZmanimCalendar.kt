@@ -232,9 +232,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
             getTimeOffset(elevationAdjustedSunrise, -72 * MINUTE_MILLIS),
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.Relationship,
+                ZmanCalculationMethod.Relationship(ZmanType.ALOS occurs 72.minutes before ZmanType.HANAITZ),
                 ZmanDefinition.UsesElevation.NEVER,
-                relationship = ZmanType.ALOS occurs 72.minutes before ZmanType.HANAITZ
             )
         )
 
@@ -356,14 +355,13 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
             getTimeOffset(elevationAdjustedSunset, 72 * MINUTE_MILLIS),
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Relationship,
+                ZmanCalculationMethod.Relationship(ZmanType.TZAIS occurs 72.minutes after ZmanType.SHKIAH),
                 ZmanDefinition.UsesElevation.IF_SET,
                 supportingAuthorities = listOf(
                     ZmanAuthority.MACHATZIS_HASHEKEL,
                     ZmanAuthority.PRI_MEGADIM,
                     ZmanAuthority.RABEINU_TAM
                 ),
-                relationship = ZmanType.TZAIS occurs 72.minutes after ZmanType.SHKIAH
             )
         )
 
@@ -387,9 +385,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
             getTimeOffset(seaLevelSunset, -candleLightingOffset * MINUTE_MILLIS),
             ZmanDefinition(
                 ZmanType.CANDLE_LIGHTING,
-                ZmanCalculationMethod.Relationship,
+                ZmanCalculationMethod.Relationship(ZmanType.CANDLE_LIGHTING occurs candleLightingOffset.minutes before ZmanType.SHKIAH),
                 ZmanDefinition.UsesElevation.NEVER,
-                relationship = ZmanType.CANDLE_LIGHTING occurs candleLightingOffset.minutes before ZmanType.SHKIAH
             )
         )
 
