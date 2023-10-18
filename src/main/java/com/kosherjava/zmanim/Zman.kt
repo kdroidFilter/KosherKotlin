@@ -1,5 +1,6 @@
 package com.kosherjava.zmanim
 
+import com.kosherjava.zmanim.metadata.ZmanDefinition
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

@@ -1,4 +1,7 @@
-package com.kosherjava.zmanim
+package com.kosherjava.zmanim.metadata
+
+import com.kosherjava.zmanim.ComplexZmanimCalendar
+import com.kosherjava.zmanim.ZmanDescriptionFormatter
 
 /**
  * A [ZmanAuthority] is also a [ZmanCalculationMethod] so that it is possible to say (for example) that
@@ -11,7 +14,9 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod<String>(name) 
     data class AccordingTo(val authority: ZmanAuthority? = null, val accordingTo: ZmanAuthority, val calculationMethod: ZmanCalculationMethod<*>? = null): ZmanAuthority("${authority?.name ?: calculationMethod?.valueToString()} according to ${accordingTo.name}")
     infix fun accordingTo(accordingTo: ZmanAuthority) = AccordingTo(this, accordingTo)
 
-    data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET): ZmanAuthority(ZmanDescriptionFormatter.shortDescriptionAteretTorah(minutes))
+    data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET): ZmanAuthority(
+        ZmanDescriptionFormatter.shortDescriptionAteretTorah(minutes)
+    )
 
     override fun format() = "According to $name"
     override fun valueToString(): String = name

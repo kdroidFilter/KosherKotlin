@@ -15,11 +15,15 @@
  */
 package com.kosherjava.zmanim
 
-import com.kosherjava.zmanim.ZmanAuthority.DIVREI_YOSEF
-import com.kosherjava.zmanim.ZmanAuthority.RABEINU_TAM
-import com.kosherjava.zmanim.ZmanCalculationMethod.Companion.degrees
-import com.kosherjava.zmanim.ZmanCalculationMethod.Companion.zmaniyos
+import com.kosherjava.zmanim.metadata.ZmanAuthority.DIVREI_YOSEF
+import com.kosherjava.zmanim.metadata.ZmanAuthority.RABEINU_TAM
+import com.kosherjava.zmanim.metadata.ZmanCalculationMethod.Companion.degrees
+import com.kosherjava.zmanim.metadata.ZmanCalculationMethod.Companion.zmaniyos
 import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
+import com.kosherjava.zmanim.metadata.ZmanAuthority
+import com.kosherjava.zmanim.metadata.ZmanCalculationMethod
+import com.kosherjava.zmanim.metadata.ZmanDefinition
+import com.kosherjava.zmanim.metadata.ZmanType
 import com.kosherjava.zmanim.util.AstronomicalCalculator
 import com.kosherjava.zmanim.util.GeoLocation
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
@@ -2468,7 +2472,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 ZmanCalculationMethod.Degrees._13_24,
                 ZmanDefinition.UsesElevation.ALWAYS,
                 listOf(
-                    ZmanAuthority.RABEINU_TAM
+                    RABEINU_TAM
                 )
             )
         )
@@ -2491,7 +2495,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 ZmanCalculationMethod.FixedDuration(58.5.minutes, ZmanType.SHKIAH),
                 ZmanDefinition.UsesElevation.IF_SET,
                 listOf(
-                    ZmanAuthority.RABEINU_TAM
+                    RABEINU_TAM
                 ),
                 ZmanType.BAIN_HASHMASHOS occurs 58.5.minutes after ZmanType.SHKIAH
             )
@@ -3339,7 +3343,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.ZmaniyosDuration._72,
                 ZmanDefinition.UsesElevation.IF_SET,
-                listOf(ZmanAuthority.RABEINU_TAM accordingTo ZmanAuthority.MINCHAS_COHEN),
+                listOf(RABEINU_TAM accordingTo ZmanAuthority.MINCHAS_COHEN),
                 ZmanType.TZAIS occurs 72.minutes.zmaniyos after ZmanType.SHKIAH
             ),
 

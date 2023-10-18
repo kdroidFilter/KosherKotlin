@@ -16,6 +16,10 @@
 package com.kosherjava.zmanim
 
 import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
+import com.kosherjava.zmanim.metadata.ZmanAuthority
+import com.kosherjava.zmanim.metadata.ZmanCalculationMethod
+import com.kosherjava.zmanim.metadata.ZmanDefinition
+import com.kosherjava.zmanim.metadata.ZmanType
 import com.kosherjava.zmanim.util.GeoLocation
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds

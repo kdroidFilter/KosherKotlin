@@ -2,7 +2,7 @@ package com.kosherjava.zmanim.hebrewcalendar
 
 import com.kosherjava.java.zmanim.AstronomicalCalendar
 import com.kosherjava.zmanim.ComplexZmanimCalendar
-import com.kosherjava.zmanim.ZmanType
+import com.kosherjava.zmanim.metadata.ZmanType
 import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
 import org.junit.Assert
 import org.junit.Test
