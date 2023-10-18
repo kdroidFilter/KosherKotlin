@@ -4145,7 +4145,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 .toLocalDateTime(tz)
             val tomorrowChatzos = clonedCal.chatzos
             val thisChatzos = this.chatzos
-            println("Date: ${clonedCal.localDateTime}, tomorrowChatzos: ${tomorrowChatzos.momentOfOccurrence}, thisChatzos: ${thisChatzos.momentOfOccurrence}")
+            //println("Date: ${clonedCal.localDateTime}, tomorrowChatzos: ${tomorrowChatzos.momentOfOccurrence}, thisChatzos: ${thisChatzos.momentOfOccurrence}")
             return Zman.DateBased(
                 if (tomorrowChatzos.momentOfOccurrence == null || thisChatzos.momentOfOccurrence == null) null
                 else getTimeOffset(
