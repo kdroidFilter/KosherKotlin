@@ -10,7 +10,7 @@ import kotlin.time.Duration
  * This class represents a halachic moment in time or duration of time.
  * Some zmanim, like [sha'os zmaniyos][ZmanType.SHAA_ZMANIS], don't have a moment when they occur. Rather, they carry a value.
  * Others, like [sunset][ZmanType.SHKIAH] happen at a specific moment in time.
- * @param T the type of zman opinion which this zman was calculated using. See [ZmanCalculationMethod] for options.
+ * @param T the type of value that this zman represents ([Instant], [Duration], etc.). This is the type of the [value] property.
  * */
 sealed class Zman<T>(
     val value: T,
