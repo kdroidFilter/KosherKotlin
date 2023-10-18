@@ -233,7 +233,13 @@ public abstract class AstronomicalCalculator implements Cloneable {
 	double adjustZenith(double zenith, double elevation) {
 		double adjustedZenith = zenith;
 		if (zenith == GEOMETRIC_ZENITH) { // only adjust if it is exactly sunrise or sunset
-			adjustedZenith = zenith + (getSolarRadius() + getRefraction() + getElevationAdjustment(elevation));
+			double elevationAdjustment = getElevationAdjustment(elevation);
+//			System.out.println("elevation Adjustment: " + elevationAdjustment);
+			double solarRadius = getSolarRadius();
+			double refraction = getRefraction();
+//			System.out.println("refraction = " + refraction);
+//			System.out.println("solarRadius = " + solarRadius);
+			adjustedZenith = zenith + (solarRadius + refraction + elevationAdjustment);
 		}
 		return adjustedZenith;
 	}

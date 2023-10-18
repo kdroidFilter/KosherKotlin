@@ -22,6 +22,7 @@ import com.kosherjava.java.zmanim.util.AstronomicalCalculator;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * <p>This class extends ZmanimCalendar and provides many more <em>zmanim</em> than available in the ZmanimCalendar. The basis
@@ -1835,12 +1836,18 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	 * @see #getMinchaGedolaGreaterThan30()
 	 */
 	public Date getMinchaGedolaAhavatShalom() {
-		
-		if (getMinchaGedola30Minutes() == null || getMinchaGedola() == null) {
+
+		Date minchaGedola30Minutes = getMinchaGedola30Minutes();
+//		System.out.println("Mincha gedola 30 minutes: " + minchaGedola30Minutes);
+		Date minchaGedola = getMinchaGedola();
+//		System.out.println("Mincha gedola: " + minchaGedola);
+		if (minchaGedola30Minutes == null || minchaGedola == null) {
 			return null;
 		} else {
-			return getMinchaGedola30Minutes().compareTo(getTimeOffset(getChatzos(), getShaahZmanisAlos16Point1ToTzais3Point7() / 2)) > 0 ?
-					getMinchaGedola30Minutes() : getTimeOffset(getChatzos(), getShaahZmanisAlos16Point1ToTzais3Point7() / 2);
+			Date minchaGedola30MinutesZmanis = getTimeOffset(getChatzos(), getShaahZmanisAlos16Point1ToTzais3Point7() / 2);
+			return minchaGedola30Minutes.compareTo(minchaGedola30MinutesZmanis) > 0 ?
+					minchaGedola30Minutes :
+					minchaGedola30MinutesZmanis;
 		}
 	}
 
@@ -1856,7 +1863,7 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	 *         explanation on top of the {@link AstronomicalCalendar} documentation.
 	 */
 	public Date getMinchaGedolaGreaterThan30() {
-		if (getMinchaGedola30Minutes() == null || getMinchaGedola() == null) {
+		if (getMinchaGedola30Minutes() == null) { //TODO || getMinchaGedola() == null
 			return null;
 		} else {
 			return getMinchaGedola30Minutes().compareTo(getMinchaGedola()) > 0 ? getMinchaGedola30Minutes()
@@ -3272,8 +3279,18 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	 * @see GeoLocation#getLocalMeanTimeOffset()
 	 */
 	public Date getFixedLocalChatzos() {
-		return getTimeOffset(getDateFromTime(12.0 - getGeoLocation().getTimeZone().getRawOffset()
-				/ (double) HOUR_MILLIS, true), -getGeoLocation().getLocalMeanTimeOffset());
+		TimeZone timeZone = getGeoLocation().getTimeZone();
+		int rawOffset = timeZone.getRawOffset();
+		//System.out.println("rawOffset: " + rawOffset + " for timezone: " + timeZone.getDisplayName());
+		Date dateFromTime = getDateFromTime(
+				12.0 - rawOffset / (double) HOUR_MILLIS,
+				true
+		);
+		//System.out.println("dateFromTime: " + dateFromTime);
+		return getTimeOffset(
+				dateFromTime,
+				-getGeoLocation().getLocalMeanTimeOffset()
+		);
 	}
 
 	/**
@@ -3799,7 +3816,10 @@ public class ComplexZmanimCalendar extends ZmanimCalendar {
 	public Date getSolarMidnight() {
 		ZmanimCalendar clonedCal = (ZmanimCalendar) clone();
 		clonedCal.getCalendar().add(Calendar.DAY_OF_MONTH, 1);
-		return getTimeOffset(getChatzos(), (clonedCal.getChatzos().getTime() - getChatzos().getTime()) / 2);
+		Date tommorowChatzos = clonedCal.getChatzos();
+		Date thisChatzos = getChatzos();
+//		System.out.println("Date: " + clonedCal.getCalendar().getTime().toInstant() + ", tomorrowChatzos: " + tommorowChatzos.toInstant() + ", thisChatzos: " + thisChatzos.toInstant());
+		return getTimeOffset(thisChatzos, (tommorowChatzos.getTime() - thisChatzos.getTime()) / 2);
 	}
 	
 	/**

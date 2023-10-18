@@ -16,6 +16,8 @@
 package com.kosherjava.java.zmanim.util;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.StringJoiner;
 
 /**
  * Implementation of sunrise and sunset methods to calculate astronomical times based on the <a
@@ -58,6 +60,7 @@ public class NOAACalculator extends AstronomicalCalculator {
 
 		double sunrise = getSunriseUTC(getJulianDay(calendar), geoLocation.getLatitude(), -geoLocation.getLongitude(),
 				adjustedZenith);
+//		System.out.println("jelevation: " + elevation + ", adjustedZenith: " + adjustedZenith + ", sunrise: " + sunrise);
 		sunrise = sunrise / 60;
 
 		// ensure that the time is >= 0 and < 24
@@ -100,16 +103,20 @@ public class NOAACalculator extends AstronomicalCalculator {
 	 *         should be added later.
 	 */
 	private static double getJulianDay(Calendar calendar) {
+//		System.out.println("calendar: " + new Calendar.Builder().setDate(1,8,7).build().toInstant().toString());
+//		System.out.println("calendar: " + Date.from(new Calendar.Builder().setDate(1,8,7).build().toInstant()));
+//		System.out.println("calendar: " + calendar.toInstant());
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH) + 1;
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
+//		System.out.println(new StringJoiner(",").add(""+year).add(""+month).add(""+day));
 		if (month <= 2) {
 			year -= 1;
 			month += 12;
 		}
 		int a = year / 100;
 		int b = 2 - a + a / 4;
-
+//		System.out.println("a: " + a + ", b: " + b + ", year: " + year + ", month: " + month + ", day: " + day);
 		return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5;
 	}
 
@@ -498,10 +505,12 @@ public class NOAACalculator extends AstronomicalCalculator {
 	 * @return the time in minutes from zero UTC
 	 */
 	public double getUTCNoon(Calendar calendar, GeoLocation geoLocation) {
+//		System.out.println("getUTCNoon(" + calendar.toInstant() + ", " + geoLocation.getLocationName() + ")");
 		double julianDay = getJulianDay(calendar);
 		double julianCenturies = getJulianCenturiesFromJulianDay(julianDay);
 		
 		double noon = getSolarNoonUTC(julianCenturies, -geoLocation.getLongitude());
+//		System.out.println("JulianDay: " + julianDay + " JulianCenturies: " + julianCenturies + " Noon: " + noon);
 		noon = noon / 60;
 
 		// ensure that the time is >= 0 and < 24

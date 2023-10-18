@@ -510,7 +510,10 @@ public class AstronomicalCalendar implements Cloneable {
 	 * @see #getTemporalHour()
 	 */
 	public Date getSunTransit() {
-		double noon = getAstronomicalCalculator().getUTCNoon(getAdjustedCalendar(), getGeoLocation());
+		Calendar adjustedCalendar = getAdjustedCalendar();
+//		System.out.println("jAdjusted: " + adjustedCalendar.getTime().toInstant());
+		double noon = getAstronomicalCalculator().getUTCNoon(adjustedCalendar, getGeoLocation());
+//		System.out.println("jNoon: " + noon);
 		return getDateFromTime(noon, false); 
 	}
 
@@ -547,6 +550,7 @@ public class AstronomicalCalendar implements Cloneable {
 	 * @return The Date.
 	 */
 	protected Date getDateFromTime(double time, boolean isSunrise) {
+//		System.out.println("getDateFromTime(" + time +", " + isSunrise + ")");
 		if (Double.isNaN(time)) {
 			return null;
 		}
@@ -565,20 +569,28 @@ public class AstronomicalCalendar implements Cloneable {
 		calculatedTime -= minutes;
 		int seconds = (int) (calculatedTime *= 60); // retain only the seconds
 		calculatedTime -= seconds; // remaining milliseconds
-		
+//		System.out.println("hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds + ", millis: " + calculatedTime);
 		// Check if a date transition has occurred, or is about to occur - this indicates the date of the event is
 		// actually not the target date, but the day prior or after
 		int localTimeHours = (int)getGeoLocation().getLongitude() / 15;
+//		System.out.println("localTimeHours: " + localTimeHours);
+//		System.out.println("Cal1: " + cal.toInstant().toString());
 		if (isSunrise && localTimeHours + hours > 18) {
 			cal.add(Calendar.DAY_OF_MONTH, -1);
 		} else if (!isSunrise && localTimeHours + hours < 6) {
 			cal.add(Calendar.DAY_OF_MONTH, 1);
 		}
+//		System.out.println("Cal2: " + cal.toInstant().toString());
 
+//		System.out.println("cal.set(HOUR_OF_DAY, " + hours + ") - " + cal.toInstant().toString());
 		cal.set(Calendar.HOUR_OF_DAY, hours);
+//		System.out.println("Cal3: " + cal.toInstant().toString());
 		cal.set(Calendar.MINUTE, minutes);
+//		System.out.println("Cal4: " + cal.toInstant().toString());
 		cal.set(Calendar.SECOND, seconds);
+//		System.out.println("Cal5: " + cal.toInstant().toString());
 		cal.set(Calendar.MILLISECOND, (int) (calculatedTime * 1000));
+//		System.out.println("Cal6: " + cal.toInstant().toString());
 		return cal.getTime();
 	}
 
@@ -648,6 +660,7 @@ public class AstronomicalCalendar implements Cloneable {
 	 */
 	private Calendar getAdjustedCalendar(){
 		int offset = getGeoLocation().getAntimeridianAdjustment();
+//		System.out.println("joffset: " + offset);
 		if (offset == 0) {
 			return getCalendar();
 		}
