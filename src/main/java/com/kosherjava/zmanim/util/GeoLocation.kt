@@ -75,7 +75,7 @@ data class GeoLocation(
          * The elevation to set in Meters. An IllegalArgumentException will be thrown if the value is a negative, NaN or infinite.
          */
         set(elevation) {
-            require(elevation >= 0) { "Elevation cannot be negative" }
+//            require(elevation >= 0) { "Elevation cannot be negative" }
             require(!(elevation.isNaN() || elevation.isInfinite())) { "Elevation must not be NaN or infinite" }
             field = elevation
         }
