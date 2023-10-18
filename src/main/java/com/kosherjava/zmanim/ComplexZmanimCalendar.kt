@@ -176,10 +176,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8),
             )
         )
 
@@ -202,10 +200,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos18Degrees.momentOfOccurrence, tzais18Degrees.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18),
                 )
         )
 
@@ -233,11 +229,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos26Degrees.momentOfOccurrence, tzais26Degrees.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._26),
-
                 )
         )
 
@@ -270,10 +263,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                 )
         )
 
@@ -299,10 +290,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos60.momentOfOccurrence, tzais60.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._60),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._60)
             )
         )
 
@@ -343,10 +332,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos72Zmanis.momentOfOccurrence, tzais72Zmanis.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72)
             )
         )
 
@@ -368,10 +355,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos90.momentOfOccurrence, tzais90.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90)
             )
         )
 
@@ -397,10 +382,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos90Zmanis.momentOfOccurrence, tzais90Zmanis.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90),
             )
         )
 
@@ -426,10 +409,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos96Zmanis.momentOfOccurrence, tzais96Zmanis.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96),
             )
         )
 
@@ -462,10 +443,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_DUSK_3_8,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_3_8,
                 listOf(
                     ZmanAuthority.AHAVAT_SHALOM
                 )
@@ -496,10 +475,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_72_ZMANIS_TO_DUSK_ATERET_TORAH(ateretTorahSunsetOffset),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_72_ZMANIS_TO_DUSK_ATERET_TORAH(ateretTorahSunsetOffset)
             )
         )
 
@@ -530,10 +507,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_DUSK_3_7,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_3_7,
                 listOf(
                     ZmanAuthority.AHAVAT_SHALOM
                 )
@@ -558,10 +533,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos96.momentOfOccurrence, tzais96.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96),
             )
         )
 
@@ -588,10 +561,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos120.momentOfOccurrence, tzais120.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120),
             )
         )
 
@@ -621,10 +592,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTemporalHour(alos120Zmanis.momentOfOccurrence, tzais120Zmanis.momentOfOccurrence).milliseconds,
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._120),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._120),
             )
         )
 
@@ -652,10 +621,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos120Zmanis.momentOfOccurrence, tzais120Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._120),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._120),
             )
         )
 
@@ -682,10 +649,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos120.momentOfOccurrence, tzais120.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120),
             )
         )
 
@@ -734,7 +699,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.FixedDuration._60,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
                 relationship = ZmanType.ALOS occurs 60.minutes before ZmanType.HANAITZ
             ),
@@ -764,9 +728,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.ZmaniyosDuration._72,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 listOf(
                     ZmanAuthority.HISACHDUS_HARABONIM
                 ),
@@ -794,7 +756,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.FixedDuration._96,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 96.minutes before ZmanType.HANAITZ
             )
@@ -821,7 +782,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.ZmaniyosDuration._90,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 90.minutes before ZmanType.HANAITZ
             )
@@ -847,7 +807,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.ZmaniyosDuration._96,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 96.minutes.zmaniyos before ZmanType.HANAITZ
             )
@@ -871,7 +830,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.FixedDuration._90,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 90.minutes before ZmanType.HANAITZ
             )
@@ -904,7 +862,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.FixedDuration._120,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 120.minutes before ZmanType.HANAITZ
             )
@@ -933,7 +890,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.ZmaniyosDuration._120,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 120.minutes.zmaniyos before ZmanType.HANAITZ
             )
@@ -965,7 +921,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Degrees._26,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
                 relationship = ZmanType.ALOS occurs 26.degrees before ZmanType.HANAITZ
             )
@@ -987,7 +942,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Degrees._18,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -1014,9 +968,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Degrees._19,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(
                     ZmanAuthority.RAMBAM,
                     ZmanAuthority.MAAGALEI_TZEDEK,
@@ -1048,7 +1000,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Degrees._19_8,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
             )
         )
@@ -1076,7 +1027,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Degrees._16_1,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
             )
         )
@@ -1100,7 +1050,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
                 ZmanCalculationMethod.Degrees._11_5,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
             )
         )
@@ -1123,7 +1072,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
                 ZmanCalculationMethod.Degrees._11,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
             )
         )
@@ -1146,7 +1094,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
                 ZmanCalculationMethod.Degrees._10_2,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
             )
         )
@@ -1184,9 +1131,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
                 ZmanCalculationMethod.Degrees._7_65,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(
                     ZmanAuthority.FEINSTEIN,
                     ZmanAuthority.KAMENETSKY,
@@ -1229,9 +1174,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
                 ZmanCalculationMethod.Degrees._9_5,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(
                     ZmanAuthority.KRONGLASS,
                     ZmanAuthority.ZILBER,
@@ -1268,10 +1211,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos19Point8Degrees.momentOfOccurrence, tzais19Point8Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8),
             )
         )
 
@@ -1297,10 +1238,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos16Point1Degrees.momentOfOccurrence, tzais16Point1Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
             )
         )
 
@@ -1324,10 +1263,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos18Degrees.momentOfOccurrence, tzais18Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18),
             )
         )
 
@@ -1373,10 +1310,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos72Zmanis.momentOfOccurrence, tzais72Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72),
             )
         )
 
@@ -1401,10 +1336,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos90.momentOfOccurrence, tzais90.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90),
             )
         )
 
@@ -1428,10 +1361,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos90Zmanis.momentOfOccurrence, tzais90Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90),
             )
         )
 
@@ -1455,10 +1386,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos96.momentOfOccurrence, tzais96.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96),
             )
         )
 
@@ -1482,10 +1411,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos96Zmanis.momentOfOccurrence, tzais96Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96),
             )
         )
 
@@ -1530,9 +1457,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                     (-3).hours,
                     ZmanType.CHATZOS_HAYOM
                 ),
-                null,
                 ZmanDefinition.UsesElevation.NEVER,
-                null,
                 listOf(
                     ZmanAuthority.KOMARNO,
                     ZmanAuthority.SHACH,
@@ -1566,10 +1491,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos120.momentOfOccurrence, tzais120.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120),
             )
         )
 
@@ -1599,10 +1522,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos16Point1Degrees.momentOfOccurrence, elevationAdjustedSunset),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_ELEVATION_ADJUSTED_SUNSET,
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_ELEVATION_ADJUSTED_SUNSET,
                 listOf(ZmanAuthority.RAZEH)
             )
         )
@@ -1633,10 +1554,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos16Point1Degrees.momentOfOccurrence, tzaisGeonim7Point083Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_DUSK_7_083,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_7_083
             )
         )
 
@@ -1663,10 +1582,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos19Point8Degrees.momentOfOccurrence, tzais19Point8Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8)
             )
         )
 
@@ -1694,10 +1611,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos16Point1Degrees.momentOfOccurrence, tzais16Point1Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
             )
         )
 
@@ -1723,10 +1638,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos18Degrees.momentOfOccurrence, tzais18Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18)
             )
         )
 
@@ -1771,10 +1684,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos72Zmanis.momentOfOccurrence, tzais72Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72)
             )
         )
 
@@ -1799,10 +1710,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos90.momentOfOccurrence, tzais90.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90)
             )
         )
 
@@ -1827,10 +1736,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos90Zmanis.momentOfOccurrence, tzais90Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90)
             )
         )
 
@@ -1855,10 +1762,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos96.momentOfOccurrence, tzais96.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96)
             )
         )
 
@@ -1883,10 +1788,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos96Zmanis.momentOfOccurrence, tzais96Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96)
             )
         )
 
@@ -1912,10 +1815,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos120.momentOfOccurrence, tzais120.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._120)
             )
         )
 
@@ -1941,9 +1842,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                     (-2).hours,
                     ZmanType.CHATZOS_HAYOM
                 ),
-                null,
                 ZmanDefinition.UsesElevation.NEVER,
-                null,
                 listOf(
                     ZmanAuthority.KOMARNO,
                 ),
@@ -1981,7 +1880,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                     30.minutes,
                     ZmanType.CHATZOS_HAYOM
                 ),
-                null,
                 ZmanDefinition.UsesElevation.NEVER,
                 relationship = ZmanType.MINCHA_GEDOLAH occurs 30.minutes after ZmanType.CHATZOS_HAYOM
             ),
@@ -2008,10 +1906,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaGedola(alos72.momentOfOccurrence, tzais72.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72)
             )
         )
 
@@ -2035,10 +1931,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaGedola(alos16Point1Degrees.momentOfOccurrence, tzais16Point1Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1)
             )
         )
 
@@ -2084,7 +1978,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                         relationship = ZmanType.MINCHA_GEDOLAH occurs 30.minutes.zmaniyos after ZmanType.CHATZOS_HAYOM,
                     ),
                 ),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
                 supportingAuthorities = listOf(ZmanAuthority.AHAVAT_SHALOM),
             )
@@ -2110,7 +2003,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                     minchaGedola30Minutes.rules,
                     minchaGedola.rules,
                 ),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET
             )
         )
@@ -2136,10 +2028,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaKetana(alos16Point1Degrees.momentOfOccurrence, tzais16Point1Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1)
             )
         )
 
@@ -2169,10 +2059,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ),
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_DUSK_3_8,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_3_8,
                 listOf(
                     ZmanAuthority.AHAVAT_SHALOM,
                 ),
@@ -2201,10 +2089,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaKetana(alos72.momentOfOccurrence, tzais72.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72)
             )
         )
 
@@ -2227,10 +2113,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos60.momentOfOccurrence, tzais60.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._60),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._60)
             )
         )
 
@@ -2254,10 +2138,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos72.momentOfOccurrence, tzais72.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72)
             )
         )
 
@@ -2281,10 +2163,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos90.momentOfOccurrence, tzais90.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._90)
             )
         )
 
@@ -2307,10 +2187,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos96.momentOfOccurrence, tzais96.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._96)
             )
         )
 
@@ -2330,10 +2208,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos96Zmanis.momentOfOccurrence, tzais96Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._96)
             )
         )
 
@@ -2353,10 +2229,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos90Zmanis.momentOfOccurrence, tzais90Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._90)
             )
         )
 
@@ -2377,10 +2251,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos72Zmanis.momentOfOccurrence, tzais72Zmanis.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72)
             )
         )
 
@@ -2404,10 +2276,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos16Point1Degrees.momentOfOccurrence, tzais16Point1Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1)
             )
         )
 
@@ -2430,10 +2300,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos19Point8Degrees.momentOfOccurrence, tzais19Point8Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._19_8)
             )
         )
 
@@ -2456,10 +2324,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos26Degrees.momentOfOccurrence, tzais26Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._26),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._26)
             )
         )
 
@@ -2481,10 +2347,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos18Degrees.momentOfOccurrence, tzais18Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._18)
             )
         )
 
@@ -2509,10 +2373,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos16Point1Degrees.momentOfOccurrence, elevationAdjustedSunset),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_ELEVATION_ADJUSTED_SUNSET,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_ELEVATION_ADJUSTED_SUNSET
             )
         )
 
@@ -2537,10 +2399,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos16Point1Degrees.momentOfOccurrence, tzaisGeonim7Point083Degrees.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_DUSK_7_083,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_7_083
             )
         )
 
@@ -2569,14 +2429,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_DUSK_3_8,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_DUSK_3_8,
                 listOf(
                     ZmanAuthority.AHAVAT_SHALOM
-                ),
-                ZmanType.PLAG_HAMINCHA occurs 1.25.hours.zmaniyos before ZmanType.TZAIS
+                )
             )
         )
 
@@ -2609,9 +2466,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.Degrees._13_24,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(
                     ZmanAuthority.RABEINU_TAM
                 )
@@ -2634,9 +2489,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.FixedDuration(58.5.minutes, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 listOf(
                     ZmanAuthority.RABEINU_TAM
                 ),
@@ -2658,17 +2511,17 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
     val bainHashmashosRT13Point5MinutesBefore7Point083Degrees: Zman.DateBased
         get() = Zman.DateBased(
             getTimeOffset(
-                getSunsetOffsetByDegrees(ZENITH_7_POINT_083),
+                tzaisGeonim7Point083Degrees.momentOfOccurrence,
                 -13.5 * MINUTE_MILLIS
             ),
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.ZmaniyosDuration(
                     (-13.5).minutes,
-                    ZmanType.SHKIAH
-                ),//TODO this is hard to catalog. Revisit.
-                null,
-                ZmanDefinition.UsesElevation.ALWAYS
+                    ZmanType.TZAIS
+                ),
+                ZmanDefinition.UsesElevation.ALWAYS,
+                relationship = ZmanType.BAIN_HASHMASHOS occurs 13.5.minutes before tzaisGeonim7Point083Degrees.rules
             ),
         )
 
@@ -2690,16 +2543,14 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 elevationAdjustedSunrise?.let { sunrise ->
                     getTimeOffset(
                         elevationAdjustedSunset,
-                        ((sunrise - alos19Point8) * (5 / 18.0)).inWholeMilliseconds
+                        ((sunrise - alos19Point8) * (5 / 18.0)).inWholeMilliseconds //five-eighteenths of the time between alos and sunrise after sunset
                     )
                 }
             },
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.ZmaniyosDuration(5.minutes, ZmanType.SHKIAH),//TODO this hard to catalog. Revisit.
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(RABEINU_TAM accordingTo DIVREI_YOSEF)
             )
         )
@@ -2724,9 +2575,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.FixedDuration((-18).minutes, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 listOf(ZmanAuthority.YEREIM),
                 ZmanType.BAIN_HASHMASHOS occurs 18.minutes before ZmanType.SHKIAH
             ),
@@ -2761,7 +2610,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.Degrees(-3.05F, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             ),
         )
@@ -2787,9 +2635,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.FixedDuration((-16.875).minutes, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 listOf(ZmanAuthority.YEREIM),
                 ZmanType.BAIN_HASHMASHOS occurs 16.875.minutes before ZmanType.SHKIAH
             ),
@@ -2820,7 +2666,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.Degrees(2.8F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -2846,9 +2691,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.FixedMinutesFloat(13.5F),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 listOf(ZmanAuthority.YEREIM),
                 ZmanType.BAIN_HASHMASHOS occurs 13.5.minutes before ZmanType.SHKIAH
             )
@@ -2879,7 +2722,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
                 ZmanCalculationMethod.Degrees(2.1F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -2897,7 +2739,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(3.7F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -2915,7 +2756,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._3_8,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -2936,7 +2776,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(5.95F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -2959,7 +2798,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(3.65F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -2984,7 +2822,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(3.676F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -3007,7 +2844,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(4.61F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -3030,7 +2866,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(4.37F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -3055,7 +2890,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(5.88F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -3079,7 +2913,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(4.8F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -3105,7 +2938,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(6.45F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             )
         )
@@ -3146,9 +2978,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._7_083,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(ZmanAuthority.GEONIM)
             )
         )
@@ -3184,7 +3014,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._7_67,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             ),
         )
@@ -3205,7 +3034,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._8_5,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             ),
         )
@@ -3225,7 +3053,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._9_3,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             ),
         )
@@ -3252,7 +3079,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._9_75,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS
             ),
         )
@@ -3280,9 +3106,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.FixedDuration._60,
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(ZmanAuthority.CHAVAS_YAIR, ZmanAuthority.DIVREI_MALKIEL),
                 ZmanType.TZAIS occurs 60.minutes after ZmanType.SHKIAH
             ),
@@ -3313,9 +3137,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.FixedDuration.AteretTorah(ateretTorahSunsetOffset),
-                null,
                 ZmanDefinition.UsesElevation.NEVER,
-                null,
                 listOf(ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 ZmanType.TZAIS occurs ateretTorahSunsetOffset.minutes after ZmanType.SHKIAH
             ),
@@ -3347,10 +3169,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanShma(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 listOf(ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
             )
         )
@@ -3377,10 +3197,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSofZmanTfila(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 listOf(ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
             )
         )
@@ -3411,10 +3229,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaGedola(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 listOf(ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
             )
         )
@@ -3447,10 +3263,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaKetana(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 listOf(ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
             )
         )
@@ -3477,10 +3291,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(alos72Zmanis.momentOfOccurrence, tzaisAteretTorah.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.ZmaniyosDuration._72, ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
                 listOf(ZmanAuthority.AteretTorah(ateretTorahSunsetOffset)),
             )
         )
@@ -3526,9 +3338,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.ZmaniyosDuration._72,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 listOf(ZmanAuthority.RABEINU_TAM accordingTo ZmanAuthority.MINCHAS_COHEN),
                 ZmanType.TZAIS occurs 72.minutes.zmaniyos after ZmanType.SHKIAH
             ),
@@ -3574,9 +3384,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.ZmaniyosDuration._90,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 relationship = ZmanType.TZAIS occurs 90.minutes.zmaniyos after ZmanType.SHKIAH
             ),
         )
@@ -3597,9 +3405,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.ZmaniyosDuration._96,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 relationship = ZmanType.TZAIS occurs 96.minutes.zmaniyos after ZmanType.SHKIAH
             ),
         )
@@ -3628,9 +3434,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.FixedDuration(90.minutes, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 relationship = ZmanType.TZAIS occurs 90.minutes after ZmanType.SHKIAH
             ),
         )
@@ -3661,9 +3465,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.FixedDuration(120.minutes, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 relationship = ZmanType.TZAIS occurs 120.minutes after ZmanType.SHKIAH
             ),
         )
@@ -3689,9 +3491,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.ZmaniyosDuration._120,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 relationship = ZmanType.TZAIS occurs 120.minutes.zmaniyos after ZmanType.SHKIAH
             ),
         )
@@ -3719,9 +3519,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._16_1,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
             ),
         )
 
@@ -3746,7 +3544,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._26,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
             ),
         )
@@ -3766,7 +3563,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._18,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
             ),
         )
@@ -3787,7 +3583,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._19_8,
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
             ),
         )
@@ -3811,9 +3606,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.FixedDuration(96.minutes, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 relationship = ZmanType.TZAIS occurs 96.minutes after ZmanType.SHKIAH,
             ),
         )
@@ -3836,14 +3629,13 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 getDateFromTime(
                     12.0 - geoLocation.timeZone.rawOffset
                             / HOUR_MILLIS.toDouble(), true
-                ), -geoLocation.localMeanTimeOffset
+                ),
+                -geoLocation.localMeanTimeOffset
             ),
             ZmanDefinition(
                 ZmanType.CHATZOS_HAYOM,
                 ZmanCalculationMethod.FixedLocalChatzos,//TODO
-                null,
                 ZmanDefinition.UsesElevation.NEVER,
-                null,
                 listOf(
                     ZmanAuthority.ARUCH_HASHULCHAN,
                     ZmanAuthority.FEINSTEIN,
@@ -4174,7 +3966,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.EARLIEST_KIDDUSH_LEVANA,
                 ZmanCalculationMethod.FixedDuration(7.days, ZmanType.MOLAD),
-                null,
                 relationship = ZmanType.EARLIEST_KIDDUSH_LEVANA occurs 7.days after ZmanType.MOLAD
             )
         )
@@ -4297,10 +4088,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             else null,
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72),
                 ZmanDefinition.UsesElevation.NEVER,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72),
                 listOf(ZmanAuthority.MGA),
             )
         )
@@ -4331,10 +4120,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 else null,
                 ZmanDefinition(
                     ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
-                    ZmanCalculationMethod.DayDefinition,
-                    null,
+                    ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                     ZmanDefinition.UsesElevation.ALWAYS,
-                    ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                     listOf(ZmanAuthority.MGA)
                 )
             )
@@ -4358,6 +4145,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 .toLocalDateTime(tz)
             val tomorrowChatzos = clonedCal.chatzos
             val thisChatzos = this.chatzos
+            println("Date: ${clonedCal.localDateTime}, tomorrowChatzos: ${tomorrowChatzos.momentOfOccurrence}, thisChatzos: ${thisChatzos.momentOfOccurrence}")
             return Zman.DateBased(
                 if (tomorrowChatzos.momentOfOccurrence == null || thisChatzos.momentOfOccurrence == null) null
                 else getTimeOffset(
@@ -4500,10 +4288,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4529,10 +4315,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4578,10 +4362,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             else null,
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4609,10 +4391,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaGedola(sunriseBaalHatanya, sunsetBaalHatanya),
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4639,9 +4419,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                     minchaGedola30Minutes.rules,
                     minchaGedolaBaalHatanya.rules
                 ),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4666,10 +4444,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getMinchaKetana(sunriseBaalHatanya, sunsetBaalHatanya),
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4691,10 +4467,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getPlagHamincha(sunriseBaalHatanya, sunsetBaalHatanya),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_SUNSET(ZmanCalculationMethod.Degrees(1.583F)),
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4716,9 +4490,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees(6F),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                null,
                 listOf(ZmanAuthority.BAAL_HATANYA)
             )
         )
@@ -4785,10 +4557,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 ),
                 ZmanDefinition(
                     ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                    ZmanCalculationMethod.DayDefinition,
-                    null,
+                    ZmanCalculationMethod.DayDefinition.DAWN_18_TO_FIXED_LOCAL_CHATZOS,
                     ZmanDefinition.UsesElevation.ALWAYS,
-                    ZmanDefinition.DayDefinition.DAWN_18_TO_FIXED_LOCAL_CHATZOS,
                     listOf(ZmanAuthority.MGA accordingTo ZmanAuthority.FEINSTEIN)
                 ),
             )
@@ -4817,10 +4587,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_16_1_TO_FIXED_LOCAL_CHATZOS,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_16_1_TO_FIXED_LOCAL_CHATZOS,
                 listOf(ZmanAuthority.MGA accordingTo ZmanAuthority.FEINSTEIN)
             )
         )
@@ -4846,10 +4614,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getFixedLocalChatzosBasedZmanim(alos90.momentOfOccurrence, fixedLocalChatzos.momentOfOccurrence, 3.0),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_90_MINUTES_TO_FIXED_LOCAL_CHATZOS,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_90_MINUTES_TO_FIXED_LOCAL_CHATZOS,
                 listOf(ZmanAuthority.MGA accordingTo ZmanAuthority.FEINSTEIN)
             )
         )
@@ -4875,10 +4641,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getFixedLocalChatzosBasedZmanim(alos72.momentOfOccurrence, fixedLocalChatzos.momentOfOccurrence, 3.0),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_72_MINUTES_TO_FIXED_LOCAL_CHATZOS,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.DAWN_72_MINUTES_TO_FIXED_LOCAL_CHATZOS,
                 listOf(ZmanAuthority.MGA accordingTo ZmanAuthority.FEINSTEIN)
             )
         )
@@ -4903,10 +4667,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getFixedLocalChatzosBasedZmanim(sunrise, fixedLocalChatzos.momentOfOccurrence, 3.0),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_FIXED_LOCAL_CHATZOS,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_FIXED_LOCAL_CHATZOS,
                 listOf(ZmanAuthority.GRA accordingTo ZmanAuthority.FEINSTEIN)
             )
         )
@@ -4932,10 +4694,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getFixedLocalChatzosBasedZmanim(sunrise, fixedLocalChatzos.momentOfOccurrence, 4.0),
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_FIXED_LOCAL_CHATZOS,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_FIXED_LOCAL_CHATZOS,
                 listOf(ZmanAuthority.GRA accordingTo ZmanAuthority.FEINSTEIN)
             )
         )
@@ -4959,7 +4719,6 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
                 ZmanCalculationMethod.FixedDuration(30.minutes, ZmanType.CHATZOS_HAYOM),
-                null,
                 ZmanDefinition.UsesElevation.ALWAYS,
                 supportingAuthorities = listOf(ZmanAuthority.GRA accordingTo ZmanAuthority.FEINSTEIN),
                 relationship = ZmanType.MINCHA_GEDOLAH occurs 30.minutes after fixedLocalChatzos.rules
@@ -4987,10 +4746,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getFixedLocalChatzosBasedZmanim(fixedLocalChatzos.momentOfOccurrence, sunset, 3.5),
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
-                ZmanCalculationMethod.FixedDuration(3.5.hours, ZmanType.CHATZOS_HAYOM),
-                null,
+                ZmanCalculationMethod.DayDefinition.FIXED_LOCAL_CHATZOS_TO_SUNSET,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.FIXED_LOCAL_CHATZOS_TO_SUNSET,
                 listOf(
                     ZmanAuthority.GRA accordingTo ZmanAuthority.FEINSTEIN
                 ),
@@ -5020,14 +4777,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getFixedLocalChatzosBasedZmanim(fixedLocalChatzos.momentOfOccurrence, sunset, 4.75),
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.FixedDuration(4.75.hours, ZmanType.CHATZOS_HAYOM),
-                null,
+                ZmanCalculationMethod.DayDefinition.FIXED_LOCAL_CHATZOS_TO_SUNSET,
                 ZmanDefinition.UsesElevation.ALWAYS,
-                ZmanDefinition.DayDefinition.FIXED_LOCAL_CHATZOS_TO_SUNSET,
                 listOf(
                     ZmanAuthority.GRA accordingTo ZmanAuthority.FEINSTEIN
-                ),
-                ZmanType.MINCHA_KETANAH occurs 4.75.hours after fixedLocalChatzos.rules
+                )
             )
         )
 
@@ -5050,9 +4804,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.FixedDuration(50.minutes, ZmanType.SHKIAH),
-                null,
                 ZmanDefinition.UsesElevation.IF_SET,
-                null,
                 listOf(
                     ZmanAuthority.FEINSTEIN
                 ),
@@ -5080,10 +4832,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSamuchLeMinchaKetana(elevationAdjustedSunrise, elevationAdjustedSunset),
             ZmanDefinition(
                 ZmanType.SAMUCH_LEMINCHA_KETANA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET,
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.SUNRISE_TO_SUNSET,
                 listOf(ZmanAuthority.GRA)
             ),
         )
@@ -5107,10 +4857,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                 getSamuchLeMinchaKetana(alos16Point1Degrees.momentOfOccurrence, tzais16Point1Degrees.momentOfOccurrence),
                 ZmanDefinition(
                     ZmanType.SAMUCH_LEMINCHA_KETANA,
-                    ZmanCalculationMethod.DayDefinition,
-                    null,
+                    ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1),
                     ZmanDefinition.UsesElevation.ALWAYS,
-                    ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.Degrees._16_1)
                 )
             )
 
@@ -5131,10 +4879,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getSamuchLeMinchaKetana(alos72.momentOfOccurrence, tzais72.momentOfOccurrence),
             ZmanDefinition(
                 ZmanType.SAMUCH_LEMINCHA_KETANA,
-                ZmanCalculationMethod.DayDefinition,
-                null,
+                ZmanCalculationMethod.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72),
                 ZmanDefinition.UsesElevation.IF_SET,
-                ZmanDefinition.DayDefinition.DAWN_TO_DUSK(ZmanCalculationMethod.FixedDuration._72)
             )
         )
 
@@ -5144,8 +4890,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
 
     operator fun get(zmanCalculationMethod: ZmanCalculationMethod<*>): List<Zman<*>> =
         (allShaosZmaniyos + allZmanim).filter {
-            it.rules.mainCalculationMethodUsed == zmanCalculationMethod ||
-                    it.rules.zmanToCalcMethodUsed?.values?.contains(zmanCalculationMethod) != null
+            it.rules.mainCalculationMethodUsed == zmanCalculationMethod
         }
 
     /**

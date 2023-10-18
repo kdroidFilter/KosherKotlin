@@ -145,7 +145,7 @@ abstract class AstronomicalCalculator {
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
      * @param zenith
-     * the azimuth below the vertical zenith of 90. For sunset typically the [zenith][.adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
+     * the azimuth below the vertical zenith of 90. For sunset typically the [zenith][adjustZenith] used for the calculation uses geometric zenith of 90 and [adjusts][.adjustZenith]
      * this slightly to account for solar refraction and the sun's radius. Another example would be
      * [com.kosherjava.zmanim.AstronomicalCalendar.getEndNauticalTwilight] that passes
      * [com.kosherjava.zmanim.AstronomicalCalendar.NAUTICAL_ZENITH] to this method.
@@ -167,14 +167,14 @@ abstract class AstronomicalCalculator {
      * true solar noon, while the [com.kosherjava.zmanim.util.SunTimesCalculator] approximates it, calculating
      * the time as halfway between sunrise and sunset.
      *
-     * @param LocalDate
+     * @param date
      * Used to calculate day of year.
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
      *
      * @return the time in minutes from zero UTC
      */
-    abstract fun getUTCNoon(LocalDate: LocalDate, geoLocation: GeoLocation): Double
+    abstract fun getUTCNoon(date: LocalDate, geoLocation: GeoLocation): Double
 
     /**
      * Method to return the adjustment to the zenith required to account for the elevation. Since a person at a higher
@@ -241,7 +241,7 @@ abstract class AstronomicalCalculator {
      */
     fun adjustZenith(zenith: Double, elevation: Double): Double = zenith
         .takeUnless { it == GEOMETRIC_ZENITH } ?: // only adjust if it is exactly sunrise or sunset
-    (zenith + solarRadius + refraction + getElevationAdjustment(elevation))
+    (zenith + (solarRadius + refraction + getElevationAdjustment(elevation)))
 
 
     abstract fun copy(): AstronomicalCalculator

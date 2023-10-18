@@ -5,7 +5,7 @@ class ZmanDescriptionFormatter {
         val result = StringBuilder()
 //        "Alos-Tzais - 19.8˚ - affected by elevation"
         val rules = zman.rules
-        addShortDayDefinition(rules.definitionOfDayUsed, result, rules, includeElevationDescription)
+        addShortDayDefinition(rules.mainCalculationMethodUsed as? ZmanCalculationMethod.DayDefinition, result, rules, includeElevationDescription)
         /*if (rules.zmanToCalcMethodUsed == null && rules.mainCalculationMethodUsed == null) {
             addShortDayDefinition(rules.definitionOfDayUsed!!, result, rules)
         } else if (rules.mainCalculationMethodUsed != null && rules.zmanToCalcMethodUsed == null) {
@@ -17,7 +17,7 @@ class ZmanDescriptionFormatter {
     }
 
     private fun addShortDayDefinition(
-        definitionOfDayUsed: ZmanDefinition.DayDefinition?,
+        mainCalculationMethodUsed: ZmanCalculationMethod.DayDefinition?,
         result: StringBuilder,
         rules: ZmanDefinition,
         includeElevationDescription: Boolean
@@ -55,8 +55,8 @@ class ZmanDescriptionFormatter {
             )
         )
         * */
-        val startZman = definitionOfDayUsed?.dayStart?.zmanToCalcMethodUsed?.keys?.firstOrNull()
-        val endZman = definitionOfDayUsed?.dayEnd?.zmanToCalcMethodUsed?.keys?.firstOrNull()
+        val startZman = mainCalculationMethodUsed?.dayStart?.type
+        val endZman = mainCalculationMethodUsed?.dayEnd?.type
         val mainCalculationMethod =
             {
                 if (rules.mainCalculationMethodUsed != null) "${if (result.isNotBlank()) " - " else ""}${rules.mainCalculationMethodUsed.valueToString()}"
@@ -66,7 +66,7 @@ class ZmanDescriptionFormatter {
         result.apply {
             if (startZman != null && endZman != null) {
                 append(startZman.friendlyNameEnglish)
-                val startCalcMethod = definitionOfDayUsed.dayStart.zmanToCalcMethodUsed.values.firstOrNull()
+                val startCalcMethod = mainCalculationMethodUsed.dayStart.mainCalculationMethodUsed
                 if (startCalcMethod != null && startCalcMethod != ZmanCalculationMethod.Unspecified) {
                     append("(")
                     append(startCalcMethod.valueToString())
@@ -74,7 +74,7 @@ class ZmanDescriptionFormatter {
                 }
                 append("-")
                 append(endZman.friendlyNameEnglish)
-                val endCalcMethod = definitionOfDayUsed.dayEnd.zmanToCalcMethodUsed.values.firstOrNull()
+                val endCalcMethod = mainCalculationMethodUsed.dayEnd.mainCalculationMethodUsed
                 if (endCalcMethod != null && endCalcMethod != ZmanCalculationMethod.Unspecified) {
                     append("(")
                     append(endCalcMethod.valueToString())
@@ -101,21 +101,16 @@ class ZmanDescriptionFormatter {
         val result = StringBuilder()
         if (zman is Zman.DateBased) {
             val rules = zman.rules
-            if (rules.zmanToCalcMethodUsed == null && rules.mainCalculationMethodUsed == null) {
-                val start = rules.definitionOfDayUsed?.dayStart
-                val end = rules.definitionOfDayUsed?.dayEnd
-                tryAddDescription(start, result)
-                tryAddDescription(end, result)
-            } else if (rules.mainCalculationMethodUsed != null && rules.zmanToCalcMethodUsed == null) {
-                if (rules.definitionOfDayUsed != null) {
-                    val startZman = rules.definitionOfDayUsed.dayStart.zmanToCalcMethodUsed?.keys?.firstOrNull()
-                    val endZman = rules.definitionOfDayUsed.dayEnd.zmanToCalcMethodUsed?.keys?.firstOrNull()
+            if (rules.mainCalculationMethodUsed != null) {
+                if (rules.mainCalculationMethodUsed is ZmanCalculationMethod.DayDefinition) {
+                    val startZman = rules.mainCalculationMethodUsed.dayStart.type
+                    val endZman = rules.mainCalculationMethodUsed.dayEnd.type
                     result.appendLine("Day starts at ${startZman?.friendlyNameEnglish} and ends at ${endZman?.friendlyNameEnglish}")
                     result.appendLine("${startZman?.friendlyNameEnglish} is defined as")
-                    if(rules.definitionOfDayUsed.dayStart.zmanToCalcMethodUsed?.values?.firstOrNull() != null) {
-                        result.append(rules.definitionOfDayUsed.dayStart.zmanToCalcMethodUsed?.values?.firstOrNull()?.format())
+                    if(rules.mainCalculationMethodUsed.dayStart.mainCalculationMethodUsed != null) {
+                        result.append(rules.mainCalculationMethodUsed.dayStart.mainCalculationMethodUsed.format())
                     }else {
-                        result.append(rules.mainCalculationMethodUsed.format(startZman?.friendlyNameEnglish ?: "", endZman?.friendlyNameEnglish ?: ""))
+                        result.append(rules.mainCalculationMethodUsed.format(startZman.friendlyNameEnglish, endZman.friendlyNameEnglish))
                     }
                     /*
                     getTemporalHour(
@@ -185,8 +180,8 @@ class ZmanDescriptionFormatter {
         val startPrefix = "Day starts at "
         val endPrefix = "and ends at"
         val tryAddDescription = { zman: ZmanType, string: StringBuilder, prefix: String ->
-            start?.zmanToCalcMethodUsed?.getOrElse(zman) { null }
-            val startCalculationMethod = start?.zmanToCalcMethodUsed?.getOrElse(zman) { null }
+            //start?.type?.equals(zman) ?: null
+            val startCalculationMethod = start?.mainCalculationMethodUsed
             val notNuln = startCalculationMethod != null
             if (notNuln) {
                 string.append("$startPrefix${zman.friendlyNameEnglish} ${startCalculationMethod?.format()}")
