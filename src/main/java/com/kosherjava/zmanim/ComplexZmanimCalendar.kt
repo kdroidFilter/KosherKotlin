@@ -1958,7 +1958,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
                     minchaGedola30Minutes.rules,
                     shaahZmanisAlos16Point1ToTzais3Point7.rules.copy(
                         type = ZmanType.MINCHA_GEDOLAH,
-                        mainCalculationMethodUsed = ZmanCalculationMethod.Relationship(
+                        calculationMethod = ZmanCalculationMethod.Relationship(
                             ZmanType.MINCHA_GEDOLAH occurs 30.minutes.zmaniyos after ZmanType.CHATZOS_HAYOM
                         )
                     ),
@@ -3155,8 +3155,11 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
 
     /**
      * This method returns the latest *zman tfila* (time to recite the morning prayers) based on the calculation
-     * of *Chacham* Yosef Harari-Raful of Yeshivat Ateret Torah, that the day starts [1/10th of the day][alos72Zmanis] before sunrise and is usually calculated as ending [40 minutes][tzaisAteretTorah] (configurable to any offset via [.setAteretTorahSunsetOffset]). *shaos zmaniyos*
-     * are calculated based on this day and added to [*alos*][alos72Zmanis] to reach this time. This time
+     * of *Chacham* Yosef Harari-Raful of Yeshivat Ateret Torah, that the day starts [1/10th of the day][alos72Zmanis]
+     * before sunrise and is usually calculated as ending [40 minutes][tzaisAteretTorah] (configurable to any offset via
+     * setting [ateretTorahSunsetOffset]).
+     *
+     * *shaos zmaniyos* are calculated based on this day and added to [*alos*][alos72Zmanis] to reach this time. This time
      * is 4 * [*shaos zmaniyos*][shaahZmanisAteretTorah] (temporal hours) after
      * [*alos* 72 zmaniyos][alos72Zmanis].
      * **Note: ** Based on this calculation *chatzos* will not be at midday.
@@ -3706,13 +3709,13 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * halfway between *molad* and *molad*. This adds half the 29 days, 12 hours and 793 chalakim time between
      * *molad* and *molad* (14 days, 18 hours, 22 minutes and 666 milliseconds) to the month's *molad*.
      * The *sof zman Kiddush Levana* will be returned even if it occurs during the day. To limit the time to between
-     * *tzais* and *alos*, see [sofZmanKidushLevanaBetweenMoldos].
+     * *tzais* and *alos*, see [JewishCalendar.sofZmanKidushLevanaBetweenMoldos].
      *
      * @return the Date representing the moment halfway between molad and molad. If the time occurs between
      * *alos* and *tzais*, *alos* will be returned
      * @see sofZmanKidushLevanaBetweenMoldos
      * @see sofZmanKidushLevana15Days
-     * @see JewishCalendar.getSofZmanKidushLevanaBetweenMoldos
+     * @see JewishCalendar.sofZmanKidushLevanaBetweenMoldos
      */
     val sofZmanKidushLevanaBetweenMoldos: Zman.DateBased
         get() =
@@ -4869,7 +4872,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
 
     operator fun get(zmanCalculationMethod: ZmanCalculationMethod<*>): List<Zman<*>> =
         (allShaosZmaniyos + allZmanim).filter {
-            it.rules.mainCalculationMethodUsed == zmanCalculationMethod
+            it.rules.calculationMethod == zmanCalculationMethod
         }
 
     /**
