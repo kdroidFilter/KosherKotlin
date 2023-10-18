@@ -698,7 +698,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ),
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.FixedDuration._60,
+                ZmanCalculationMethod.Relationship,
                 ZmanDefinition.UsesElevation.ALWAYS,
                 relationship = ZmanType.ALOS occurs 60.minutes before ZmanType.HANAITZ
             ),
@@ -755,7 +755,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTimeOffset(elevationAdjustedSunrise, -96 * MINUTE_MILLIS),
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.FixedDuration._96,
+                ZmanCalculationMethod.Relationship,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 96.minutes before ZmanType.HANAITZ
             )
@@ -829,7 +829,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTimeOffset(elevationAdjustedSunrise, -90 * MINUTE_MILLIS),
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.FixedDuration._90,
+                ZmanCalculationMethod.Relationship,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 90.minutes before ZmanType.HANAITZ
             )
@@ -861,7 +861,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             getTimeOffset(elevationAdjustedSunrise, -120 * MINUTE_MILLIS),
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.FixedDuration._120,
+                ZmanCalculationMethod.Relationship,
                 ZmanDefinition.UsesElevation.IF_SET,
                 relationship = ZmanType.ALOS occurs 120.minutes before ZmanType.HANAITZ
             )
@@ -3105,7 +3105,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             ),
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.FixedDuration._60,
+                ZmanCalculationMethod.Relationship,
                 ZmanDefinition.UsesElevation.ALWAYS,
                 listOf(ZmanAuthority.CHAVAS_YAIR, ZmanAuthority.DIVREI_MALKIEL),
                 ZmanType.TZAIS occurs 60.minutes after ZmanType.SHKIAH
@@ -3886,7 +3886,7 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             // Iti in French Polynesia on Dec 2027 occurs on the night of the 27th of Kislev. In the case of Anadyr, Russia on
             // Jan 2071, the molad will be on the 2nd day of Shevat. See Rabbi Dovid Heber's Shaarei Zmanim chapter 4 (pages 28 and 32).
             if (jewishCalendar.jewishDayOfMonth in 3..26) {
-                return Zman.DateBased(null, ZmanDefinition(ZmanType.MOLAD))
+                return Zman.DateBased(null, ZmanDefinition(ZmanType.MOLAD, ZmanAuthority.Unanimous))
             }
             var molad: Instant? = getMoladBasedTime(jewishCalendar.moladAsInstant, null, null, true)
 

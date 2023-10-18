@@ -32,6 +32,7 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanAuthority,
             is ZmanCalculationMethod.DayDefinition,
             is ZmanCalculationMethod.LaterOf,
+            ZmanCalculationMethod.Relationship,
             ZmanCalculationMethod.FixedLocalChatzos,
             ZmanCalculationMethod.Unspecified,-> this
         } as ZmanCalculationMethod<T>
@@ -45,6 +46,7 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanAuthority,
             is ZmanCalculationMethod.DayDefinition,
             is ZmanCalculationMethod.LaterOf,
+            ZmanCalculationMethod.Relationship,
             ZmanCalculationMethod.FixedLocalChatzos,
             ZmanCalculationMethod.Unspecified, -> this
         } as ZmanCalculationMethod<T>
