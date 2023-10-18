@@ -81,9 +81,9 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
     }
     /**
      * A method of calculation in which the zman is calculated relative to another zman (e.g. X occurs 10 minutes before Y).
-     * If a [com.kosherjava.zmanim.Zman] uses this [ZmanCalculationMethod], the information on how it is calculated will be in the [ZmanDefinition.relationship]
+     * If a [com.kosherjava.zmanim.Zman] uses this [ZmanCalculationMethod], the information on how it is calculated will be in the [relationship]
      *
-     * A [ZmanRelationship] is a relationship between two [ZmanType]s, dictating when [subject] occurs relative to [relativeToZman].
+     * A [ZmanRelationship] is a relationship between two [ZmanType]s, dictating when [ZmanRelationship.subject] occurs relative to [ZmanRelationship.relativeToZman].
      * ZmanType.TZAIS  occurs 45.minutes          after  ZmanType.SHKIAH
      * ZmanType.SHKIAH occurs 45.minutes          before ZmanType.TZAIS
      *
