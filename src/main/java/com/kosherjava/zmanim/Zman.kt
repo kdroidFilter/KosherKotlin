@@ -13,7 +13,7 @@ import kotlin.time.Duration
  * */
 sealed class Zman<T>(
     val value: T,
-    open val rules: ZmanDefinition = ZmanDefinition.empty,
+    open val rules: ZmanDefinition,
 ): Comparable<Zman<T>> {
     /**
      * This class represents a zman that has a moment in which it occurs.
@@ -22,7 +22,7 @@ sealed class Zman<T>(
      * */
     data class DateBased(
         val momentOfOccurrence: Instant?,
-        override val rules: ZmanDefinition = ZmanDefinition.empty
+        override val rules: ZmanDefinition
     ) : Zman<Instant?>(momentOfOccurrence, rules) {
         override fun compareTo(other: Zman<Instant?>): Int {
             if(this === other) return 0
@@ -47,7 +47,7 @@ sealed class Zman<T>(
      * */
     data class ValueBased(
         val duration: Duration,
-        override val rules: ZmanDefinition = ZmanDefinition.empty,
+        override val rules: ZmanDefinition
     ) : Zman<Duration>(duration, rules) {
         override fun compareTo(other: Zman<Duration>): Int {
             if(this === other) return 0

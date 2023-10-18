@@ -55,6 +55,9 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
     object Unspecified : ZmanCalculationMethod<Unit>(Unit) {
         override fun format(): String = "Unspecified"
     }
+    object Relationship : ZmanCalculationMethod<Unit>(Unit) {
+        override fun format(): String = "Unspecified"
+    }
     /**
      * - The [GR"A][ZmanAuthority.GRA] holds that the day starts at [sunrise][ZmanType.HANAITZ] and ends at [sunset][ZmanType.SHKIAH].
      * - The [MG"A][ZmanAuthority.MGA] holds that the day starts at [dawn][ZmanType.ALOS] and ends at [dusk][ZmanType.TZAIS].
@@ -298,7 +301,6 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
              * @see ZmanAuthority.HISACHDUS_HARABONIM
              *
              * */
-            val _30 = FixedDuration(30.minutes)
             val _60 = FixedDuration(60.minutes)
 
             /**
