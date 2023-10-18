@@ -147,9 +147,6 @@ class ZmanDescriptionFormatter {
                         ZmanCalculationMethod.FixedLocalChatzos -> {
 
                         }
-                        is ZmanCalculationMethod.FixedMinutesFloat -> {
-
-                        }
                         is ZmanAuthority -> {
 
                         }

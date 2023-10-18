@@ -19,7 +19,7 @@ sealed class Zman<T>(
     /**
      * This class represents a zman that has a moment in which it occurs.
      * @param momentOfOccurrence null if zman never occurs or does not apply (e.g. time to say kiddush levana after time
-     * has passed). Some zmanim can occasionally not occur (e.g. sunrise in the Arctic Circle).
+     * has passed). Some zmanim can occasionally not occur (e.g. sunrise in the Arctic Circle) - see [AstronomicalCalendar] for more details.
      * */
     data class DateBased(
         val momentOfOccurrence: Instant?,
@@ -65,7 +65,6 @@ sealed class Zman<T>(
     }
     fun formatted(tz: TimeZone) = formatted(tz, rules.toString())
     fun formatted(tz: TimeZone, inEnglish: Boolean) = formatted(tz, rules.toString()/*.format(inEnglish)*/)
-    private fun Int.pad() = toString().padStart(2,'0')
     fun formatted(tz: TimeZone, opinion: String) = opinion +
             if (this is ValueBased) this.duration.toString()
             else {
@@ -78,4 +77,5 @@ sealed class Zman<T>(
                     }
                     ?: "N/A"
             }
+    private fun Int.pad() = toString().padStart(2,'0')
 }

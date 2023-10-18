@@ -1,5 +1,6 @@
 package com.kosherjava.zmanim.metadata
 
+import com.kosherjava.zmanim.Zman
 import kotlin.math.absoluteValue
 
 data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalculationMethod<T>) {
@@ -10,13 +11,21 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
     infix fun after(zmanDefinition: ZmanDefinition): ZmanRelationship<T> = ZmanRelationship(
         subject, +calculationMethod, relativeToZman = zmanDefinition
     )
-
     infix fun before(zmanType: ZmanType): ZmanRelationship<T> = ZmanRelationship(
         subject, -calculationMethod, zmanType
     )
     infix fun before(zmanDefinition: ZmanDefinition): ZmanRelationship<T> = ZmanRelationship(
         subject, -calculationMethod, relativeToZman = zmanDefinition
     )
+
+    /**
+     * Syntactic sugar for [after] ([zman].[rules][Zman.rules]).
+     * */
+    infix fun after(zman: Zman<*>): ZmanRelationship<T> = after(zman.rules)
+    /**
+     * Syntactic sugar for [before] ([zman].[rules][Zman.rules]).
+     * */
+    infix fun before(zman: Zman<*>): ZmanRelationship<T> = before(zman.rules)
 
     /**
      * Returns a [ZmanCalculationMethod] with a [ZmanCalculationMethod.value] that is the negative of [this.value].
@@ -27,7 +36,6 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanCalculationMethod.Degrees -> ZmanCalculationMethod.Degrees(-(degrees.absoluteValue))
             is ZmanCalculationMethod.FixedDuration -> ZmanCalculationMethod.FixedDuration(-(duration.absoluteValue))
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(-(duration.absoluteValue))
-            is ZmanCalculationMethod.FixedMinutesFloat -> ZmanCalculationMethod.FixedMinutesFloat(-(minutes.absoluteValue))
             is ZmanCalculationMethod.FixedDuration.AteretTorah -> ZmanCalculationMethod.FixedDuration.AteretTorah(-(minutes.absoluteValue))
             is ZmanAuthority,
             is ZmanCalculationMethod.DayDefinition,
@@ -41,7 +49,6 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanCalculationMethod.Degrees -> ZmanCalculationMethod.Degrees(degrees.absoluteValue)
             is ZmanCalculationMethod.FixedDuration -> ZmanCalculationMethod.FixedDuration(duration.absoluteValue)
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(duration.absoluteValue)
-            is ZmanCalculationMethod.FixedMinutesFloat -> ZmanCalculationMethod.FixedMinutesFloat(minutes.absoluteValue)
             is ZmanCalculationMethod.FixedDuration.AteretTorah -> ZmanCalculationMethod.FixedDuration.AteretTorah(minutes.absoluteValue)
             is ZmanAuthority,
             is ZmanCalculationMethod.DayDefinition,
