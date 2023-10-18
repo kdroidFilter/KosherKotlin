@@ -423,7 +423,7 @@ open class AstronomicalCalendar(
      */
     val sunTransit: Instant?
         get() = astronomicalCalculator
-            .getUTCNoon(adjustedLocalDate.date, geoLocation)
+            .getUTCNoon(adjustedLocalDate.date/*.also { println("kAdjusted: $it") }*/, geoLocation)/*.also { println("kNoon: $it") }*/
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
 
@@ -456,6 +456,7 @@ open class AstronomicalCalendar(
      * @return The Date. null if [time] is [Double.NaN]
      */
     protected fun getDateFromTime(time: Double, isSunrise: Boolean): Instant? {
+//        println("getDateFromTime($time, $isSunrise)")
         if (time.isNaN()) {
             return null
         }
@@ -475,10 +476,12 @@ open class AstronomicalCalendar(
         calculatedTime *= 60
         val seconds = calculatedTime.toInt()
         calculatedTime -= seconds.toDouble() // remaining milliseconds
-
+//        println("Hours: $hours, Minutes: $minutes, Seconds: $seconds, Milliseconds: $calculatedTime")
         // Check if a date transition has occurred, or is about to occur - this indicates the date of the event is
         // actually not the target date, but the day prior or after
         val localTimeHours = (geoLocation.longitude / 15).toInt()
+//        println("Local Time Hours: $localTimeHours")
+//        println("Cal1: $cal")
         if (isSunrise && localTimeHours.plus(hours) > 18)
             cal = cal.plus(DatePeriod(days = -1), timeZone)
         else if (!isSunrise && localTimeHours.plus(hours) < 6)
@@ -557,6 +560,7 @@ open class AstronomicalCalendar(
     internal val adjustedLocalDate: LocalDateTime
         get() {
             val offset = geoLocation.antimeridianAdjustment
+//            println("koffset: $offset")
             return if (offset == 0) localDateTime
             else localDateTime
                 .toInstant(geoLocation.timeZone)

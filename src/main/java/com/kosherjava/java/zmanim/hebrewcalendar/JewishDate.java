@@ -879,7 +879,7 @@ public class JewishDate implements Comparable<JewishDate>, Cloneable {
 	 */
 	public JewishDate getMolad() {
 		JewishDate moladDate = new JewishDate(getChalakimSinceMoladTohu());
-		System.out.println("Molad date java: " + moladDate);
+//		System.out.println("Molad date java: " + moladDate);
 		if (moladDate.getMoladHours() >= 6) {
 			moladDate.forward(Calendar.DATE, 1);
 		}

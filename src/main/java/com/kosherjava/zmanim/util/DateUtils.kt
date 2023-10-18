@@ -20,12 +20,14 @@ object DateUtils {
         var year = date.year
         var month = date.monthNumber
         val day = date.dayOfMonth
+//        println("kyear: $year, kmonth: $month, kday: $day")
         if (month <= 2) {
             year -= 1
             month += 12
         }
         val a = year / 100
         val b = 2 - a + a / 4
+//        println("a: $a, b: $b, year: $year, month: $month, day: $day")
         return floor(365.25 * (year + 4716)) + floor(30.6001 * (month + 1)) + day + b - 1524.5
     }
     fun LocalDate.Companion.now() =

@@ -40,9 +40,9 @@ class UnitTest {
             val jShaaZmanis = elevation.shaahZmanisAlos16Point1ToTzais3Point7
             println("noElevation.getMinchaGedola() = $jNoElevFixedLocalChatzos, elevation.getMinchaGedola() = $jElevFixedLocalChatzos")
             println("noElevation.getMinchaGedola30() = $jNoElevMinchaGedola30, elevation.getMinchaGedola30() = $jElevMinchaGedola30")
-            println("noElev.sunrise = ${noElevation.elevationAdjustedSunrise}, noElev.sunset = ${noElevation.elevationAdjustedSunset}")
+//            println("noElev.sunrise = ${noElevation.elevationAdjustedSunrise}, noElev.sunset = ${noElevation.elevationAdjustedSunset}")
+//            println("elev.sunrise = ${elevation.elevationAdjustedSunrise}, elev.sunset = ${elevation.elevationAdjustedSunset}")
             println("noElev.minchaGedola30MinutesZmanis = ${AstronomicalCalendar.getTimeOffset(noElevation.getChatzos(), noElevation.getShaahZmanisAlos16Point1ToTzais3Point7() / 2)}, elev.minchaGedola30MinutesZmanis = ${AstronomicalCalendar.getTimeOffset(elevation.getChatzos(), elevation.getShaahZmanisAlos16Point1ToTzais3Point7() / 2)}")
-            println("elev.sunrise = ${elevation.elevationAdjustedSunrise}, elev.sunset = ${elevation.elevationAdjustedSunset}")
             println("jNoShaaZmanis = $jNoShaaZmanis, jShaaZmanis = $jShaaZmanis")
             assert(jNoElevFixedLocalChatzos != null) { "Mincha gedolah failed for no elevation in $location" }
             assert(jElevFixedLocalChatzos != null) { "Fixed local chatzos failed for elevation in $location" }
