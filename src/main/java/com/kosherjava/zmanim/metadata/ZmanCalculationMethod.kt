@@ -246,9 +246,9 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * Dawn for this calculation is 60 minutes before sunrise.
      * Dusk is 60 minutes after sunset.
      *
-     * @param duration if negative, this zman is [duration] before [fromZman]. If positive, after. If [Duration.ZERO], this zman is equal to [fromZman].
+     * @param duration if negative, this zman is [duration] before what this is relative to . If positive, after.
      * */
-    data class FixedDuration(val duration: Duration, val fromZman: ZmanType? = null/*sunrise/set*/) :
+    data class FixedDuration(val duration: Duration) :
         ZmanCalculationMethod<Duration>(duration) {
         /**
          * Ateret torah (which defaults to 40 minutes)
@@ -294,7 +294,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
             val _120 = FixedDuration(120.minutes)
         }
 
-        override fun format() = format("Day", fromZman?.toString() ?: "sunrise/set")
+        override fun format() = format("Day", "sunrise/set")
 
         override fun format(subjectZman:String, zmanRelativeTo: String) = "$subjectZman is ${valueToString()} ${if (duration.isNegative()) "before" else "after"} $zmanRelativeTo"
 
@@ -315,7 +315,6 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
         val dayEndRelationship: ZmanRelationship<*>? = null,
     ): ZmanCalculationMethod<Unit>(Unit) {
         override fun format(): String = "Day starts at $dayStart and ends at $dayEnd"//TODO add relationships
-
         companion object {
 
             fun fromCalculationMethod(
@@ -486,6 +485,5 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
                 )
             )
         }
-
     }
 }

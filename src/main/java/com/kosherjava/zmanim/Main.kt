@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
         allZmanim
     ).flatten()
         .filter {
-            val fromZman = (it.rules.mainCalculationMethodUsed as? ZmanCalculationMethod.FixedDuration)?.fromZman
+            val fromZman = (it.rules.mainCalculationMethodUsed as? ZmanCalculationMethod.Relationship<*>)?.relationship?.relativeToZmanType
             it.rules.mainCalculationMethodUsed is ZmanCalculationMethod.FixedDuration &&
                     fromZman == null
         }
