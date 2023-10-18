@@ -8,10 +8,10 @@ import kotlin.time.Duration
 
 class ZmanDescriptionFormatter {
     fun formatShortDescription(zman: Zman<*>, includeElevationDescription: Boolean): String {
-        val result = StringBuilder()
-//        "Alos-Tzais - 19.8˚ - affected by elevation"
         val rules = zman.rules
-        addShortDayDefinition(rules.calculationMethod as? ZmanCalculationMethod.DayDefinition, result, rules, includeElevationDescription)
+        val result = StringBuilder(getShortCalculationDescription(rules))
+//        "Alos-Tzais - 19.8˚ - affected by elevation"
+//        addShortDayDefinition(rules.calculationMethod as? ZmanCalculationMethod.DayDefinition, result, rules, includeElevationDescription)
         /*if (rules.zmanToCalcMethodUsed == null && rules.mainCalculationMethodUsed == null) {
             addShortDayDefinition(rules.definitionOfDayUsed!!, result, rules)
         } else if (rules.mainCalculationMethodUsed != null && rules.zmanToCalcMethodUsed == null) {
@@ -106,7 +106,7 @@ class ZmanDescriptionFormatter {
     fun formatLongDescription(zman: Zman<*>): String = formatLongDescription(zman.rules)
     fun formatLongDescription(zman: ZmanDefinition): String {
         val result = StringBuilder()
-        result.append(getCalculationDescription(zman))
+        result.append(getLongCalculationDescription(zman))
         if (zman.calculationMethod is ZmanCalculationMethod.DayDefinition) {
             /*val startZman = zman.calculationMethod.dayStart.type
             val endZman = zman.calculationMethod.dayEnd.type
@@ -146,22 +146,18 @@ class ZmanDescriptionFormatter {
             result.appendLine("Day is defined as when the sun is ")
         }*/
         if(zman.supportingAuthorities.isNotEmpty()) {
-            result.append(" Supporting authorities: ")
-            for(authority in zman.supportingAuthorities) {
-                result.append(authority.name)
-                result.append(", ")
-            }
+            result.append(" Supporting authorities: ${zman.supportingAuthorities.joinToString(", ", postfix = ".") { it.name } }")
         }
         when (zman.isElevationUsed) {
-            ZmanDefinition.UsesElevation.IF_SET -> result.append(" This zman is affected by elevation if set")
-            ZmanDefinition.UsesElevation.NEVER -> result.append(" This zman is unaffected by elevation")
-            ZmanDefinition.UsesElevation.ALWAYS -> result.append(" This zman is affected by elevation")
+            ZmanDefinition.UsesElevation.IF_SET -> result.append(" This zman is affected by elevation if set.")
+            ZmanDefinition.UsesElevation.NEVER -> result.append(" This zman is unaffected by elevation.")
+            ZmanDefinition.UsesElevation.ALWAYS -> result.append(" This zman is affected by elevation.")
             ZmanDefinition.UsesElevation.UNSPECIFIED -> {}
         }
         return result.toString()
     }
 
-    private fun getCalculationDescription(method: ZmanDefinition): String =
+    private fun getLongCalculationDescription(method: ZmanDefinition): String =
         when (method.calculationMethod) {
             is ZmanCalculationMethod.Degrees -> "Day starts when the sun is ${method.calculationMethod.degrees}˚ below the eastern geometric horizon and ends when it is ${method.calculationMethod.degrees}˚ below the western geometric horizon."
             is ZmanAuthority -> "${method.type.friendlyNameEnglish} as calculated according to ${method.calculationMethod.name}."
@@ -169,14 +165,14 @@ class ZmanDescriptionFormatter {
                 val shaosZmaniyos = ZmanType.shaosZmaniyosIntoDay[method.type]
                 var dayDefString = "${method.type.friendlyNameEnglish} as calculated based on the definition of when day starts and ends. Day starts at ${method.calculationMethod.dayStart.type.friendlyNameEnglish} and ends at ${method.calculationMethod.dayEnd.type.friendlyNameEnglish}."
                 dayDefString += if(method.calculationMethod.dayStart.calculationMethod != method.calculationMethod.dayEnd.calculationMethod) {
-                    " ${method.calculationMethod.dayStart.type.friendlyNameEnglish} is defined as \"${getCalculationDescription(method.calculationMethod.dayStart)}\"; and ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} is defined as \"${getCalculationDescription(method.calculationMethod.dayEnd)}\"."
-                } else " ${method.calculationMethod.dayStart.type.friendlyNameEnglish} and ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} are defined as follows: \"${getCalculationDescription(method.calculationMethod.dayStart)}\"."
+                    " ${method.calculationMethod.dayStart.type.friendlyNameEnglish} is defined as \"${getLongCalculationDescription(method.calculationMethod.dayStart)}\"; and ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} is defined as \"${getLongCalculationDescription(method.calculationMethod.dayEnd)}\"."
+                } else " ${method.calculationMethod.dayStart.type.friendlyNameEnglish} and ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} are defined as follows: \"${getLongCalculationDescription(method.calculationMethod.dayStart)}\"."
                 if(shaosZmaniyos != null)
                     dayDefString += "${method.type.friendlyNameEnglish} is $shaosZmaniyos Shao'os Zmaniyos (halachic hours) into the day. A Shaa Zmanis is 1/12th of the day, using the previously mentioned definition of day."
                 ;dayDefString
             }
-            is ZmanCalculationMethod.LaterOf -> "${method.type.friendlyNameEnglish} occurs at the later of either of the following zmanim: ${getCalculationDescription(method.calculationMethod.zman1)}; or ${getCalculationDescription(method.calculationMethod.zman2)}."
-            is ZmanCalculationMethod.Relationship<*> -> "${method.type.friendlyNameEnglish} is calculated as follows: ${method.calculationMethod.relationship.subject.friendlyNameEnglish} occurs ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.value.let { it is Duration && it.isNegative() }) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
+            is ZmanCalculationMethod.LaterOf -> "${method.type.friendlyNameEnglish} occurs at the later of either of the following zmanim: ${getLongCalculationDescription(method.calculationMethod.zman1)}; or ${getLongCalculationDescription(method.calculationMethod.zman2)}."
+            is ZmanCalculationMethod.Relationship<*> -> "${method.type.friendlyNameEnglish} is calculated as follows: ${method.calculationMethod.relationship.subject.friendlyNameEnglish} occurs ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.value.let { it is Duration && it.isNegative() }) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getLongCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
             ZmanCalculationMethod.FixedLocalChatzos -> {
                 val shaosZmaniyos = ZmanType.shaosZmaniyosIntoDay[method.type]
                 var dayDefString = "${method.type.friendlyNameEnglish} is calculated based on the opinion of R' Moshe Feinstein that chatzos is calculated using what is known as \"Fixed Local Chatzos\". The 360˚ of the globe divided by 24 (hours) calculates to 15˚ per hour with 4 minutes per degree, so at a longitude of 0˚, 15˚, 30˚, etc., Chatzos is at exactly 12:00 noon."
@@ -188,6 +184,25 @@ class ZmanDescriptionFormatter {
             ZmanCalculationMethod.Unspecified -> "The calculation method for ${method.type.friendlyNameEnglish} is unspecified."
 
             //never happens
+            is ZmanCalculationMethod.FixedDuration -> method.calculationMethod.valueToString()
+            is ZmanCalculationMethod.ZmaniyosDuration -> method.calculationMethod.valueToString()
+            is ZmanCalculationMethod.FixedDuration.AteretTorah -> method.calculationMethod.shortDescription()
+        }
+    private fun getShortCalculationDescription(method: ZmanDefinition): String =
+        when (method.calculationMethod) {
+            is ZmanCalculationMethod.Degrees -> method.calculationMethod.valueToString()
+            is ZmanAuthority -> method.calculationMethod.valueToString()
+            is ZmanCalculationMethod.DayDefinition -> {
+                if(method.calculationMethod.dayStart.calculationMethod != method.calculationMethod.dayEnd.calculationMethod) {
+                    "${method.calculationMethod.dayStart.type.friendlyNameEnglish} (${getShortCalculationDescription(method.calculationMethod.dayStart)}) - ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} (${getShortCalculationDescription(method.calculationMethod.dayEnd)})."
+                } else "${method.calculationMethod.dayStart.type.friendlyNameEnglish} - ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} (${getShortCalculationDescription(method.calculationMethod.dayStart)})."
+            }
+            is ZmanCalculationMethod.LaterOf -> "Later of: ${getShortCalculationDescription(method.calculationMethod.zman1)} or ${getShortCalculationDescription(method.calculationMethod.zman2)}."
+            is ZmanCalculationMethod.Relationship<*> -> "${method.calculationMethod.relationship.subject.friendlyNameEnglish} is ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.value.let { it is Duration && it.isNegative() }) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getShortCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
+            ZmanCalculationMethod.FixedLocalChatzos -> "Fixed Local Chatzos"
+
+            //never happens
+            ZmanCalculationMethod.Unspecified -> "Unspecified"
             is ZmanCalculationMethod.FixedDuration -> method.calculationMethod.valueToString()
             is ZmanCalculationMethod.ZmaniyosDuration -> method.calculationMethod.valueToString()
             is ZmanCalculationMethod.FixedDuration.AteretTorah -> method.calculationMethod.shortDescription()

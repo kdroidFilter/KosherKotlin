@@ -403,7 +403,6 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
 
                 ), ZmanDefinition(
                     ZmanType.SHKIAH, ZmanAuthority.Unanimous, ZmanDefinition.UsesElevation.IF_SET
-
                 )
             )
             /**
