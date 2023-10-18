@@ -1,5 +1,10 @@
 package com.kosherjava.zmanim
 
+import com.kosherjava.zmanim.metadata.ZmanAuthority
+import com.kosherjava.zmanim.metadata.ZmanCalculationMethod
+import com.kosherjava.zmanim.metadata.ZmanDefinition
+import com.kosherjava.zmanim.metadata.ZmanType
+
 class ZmanDescriptionFormatter {
     fun formatShortDescription(zman: Zman<*>, includeElevationDescription: Boolean): String {
         val result = StringBuilder()

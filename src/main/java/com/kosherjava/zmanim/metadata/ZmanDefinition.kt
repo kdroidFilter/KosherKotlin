@@ -1,4 +1,4 @@
-package com.kosherjava.zmanim
+package com.kosherjava.zmanim.metadata
 
 /**
  *

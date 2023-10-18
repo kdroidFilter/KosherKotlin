@@ -1,5 +1,7 @@
 package com.kosherjava.zmanim
 
+import com.kosherjava.zmanim.metadata.ZmanCalculationMethod
+
 fun main(args: Array<String>) {
     val zmanim = ComplexZmanimCalendar()
 //    println("TimeZone.UTC.id = ${TimeZone.UTC.id}")
