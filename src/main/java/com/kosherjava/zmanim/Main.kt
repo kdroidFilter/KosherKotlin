@@ -1,18 +1,26 @@
 package com.kosherjava.zmanim
 
-import kotlinx.datetime.TimeZone
-
 fun main(args: Array<String>) {
     val zmanim = ComplexZmanimCalendar()
 //    println("TimeZone.UTC.id = ${TimeZone.UTC.id}")
-    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.rules.mainCalculationMethodUsed?.format())
-    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.rules.mainCalculationMethodUsed?.valueToString())
+//    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.rules.mainCalculationMethodUsed?.format())
+//    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.rules.mainCalculationMethodUsed?.valueToString())
     val formatter = ZmanDescriptionFormatter()
     val includeElevationDescription = false
-    listOf(zmanim.allShaosZmaniyos,
-            zmanim.allZmanim).flatten().filter { it.rules.mainCalculationMethodUsed !is ZmanCalculationMethod.DayDefinition }.forEach {
-        println(it)
-    }
+    val allZmanim = zmanim.allZmanim
+    listOf(
+        zmanim.allShaosZmaniyos,
+        allZmanim
+    ).flatten()
+        .filter {
+            val fromZman = (it.rules.mainCalculationMethodUsed as? ZmanCalculationMethod.FixedDuration)?.fromZman
+            it.rules.mainCalculationMethodUsed is ZmanCalculationMethod.FixedDuration &&
+                    fromZman == null &&
+                    it.rules.relationship == null
+        }
+        .forEach {
+            println("Index in allZmanim = ${allZmanim.indexOf(it)}")
+        }
 //    println("Shaos zmaniyos:")
 //    zmanim.allShaosZmaniyos.mapIndexed { index, it -> "$index(${it.rules.type}): " + formatter.formatShortDescription(it, includeElevationDescription) }.forEach { println(it) }
 //    println("Zmanim:")
