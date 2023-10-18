@@ -28,11 +28,12 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanCalculationMethod.FixedDuration -> ZmanCalculationMethod.FixedDuration(-(duration.absoluteValue))
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(-(duration.absoluteValue))
             is ZmanCalculationMethod.FixedMinutesFloat -> ZmanCalculationMethod.FixedMinutesFloat(-(minutes.absoluteValue))
+            is ZmanCalculationMethod.FixedDuration.AteretTorah -> ZmanCalculationMethod.FixedDuration.AteretTorah(-(minutes.absoluteValue))
             is ZmanAuthority,
+            is ZmanCalculationMethod.DayDefinition,
             is ZmanCalculationMethod.LaterOf,
             ZmanCalculationMethod.FixedLocalChatzos,
-            ZmanCalculationMethod.Unspecified,
-            ZmanCalculationMethod.DayDefinition -> this
+            ZmanCalculationMethod.Unspecified,-> this
         } as ZmanCalculationMethod<T>
     private operator fun <T> ZmanCalculationMethod<T>.unaryPlus(): ZmanCalculationMethod<T> =
         when (this) {
@@ -40,10 +41,11 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
             is ZmanCalculationMethod.FixedDuration -> ZmanCalculationMethod.FixedDuration(duration.absoluteValue)
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(duration.absoluteValue)
             is ZmanCalculationMethod.FixedMinutesFloat -> ZmanCalculationMethod.FixedMinutesFloat(minutes.absoluteValue)
+            is ZmanCalculationMethod.FixedDuration.AteretTorah -> ZmanCalculationMethod.FixedDuration.AteretTorah(minutes.absoluteValue)
             is ZmanAuthority,
+            is ZmanCalculationMethod.DayDefinition,
             is ZmanCalculationMethod.LaterOf,
             ZmanCalculationMethod.FixedLocalChatzos,
-            ZmanCalculationMethod.Unspecified,
-            ZmanCalculationMethod.DayDefinition -> this
+            ZmanCalculationMethod.Unspecified, -> this
         } as ZmanCalculationMethod<T>
 }

@@ -38,11 +38,14 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod<String>(name) 
     object KRONGLASS: ZmanAuthority(Strings.KRONGLASS)
     object LECHEM_MISHNAH: ZmanAuthority(Strings.LECHEM_MISHNAH)
     object MAAGALEI_TZEDEK: ZmanAuthority(Strings.MAAGALEI_TZEDEK)
+    object MACHATZIS_HASHEKEL: ZmanAuthority(Strings.MACHATZIS_HASHEKEL)
     object MAHARIK: ZmanAuthority(Strings.MAHARIK)
     object MAHARIL: ZmanAuthority(Strings.MAHARIL)
     object MGA: ZmanAuthority(Strings.MGA)
     object MINCHAS_COHEN: ZmanAuthority(Strings.MINCHAS_COHEN)
     object NEIMAN: ZmanAuthority(Strings.NEIMAN)
+    object POSEN: ZmanAuthority(Strings.POSEN)
+    object PRI_MEGADIM: ZmanAuthority(Strings.PRI_MEGADIM)
     object RAAVAN: ZmanAuthority(Strings.RAAVAN)
     object RABEINU_TAM: ZmanAuthority(Strings.RABEINU_TAM)
     object RABEINU_YONAH: ZmanAuthority(Strings.RABEINU_YONAH)
@@ -86,11 +89,14 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod<String>(name) 
         const val KRONGLASS = "Rabbi Dovid Kronglass (Divrei Chachamim)"
         const val LECHEM_MISHNAH = "Lechem Mishnah"
         const val MAAGALEI_TZEDEK = "Ma'agalei Tzedek"
+        const val MACHATZIS_HASHEKEL = "Machatzis Hashekel"
         const val MAHARIK = "Maharik"
         const val MAHARIL = "Maharil"
         const val MGA = "Magen Avraham"
         const val MINCHAS_COHEN = "Minchas Cohen"
         const val NEIMAN = "Rabbi Yaakov Yitzchok Neiman (Kovetz Eitz Chaim)"
+        const val POSEN = "Rabbi Meir Posen (Ohr Meir)"
+        const val PRI_MEGADIM = "Pri Megadim"
         const val RAAVAN = "Ra'avan (R' Elazar Ben Nosson)"
         const val RABEINU_TAM = "Rabeinu Tam"
         const val RABEINU_YONAH = "Rabeinu Yonah"

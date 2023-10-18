@@ -89,15 +89,15 @@ class SunTimesCalculator : AstronomicalCalculator() {
      * @see NOAACalculator
      *
      *
-     * @param LocalDate
+     * @param date
      * The LocalDate representing the date to calculate solar noon for
      * @param geoLocation
      * The location information used for astronomical calculating sun times.
      * @return the time in minutes from zero UTC
      */
-    override fun getUTCNoon(LocalDate: LocalDate, geoLocation: GeoLocation): Double {
-        val sunrise: Double = getUTCSunrise(LocalDate, geoLocation, 90.0, true)
-        val sunset: Double = getUTCSunset(LocalDate, geoLocation, 90.0, true)
+    override fun getUTCNoon(date: LocalDate, geoLocation: GeoLocation): Double {
+        val sunrise: Double = getUTCSunrise(date, geoLocation, 90.0, true)
+        val sunset: Double = getUTCSunset(date, geoLocation, 90.0, true)
         return (sunrise + ((sunset - sunrise) / 2))
     }
 
