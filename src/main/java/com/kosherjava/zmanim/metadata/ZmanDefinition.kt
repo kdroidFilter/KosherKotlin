@@ -9,7 +9,6 @@ data class ZmanDefinition(
     val isElevationUsed: UsesElevation = UsesElevation.UNSPECIFIED,
     val supportingAuthorities: List<ZmanAuthority> = listOf()
 ) {
-
     enum class UsesElevation {
         IF_SET, NEVER, ALWAYS, UNSPECIFIED
     }
