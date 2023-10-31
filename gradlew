@@ -1,3 +1,4 @@
+
 #!/usr/bin/env sh
 
 #
@@ -23,12 +24,12 @@
 ##############################################################################
 
 # Attempt to set APP_HOME
-# Resolve links: $0 may be a link
+# Resolve links: ${'$'}0 may be a link
 PRG="$0"
 # Need this for relative symlinks.
 while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
-    link=`expr "$ls" : '.*-> \(.*\)$'`
+    link=`expr "$ls" : '.*-> \(.*\)${'$'}'`
     if expr "$link" : '/.*' > /dev/null; then
         PRG="$link"
     else
@@ -50,12 +51,12 @@ DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
 MAX_FD="maximum"
 
 warn () {
-    echo "$*"
+    echo "${'$'}*"
 }
 
 die () {
     echo
-    echo "$*"
+    echo "${'$'}*"
     echo
     exit 1
 }
@@ -72,7 +73,7 @@ case "`uname`" in
   Darwin* )
     darwin=true
     ;;
-  MINGW* )
+  MSYS* | MINGW* )
     msys=true
     ;;
   NONSTOP* )
@@ -130,7 +131,7 @@ fi
 if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     APP_HOME=`cygpath --path --mixed "$APP_HOME"`
     CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
-    
+
     JAVACMD=`cygpath --unix "$JAVACMD"`
 
     # We build the pattern for arguments to be converted via cygpath
