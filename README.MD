@@ -68,8 +68,7 @@ Every `Zman` object has a `rules` property which contains the metadata of the ru
 ```kotlin
 val location = GeoLocation("New York", 40.7, -74.0, 0.0, TimeZone.of("America/New_York"))
 val calendar = ComplexZmanimCalendar(location)
-val zmanim = calendar.allZmanim
-println(zmanim.filter { it.rules.type == ZmanType.ALOS }.map { it.value })
+println(calendar.allZmanim.filter { it.rules.type == ZmanType.ALOS }.map { it.value })
 println(calendar.sunrise)
 println(calendar.alos72.momentOfOccurrence)
 println(calendar.shaahZmanis72Minutes.duration)
