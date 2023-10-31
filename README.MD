@@ -9,7 +9,7 @@ It is based on Eliyahu Hershfeld's [KosherJava](https://github.com/KosherJava/zm
 
 These classes extend GregorianCalendar and can therefore
 use the standard Calendar functionality to change dates etc. For non religious astronomical / solar
-calculations use the [AstronomicalCalendar](./src/main/java/com/kosherjava/zmanim/AstronomicalCalendar.kt).
+calculations use the [AstronomicalCalendar](./composeApp/src/commonMain/sternbach/software/kosherkotlin/AstronomicalCalendar.kt).
 
 The ZmanimCalendar contains the most common zmanim or religious time calculations. For a much more
 extensive list of _zmanim_ use the ComplexZmanimCalendar.
@@ -55,7 +55,10 @@ Run the browser application: `./gradlew :composeApp:jsBrowserDevelopmentRun`
 
 ## Usage
 
-The library was designed to be as idiomatic as possible, both in its implementation and its API surface. Every client-facing zero-argument function is accessible as a computed property (e.g. `calendar.alos72`). Hosted documentation coming soon!
+The library was designed to be as idiomatic as possible, both in its implementation and its API surface. Every client-facing zero-argument function is accessible as a computed property (e.g. `ComplexZmanimCalender().alos72`).
+Every zman has a lazily computed generic property called `value`. `Zman.DateBased` objects have a `momentOfOccurrence` property which lazily computes the `Instant` of the zman's occurrence. `Zman.ValueBased` objects have a `duration` property which lazily computes the `Duration` of how long the zman lasts.
+
+Hosted documentation coming soon!
 
 # Future
 - [x] ~~There are plans to port the library to `kotlinx-datetime` so that it is multi-platform friendly. This is a major overhaul - PRs are welcomed.~~
