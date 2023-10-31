@@ -1,18 +1,16 @@
 KosherKotlin Zmanim API
 =====================
 
-The Zmanim library is an API for a specialized calendar that can calculate different astronomical
+The KosherKotlin Zmanim library is a Kotlin Multiplatform API for a specialized calendar that can calculate different astronomical
 times including sunrise and sunset (default uses NOAA's algorithm) and Jewish _zmanim_ or religious times for prayers and other
 Jewish religious duties.
 
 It is based on Eliyahu Hershfeld's [KosherJava](https://github.com/KosherJava/zmanim).
 
-These classes extend GregorianCalendar and can therefore
-use the standard Calendar functionality to change dates etc. For non religious astronomical / solar
-calculations use the [AstronomicalCalendar](./composeApp/src/commonMain/sternbach/software/kosherkotlin/AstronomicalCalendar.kt).
+For non religious astronomical / solar calculations use the [AstronomicalCalendar](./composeApp/src/commonMain/sternbach/software/kosherkotlin/AstronomicalCalendar.kt).
 
-The ZmanimCalendar contains the most common zmanim or religious time calculations. For a much more
-extensive list of _zmanim_ use the ComplexZmanimCalendar.
+The `ZmanimCalendar` class contains the most common zmanim or religious time calculations. 
+For a much more extensive list of _zmanim_ use the `ComplexZmanimCalendar`.
 This class contains the main functionality of the Zmanim library.
 
 For a basic set of instructions on the use of the API, see [How to Use the Zmanim API](https://kosherjava.com/zmanim-project/how-to-use-the-zmanim-api/), [zmanim code samples](https://kosherjava.com/tag/code-sample/) and the [KosherJava FAQ](https://kosherjava.com/tag/faq/). See the <a href="https://kosherjava.com">KosherJava Zmanim site</a> for additional information.
@@ -71,8 +69,10 @@ Every `Zman` object has a `rules` property which contains the metadata of the ru
 val location = GeoLocation("New York", 40.7, -74.0, 0.0, TimeZone.of("America/New_York"))
 val calendar = ComplexZmanimCalendar(location)
 val zmanim = calendar.allZmanim
-println(calendar.alos72.momentOfOccurrence)
 println(zmanim.filter { it.rules.type == ZmanType.ALOS }.map { it.value })
+println(calendar.sunrise)
+println(calendar.alos72.momentOfOccurrence)
+println(calendar.shaahZmanis72Minutes.duration)
 ```
 
 
