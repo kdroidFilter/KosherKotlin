@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -68,10 +70,10 @@ internal fun App() = AppTheme {
         }
         LazyColumn(
             Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(calc.allZmanim.sortedBy { it.momentOfOccurrence }) {
-                Card(Modifier.fillMaxWidth()) {
+                ElevatedCard(Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(8.dp)) {
                     Text(text = it.rules.type.friendlyNameHebrew, modifier = Modifier.fillParentMaxWidth(), textAlign = TextAlign.Center)
                     Text(text = fmt.formatShortDescription(it, true), modifier = Modifier.fillParentMaxWidth(), textAlign = TextAlign.Center)
                     Text(text = it.momentOfOccurrence.toString(), modifier = Modifier.fillParentMaxWidth(), textAlign = TextAlign.Center)
