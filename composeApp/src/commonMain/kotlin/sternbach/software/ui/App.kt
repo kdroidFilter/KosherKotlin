@@ -1,4 +1,4 @@
-package sternbach.software.kosherkotlin.ui
+package sternbach.software.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
