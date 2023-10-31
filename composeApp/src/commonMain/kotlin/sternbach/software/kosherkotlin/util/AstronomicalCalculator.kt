@@ -13,7 +13,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.util
+package sternbach.software.kosherkotlin.util
 
 import kotlinx.datetime.LocalDate
 import kotlin.math.acos

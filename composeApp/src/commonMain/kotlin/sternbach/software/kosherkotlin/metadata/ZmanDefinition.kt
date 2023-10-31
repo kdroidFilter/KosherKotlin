@@ -1,4 +1,4 @@
-package com.kosherjava.zmanim.metadata
+package sternbach.software.kosherkotlin.metadata
 
 /**
  *

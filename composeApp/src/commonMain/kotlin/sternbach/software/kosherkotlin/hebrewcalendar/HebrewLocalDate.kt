@@ -1,7 +1,7 @@
-package com.kosherjava.zmanim.hebrewcalendar
+package sternbach.software.kosherkotlin.hebrewcalendar
 
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate.Companion.daysInJewishYear
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate.Companion.isJewishLeapYear
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate.Companion.daysInJewishYear
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate.Companion.isJewishLeapYear
 import kotlinx.datetime.*
 import kotlin.time.Duration.Companion.days
 

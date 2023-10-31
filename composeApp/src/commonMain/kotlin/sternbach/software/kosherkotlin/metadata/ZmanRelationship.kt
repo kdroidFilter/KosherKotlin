@@ -1,4 +1,4 @@
-package com.kosherjava.zmanim.metadata
+package sternbach.software.kosherkotlin.metadata
 /**
  * A [ZmanRelationship] is a relationship between two [ZmanType]s, dictating when [subject] occurs relative to [relativeToZman].
  * ZmanType.TZAIS  occurs 45.minutes          after  ZmanType.SHKIAH

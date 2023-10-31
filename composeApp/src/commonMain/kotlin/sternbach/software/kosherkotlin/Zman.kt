@@ -1,6 +1,6 @@
-package com.kosherjava.zmanim
+package sternbach.software.kosherkotlin
 
-import com.kosherjava.zmanim.metadata.ZmanDefinition
+import sternbach.software.kosherkotlin.metadata.ZmanDefinition
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

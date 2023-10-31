@@ -1,7 +1,7 @@
-package com.kosherjava.zmanim.metadata
+package sternbach.software.kosherkotlin.metadata
 
-import com.kosherjava.zmanim.ComplexZmanimCalendar
-import com.kosherjava.zmanim.ZmanDescriptionFormatter
+import sternbach.software.kosherkotlin.ComplexZmanimCalendar
+import sternbach.software.kosherkotlin.ZmanDescriptionFormatter
 
 /**
  * A [ZmanAuthority] is also a [ZmanCalculationMethod] so that it is possible to say (for example) that
