@@ -76,4 +76,4 @@ The library is released under the [LGPL 2.1 license](https://kosherjava.com/2011
 If you made a publicly-available program that uses this library, I want to know! Just send me a heads-up email at "software at sternbach.org".
 
 # Disclaimer:
-__While I did my best to get accurate results, please double check before relying on these zmanim for **halacha lemaaseh**.
+__While I did my best to get accurate results, please double check before relying on these zmanim for *halacha lemaaseh*.
