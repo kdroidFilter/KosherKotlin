@@ -4,7 +4,6 @@ import sternbach.software.kosherkotlin.hebrewcalendar.HebrewLocalDate
 import sternbach.software.kosherkotlin.hebrewcalendar.HebrewMonth
 import sternbach.software.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.*
-import java.util.*
 
 fun main(args: Array<String>) {
     println(Clock.System.now().toString())
