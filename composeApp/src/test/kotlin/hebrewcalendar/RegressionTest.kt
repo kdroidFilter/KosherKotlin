@@ -1,15 +1,20 @@
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
-import com.kosherjava.zmanim.AstronomicalCalendar
-import com.kosherjava.zmanim.ComplexZmanimCalendar
-import com.kosherjava.zmanim.Zman
-import com.kosherjava.zmanim.util.GeoLocation
-import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
+import sternbach.software.kosherkotlin.hebrewcalendar.Daf
+import sternbach.software.kosherkotlin.AstronomicalCalendar
+import sternbach.software.kosherkotlin.ComplexZmanimCalendar
+import sternbach.software.kosherkotlin.Zman
+import sternbach.software.kosherkotlin.util.GeoLocation
+import sternbach.software.kosherkotlin.util.GeoLocation.Companion.rawOffset
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewDateFormatter
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewLocalDate
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewMonth
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate
 import java.util.*
 import kotlin.time.Duration.Companion.days
 
@@ -37,7 +42,7 @@ class RegressionTest {
         TimeZone.of("America/New_York")
     )
 
-    val javaLocation = com.kosherjava.java.zmanim.util.GeoLocation(
+    val javaLocation = com.kosherjava.zmanim.util.GeoLocation(
         kotlinLocation.locationName,
         kotlinLocation.latitude,
         kotlinLocation.longitude,
@@ -120,20 +125,21 @@ class RegressionTest {
             HebrewLocalDate.STARTING_DATE_HEBREW //start of hillel hakatan's calender - java upstream doesn't support earlier
         val distantFutureJewishDate = JewishDate(gregorianEnd) //6000-1-1 hebrew
 
-        val javaCurrentJewishCalendar = com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
-            hebrewStart.year.toInt(),
-            hebrewStart.month.value,
-            hebrewStart.dayOfMonth
-        )
+        val javaCurrentJewishCalendar =
+            com.kosherjava.zmanim.hebrewcalendar.JewishCalendar(
+                hebrewStart.year.toInt(),
+                hebrewStart.month.value,
+                hebrewStart.dayOfMonth
+            )
         val javaCurrentJewishCalendarIsraeli =
-            com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
+            com.kosherjava.zmanim.hebrewcalendar.JewishCalendar(
                 hebrewStart.year.toInt(),
                 hebrewStart.month.value,
                 hebrewStart.dayOfMonth,
                 true
             )
         val javaCurrentJewishCalendarIsraeliUseModernHolidays =
-            com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
+            com.kosherjava.zmanim.hebrewcalendar.JewishCalendar(
                 hebrewStart.year.toInt(),
                 hebrewStart.month.value,
                 hebrewStart.dayOfMonth,
@@ -142,9 +148,9 @@ class RegressionTest {
                 isUseModernHolidays = true
             }
 
-        val kotlinCurrentJewishCalendar = JewishCalendar(hebrewStart)
-        val kotlinCurrentJewishCalendarIsraeli = JewishCalendar(hebrewStart, true)
-        val kotlinCurrentJewishCalendarIsraeliUseModernHolidays = JewishCalendar(hebrewStart, true, true)
+        val kotlinCurrentJewishCalendar = sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart)
+        val kotlinCurrentJewishCalendarIsraeli = sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart, true)
+        val kotlinCurrentJewishCalendarIsraeliUseModernHolidays = sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart, true, true)
 
         while (
             javaCurrentJewishCalendar.jewishYear != distantFutureJewishDate.jewishYear.toInt() ||
@@ -169,8 +175,8 @@ class RegressionTest {
     }
 
     private fun assertAllValues(
-        kotlin: JewishCalendar,
-        java: com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar
+        kotlin: sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar,
+        java: com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
     ) {
         assertEquals(java.chalakimSinceMoladTohu, kotlin.chalakimSinceMoladTohu)
         assertEquals(java.cheshvanKislevKviah, kotlin.cheshvanKislevKviah)
@@ -251,7 +257,7 @@ class RegressionTest {
 
     private fun testComplexZmanimCalendar(
         kotlinLocation: GeoLocation,
-        javaLocation: com.kosherjava.java.zmanim.util.GeoLocation,
+        javaLocation: com.kosherjava.zmanim.util.GeoLocation,
         javaDate: java.time.LocalDate,
         kotlinDate: kotlinx.datetime.LocalDate
     ) {
@@ -274,7 +280,7 @@ class RegressionTest {
         println("kotlin date:       $kotlinDate")
         println("java calendar:     $javaCalendar")
         val calc = ComplexZmanimCalendar(kotlinLocation)
-        val javaCalc = com.kosherjava.java.zmanim.ComplexZmanimCalendar(javaLocation)
+        val javaCalc = com.kosherjava.zmanim.ComplexZmanimCalendar(javaLocation)
         calc.localDateTime = LocalDateTime(kotlinDate, LocalTime(0, 0, 0))
         javaCalc.calendar = javaCalendar
         fun assertEquals(date: java.util.Date?, instant: Instant?) = assertEquals(
@@ -294,12 +300,12 @@ class RegressionTest {
         assertEquals(javaCalc.alos90Zmanis, calc.alos90Zmanis.momentOfOccurrence?.toDate())
         assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis.momentOfOccurrence?.toDate())
         assertEquals(
-            com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time,
-            JewishCalendar().moladAsInstant.toDate()!!.time
+            com.kosherjava.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time,
+            sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar().moladAsInstant.toDate()!!.time
         )
         assertEquals(
-            com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time,
-            JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time
+            com.kosherjava.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time,
+            sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time
         )
         assertEquals(
             javaCalc.sofZmanKidushLevanaBetweenMoldos?.time?.toDouble() ?: 0.0,
@@ -686,7 +692,7 @@ class RegressionTest {
         }
     }
 
-    private fun getAllValues(java: com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar): Array<Any?> {
+    private fun getAllValues(java: com.kosherjava.zmanim.hebrewcalendar.JewishCalendar): Array<Any?> {
         val moladAsKotlinLocalDate = java.molad.localDate.atStartOfDay(javaLocation.timeZone.toZoneId()).toLocalDate()
             .toKotlinLocalDate()
         val molad = if (moladAsKotlinLocalDate < HebrewLocalDate.STARTING_DATE_GREGORIAN
@@ -716,7 +722,9 @@ class RegressionTest {
         val kotlinAstroCal = AstronomicalCalendar(kotlinLocation).apply {
             localDateTime = LocalDateTime(localDateTime.date, LocalTime(1, 0, 0))
         }
-        val javaAstroCal = com.kosherjava.java.zmanim.AstronomicalCalendar(javaLocation).apply {
+        val javaAstroCal = com.kosherjava.zmanim.AstronomicalCalendar(
+            javaLocation
+        ).apply {
             val cal = Calendar.getInstance()
             cal.set(Calendar.YEAR, kotlinAstroCal.localDateTime.year)
             cal.set(Calendar.MONTH, kotlinAstroCal.localDateTime.monthNumber - 1)
@@ -1026,7 +1034,7 @@ class RegressionTest {
 
     private fun assertYomTovOrParshaMatches(
         jewishDate: JewishDate,
-        jewishCalendar: JewishCalendar,
+        jewishCalendar: sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar,
         fields: List<String>,
         quote: String
     ) {
@@ -1039,11 +1047,11 @@ class RegressionTest {
         )
     }
 
-    private fun getParshaOrYomTov(jewishCalendar: JewishCalendar) = hdf
+    private fun getParshaOrYomTov(jewishCalendar: sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar) = hdf
         .transliteratedParshiosList[jewishCalendar.parshah]
         ?.let {
             val specialShabbos = jewishCalendar.specialShabbos
-            if (specialShabbos != JewishCalendar.Parsha.NONE) "$it, ${hdf.transliteratedParshiosList[specialShabbos]}" else it
+            if (specialShabbos != sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar.Parsha.NONE) "$it, ${hdf.transliteratedParshiosList[specialShabbos]}" else it
         }
         ?.ifBlank {
             jewishCalendar

@@ -1,12 +1,13 @@
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
-import com.kosherjava.java.zmanim.hebrewcalendar.JewishDate
-import com.kosherjava.zmanim.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate.Companion.daysInJewishYear
-import com.kosherjava.zmanim.util.DateUtils.now
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate.Companion.daysInJewishYear
+import sternbach.software.kosherkotlin.util.DateUtils.now
 import kotlinx.datetime.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewLocalDate
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewMonth
 import java.util.*
 
 class ConvertBetweenGregorianAndHebrewTest {
@@ -136,7 +137,7 @@ class ConvertBetweenGregorianAndHebrewTest {
     fun regressionTest() {
         val newGregorianDate = HebrewLocalDate.STARTING_DATE_GREGORIAN.plus(DatePeriod(years = 1, months = 1))
         val distantFutureJewishDate =
-            JewishDate(
+            com.kosherjava.zmanim.hebrewcalendar.JewishDate(
                 java.time.LocalDate.of(
                     newGregorianDate.year,
                     newGregorianDate.month,
@@ -148,11 +149,12 @@ class ConvertBetweenGregorianAndHebrewTest {
             HebrewMonth.TISHREI,
             1
         )
-        val javaCurrentJewishDate = JewishDate(
-            3763,
-            HebrewMonth.TISHREI.value,
-            1
-        ) //start of hillel hakatan's calender
+        val javaCurrentJewishDate =
+            com.kosherjava.zmanim.hebrewcalendar.JewishDate(
+                3763,
+                HebrewMonth.TISHREI.value,
+                1
+            ) //start of hillel hakatan's calender
 
         while (
             javaCurrentJewishDate.jewishYear != distantFutureJewishDate.jewishYear ||

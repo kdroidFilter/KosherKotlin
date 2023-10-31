@@ -1,7 +1,11 @@
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewDateFormatter
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewMonth
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar
+import sternbach.software.kosherkotlin.hebrewcalendar.YomiCalculator
 
 class YomiCalculatorTest {
     private val calc = YomiCalculator

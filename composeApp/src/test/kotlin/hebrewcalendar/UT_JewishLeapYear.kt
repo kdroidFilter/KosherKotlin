@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2011. Jay R. Gindin
  */
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate
 
 /**
  * Verify correct calculations of when a Hebrew leap year occurs.

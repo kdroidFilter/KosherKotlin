@@ -1,5 +1,5 @@
-package com.kosherjava.zmanim.hebrewcalendar
-import com.kosherjava.zmanim.util.GeoLocation
+package hebrewcalendar
+import sternbach.software.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.TimeZone
 
 object TestHelper {
@@ -17,5 +17,12 @@ object TestHelper {
 
     val allLocations = basicLocations + arcticLocations
     val allJavaLocations = allLocations.map { it.toJava() }
-    fun GeoLocation.toJava() = com.kosherjava.java.zmanim.util.GeoLocation(locationName, latitude, longitude, elevation, java.util.TimeZone.getTimeZone(timeZone.id))
+    fun sternbach.software.kosherkotlin.util.GeoLocation.toJava() =
+        com.kosherjava.zmanim.util.GeoLocation(
+            locationName,
+            latitude,
+            longitude,
+            elevation,
+            java.util.TimeZone.getTimeZone(timeZone.id)
+        )
 }

@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2011. Jay R. Gindin
  */
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import org.junit.Assert
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate
 import java.time.ZoneId
 import java.util.*
 
