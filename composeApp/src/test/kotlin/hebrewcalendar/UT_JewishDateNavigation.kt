@@ -1,10 +1,12 @@
 /*
  * Copyright (c) 2011. Jay R. Gindin
  */
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewMonth
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate
 
 /**
  *

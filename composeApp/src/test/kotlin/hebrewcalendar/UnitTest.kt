@@ -1,9 +1,8 @@
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
-import com.kosherjava.java.zmanim.AstronomicalCalendar
-import com.kosherjava.zmanim.ComplexZmanimCalendar
-import com.kosherjava.zmanim.metadata.ZmanType
-import com.kosherjava.zmanim.util.GeoLocation.Companion.rawOffset
+import sternbach.software.kosherkotlin.ComplexZmanimCalendar
+import sternbach.software.kosherkotlin.metadata.ZmanType
+import sternbach.software.kosherkotlin.util.GeoLocation.Companion.rawOffset
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
@@ -13,15 +12,24 @@ class UnitTest {
     fun fixedLocalChatzosWorksInAllRegions() {
         for(location in TestHelper.allLocations) {
             println("Location: ${location.locationName}, timezone id: ${location.timeZone.id}")
-            val locationJ = com.kosherjava.java.zmanim.util.GeoLocation(location.locationName, location.latitude, location.longitude, location.elevation, java.util.TimeZone.getTimeZone(location.timeZone.id))
+            val locationJ = com.kosherjava.zmanim.util.GeoLocation(
+                location.locationName,
+                location.latitude,
+                location.longitude,
+                location.elevation,
+                TimeZone.getTimeZone(location.timeZone.id)
+            )
             Assert.assertEquals(locationJ.timeZone.rawOffset, location.timeZone.rawOffset)
-            val noElevation = com.kosherjava.java.zmanim.ComplexZmanimCalendar(locationJ).also {
+            val noElevation = com.kosherjava.zmanim.ComplexZmanimCalendar(
+                locationJ
+            ).also {
                 it.calendar = Calendar.getInstance().apply {
                     set(Calendar.MONTH, Calendar.MARCH)
                     set(Calendar.DAY_OF_MONTH, 1)
                 }
             }
-            val elevation = com.kosherjava.java.zmanim.ComplexZmanimCalendar(locationJ).also {
+            val elevation = com.kosherjava.zmanim.ComplexZmanimCalendar(locationJ)
+                .also {
                 it.isUseElevation = true
                 it.calendar = Calendar.getInstance().apply {
                     set(Calendar.MONTH, Calendar.MARCH)
@@ -42,7 +50,7 @@ class UnitTest {
             println("noElevation.getMinchaGedola30() = $jNoElevMinchaGedola30, elevation.getMinchaGedola30() = $jElevMinchaGedola30")
 //            println("noElev.sunrise = ${noElevation.elevationAdjustedSunrise}, noElev.sunset = ${noElevation.elevationAdjustedSunset}")
 //            println("elev.sunrise = ${elevation.elevationAdjustedSunrise}, elev.sunset = ${elevation.elevationAdjustedSunset}")
-            println("noElev.minchaGedola30MinutesZmanis = ${AstronomicalCalendar.getTimeOffset(noElevation.getChatzos(), noElevation.getShaahZmanisAlos16Point1ToTzais3Point7() / 2)}, elev.minchaGedola30MinutesZmanis = ${AstronomicalCalendar.getTimeOffset(elevation.getChatzos(), elevation.getShaahZmanisAlos16Point1ToTzais3Point7() / 2)}")
+            println("noElev.minchaGedola30MinutesZmanis = ${com.kosherjava.zmanim.AstronomicalCalendar.getTimeOffset(noElevation.getChatzos(), noElevation.getShaahZmanisAlos16Point1ToTzais3Point7() / 2)}, elev.minchaGedola30MinutesZmanis = ${com.kosherjava.zmanim.AstronomicalCalendar.getTimeOffset(elevation.getChatzos(), elevation.getShaahZmanisAlos16Point1ToTzais3Point7() / 2)}")
             println("jNoShaaZmanis = $jNoShaaZmanis, jShaaZmanis = $jShaaZmanis")
             assert(jNoElevFixedLocalChatzos != null) { "Mincha gedolah failed for no elevation in $location" }
             assert(jElevFixedLocalChatzos != null) { "Fixed local chatzos failed for elevation in $location" }

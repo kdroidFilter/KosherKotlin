@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2011. Jay R. Gindin
  */
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toKotlinInstant
-import kotlinx.datetime.toLocalDateTime
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

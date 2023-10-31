@@ -1,16 +1,20 @@
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewDateFormatter
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewMonth
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar
 
 class UT_YerushalmiTest {
     @Test
     fun testCorrectDaf1() {
-        val javaJewishCalendar = com.kosherjava.java.zmanim.hebrewcalendar.JewishCalendar(
-            5777,
-            HebrewMonth.ELUL.value,
-            10
-        )
+        val javaJewishCalendar =
+            JewishCalendar(
+                5777,
+                HebrewMonth.ELUL.value,
+                10
+            )
         val kotlinJewishCalendar = JewishCalendar(5777, HebrewMonth.ELUL, 10)
         Assert.assertEquals(
             javaJewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong(),

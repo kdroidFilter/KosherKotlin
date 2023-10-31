@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2011. Jay R. Gindin
  */
-package com.kosherjava.zmanim.hebrewcalendar
+package hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate
 
 /**
  * Validate the days in a Hebrew month (in various types of years) are correct.
