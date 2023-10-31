@@ -13,11 +13,11 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA,
  * or connect to: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim
+package sternbach.software.kosherkotlin
 
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
-import com.kosherjava.zmanim.util.AstronomicalCalculator
-import com.kosherjava.zmanim.util.GeoLocation
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar
+import sternbach.software.kosherkotlin.util.AstronomicalCalculator
+import sternbach.software.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.*
 import kotlin.time.Duration.Companion.milliseconds
 

@@ -1,7 +1,7 @@
-package com.kosherjava.zmanim.metadata
+package sternbach.software.kosherkotlin.metadata
 
-import com.kosherjava.zmanim.ComplexZmanimCalendar
-import com.kosherjava.zmanim.ZmanDescriptionFormatter
+import sternbach.software.kosherkotlin.ComplexZmanimCalendar
+import sternbach.software.kosherkotlin.ZmanDescriptionFormatter
 import kotlin.math.absoluteValue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes

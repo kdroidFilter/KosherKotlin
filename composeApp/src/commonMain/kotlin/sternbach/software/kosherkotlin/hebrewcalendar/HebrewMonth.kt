@@ -1,6 +1,6 @@
-package com.kosherjava.zmanim.hebrewcalendar;
+package sternbach.software.kosherkotlin.hebrewcalendar;
 
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate.Companion.isJewishLeapYear
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate.Companion.isJewishLeapYear
 import kotlin.math.absoluteValue
 
 enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {

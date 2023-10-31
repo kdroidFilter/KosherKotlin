@@ -1,6 +1,6 @@
-package com.kosherjava.zmanim.metadata
+package sternbach.software.kosherkotlin.metadata
 
-import com.kosherjava.zmanim.Zman
+import sternbach.software.kosherkotlin.Zman
 import kotlin.math.absoluteValue
 
 data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalculationMethod<T>) {

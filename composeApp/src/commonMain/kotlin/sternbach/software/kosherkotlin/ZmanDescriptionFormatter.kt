@@ -1,9 +1,9 @@
-package com.kosherjava.zmanim
+package sternbach.software.kosherkotlin
 
-import com.kosherjava.zmanim.metadata.ZmanAuthority
-import com.kosherjava.zmanim.metadata.ZmanCalculationMethod
-import com.kosherjava.zmanim.metadata.ZmanDefinition
-import com.kosherjava.zmanim.metadata.ZmanType
+import sternbach.software.kosherkotlin.metadata.ZmanAuthority
+import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod
+import sternbach.software.kosherkotlin.metadata.ZmanDefinition
+import sternbach.software.kosherkotlin.metadata.ZmanType
 import kotlin.time.Duration
 
 class ZmanDescriptionFormatter {

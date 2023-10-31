@@ -1,4 +1,4 @@
-package com.kosherjava.zmanim.util
+package sternbach.software.kosherkotlin.util
 
 import kotlinx.datetime.LocalDate
 

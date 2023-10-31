@@ -1,8 +1,8 @@
-package com.kosherjava.zmanim
+package sternbach.software.kosherkotlin
 
-import com.kosherjava.zmanim.hebrewcalendar.HebrewLocalDate
-import com.kosherjava.zmanim.hebrewcalendar.HebrewMonth
-import com.kosherjava.zmanim.util.GeoLocation
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewLocalDate
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewMonth
+import sternbach.software.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.*
 import java.util.*
 

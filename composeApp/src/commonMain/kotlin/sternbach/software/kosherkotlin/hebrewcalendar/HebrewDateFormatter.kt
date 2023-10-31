@@ -13,11 +13,11 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.hebrewcalendar
+package sternbach.software.kosherkotlin.hebrewcalendar
 
-import com.kosherjava.zmanim.util.WeekFormat
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Companion.toJewishDayOfWeek
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar.Parsha
+import sternbach.software.kosherkotlin.util.WeekFormat
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar.Companion.toJewishDayOfWeek
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar.Parsha
 import kotlin.text.StringBuilder
 
 /**

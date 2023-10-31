@@ -16,11 +16,11 @@
  *
  * @author  Eliyahu Hershfeld 2011 - 2022
  */
-package com.kosherjava.zmanim.hebrewcalendar
+package sternbach.software.kosherkotlin.hebrewcalendar
 
-import com.kosherjava.zmanim.hebrewcalendar.Daf
-import com.kosherjava.zmanim.hebrewcalendar.HebrewDateFormatter
-import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
-import com.kosherjava.zmanim.hebrewcalendar.JewishDate
-import com.kosherjava.zmanim.hebrewcalendar.YerushalmiYomiCalculator
-import com.kosherjava.zmanim.hebrewcalendar.YomiCalculator
+import sternbach.software.kosherkotlin.hebrewcalendar.Daf
+import sternbach.software.kosherkotlin.hebrewcalendar.HebrewDateFormatter
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishCalendar
+import sternbach.software.kosherkotlin.hebrewcalendar.JewishDate
+import sternbach.software.kosherkotlin.hebrewcalendar.YerushalmiYomiCalculator
+import sternbach.software.kosherkotlin.hebrewcalendar.YomiCalculator

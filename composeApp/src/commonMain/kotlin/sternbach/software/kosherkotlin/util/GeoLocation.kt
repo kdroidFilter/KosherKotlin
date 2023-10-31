@@ -13,10 +13,10 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA,
  * or connect to: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
  */
-package com.kosherjava.zmanim.util
+package sternbach.software.kosherkotlin.util
 
-import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toDegrees
-import com.kosherjava.zmanim.util.AstronomicalCalculator.Companion.toRadians
+import sternbach.software.kosherkotlin.util.AstronomicalCalculator.Companion.toDegrees
+import sternbach.software.kosherkotlin.util.AstronomicalCalculator.Companion.toRadians
 import kotlinx.datetime.TimeZone
 
 

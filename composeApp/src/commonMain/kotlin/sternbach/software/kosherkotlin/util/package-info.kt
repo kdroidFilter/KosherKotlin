@@ -5,9 +5,9 @@
  *
  * @author  Eliyahu Hershfeld 2004 - 2022
  */
-package com.kosherjava.zmanim.util
+package sternbach.software.kosherkotlin.util
 
-//import com.kosherjava.zmanim.util.ZmanimFormatter
-import com.kosherjava.zmanim.util.GeoLocation
-import com.kosherjava.zmanim.util.NOAACalculator
-import com.kosherjava.zmanim.util.SunTimesCalculator
+//import sternbach.software.kosherkotlin.util.ZmanimFormatter
+import sternbach.software.kosherkotlin.util.GeoLocation
+import sternbach.software.kosherkotlin.util.NOAACalculator
+import sternbach.software.kosherkotlin.util.SunTimesCalculator
