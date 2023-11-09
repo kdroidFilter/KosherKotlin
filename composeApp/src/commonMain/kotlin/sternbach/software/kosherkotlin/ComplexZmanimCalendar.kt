@@ -320,7 +320,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * where it does not set, a [Long.MIN_VALUE] will be returned. See detailed explanation on top of the
      * [AstronomicalCalendar] documentation.
      */
-    val shaahZmanis72Minutes: Zman.ValueBased get() = shaahZmanisMGA
+    val shaahZmanis72Minutes: Zman.ValueBased
+        get() = shaahZmanisMGA
 
     /**
      * Method to return a *shaah zmanis* (temporal hour) according to the opinion of the [Magen Avraham (MGA)](https://en.wikipedia.org/wiki/Avraham_Gombinern) based on *alos* being
@@ -1334,7 +1335,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see alos72
      * @see sofZmanShmaMGA
      */
-    val sofZmanShmaMGA72Minutes: Zman.DateBased get() = sofZmanShmaMGA
+    val sofZmanShmaMGA72Minutes: Zman.DateBased
+        get() = sofZmanShmaMGA
 
     /**
      * This method returns the latest *zman krias shema* (time to recite *Shema* in the morning) according
@@ -1725,7 +1727,8 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
      * @see alos72
      * @see sofZmanShmaMGA
      */
-    val sofZmanTfilaMGA72Minutes: Zman.DateBased get() = sofZmanTfilaMGA
+    val sofZmanTfilaMGA72Minutes: Zman.DateBased
+        get() = sofZmanTfilaMGA
 
     /**
      * This method returns the latest *zman tfila* (time to the morning prayers) according to the opinion of the
@@ -5159,16 +5162,28 @@ class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalen
             bainHashmashosYereim2Point8Degrees,
             bainHashmashosYereim13Point5Minutes,
             bainHashmashosYereim2Point1Degrees,
-            Zman.DateBased(ZmanDefinition(ZmanType.SHKIAH, ZmanAuthority.Unanimous)) { sunset },
             Zman.DateBased(
                 ZmanDefinition(
-                    ZmanType.SHKIAH, ZmanAuthority.Unanimous
+                    ZmanType.SHKIAH,
+                    ZmanAuthority.Unanimous,
+                    ZmanDefinition.UsesElevation.IF_SET
+                )
+            ) { sunset },
+            Zman.DateBased(
+                ZmanDefinition(
+                    ZmanType.SHKIAH, ZmanAuthority.Unanimous, ZmanDefinition.UsesElevation.NEVER
                 )
             ) { seaLevelSunset },
-            Zman.DateBased(ZmanDefinition(ZmanType.HANAITZ, ZmanAuthority.Unanimous)) { sunrise },
             Zman.DateBased(
                 ZmanDefinition(
-                    ZmanType.HANAITZ, ZmanAuthority.Unanimous
+                    ZmanType.HANAITZ,
+                    ZmanAuthority.Unanimous,
+                    ZmanDefinition.UsesElevation.IF_SET
+                )
+            ) { sunrise },
+            Zman.DateBased(
+                ZmanDefinition(
+                    ZmanType.HANAITZ, ZmanAuthority.Unanimous, ZmanDefinition.UsesElevation.NEVER
                 )
             ) { seaLevelSunrise },
             tzaisGeonim3Point7Degrees,
