@@ -127,7 +127,22 @@ import kotlin.time.Duration.Companion.minutes
  *
  * @author  Eliyahu Hershfeld 2004 - 2023
  */
-class ComplexZmanimCalendar(location: GeoLocation = GeoLocation()) : ZmanimCalendar(location) {
+class ComplexZmanimCalendar(
+    location: GeoLocation
+) : ZmanimCalendar(location) {
+
+    constructor(
+        location: GeoLocation = GeoLocation(),
+        date: LocalDate = Clock.System.todayIn(location.timeZone),
+        useElevation: Boolean = false,
+        ateretTorahSunsetOffset: Double = ATERET_TORAH_DEFAULT_OFFSET,
+        candleLightingOffset: Double = 18.0,
+    ) : this(location) {
+        localDateTime = LocalDateTime(date, localDateTime.time)
+        this.isUseElevation = useElevation
+        this.ateretTorahSunsetOffset = ateretTorahSunsetOffset
+        this.candleLightingOffset = candleLightingOffset
+    }
 
     override var localDateTime: LocalDateTime =
         Clock.System.now().toLocalDateTime(geoLocation.timeZone)
