@@ -1,5 +1,6 @@
 package sternbach.software.kosherkotlin
 
+import sternbach.software.kosherkotlin.metadata.UsesElevation
 import sternbach.software.kosherkotlin.metadata.ZmanAuthority
 import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod
 import sternbach.software.kosherkotlin.metadata.ZmanDefinition
@@ -41,7 +42,7 @@ class ZmanDescriptionFormatter {
                     ZmanType.ALOS to ZmanCalculationMethod.ZmaniyosDuration._72,
                     ZmanType.TZAIS to ZmanAuthority.AteretTorah,
                 ),
-                ZmanDefinition.UsesElevation.IF_SET
+                UsesElevation.IF_SET
             )
         )
     val shaahZmanisAlos16Point1ToTzais3Point8: Zman.ValueBased
@@ -57,7 +58,7 @@ class ZmanDescriptionFormatter {
                     ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1,
                     ZmanType.TZAIS to ZmanCalculationMethod.Degrees._3_8,
                 ),
-                ZmanDefinition.UsesElevation.ALWAYS
+                UsesElevation.ALWAYS
             )
         )
         * */
@@ -93,10 +94,10 @@ class ZmanDescriptionFormatter {
                 append(" - ")
                 append(
                     when (definition.isElevationUsed) {
-                        ZmanDefinition.UsesElevation.IF_SET -> "affected by elevation if set"
-                        ZmanDefinition.UsesElevation.NEVER -> "unaffected by elevation"
-                        ZmanDefinition.UsesElevation.ALWAYS -> "affected by elevation"
-                        ZmanDefinition.UsesElevation.UNSPECIFIED -> "affect by elevation unspecified"
+                        UsesElevation.IF_SET -> "affected by elevation if set"
+                        UsesElevation.NEVER -> "unaffected by elevation"
+                        UsesElevation.ALWAYS -> "affected by elevation"
+                        UsesElevation.UNSPECIFIED -> "affect by elevation unspecified"
                     }
                 )
             }
@@ -130,7 +131,7 @@ class ZmanDescriptionFormatter {
             ZmanDefinition(
                 ZmanCalculationMethod.Degrees._19_8,
                 null,
-                ZmanDefinition.UsesElevation.ALWAYS,
+                UsesElevation.ALWAYS,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK,
             )
         ) //Long description:
@@ -149,10 +150,10 @@ class ZmanDescriptionFormatter {
             result.append(" Supporting authorities: ${zman.supportingAuthorities.joinToString(", ", postfix = ".") { it.name } }")
         }
         when (zman.isElevationUsed) {
-            ZmanDefinition.UsesElevation.IF_SET -> result.append(" This zman is affected by elevation if set.")
-            ZmanDefinition.UsesElevation.NEVER -> result.append(" This zman is unaffected by elevation.")
-            ZmanDefinition.UsesElevation.ALWAYS -> result.append(" This zman is affected by elevation.")
-            ZmanDefinition.UsesElevation.UNSPECIFIED -> {}
+            UsesElevation.IF_SET -> result.append(" This zman is affected by elevation if set.")
+            UsesElevation.NEVER -> result.append(" This zman is unaffected by elevation.")
+            UsesElevation.ALWAYS -> result.append(" This zman is affected by elevation.")
+            UsesElevation.UNSPECIFIED -> {}
         }
         return result.toString()
     }
