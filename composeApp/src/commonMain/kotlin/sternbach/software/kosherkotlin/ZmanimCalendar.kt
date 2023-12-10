@@ -22,6 +22,7 @@ import sternbach.software.kosherkotlin.metadata.ZmanDefinition
 import sternbach.software.kosherkotlin.metadata.ZmanType
 import sternbach.software.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.Instant
+import sternbach.software.kosherkotlin.metadata.UsesElevation
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
@@ -183,7 +184,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Degrees._8_5,
-                ZmanDefinition.UsesElevation.ALWAYS,
+                UsesElevation.ALWAYS,
                 supportingAuthorities = listOf(ZmanAuthority.POSEN)
             )
         ) {
@@ -211,7 +212,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Degrees._16_1,
-                ZmanDefinition.UsesElevation.ALWAYS
+                UsesElevation.ALWAYS
             )
         ) {
             getSunriseOffsetByDegrees(ZENITH_16_POINT_1)
@@ -235,7 +236,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Relationship(ZmanType.ALOS occurs 72.minutes before ZmanType.HANAITZ),
-                ZmanDefinition.UsesElevation.NEVER,
+                UsesElevation.NEVER,
             )
         ) {
             getTimeOffset(elevationAdjustedSunrise, -72 * MINUTE_MILLIS)
@@ -258,7 +259,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.CHATZOS_HAYOM,
                 ZmanAuthority.Unanimous,
-                ZmanDefinition.UsesElevation.NEVER
+                UsesElevation.NEVER
             )
         ) {
             sunTransit
@@ -309,7 +310,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
                 ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET,
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
                 listOf(ZmanAuthority.GRA)
             )
         ) {
@@ -336,7 +337,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
                 ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.FixedDuration._72),
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
             )
         ) {
             getSofZmanShma(alos72.momentOfOccurrence, tzais72.momentOfOccurrence)
@@ -362,7 +363,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.TZAIS,
                 ZmanCalculationMethod.Relationship(ZmanType.TZAIS occurs 72.minutes after ZmanType.SHKIAH),
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
                 supportingAuthorities = listOf(
                     ZmanAuthority.MACHATZIS_HASHEKEL,
                     ZmanAuthority.PRI_MEGADIM,
@@ -393,7 +394,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.CANDLE_LIGHTING,
                 ZmanCalculationMethod.Relationship(ZmanType.CANDLE_LIGHTING occurs candleLightingOffset.minutes before ZmanType.SHKIAH),
-                ZmanDefinition.UsesElevation.NEVER,
+                UsesElevation.NEVER,
             )
         ) {
             getTimeOffset(seaLevelSunset, -candleLightingOffset * MINUTE_MILLIS)
@@ -443,7 +444,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
                 ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET,
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
                 listOf(ZmanAuthority.GRA)
             )
         ) {
@@ -469,7 +470,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
                 ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.FixedDuration._72),
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
             )
         ) {
             getSofZmanTfila(alos72.momentOfOccurrence, tzais72.momentOfOccurrence)
@@ -524,7 +525,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
                 ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET,
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
                 listOf(ZmanAuthority.GRA)
             )
         ) {
@@ -608,7 +609,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
                 ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET,
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
                 listOf(ZmanAuthority.GRA)
             )
         ) {
@@ -655,7 +656,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
                 ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET,
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
                 listOf(ZmanAuthority.GRA)
             )
         ) {
@@ -699,7 +700,7 @@ open class ZmanimCalendar(
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
                 ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.FixedDuration._72),
-                ZmanDefinition.UsesElevation.IF_SET,
+                UsesElevation.IF_SET,
                 listOf(ZmanAuthority.MGA)
             )
         ) {
