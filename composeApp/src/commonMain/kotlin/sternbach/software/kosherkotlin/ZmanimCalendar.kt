@@ -79,7 +79,8 @@ import kotlin.time.Duration.Companion.minutes
  *
  * @author  Eliyahu Hershfeld 2004 - 2022
  */
-open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : AstronomicalCalendar(geoLocation) {
+open class ZmanimCalendar(
+    geoLocation: GeoLocation = GeoLocation(),
     /**
      * Is elevation above sea level calculated for times besides sunrise and sunset. According to Rabbi Dovid Yehuda
      * Bursztyn in his [Zmanim Kehilchasam (second edition published
@@ -97,20 +98,18 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      *
      * @return if the use of elevation is active
      *
-     * @see .setUseElevation
+     * @see isUseElevation
      */
     /**
      * Sets whether elevation above sea level is factored into *zmanim* calculations for times besides sunrise and sunset.
      * See [isUseElevation] for more details.
-     * @see .isUseElevation
      * @param useElevation set to true to use elevation in *zmanim* calculations
      */
     /**
      * Is elevation factored in for some zmanim (see [isUseElevation] for additional information).
-     * @see .isUseElevation
-     * @see .setUseElevation
+     * @see isUseElevation
      */
-    var isUseElevation: Boolean = false
+    var isUseElevation: Boolean = false,
     /**
      * A method to get the offset in minutes before [sea level sunset][AstronomicalCalendar.seaLevelSunset] which
      * is used in calculating candle lighting time. The default time used is 18 minutes before sea level sunset. Some
@@ -136,6 +135,8 @@ open class ZmanimCalendar(geoLocation: GeoLocation = GeoLocation()) : Astronomic
      * [candleLightingOffset] and retrieved by the [candleLightingOffset].
      */
     var candleLightingOffset: Double = 18.0
+) : AstronomicalCalendar(geoLocation) {
+
 
     /**
      * This method will return [sea level sunrise][seaLevelSunrise] if [isUseElevation] is false (the
