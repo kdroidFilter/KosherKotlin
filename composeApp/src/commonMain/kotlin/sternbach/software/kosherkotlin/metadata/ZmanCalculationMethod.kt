@@ -90,7 +90,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * ZmanType.SHKIAH occurs 45.minutes.zmaniyos before ZmanType.TZAIS
      * ZmanType.SHKIAH occurs 16.1F.degrees       before ZmanType.TZAIS
      *
-     * ZmanType.BAIN_HASHMASHOS occurs 13.5.minutes before tzaisGeonim7Point083Degrees.rules
+     * ZmanType.BAIN_HASHMASHOS occurs 13.5.minutes before tzaisGeonim7Point083Degrees.definition
      *
      *
      * @see ZmanRelationship

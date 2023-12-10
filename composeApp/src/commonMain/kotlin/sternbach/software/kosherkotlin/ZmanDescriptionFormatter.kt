@@ -8,15 +8,15 @@ import kotlin.time.Duration
 
 class ZmanDescriptionFormatter {
     fun formatShortDescription(zman: Zman<*>, includeElevationDescription: Boolean): String {
-        val rules = zman.rules
-        val result = StringBuilder(getShortCalculationDescription(rules))
+        val definition = zman.definition
+        val result = StringBuilder(getShortCalculationDescription(definition))
 //        "Alos-Tzais - 19.8˚ - affected by elevation"
-//        addShortDayDefinition(rules.calculationMethod as? ZmanCalculationMethod.DayDefinition, result, rules, includeElevationDescription)
-        /*if (rules.zmanToCalcMethodUsed == null && rules.mainCalculationMethodUsed == null) {
-            addShortDayDefinition(rules.definitionOfDayUsed!!, result, rules)
-        } else if (rules.mainCalculationMethodUsed != null && rules.zmanToCalcMethodUsed == null) {
-            if (rules.definitionOfDayUsed != null) {
-                addShortDayDefinition(rules.definitionOfDayUsed, result, rules)
+//        addShortDayDefinition(definition.calculationMethod as? ZmanCalculationMethod.DayDefinition, result, rules, includeElevationDescription)
+        /*if (definition.zmanToCalcMethodUsed == null && definition.mainCalculationMethodUsed == null) {
+            addShortDayDefinition(definition.definitionOfDayUsed!!, result, definition)
+        } else if (definition.mainCalculationMethodUsed != null && definition.zmanToCalcMethodUsed == null) {
+            if (definition.definitionOfDayUsed != null) {
+                addShortDayDefinition(definition.definitionOfDayUsed, result, definition)
             }
         }*/
         return result.toString()
@@ -25,7 +25,7 @@ class ZmanDescriptionFormatter {
     private fun addShortDayDefinition(
         mainCalculationMethodUsed: ZmanCalculationMethod.DayDefinition?,
         result: StringBuilder,
-        rules: ZmanDefinition,
+        definition: ZmanDefinition,
         includeElevationDescription: Boolean
     ) {
         /*
@@ -65,7 +65,7 @@ class ZmanDescriptionFormatter {
         val endZman = mainCalculationMethodUsed?.dayEnd?.type
         val mainCalculationMethod =
             {
-                if (rules.calculationMethod != null) "${if (result.isNotBlank()) " - " else ""}${rules.calculationMethod.valueToString()}"
+                if (definition.calculationMethod != null) "${if (result.isNotBlank()) " - " else ""}${definition.calculationMethod.valueToString()}"
                 else null
             }
 
@@ -92,7 +92,7 @@ class ZmanDescriptionFormatter {
             if (includeElevationDescription) {
                 append(" - ")
                 append(
-                    when (rules.isElevationUsed) {
+                    when (definition.isElevationUsed) {
                         ZmanDefinition.UsesElevation.IF_SET -> "affected by elevation if set"
                         ZmanDefinition.UsesElevation.NEVER -> "unaffected by elevation"
                         ZmanDefinition.UsesElevation.ALWAYS -> "affected by elevation"
@@ -103,7 +103,7 @@ class ZmanDescriptionFormatter {
         }
     }
 
-    fun formatLongDescription(zman: Zman<*>): String = formatLongDescription(zman.rules)
+    fun formatLongDescription(zman: Zman<*>): String = formatLongDescription(zman.definition)
     fun formatLongDescription(zman: ZmanDefinition): String {
         val result = StringBuilder()
         result.append(getLongCalculationDescription(zman))
