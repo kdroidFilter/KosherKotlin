@@ -63,8 +63,8 @@ val lakewood = GeoLocation("Lakewood, NJ", 40.0721087, -74.2400243, 15.0, kotlin
     val allLocations = basicLocations + arcticLocations
 
 //    println("TimeZone.UTC.id = ${TimeZone.UTC.id}")
-//    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.rules.mainCalculationMethodUsed?.format())
-//    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.rules.mainCalculationMethodUsed?.valueToString())
+//    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.definition.mainCalculationMethodUsed?.format())
+//    println(zmanim.minchaKetanaGRAFixedLocalChatzosToSunset.definition.mainCalculationMethodUsed?.valueToString())
     val formatter = ZmanDescriptionFormatter()
     val includeElevationDescription = false
 //    val days = Int.MAX_VALUE * 1000L * 60L * 60L * 24L
@@ -161,11 +161,11 @@ val lakewood = GeoLocation("Lakewood, NJ", 40.0721087, -74.2400243, 15.0, kotlin
 //                    println(formatter.formatLongDescription(it))
 //                }
 //    println("Shaos zmaniyos:")
-//    zmanim.allShaosZmaniyos.mapIndexed { index, it -> "$index(${it.rules.type}): " + formatter.formatShortDescription(it, includeElevationDescription) }.forEach { println(it) }
+//    zmanim.allShaosZmaniyos.mapIndexed { index, it -> "$index(${it.definition.type}): " + formatter.formatShortDescription(it, includeElevationDescription) }.forEach { println(it) }
 //    println("Zmanim:")
-//    zmanim.allZmanim.mapIndexed { index, it -> "$index(${it.rules.type}): " + runCatching{ formatter.formatShortDescription(it, includeElevationDescription) }.getOrNull() }.forEach { println(it) }
+//    zmanim.allZmanim.mapIndexed { index, it -> "$index(${it.definition.type}): " + runCatching{ formatter.formatShortDescription(it, includeElevationDescription) }.getOrNull() }.forEach { println(it) }
 //    println()
-//    zmanim.allZmanim.mapIndexed { index, it -> "$index(${it.rules.type}) - ${it.rules}: " + runCatching{ formatter.formatShortDescription(it, includeElevationDescription) }.getOrNull() }.forEach { println(it) }
+//    zmanim.allZmanim.mapIndexed { index, it -> "$index(${it.definition.type}) - ${it.definition}: " + runCatching{ formatter.formatShortDescription(it, includeElevationDescription) }.getOrNull() }.forEach { println(it) }
 //            }
 //    }
 //}

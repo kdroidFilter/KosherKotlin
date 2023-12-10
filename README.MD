@@ -63,12 +63,12 @@ Every zman has a lazily computed generic property called `value`.
 
 A lazy list of all zmanim can be accessed using the `allZmanim` property of `ComplexZmanimCalendar` or `ZmanimCalendar`.
 
-Every `Zman` object has a `rules` property which contains the metadata of the rules used to calculate the zman.
+Every `Zman` object has a `definition` property which contains the metadata of the rules used to calculate the zman.
 
 ```kotlin
 val location = GeoLocation("New York", 40.7, -74.0, 0.0, TimeZone.of("America/New_York"))
 val calendar = ComplexZmanimCalendar(location)
-println(calendar.allZmanim.filter { it.rules.type == ZmanType.ALOS }.map { it.value })
+println(calendar.allZmanim.filter { it.definition.type == ZmanType.ALOS }.map { it.value })
 println(calendar.sunrise)
 println(calendar.alos72.momentOfOccurrence)
 println(calendar.shaahZmanis72Minutes.duration)

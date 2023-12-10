@@ -19,13 +19,13 @@ data class Occurence<T>(val subject: ZmanType, val calculationMethod: ZmanCalcul
     )
 
     /**
-     * Syntactic sugar for [after] ([zman].[rules][Zman.rules]).
+     * Syntactic sugar for [after] ([zman].[definition][Zman.definition]).
      * */
-    infix fun after(zman: Zman<*>): ZmanRelationship<T> = after(zman.rules)
+    infix fun after(zman: Zman<*>): ZmanRelationship<T> = after(zman.definition)
     /**
-     * Syntactic sugar for [before] ([zman].[rules][Zman.rules]).
+     * Syntactic sugar for [before] ([zman].[definition][Zman.definition]).
      * */
-    infix fun before(zman: Zman<*>): ZmanRelationship<T> = before(zman.rules)
+    infix fun before(zman: Zman<*>): ZmanRelationship<T> = before(zman.definition)
 
     /**
      * Returns a [ZmanCalculationMethod] with a [ZmanCalculationMethod.value] that is the negative of [this.value].

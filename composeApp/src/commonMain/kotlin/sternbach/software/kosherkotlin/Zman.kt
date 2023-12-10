@@ -13,7 +13,7 @@ import kotlin.time.Duration
  * @param T the type of value that this zman represents ([Instant], [Duration], etc.). This is the type of the [value] property.
  * */
 sealed class Zman<T>(
-    open val rules: ZmanDefinition,
+    open val definition: ZmanDefinition,
     protected val computeValue: () -> T,
 ): Comparable<Zman<T>> {
     val value: T by lazy { computeValue() }
@@ -23,9 +23,9 @@ sealed class Zman<T>(
      * has passed). Some zmanim can occasionally not occur (e.g. sunrise in the Arctic Circle) - see [AstronomicalCalendar] for more details.
      * */
     data class DateBased(
-        override val rules: ZmanDefinition,
+        override val definition: ZmanDefinition,
         private val computeInstant: () -> Instant?,
-    ) : Zman<Instant?>(rules, computeInstant) {
+    ) : Zman<Instant?>(definition, computeInstant) {
         val momentOfOccurrence: Instant? by lazy { value }
         override fun compareTo(other: Zman<Instant?>): Int {
             if(this === other) return 0
@@ -49,9 +49,9 @@ sealed class Zman<T>(
      * [*shaah Zmanis 16.1˚*][com.kosherjava.zmanim.ComplexZmanimCalendar.shaahZmanis16Point1Degrees]).
      * */
     data class ValueBased(
-        override val rules: ZmanDefinition,
+        override val definition: ZmanDefinition,
         private val computeDuration: () -> Duration,
-    ) : Zman<Duration>(rules, computeDuration) {
+    ) : Zman<Duration>(definition, computeDuration) {
         val duration: Duration by lazy { value }
 
         override fun compareTo(other: Zman<Duration>): Int {
@@ -67,8 +67,8 @@ sealed class Zman<T>(
             }
         }
     }
-    fun formatted(tz: TimeZone) = formatted(tz, rules.toString())
-    fun formatted(tz: TimeZone, inEnglish: Boolean) = formatted(tz, rules.toString()/*.format(inEnglish)*/)
+    fun formatted(tz: TimeZone) = formatted(tz, definition.toString())
+    fun formatted(tz: TimeZone, inEnglish: Boolean) = formatted(tz, definition.toString()/*.format(inEnglish)*/)
     fun formatted(tz: TimeZone, opinion: String) = opinion +
             if (this is ValueBased) this.duration.toString()
             else {

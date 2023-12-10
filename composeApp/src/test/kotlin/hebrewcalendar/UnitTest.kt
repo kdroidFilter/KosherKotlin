@@ -14,7 +14,6 @@ import sternbach.software.kosherkotlin.metadata.ZmanType
 import sternbach.software.kosherkotlin.util.GeoLocation.Companion.rawOffset
 import java.util.Calendar
 import java.util.TimeZone
-import kotlin.time.Duration.Companion.days
 
 class UnitTest {
     @Test
@@ -188,8 +187,8 @@ class UnitTest {
             val elevation = ComplexZmanimCalendar(location).also { it.isUseElevation = true }
             val cals = listOf(elevation, noElevation)
             println("Raw offset for ${location.locationName}: ${location.timeZone.rawOffset} - fixedLocalChatzos = ${cals.map { it.fixedLocalChatzos }}")
-            val alos = cals.flatMap { it.allZmanim.filter { it.rules.type == ZmanType.ALOS } }
-            val sunrise = cals.flatMap { it.allZmanim.filter { it.rules.type == ZmanType.HANAITZ } }
+            val alos = cals.flatMap { it.allZmanim.filter { it.definition.type == ZmanType.ALOS } }
+            val sunrise = cals.flatMap { it.allZmanim.filter { it.definition.type == ZmanType.HANAITZ } }
             alos.forEach {
                 for (zman in sunrise) {
                     if (it.momentOfOccurrence != null && zman.momentOfOccurrence != null)

@@ -2051,8 +2051,8 @@ class ComplexZmanimCalendar(
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
                 ZmanCalculationMethod.LaterOf(
-                    minchaGedola30Minutes.rules,
-                    shaahZmanisAlos16Point1ToTzais3Point7.rules.copy(
+                    minchaGedola30Minutes.definition,
+                    shaahZmanisAlos16Point1ToTzais3Point7.definition.copy(
                         type = ZmanType.MINCHA_GEDOLAH,
                         calculationMethod = ZmanCalculationMethod.Relationship(
                             ZmanType.MINCHA_GEDOLAH occurs 30.minutes.zmaniyos after ZmanType.CHATZOS_HAYOM
@@ -2087,8 +2087,8 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH, ZmanCalculationMethod.LaterOf(
-                    minchaGedola30Minutes.rules,
-                    minchaGedola.rules,
+                    minchaGedola30Minutes.definition,
+                    minchaGedola.definition,
                 ), ZmanDefinition.UsesElevation.IF_SET
             )
         ) {
@@ -4128,7 +4128,7 @@ class ComplexZmanimCalendar(
      */
     val sofZmanAchilasChametzGRA: Zman.DateBased
         get() = Zman.DateBased(
-            sofZmanTfilaGRA.rules.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
+            sofZmanTfilaGRA.definition.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
         ) {
             if (jewishCalendar.isErevPesach) sofZmanTfilaGRA.momentOfOccurrence
             else null
@@ -4152,7 +4152,7 @@ class ComplexZmanimCalendar(
      */
     val sofZmanAchilasChametzMGA72Minutes: Zman.DateBased
         get() = Zman.DateBased(
-            sofZmanTfilaMGA72Minutes.rules.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
+            sofZmanTfilaMGA72Minutes.definition.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
         ) {
             if (jewishCalendar.isErevPesach) sofZmanTfilaMGA72Minutes.momentOfOccurrence
             else null
@@ -4177,7 +4177,7 @@ class ComplexZmanimCalendar(
      */
     val sofZmanAchilasChametzMGA16Point1Degrees: Zman.DateBased
         get() = Zman.DateBased(
-            sofZmanTfilaMGA16Point1Degrees.rules.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
+            sofZmanTfilaMGA16Point1Degrees.definition.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
         ) {
             if (jewishCalendar.isErevPesach) sofZmanTfilaMGA16Point1Degrees.momentOfOccurrence
             else null
@@ -4483,7 +4483,7 @@ class ComplexZmanimCalendar(
      */
     val sofZmanAchilasChametzBaalHatanya: Zman.DateBased
         get() = Zman.DateBased(
-            sofZmanTfilaBaalHatanya.rules.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
+            sofZmanTfilaBaalHatanya.definition.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
         ) {
             if (jewishCalendar.isErevPesach) sofZmanTfilaBaalHatanya.momentOfOccurrence
             else null
@@ -4562,7 +4562,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH, ZmanCalculationMethod.LaterOf(
-                    minchaGedola30Minutes.rules, minchaGedolaBaalHatanya.rules
+                    minchaGedola30Minutes.definition, minchaGedolaBaalHatanya.definition
                 ), ZmanDefinition.UsesElevation.ALWAYS, listOf(ZmanAuthority.BAAL_HATANYA)
             )
         ) {
@@ -5047,11 +5047,11 @@ class ComplexZmanimCalendar(
         }
 
     operator fun get(zmanType: ZmanType) = if (zmanType == ZmanType.SHAA_ZMANIS) allShaosZmaniyos
-    else allZmanim.filter { it.rules.type == zmanType }
+    else allZmanim.filter { it.definition.type == zmanType }
 
     operator fun get(zmanCalculationMethod: ZmanCalculationMethod<*>): List<Zman<*>> =
         (allShaosZmaniyos + allZmanim).filter {
-            it.rules.calculationMethod == zmanCalculationMethod
+            it.definition.calculationMethod == zmanCalculationMethod
         }
 
     /**
