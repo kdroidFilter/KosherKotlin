@@ -10,9 +10,9 @@ package sternbach.software.kosherkotlin.metadata
  * ZmanType.BAIN_HASHMASHOS occurs 13.5.minutes before tzaisGeonim7Point083Degrees.definition
  *
  * */
-data class ZmanRelationship<T>(
+data class ZmanRelationship(
     val subject: ZmanType,
-    val calculation: ZmanCalculationMethod<T>,
+    val calculation: ZmanCalculationMethod,
     val relativeToZmanType: ZmanType? = null,
     val relativeToZman: ZmanDefinition? = null,
 )

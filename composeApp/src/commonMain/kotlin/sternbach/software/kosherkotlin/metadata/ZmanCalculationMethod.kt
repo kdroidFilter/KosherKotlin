@@ -42,8 +42,9 @@ import kotlin.time.Duration.Companion.minutes
  *
  *
  * */
-sealed class ZmanCalculationMethod<T>(val value: T) {
+sealed interface ZmanCalculationMethod {
     companion object {
+        val Duration.fixed get() = FixedDuration(this)
         val Duration.zmaniyos get() = ZmaniyosDuration(this)
         val Float.degrees get() = Degrees(this)
         val Int.degrees get() = Degrees(this.toFloat())
@@ -51,14 +52,13 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
     }
 
     /* One or both of these must be implemented! */
-    open fun format(): String = format(true)
-    open fun format(inEnglish: Boolean): String = format()
+    fun format(): String = format(true)
+    fun format(inEnglish: Boolean): String = format()
+    fun format(subjectZman:String, zmanRelativeTo: String) = format()
+    fun valueToString() = format()
+    fun shortDescription() = valueToString()
 
-    open fun format(subjectZman:String, zmanRelativeTo: String) = format()
-    open fun valueToString() = format()
-    open fun shortDescription() = valueToString()
-
-    internal fun Duration.durationValueToString(halachic: Boolean = false) = absoluteValue.toComponents { hours, minutes, seconds, nanoseconds ->
+    fun Duration.durationValueToString(halachic: Boolean = false) = absoluteValue.toComponents { hours, minutes, seconds, nanoseconds ->
         buildString {
             val totalMinutes = inWholeMinutes
             if(totalMinutes.absoluteValue <= 120) append("$totalMinutes${if(halachic) " Halachic "  else " "}minutes")
@@ -76,7 +76,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * A form of empty set/placeholder indicating that the calculation method was not specified/is irrelevant.
      * Almost exclusively used when defining a [ZmanDefinition] that is reused across zmanim.
      * */
-    object Unspecified : ZmanCalculationMethod<Unit>(Unit) {
+    data object Unspecified : ZmanCalculationMethod {
         override fun format(): String = "Unspecified"
     }
     /**
@@ -95,9 +95,9 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      *
      * @see ZmanRelationship
      * @see ZmanType.occurs
-     * @see Occurence
+     * @see Occurrence
      * */
-    data class Relationship<T>(val relationship: ZmanRelationship<T>) : ZmanCalculationMethod<Unit>(Unit) {
+    data class Relationship(val relationship: ZmanRelationship) : ZmanCalculationMethod {
         override fun format(): String = "Unspecified"
     }
 
@@ -105,14 +105,14 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * A method of calculation in which the later of two zmanim is used.
      * Meaning that if [zman1] occurs at 6:00 AM and [zman2] occurs at 6:05 AM, this zman takes on the value of 6:00 AM.
      * */
-    data class LaterOf(val zman1: ZmanDefinition, val zman2: ZmanDefinition): ZmanCalculationMethod<Unit>(Unit) {
+    data class LaterOf(val zman1: ZmanDefinition, val zman2: ZmanDefinition): ZmanCalculationMethod {
         override fun format(): String = "Later of ${zman1.calculationMethod?.format()} or ${zman2.calculationMethod?.format()}"
     }
 
     /**
      * @see ComplexZmanimCalendar.fixedLocalChatzos
      * */
-    object FixedLocalChatzos : ZmanCalculationMethod<Unit>(Unit) {
+    object FixedLocalChatzos : ZmanCalculationMethod {
         override fun format(): String = "Fixed Local Chatzos"
     }
 
@@ -120,7 +120,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * Dawn for this calculation is X zmaniyos minutes before sunrise.
      * Dusk is X zmaniyos minutes after sunset.
      * */
-    data class ZmaniyosDuration(val duration: Duration): ZmanCalculationMethod<Duration>(duration) {
+    data class ZmaniyosDuration(val duration: Duration): ZmanCalculationMethod {
 
         companion object {
             /**
@@ -154,7 +154,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * Dusk is when the sun is x degrees below the western geometric horizon after sunset.
      * */
     data class Degrees(val degrees: Float) :
-        ZmanCalculationMethod<Float>(degrees) {
+        ZmanCalculationMethod {
         companion object {
 
 
@@ -249,12 +249,12 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
      * @param duration if negative, this zman is [duration] before what this is relative to . If positive, after.
      * */
     data class FixedDuration(val duration: Duration) :
-        ZmanCalculationMethod<Duration>(duration) {
+        ZmanCalculationMethod {
         /**
          * Ateret torah (which defaults to 40 minutes)
          * */
         data class AteretTorah(val minutes: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET) :
-            ZmanCalculationMethod<Duration>(minutes.minutes) {
+            ZmanCalculationMethod {
             override fun shortDescription(): String = ZmanDescriptionFormatter.shortDescriptionAteretTorah(minutes)
             override fun valueToString(): String = ZmanAuthority.Strings.ATERET_TORAH
         }
@@ -311,15 +311,15 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
     data class DayDefinition(
         val dayStart: ZmanDefinition,
         val dayEnd: ZmanDefinition,
-        val dayStartRelationship: ZmanRelationship<*>? = null,
-        val dayEndRelationship: ZmanRelationship<*>? = null,
-    ): ZmanCalculationMethod<Unit>(Unit) {
+        val dayStartRelationship: ZmanRelationship? = null,
+        val dayEndRelationship: ZmanRelationship? = null,
+    ): ZmanCalculationMethod {
         override fun format(): String = "Day starts at $dayStart and ends at $dayEnd"//TODO add relationships
         companion object {
 
             fun fromCalculationMethod(
-                dayStartCalculationMethod: ZmanCalculationMethod<*>,
-                dayEndCalculationMethod: ZmanCalculationMethod<*> = dayStartCalculationMethod,
+                dayStartCalculationMethod: ZmanCalculationMethod,
+                dayEndCalculationMethod: ZmanCalculationMethod = dayStartCalculationMethod,
                 dayStartsAtZman: ZmanType = ZmanType.ALOS,
                 dayEndsAtZman: ZmanType = ZmanType.TZAIS,
                 dayStartUsesElevation: UsesElevation = UsesElevation.UNSPECIFIED,
@@ -332,7 +332,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
                     dayEndsAtZman, dayEndCalculationMethod, dayEndUsesElevation
                 ),
             )
-            fun dawnToDusk(startMethod: ZmanCalculationMethod<*>, endMethod: ZmanCalculationMethod<*> = startMethod) =
+            fun dawnToDusk(startMethod: ZmanCalculationMethod, endMethod: ZmanCalculationMethod = startMethod) =
                 DayDefinition(
                     ZmanDefinition(
                         ZmanType.ALOS,
@@ -343,7 +343,7 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
                         endMethod,
                     )
                 )
-            fun sunriseToSunset(startMethod: ZmanCalculationMethod<*>, endMethod: ZmanCalculationMethod<*> = startMethod) = DayDefinition(
+            fun sunriseToSunset(startMethod: ZmanCalculationMethod, endMethod: ZmanCalculationMethod = startMethod) = DayDefinition(
                 ZmanDefinition(
                     ZmanType.HANAITZ,
                     startMethod,
@@ -355,7 +355,8 @@ sealed class ZmanCalculationMethod<T>(val value: T) {
             fun dawn72ZmanisToDuskAteretTorah(offset: Double = ComplexZmanimCalendar.ATERET_TORAH_DEFAULT_OFFSET) =
                 DayDefinition(
                     ZmanDefinition(
-                        ZmanType.ALOS, Relationship(ZmanType.ALOS occurs 72.minutes.zmaniyos before ZmanType.HANAITZ), UsesElevation.IF_SET
+                        ZmanType.ALOS, 
+                        Relationship(ZmanType.ALOS occurs 72.minutes.zmaniyos before ZmanType.HANAITZ), UsesElevation.IF_SET
 
                     ), ZmanDefinition(
                         ZmanType.TZAIS, FixedDuration.AteretTorah(offset)

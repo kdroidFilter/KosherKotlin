@@ -5,7 +5,6 @@ import sternbach.software.kosherkotlin.metadata.ZmanAuthority
 import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod
 import sternbach.software.kosherkotlin.metadata.ZmanDefinition
 import sternbach.software.kosherkotlin.metadata.ZmanType
-import kotlin.time.Duration
 
 class ZmanDescriptionFormatter {
     fun formatShortDescription(zman: Zman<*>, includeElevationDescription: Boolean): String {
@@ -55,8 +54,8 @@ class ZmanDescriptionFormatter {
             ZmanDefinition(
                 ZmanAuthority.AHAVAT_SHALOM,
                 mapOf(
-                    ZmanType.ALOS to ZmanCalculationMethod.Degrees._16_1,
-                    ZmanType.TZAIS to ZmanCalculationMethod.Degrees._3_8,
+                    ZmanType.ALOS to 16.1F.degrees,
+                    ZmanType.TZAIS to 3.8F.degrees,
                 ),
                 UsesElevation.ALWAYS
             )
@@ -129,7 +128,7 @@ class ZmanDescriptionFormatter {
                 tzais19Point8Degrees.momentOfOccurrence
             ).milliseconds,
             ZmanDefinition(
-                ZmanCalculationMethod.Degrees._19_8,
+                19.8F.degrees,
                 null,
                 UsesElevation.ALWAYS,
                 ZmanDefinition.DayDefinition.DAWN_TO_DUSK,
@@ -173,7 +172,7 @@ class ZmanDescriptionFormatter {
                 ;dayDefString
             }
             is ZmanCalculationMethod.LaterOf -> "${method.type.friendlyNameEnglish} occurs at the later of either of the following zmanim: ${getLongCalculationDescription(method.calculationMethod.zman1)}; or ${getLongCalculationDescription(method.calculationMethod.zman2)}."
-            is ZmanCalculationMethod.Relationship<*> -> "${method.type.friendlyNameEnglish} is calculated as follows: ${method.calculationMethod.relationship.subject.friendlyNameEnglish} occurs ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.value.let { it is Duration && it.isNegative() }) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getLongCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
+            is ZmanCalculationMethod.Relationship -> "${method.type.friendlyNameEnglish} is calculated as follows: ${method.calculationMethod.relationship.subject.friendlyNameEnglish} occurs ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.let { it is ZmanCalculationMethod.FixedDuration && it.duration.isNegative() || it is ZmanCalculationMethod.ZmaniyosDuration && it.duration.isNegative()}) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getLongCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
             ZmanCalculationMethod.FixedLocalChatzos -> {
                 val shaosZmaniyos = ZmanType.shaosZmaniyosIntoDay[method.type]
                 var dayDefString = "${method.type.friendlyNameEnglish} is calculated based on the opinion of R' Moshe Feinstein that chatzos is calculated using what is known as \"Fixed Local Chatzos\". The 360˚ of the globe divided by 24 (hours) calculates to 15˚ per hour with 4 minutes per degree, so at a longitude of 0˚, 15˚, 30˚, etc., Chatzos is at exactly 12:00 noon."
@@ -207,7 +206,7 @@ class ZmanDescriptionFormatter {
                 } else "${method.calculationMethod.dayStart.type.friendlyNameEnglish} - ${method.calculationMethod.dayEnd.type.friendlyNameEnglish} (${getShortCalculationDescription(method.calculationMethod.dayStart)})."
             }
             is ZmanCalculationMethod.LaterOf -> "Later of: ${getShortCalculationDescription(method.calculationMethod.zman1)} or ${getShortCalculationDescription(method.calculationMethod.zman2)}."
-            is ZmanCalculationMethod.Relationship<*> -> "${method.calculationMethod.relationship.subject.friendlyNameEnglish} is ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.value.let { it is Duration && it.isNegative() }) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getShortCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
+            is ZmanCalculationMethod.Relationship -> "${method.calculationMethod.relationship.subject.friendlyNameEnglish} is ${method.calculationMethod.relationship.calculation.valueToString()} ${if(method.calculationMethod.relationship.calculation.let { it is ZmanCalculationMethod.FixedDuration && it.duration.isNegative() || it is ZmanCalculationMethod.ZmaniyosDuration && it.duration.isNegative() }) "before" else "after"} ${method.calculationMethod.relationship.relativeToZmanType?.friendlyNameEnglish ?: getShortCalculationDescription(method.calculationMethod.relationship.relativeToZman!!)}."
             ZmanCalculationMethod.FixedLocalChatzos -> "Fixed Local Chatzos"
 
             //never happens
