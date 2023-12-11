@@ -1,0 +1,133 @@
+@startuml
+
+skin rose
+
+title Zman metadata - Class Diagram
+
+
+class Zman<T> {
+  +ZmanDefinition definition
+  +T computeValue()
+  +T value //lazily computed
+}
+class ValueBased<Duration> {
+  +Duration duration
+}
+class DateBased<Instant> {
+  +Instant momentOfOccurrence
+}
+class ZmanDefinition {
+  +ZmanType type
+  +ZmanCalculationMethod calculationMethod
+  +UsesElevation isElevationUsed
+  +List<ZmanAuthority> supportingAuthorities
+}
+class ZmanRelationship {
+  +ZmanType subject
+  +ZmanCalculationMethod calculation
+  +ZmanType|ZmanDefinition relativeTo
+
+  Usage:
+  ZmanType.TZAIS  occurs 45.minutes                 after  ZmanType.SHKIAH
+  ZmanType.SHKIAH occurs 45.minutes                 before ZmanType.TZAIS
+  ZmanType.SHKIAH occurs 45.minutes.zmaniyos        before ZmanType.TZAIS
+  ZmanType.SHKIAH occurs 16.1F.degrees              before ZmanType.TZAIS
+  ZmanType.BAIN_HASHMASHOS occurs 13.5.minutes      before tzaisGeonim7Point083Degrees.definition
+}
+enum ZmanType {
++SHAA_ZMANIS
++CHATZOS_HALAYLAH
++MISHMAR
++ALOS
++MISHEYAKIR
++HANAITZ
++CHATZOS_HAYOM
++MINCHA_GEDOLAH
++MINCHA_KETANAH
++PLAG_HAMINCHA
++SHKIAH
++BAIN_HASHMASHOS
++TZAIS
++MOLAD
++SAMUCH_LEMINCHA_KETANA
++SOF_ZMAN_KRIAS_SHEMA
++SOF_ZMAN_TEFILLAH
++SOF_ZMAN_ACHILAS_CHAMETZ
++SOF_ZMAN_BIUR_CHAMETZ
++EARLIEST_MINCHA
++EARLIEST_KIDDUSH_LEVANA
++SOF_ZMAN_KIDDUSH_LEVANA
++CANDLE_LIGHTING
+
+  +Occurrence occurs(magnitudeOfOccurrence: Duration)
+  +Occurrence occurs(magnitudeOfOccurrence: ZmaniyosDuration)
+  +Occurrence occurs(magnitudeOfOccurrence: FixedDuration)
+  +Occurrence occurs(magnitudeOfOccurrence: Degrees)
+  // e.g. this zman occurs 45 minutes (before|after) (ZmanType|ZmanDefinition)
+}
+interface ZmanCalculationMethod {
+  +String valueToString()
+}
+class Unspecified
+class Relationship {
+  +ZmanRelationship relationship
+}
+class LaterOf {
+  +ZmanDefinition zman1
+  +ZmanDefinition zman2
+}
+class FixedLocalChatzos
+class ZmaniyosDuration {
+  +Duration duration
+}
+class FixedDuration {
+  +Duration duration
+}
+class Degrees {
+  +Float degrees
+}
+class DayDefinition{
+  +ZmanDefinition dayStart,
+  +ZmanDefinition dayEnd,
+  +ZmanRelationship dayStartRelationship = null,
+  +ZmanRelationship dayEndRelationship = null,
+}
+class Occurrence {
+  +ZmanType subject
+  +ZmanCalculationMethod calculationMethod
+  +ZmanRelationship after(ZmanType zmanType)
+  +ZmanRelationship after(ZmanDefinition zmanDefinition)
+  +ZmanRelationship after(Zman zman)
+  +ZmanRelationship before(ZmanType zmanType)
+  +ZmanRelationship before(ZmanDefinition zmanDefinition)
+  +ZmanRelationship before(Zman zman)
+}
+class ZmanAuthority {
+  +String name
+}
+class AccordingTo {
+  +ZmanAuthority authority = null
+  +ZmanAuthority accordingTo
+  +ZmanCalculationMethod calculationMethod = null
+}
+enum UsesElevation {
+  +NEVER
+  +ALWAYS
+  +IF_SET
+  +UNSPECIFIED
+}
+
+AccordingTo ---|> ZmanAuthority
+ZmanAuthority ---|> ZmanCalculationMethod
+DayDefinition ---|> ZmanCalculationMethod
+Degrees ---|> ZmanCalculationMethod
+ZmaniyosDuration ---|> ZmanCalculationMethod
+FixedDuration ---|> ZmanCalculationMethod
+FixedLocalChatzos ---|> ZmanCalculationMethod
+LaterOf ---|> ZmanCalculationMethod
+Relationship ---|> ZmanCalculationMethod
+Unspecified ---|> ZmanCalculationMethod
+ValueBased ---|> Zman
+DateBased ---|> Zman
+
+@enduml

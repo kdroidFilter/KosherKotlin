@@ -23,6 +23,7 @@ import sternbach.software.kosherkotlin.metadata.ZmanAuthority.DIVREI_YOSEF
 import sternbach.software.kosherkotlin.metadata.ZmanAuthority.RABEINU_TAM
 import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod
 import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod.Companion.degrees
+import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod.Companion.fixed
 import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod.Companion.zmaniyos
 import sternbach.software.kosherkotlin.metadata.ZmanDefinition
 import sternbach.software.kosherkotlin.metadata.ZmanType
@@ -193,7 +194,7 @@ class ComplexZmanimCalendar(
         get() = Zman.ValueBased(
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._19_8),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(19.8F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -220,7 +221,7 @@ class ComplexZmanimCalendar(
         get() = Zman.ValueBased(
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._18),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(18F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -252,7 +253,7 @@ class ComplexZmanimCalendar(
         get() = Zman.ValueBased(
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._18),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(18F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -286,7 +287,7 @@ class ComplexZmanimCalendar(
         get() = Zman.ValueBased(
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -316,7 +317,7 @@ class ComplexZmanimCalendar(
         get() = Zman.ValueBased(
             ZmanDefinition(
                 ZmanType.SHAA_ZMANIS,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.FixedDuration._60),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(60.minutes.fixed),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -694,11 +695,11 @@ class ComplexZmanimCalendar(
      * @see .getPlagHamincha26Degrees
      */  // (forRemoval=false) // add back once Java 9 is the minimum supported version
     @get:Deprecated("This method should be used <em>lechumra</em> only since it returns a very late time, and if used\n" + "	          <em>lekula</em> can result in <em>chillul Shabbos</em> etc. There is no current plan to remove this\n" + "	          method from the API, and this deprecation is intended to alert developers of the danger of using it.\n" + "	  \n" + "	  ")
-    val plagHamincha120Minutes: Zman.DateBased
+    val plagHamincha120Minutes
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.FixedDuration._120),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(120.minutes.fixed),
                 UsesElevation.IF_SET,
             )
         ) {
@@ -741,13 +742,13 @@ class ComplexZmanimCalendar(
      * @see plagHamincha60Minutes
      * @see shaahZmanis60Minutes
      */
-    val alos60: Zman.DateBased
+    val alos60
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Relationship(ZmanType.ALOS occurs 60.minutes before ZmanType.HANAITZ),
                 UsesElevation.ALWAYS,
-            ),
+            )
         ) {
             getTimeOffset(
                 sunrise, -60 * MINUTE_MILLIS
@@ -990,7 +991,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.Degrees._18,
+                18F.degrees,
                 UsesElevation.ALWAYS
             )
         ) {
@@ -1017,7 +1018,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.Degrees._19,
+                19F.degrees,
                 UsesElevation.ALWAYS,
                 listOf(
                     ZmanAuthority.RAMBAM,
@@ -1050,7 +1051,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.Degrees._19_8,
+                19.8F.degrees,
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1078,7 +1079,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.Degrees._16_1,
+                16.1F.degrees,
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1102,7 +1103,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
-                ZmanCalculationMethod.Degrees._11_5,
+                11.5F.degrees,
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1125,7 +1126,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
-                ZmanCalculationMethod.Degrees._11,
+                11F.degrees,
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1148,7 +1149,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
-                ZmanCalculationMethod.Degrees._10_2,
+                10.2F.degrees,
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1186,7 +1187,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
-                ZmanCalculationMethod.Degrees._7_65,
+                7.65F.degrees,
                 UsesElevation.ALWAYS,
                 listOf(
                     ZmanAuthority.FEINSTEIN,
@@ -1230,7 +1231,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MISHEYAKIR,
-                ZmanCalculationMethod.Degrees._9_5,
+                9.5F.degrees,
                 UsesElevation.ALWAYS,
                 listOf(
                     ZmanAuthority.KRONGLASS,
@@ -1269,7 +1270,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._19_8),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(19.8F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1299,7 +1300,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1327,7 +1328,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_KRIAS_SHEMA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._18),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(18F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1656,7 +1657,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._19_8),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(19.8F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1688,7 +1689,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -1718,7 +1719,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_TEFILLAH,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._18),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(18F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -2014,7 +2015,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MINCHA_GEDOLAH,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -2116,7 +2117,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.MINCHA_KETANAH,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -2206,7 +2207,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.FixedDuration._60),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(60.minutes.fixed),
                 UsesElevation.IF_SET,
             )
         ) {
@@ -2376,7 +2377,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -2403,7 +2404,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._19_8),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(19.8F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -2430,7 +2431,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._26),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(26F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -2454,7 +2455,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.PLAG_HAMINCHA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._18),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(18F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -2579,7 +2580,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.BAIN_HASHMASHOS,
-                ZmanCalculationMethod.Degrees._13_24,
+                13.24F.degrees,
                 UsesElevation.ALWAYS,
                 listOf(
                     RABEINU_TAM
@@ -2868,7 +2869,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._3_8,
+                3.8F.degrees,
                 UsesElevation.ALWAYS
             )
         ) {
@@ -3099,7 +3100,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._7_083,
+                7.083F.degrees,
                 UsesElevation.ALWAYS,
                 listOf(ZmanAuthority.GEONIM)
             )
@@ -3136,7 +3137,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._7_67,
+                7.67F.degrees,
                 UsesElevation.ALWAYS
             ),
         ) {
@@ -3157,7 +3158,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._8_5,
+                8.5F.degrees,
                 UsesElevation.ALWAYS
             ),
         ) {
@@ -3177,7 +3178,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._9_3,
+                9.3F.degrees,
                 UsesElevation.ALWAYS
             ),
         ) {
@@ -3204,7 +3205,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._9_75,
+                9.75F.degrees,
                 UsesElevation.ALWAYS
             ),
         ) {
@@ -3663,7 +3664,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._16_1,
+                16.1F.degrees,
                 UsesElevation.IF_SET,
             ),
         ) {
@@ -3689,7 +3690,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._26,
+                26F.degrees,
                 UsesElevation.IF_SET,
             ),
         ) {
@@ -3709,7 +3710,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._18,
+                18F.degrees,
                 UsesElevation.IF_SET,
             ),
         ) {
@@ -3730,7 +3731,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._19_8,
+                19.8F.degrees,
                 UsesElevation.IF_SET,
             ),
         ) {
@@ -4259,7 +4260,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
                 listOf(ZmanAuthority.MGA)
             )
@@ -5015,7 +5016,7 @@ class ComplexZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.SAMUCH_LEMINCHA_KETANA,
-                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.Degrees._16_1),
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(16.1F.degrees),
                 UsesElevation.ALWAYS,
             )
         ) {
@@ -5050,7 +5051,7 @@ class ComplexZmanimCalendar(
     operator fun get(zmanType: ZmanType) = if (zmanType == ZmanType.SHAA_ZMANIS) allShaosZmaniyos
     else allZmanim.filter { it.definition.type == zmanType }
 
-    operator fun get(zmanCalculationMethod: ZmanCalculationMethod<*>): List<Zman<*>> =
+    operator fun get(zmanCalculationMethod: ZmanCalculationMethod): List<Zman<*>> =
         (allShaosZmaniyos + allZmanim).filter {
             it.definition.calculationMethod == zmanCalculationMethod
         }

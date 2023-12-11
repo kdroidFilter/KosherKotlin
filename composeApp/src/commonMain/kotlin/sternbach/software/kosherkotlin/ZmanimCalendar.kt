@@ -23,6 +23,7 @@ import sternbach.software.kosherkotlin.metadata.ZmanType
 import sternbach.software.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.Instant
 import sternbach.software.kosherkotlin.metadata.UsesElevation
+import sternbach.software.kosherkotlin.metadata.ZmanCalculationMethod.Companion.degrees
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
@@ -183,7 +184,7 @@ open class ZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.TZAIS,
-                ZmanCalculationMethod.Degrees._8_5,
+                8.5F.degrees,
                 UsesElevation.ALWAYS,
                 supportingAuthorities = listOf(ZmanAuthority.POSEN)
             )
@@ -211,7 +212,7 @@ open class ZmanimCalendar(
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.ALOS,
-                ZmanCalculationMethod.Degrees._16_1,
+                16.1F.degrees,
                 UsesElevation.ALWAYS
             )
         ) {
