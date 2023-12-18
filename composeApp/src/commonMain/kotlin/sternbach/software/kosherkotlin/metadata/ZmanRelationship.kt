@@ -1,4 +1,5 @@
 package sternbach.software.kosherkotlin.metadata
+
 /**
  * A [ZmanRelationship] is a relationship between two [ZmanType]s, dictating when [subject] occurs relative to [relativeToZman].
  * ZmanType.TZAIS  occurs 45.minutes          after  ZmanType.SHKIAH
@@ -15,4 +16,10 @@ data class ZmanRelationship(
     val calculation: ZmanCalculationMethod,
     val relativeToZmanType: ZmanType? = null,
     val relativeToZman: ZmanDefinition? = null,
-)
+) {
+    override fun toString(): String = "$subject occurs $calculation" +
+            (
+                    (relativeToZmanType ?: relativeToZman)?.let { " relative to $it" }
+                        ?: ""
+                    )
+}
