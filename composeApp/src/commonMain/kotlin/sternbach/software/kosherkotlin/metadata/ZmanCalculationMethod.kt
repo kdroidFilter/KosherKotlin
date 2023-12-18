@@ -55,7 +55,7 @@ sealed interface ZmanCalculationMethod {
     fun format(): String = format(true)
     fun format(inEnglish: Boolean): String = format()
     fun format(subjectZman:String, zmanRelativeTo: String) = format()
-    fun valueToString() = format()
+    fun valueToString(): String
     fun shortDescription() = valueToString()
 
     fun Duration.durationValueToString(halachic: Boolean = false) = absoluteValue.toComponents { hours, minutes, seconds, nanoseconds ->
@@ -77,6 +77,7 @@ sealed interface ZmanCalculationMethod {
      * Almost exclusively used when defining a [ZmanDefinition] that is reused across zmanim.
      * */
     data object Unspecified : ZmanCalculationMethod {
+        override fun valueToString(): String = format()
         override fun format(): String = "Unspecified"
     }
     /**
@@ -98,7 +99,8 @@ sealed interface ZmanCalculationMethod {
      * @see Occurrence
      * */
     data class Relationship(val relationship: ZmanRelationship) : ZmanCalculationMethod {
-        override fun format(): String = "Unspecified"
+        override fun valueToString(): String = format()
+        override fun format(): String = relationship.toString()
     }
 
     /**
@@ -106,13 +108,16 @@ sealed interface ZmanCalculationMethod {
      * Meaning that if [zman1] occurs at 6:00 AM and [zman2] occurs at 6:05 AM, this zman takes on the value of 6:00 AM.
      * */
     data class LaterOf(val zman1: ZmanDefinition, val zman2: ZmanDefinition): ZmanCalculationMethod {
-        override fun format(): String = "Later of ${zman1.calculationMethod?.format()} or ${zman2.calculationMethod?.format()}"
+        override fun valueToString(): String = "Later of: ${zman1.calculationMethod.valueToString()} or ${zman2.calculationMethod.valueToString()}"
+        override fun format(): String = "Later of: ${zman1.calculationMethod.format()} or ${zman2.calculationMethod.format()}"
     }
 
     /**
      * @see ComplexZmanimCalendar.fixedLocalChatzos
      * */
     object FixedLocalChatzos : ZmanCalculationMethod {
+
+        override fun valueToString(): String = format()
         override fun format(): String = "Fixed Local Chatzos"
     }
 
@@ -314,6 +319,9 @@ sealed interface ZmanCalculationMethod {
         val dayStartRelationship: ZmanRelationship? = null,
         val dayEndRelationship: ZmanRelationship? = null,
     ): ZmanCalculationMethod {
+        override fun valueToString(): String {
+            return  "${dayStart.type.friendlyNameEnglish} (${dayStart.calculationMethod.valueToString()}) - ${dayEnd.type.friendlyNameEnglish} (${dayEnd.calculationMethod.valueToString()})"
+        }
         override fun format(): String = "Day starts at $dayStart and ends at $dayEnd"//TODO add relationships
         companion object {
 
