@@ -667,8 +667,8 @@ open class ZmanimCalendar(
     /**
      * A method that returns a *shaah zmanis* ([temporal hour][temporalHour]) according to
      * the opinion of the *[GRA](https://en.wikipedia.org/wiki/Vilna_Gaon)*. This calculation divides
-     * the day based on the opinion of the *GRA* that the day runs from from [sea][seaLevelSunrise] to [sea level sunset][seaLevelSunrise] or [sunrise] to
-     * [sunset][sunset] (depending on the [isUseElevation] setting). The day is split into 12 equal
+     * the day based on the opinion of the *GRA* that the day runs from [sea level sunrise][seaLevelSunrise] to [sea level sunset][seaLevelSunset] or [sunrise] to
+     * [sunset] (depending on the [isUseElevation] setting). The day is split into 12 equal
      * parts with each one being a *shaah zmanis*. This method is similar to [temporalHour], but can
      * account for elevation.
      *
@@ -681,8 +681,17 @@ open class ZmanimCalendar(
      * @see .seaLevelSunset
      * @see ComplexZmanimCalendar.shaahZmanisBaalHatanya
      */
-    val shaahZmanisGra: Long
-        get() = getTemporalHour(elevationAdjustedSunrise, elevationAdjustedSunset)
+    val shaahZmanisGra: Zman.ValueBased
+        get() = Zman.ValueBased(
+            ZmanDefinition(
+                ZmanType.SHAA_ZMANIS,
+                ZmanCalculationMethod.DayDefinition.SUNRISE_TO_SUNSET,
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.GRA)
+            )
+        ) {
+            getTemporalHour(elevationAdjustedSunrise, elevationAdjustedSunset).milliseconds
+        }
 
     /**
      * A method that returns a *shaah zmanis* (temporal hour) according to the opinion of the *[Magen Avraham (MGA)](https://en.wikipedia.org/wiki/Avraham_Gombinern)* based on a 72 minutes *alos*
@@ -754,6 +763,28 @@ open class ZmanimCalendar(
      */
     fun getShaahZmanisBasedZman(startOfDay: Instant?, endOfDay: Instant?, hours: Double): Instant? =
         getTimeOffset(startOfDay, /*shaa zmanis:*/getTemporalHour(startOfDay, endOfDay) * hours)
+
+    open val allZmanim by lazy {
+        listOf(
+            tzais,
+            alosHashachar,
+            alos72,
+            chatzos,
+            sofZmanShmaGRA,
+            sofZmanShmaMGA,
+            tzais72,
+            candleLighting,
+            sofZmanTfilaGRA,
+            sofZmanTfilaMGA,
+            minchaGedola,
+            minchaKetana,
+            plagHamincha
+        )
+    }
+
+    open val allShaosZmaniyos by lazy {
+        listOf(shaahZmanisGra, shaahZmanisMGA)
+    }
 
     companion object {
         /**
