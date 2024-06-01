@@ -3950,18 +3950,18 @@ class ComplexZmanimCalendar(
     /**
      * Returns the earliest time of *Kiddush Levana* according to [Rabbeinu Yonah](https://en.wikipedia.org/wiki/Yonah_Gerondi)'s opinion that it can be said 3 days after the
      * *molad*. The time will be returned even if it occurs during the day when *Kiddush Levana* can't be said.
-     * Use [.getTchilasZmanKidushLevana3Days] if you want to limit the time to night hours.
+     * Use [getTchilasZmanKidushLevana3Days] if you want to limit the time to night hours.
      *
      * @return the Date representing the moment 3 days after the molad.
-     * @see .getTchilasZmanKidushLevana3Days
-     * @see .getTchilasZmanKidushLevana7Days
+     * @see getTchilasZmanKidushLevana3Days
+     * @see getTchilasZmanKidushLevana7Days
      * @see JewishCalendar.tchilasZmanKidushLevana3Days
      */
     val tchilasZmanKidushLevana3Days: Zman.DateBased
         get() = Zman.DateBased(
             ZmanDefinition(
                 ZmanType.EARLIEST_KIDDUSH_LEVANA,
-                ZmanCalculationMethod.Relationship(ZmanType.SOF_ZMAN_KIDDUSH_LEVANA occurs 3.days after ZmanType.MOLAD),
+                ZmanCalculationMethod.Relationship(ZmanType.EARLIEST_KIDDUSH_LEVANA occurs 3.days after ZmanType.MOLAD),
                 supportingAuthorities = listOf(ZmanAuthority.RABEINU_YONAH),
             )
         ) {
