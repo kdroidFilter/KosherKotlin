@@ -129,6 +129,11 @@ enum class HebrewMonth(val value: Int) : Comparable<HebrewMonth> {
                 else NISSAN
             else nextMonth
 
+    /**
+     * Returns the number of days in this month for the given [jewishYear].
+     * */
+    fun getNumDaysInMonthForYear(jewishYear: Long) = HebrewLocalDate.getNumDaysInHebrewMonth(this, jewishYear)
+
     fun getTishreiBasedValueInYear(jewishYear: Long) = getTishreiBasedValue(value, jewishYear)
     fun toTishreiBasedMonthInYear(jewishYear: Int) = getTishreiBasedMonth(this, jewishYear)
 

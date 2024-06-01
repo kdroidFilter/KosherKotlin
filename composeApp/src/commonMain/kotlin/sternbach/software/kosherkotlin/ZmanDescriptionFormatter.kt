@@ -21,6 +21,7 @@ class ZmanDescriptionFormatter {
         }*/
         return result.toString()
     }
+    fun formatShortDescription(zman: ZmanDefinition) = getShortCalculationDescription(zman)
 
     private fun addShortDayDefinition(
         mainCalculationMethodUsed: ZmanCalculationMethod.DayDefinition?,
