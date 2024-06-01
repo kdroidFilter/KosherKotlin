@@ -747,7 +747,7 @@ class ComplexZmanimCalendar(
             ZmanDefinition(
                 ZmanType.ALOS,
                 ZmanCalculationMethod.Relationship(ZmanType.ALOS occurs 60.minutes before ZmanType.HANAITZ),
-                UsesElevation.ALWAYS,
+                UsesElevation.IF_SET,
             )
         ) {
             getTimeOffset(
