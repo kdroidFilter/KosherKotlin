@@ -971,11 +971,11 @@ open class JewishDate : Comparable<JewishDate> {
                     (month == HebrewMonth.IYAR) ||
                             (month == HebrewMonth.TAMMUZ) ||
                             (month == HebrewMonth.ELUL) ||
+                            (month == HebrewMonth.TEVES) ||
+                            (month == HebrewMonth.ADAR_II) ||
                             (month == HebrewMonth.CHESHVAN && !year.isCheshvanLong) ||
                             (month == HebrewMonth.KISLEV && year.isKislevShort) ||
-                            (month == HebrewMonth.TEVES) ||
-                            (month == HebrewMonth.ADAR && !year.isJewishLeapYear) ||
-                            (month == HebrewMonth.ADAR_II)
+                            (month == HebrewMonth.ADAR && !year.isJewishLeapYear)
                     )
         ) 29 else 30
 
