@@ -63,9 +63,8 @@ sealed interface ZmanCalculationMethod {
             val totalMinutes = inWholeMinutes
             if(totalMinutes.absoluteValue <= 120) append("$totalMinutes${if(halachic) " Halachic "  else " "}minutes")
             else {
-                append(if (hours != 0L) "$hours hour${hours.pluralSuffix()}" else "")
-                append(if (minutes != 0) " $minutes minute${minutes.pluralSuffix()}" else "")
-                if (halachic) append(" - Halachic time")
+                append(if (hours != 0L) "$hours ${if(halachic) "Halachic " else ""}hour${hours.pluralSuffix()}" else "")
+                append(if (minutes != 0) " $minutes ${if(halachic) "Halachic " else ""}minute${minutes.pluralSuffix()}" else "")
             }
         }
     }
@@ -78,7 +77,7 @@ sealed interface ZmanCalculationMethod {
      * */
     data object Unspecified : ZmanCalculationMethod {
         override fun valueToString(): String = format()
-        override fun format(): String = "Unspecified"
+        override fun format(): String = ""
     }
     /**
      * A method of calculation in which the zman is calculated relative to another zman (e.g. X occurs 10 minutes before Y).
@@ -99,7 +98,12 @@ sealed interface ZmanCalculationMethod {
      * @see Occurrence
      * */
     data class Relationship(val relationship: ZmanRelationship) : ZmanCalculationMethod {
-        override fun valueToString(): String = format()
+        override fun valueToString(): String = "${relationship.subject.friendlyNameEnglish} occurs ${relationship.calculation.valueToString().let {
+            val num = it.filter { it.isDigit() || it == '-' }.toIntOrNull()
+            if(num != null)
+                if(num > 0) "$it after" else "${it.removePrefix("-")} before"
+            else it
+        }} ${relationship.relativeToZman?.calculationMethod?.valueToString() ?: relationship.relativeToZmanType?.friendlyNameEnglish ?: ""}"
         override fun format(): String = relationship.toString()
     }
 
