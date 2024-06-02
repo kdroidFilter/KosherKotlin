@@ -71,7 +71,7 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod {
     object Strings {
         //zman authorities
 
-        const val Unanimous = "Unanimous (the only or most accepted opinion)"
+        const val Unanimous = "The only or most accepted opinion"
 
         const val AHAVAT_SHALOM = "Rabbi Yaakov Moshe Hillel (Yeshivat Chevrat Ahavat Shalom)"
         const val ARUCH_HASHULCHAN = "Aruch Hashulchan"
