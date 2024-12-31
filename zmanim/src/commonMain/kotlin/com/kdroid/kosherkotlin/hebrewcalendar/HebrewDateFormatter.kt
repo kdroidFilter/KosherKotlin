@@ -807,13 +807,13 @@ class HebrewDateFormatter {
          * The [gersh](https://en.wikipedia.org/wiki/Geresh#Punctuation_mark) character is the &#x05F3; char
          * that is similar to a single quote and is used in formatting Hebrew numbers.
          */
-        private val GERESH: String = "\u05F3"
+        private const val GERESH: String = "\u05F3"
 
         /**
          * The [gershyim](https://en.wikipedia.org/wiki/Gershayim#Punctuation_mark) character is the &#x05F4; char
          * that is similar to a double quote and is used in formatting Hebrew numbers.
          */
-        private val GERSHAYIM: String = "\u05F4"
+        private const val GERSHAYIM: String = "\u05F4"
 
         /**
          * Unicode list of Hebrew months in the following format `["\u05E0\u05D9\u05E1\u05DF","\u05D0\u05D9\u05D9\u05E8",

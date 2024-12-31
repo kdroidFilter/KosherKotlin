@@ -3,10 +3,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlinx.serialization)
     id("convention.publication")
+    id("org.jetbrains.dokka")  version "2.0.0"
 }
 
 group = "com.kdroid.kosherkotlin"
-version = "1.0.0"
+version = "2.5.0"
 
 
 kotlin {
