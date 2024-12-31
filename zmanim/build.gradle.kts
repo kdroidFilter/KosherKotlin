@@ -46,6 +46,9 @@ kotlin {
         jvmTest.dependencies {
             implementation(libs.zmanim)
         }
+        jsMain.dependencies {
+            implementation(npm("@js-joda/timezone", "2.3.0"))
+        }
 
     }
 
