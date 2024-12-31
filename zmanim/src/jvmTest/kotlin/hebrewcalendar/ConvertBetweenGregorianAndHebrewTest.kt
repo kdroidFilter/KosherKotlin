@@ -1,11 +1,11 @@
 package hebrewcalendar
 
 
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewLocalDate
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewMonth
-import com.kdroid.kosherkotlin.hebrewcalendar.JewishDate.Companion.daysInJewishYear
-import com.kdroid.kosherkotlin.util.DateUtils.now
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewLocalDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate.Companion.daysInJewishYear
+import io.github.kdroidfilter.kosherkotlin.util.DateUtils.now
 import com.kosherjava.zmanim.hebrewcalendar.JewishDate
 import kotlinx.datetime.*
 import org.junit.Assert.assertEquals
@@ -118,14 +118,14 @@ class ConvertBetweenGregorianAndHebrewTest {
             HebrewLocalDate.STARTING_DATE_HEBREW.toLocalDateGregorian()
         )
         val distantFuture = LocalDate(100_000, 1, 1)
-        val distantFutureHebrew = HebrewLocalDate(103759, HebrewMonth.CHESHVAN, 22)
+        val distantFutureHebrew = HebrewLocalDate(103759, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.CHESHVAN, 22)
         assertEquals(distantFuture, distantFutureHebrew.toLocalDateGregorian())
     }
 
     @Test
     fun `gregorian to hebrew - min and max date`() {
         assertEquals(HebrewLocalDate.STARTING_DATE_HEBREW, HebrewLocalDate.STARTING_DATE_GREGORIAN.toHebrewDate())
-        val distantFutureHebrew = HebrewLocalDate(103_759, HebrewMonth.CHESHVAN, 22)
+        val distantFutureHebrew = HebrewLocalDate(103_759, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.CHESHVAN, 22)
         val distantFuture = LocalDate(100_000, 1, 1)
         assertEquals(distantFutureHebrew, distantFuture.toHebrewDate())
     }
@@ -149,13 +149,13 @@ class ConvertBetweenGregorianAndHebrewTest {
             ) //java.time.LocalDate.of(2239, Month.SEPTEMBER, 30) == 6000-1-1 hebrew, but takes too long to complete
         var kotlinCurrentJewishDate = HebrewLocalDate(
             3763,
-            HebrewMonth.TISHREI,
+            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI,
             1
         )
         val javaCurrentJewishDate =
             JewishDate(
                 3763,
-                HebrewMonth.TISHREI.value,
+                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI.value,
                 1
             ) //start of hillel hakatan's calender
 
@@ -181,7 +181,7 @@ class ConvertBetweenGregorianAndHebrewTest {
 
     @Test
     fun `6th month doesn't work (for some reason)`() {
-        val hebrew = HebrewLocalDate(4483, HebrewMonth.ELUL, 29)
+        val hebrew = HebrewLocalDate(4483, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL, 29)
         val gregorian = LocalDate(723, 9, 9)
         assertEquals(hebrew, gregorian.toHebrewDate())
         assertEquals(gregorian, hebrew.toLocalDateGregorian())

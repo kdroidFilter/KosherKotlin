@@ -5,7 +5,7 @@ package hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Test
-import com.kdroid.kosherkotlin.hebrewcalendar.JewishDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate
 
 /**
  * Verify correct calculations of when a Hebrew leap year occurs.
