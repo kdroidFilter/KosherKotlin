@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
