@@ -2,9 +2,9 @@ package hebrewcalendar
 
 import org.junit.Assert
 import org.junit.Test
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewDateFormatter
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewMonth
-import com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar
 
 class UT_YerushalmiTest {
     @Test
@@ -12,10 +12,10 @@ class UT_YerushalmiTest {
         val javaJewishCalendar =
             JewishCalendar(
                 5777,
-                HebrewMonth.ELUL.value,
+                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL.value,
                 10
             )
-        val kotlinJewishCalendar = JewishCalendar(5777, HebrewMonth.ELUL, 10)
+        val kotlinJewishCalendar = JewishCalendar(5777, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL, 10)
         Assert.assertEquals(
             javaJewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong(),
             kotlinJewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong()
@@ -31,7 +31,7 @@ class UT_YerushalmiTest {
 
     @Test
     fun testCorrectDaf2() {
-        val jewishCalendar = JewishCalendar(5744, HebrewMonth.KISLEV, 1)
+        val jewishCalendar = JewishCalendar(5744, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.KISLEV, 1)
         Assert.assertEquals(26, jewishCalendar.dafYomiYerushalmi!!.daf.toLong())
         Assert.assertEquals(32, jewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong())
         println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
@@ -39,7 +39,7 @@ class UT_YerushalmiTest {
 
     @Test
     fun testCorrectDaf3() {
-        val jewishCalendar = JewishCalendar(5782, HebrewMonth.SIVAN, 1)
+        val jewishCalendar = JewishCalendar(5782, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SIVAN, 1)
         Assert.assertEquals(15, jewishCalendar.dafYomiYerushalmi!!.daf.toLong())
         Assert.assertEquals(33, jewishCalendar.dafYomiYerushalmi!!.masechtaNumber.toLong())
         println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
@@ -47,13 +47,13 @@ class UT_YerushalmiTest {
 
     @Test
     fun testCorrectSpecialDate() {
-        var jewishCalendar = JewishCalendar(5775, HebrewMonth.TISHREI, 10)
+        var jewishCalendar = JewishCalendar(5775, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 10)
         Assert.assertNull(jewishCalendar.dafYomiYerushalmi)
         println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
-        jewishCalendar = JewishCalendar(5783, HebrewMonth.AV, 9)
+        jewishCalendar = JewishCalendar(5783, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.AV, 9)
         Assert.assertNull(jewishCalendar.dafYomiYerushalmi)
         println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
-        jewishCalendar = JewishCalendar(5775, HebrewMonth.AV, 10) // 9 Av delayed to Sunday 10 Av
+        jewishCalendar = JewishCalendar(5775, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.AV, 10) // 9 Av delayed to Sunday 10 Av
         Assert.assertNull(jewishCalendar.dafYomiYerushalmi)
         println(hdf.formatDafYomiYerushalmi(jewishCalendar.dafYomiYerushalmi))
     }

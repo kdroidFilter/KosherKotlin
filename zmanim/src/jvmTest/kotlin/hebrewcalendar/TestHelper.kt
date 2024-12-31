@@ -1,5 +1,5 @@
 package hebrewcalendar
-import com.kdroid.kosherkotlin.util.GeoLocation
+import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.TimeZone
 
 object TestHelper {
@@ -18,7 +18,7 @@ object TestHelper {
     val allLocations = basicLocations + arcticLocations
     val allJavaLocations = allLocations.map { it.toJava() }
     val basicJavaLocations = basicLocations.map { it.toJava() }
-    fun com.kdroid.kosherkotlin.util.GeoLocation.toJava() =
+    fun io.github.kdroidfilter.kosherkotlin.util.GeoLocation.toJava() =
         com.kosherjava.zmanim.util.GeoLocation(
             locationName,
             latitude,

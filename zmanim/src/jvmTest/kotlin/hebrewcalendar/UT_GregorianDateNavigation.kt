@@ -7,7 +7,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import org.junit.Assert
 import org.junit.Test
-import com.kdroid.kosherkotlin.hebrewcalendar.JewishDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate
 import java.time.ZoneId
 import java.util.*
 

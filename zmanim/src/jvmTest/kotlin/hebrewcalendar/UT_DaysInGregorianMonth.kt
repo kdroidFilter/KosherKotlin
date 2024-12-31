@@ -3,7 +3,7 @@
  */
 package hebrewcalendar
 
-import com.kdroid.kosherkotlin.hebrewcalendar.JewishDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate
 import kotlinx.datetime.LocalDate
 import org.junit.Assert
 import org.junit.Before

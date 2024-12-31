@@ -19,19 +19,19 @@ import kotlinx.datetime.until
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import com.kdroid.kosherkotlin.AstronomicalCalendar
-import com.kdroid.kosherkotlin.ComplexZmanimCalendar
-import com.kdroid.kosherkotlin.Zman
-import com.kdroid.kosherkotlin.hebrewcalendar.Daf
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewDateFormatter
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewLocalDate
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewMonth
-import com.kdroid.kosherkotlin.hebrewcalendar.JewishDate
-import com.kdroid.kosherkotlin.metadata.ZmanCalculationMethod
-import com.kdroid.kosherkotlin.metadata.ZmanDefinition
-import com.kdroid.kosherkotlin.metadata.ZmanType
-import com.kdroid.kosherkotlin.util.GeoLocation
-import com.kdroid.kosherkotlin.util.GeoLocation.Companion.rawOffset
+import io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar
+import io.github.kdroidfilter.kosherkotlin.ComplexZmanimCalendar
+import io.github.kdroidfilter.kosherkotlin.Zman
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.Daf
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewLocalDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate
+import io.github.kdroidfilter.kosherkotlin.metadata.ZmanCalculationMethod
+import io.github.kdroidfilter.kosherkotlin.metadata.ZmanDefinition
+import io.github.kdroidfilter.kosherkotlin.metadata.ZmanType
+import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
+import io.github.kdroidfilter.kosherkotlin.util.GeoLocation.Companion.rawOffset
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
@@ -44,7 +44,7 @@ class RegressionTest {
         fun Zman.DateBased.toDate(): java.util.Date? =
             this.momentOfOccurrence?.let { java.util.Date.from(it.toJavaInstant()) }
 
-        val YEAR_6000 = HebrewLocalDate(6000, HebrewMonth.TISHREI, 1).toLocalDateGregorian()
+        val YEAR_6000 = HebrewLocalDate(6000, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 1).toLocalDateGregorian()
         val YEAR_6000_INSTANT = YEAR_6000.atStartOfDayIn(TimeZone.UTC)
 
     }
@@ -112,7 +112,7 @@ class RegressionTest {
         val year = mYear + 1
         val month = mMonth + 1
         val day = mDay + 1
-        val jd = JewishDate(year, HebrewMonth.getMonthForValue(month), day)
+        val jd = JewishDate(year, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(month), day)
         assertEquals(year, jd.hebrewLocalDate.year.toInt())
         assertEquals(month, jd.hebrewLocalDate.month.value)
         assertEquals(day, jd.jewishDayOfMonth)
@@ -121,7 +121,7 @@ class RegressionTest {
     @Test
     fun assertSetYearWorks() {
         val year = mYear + 1
-        val jd = JewishDate(mYear, HebrewMonth.getMonthForValue(mMonth), mDay)
+        val jd = JewishDate(mYear, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(mMonth), mDay)
         jd.jewishYear = year.toLong()
         assertEquals(year, jd.hebrewLocalDate.year.toInt())
         assertEquals(mMonth, jd.hebrewLocalDate.month.value)
@@ -131,8 +131,8 @@ class RegressionTest {
     @Test
     fun assertSetMonthWorks() {
         val month = mMonth + 1
-        val jd = JewishDate(mYear, HebrewMonth.getMonthForValue(mMonth), mDay)
-        jd.setJewishMonth(HebrewMonth.getMonthForValue(month))
+        val jd = JewishDate(mYear, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(mMonth), mDay)
+        jd.setJewishMonth(io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(month))
         assertEquals(mYear, jd.hebrewLocalDate.year.toInt())
         assertEquals(month, jd.hebrewLocalDate.month.value)
         assertEquals(mDay, jd.jewishDayOfMonth)
@@ -174,11 +174,11 @@ class RegressionTest {
             }
 
         val kotlinCurrentJewishCalendar =
-            com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart)
+            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart)
         val kotlinCurrentJewishCalendarIsraeli =
-            com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart, true)
+            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart, true)
         val kotlinCurrentJewishCalendarIsraeliUseModernHolidays =
-            com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart, true, true)
+            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar(hebrewStart, true, true)
 
         while (
             javaCurrentJewishCalendar.jewishYear != distantFutureJewishDate.jewishYear.toInt() ||
@@ -203,7 +203,7 @@ class RegressionTest {
     }
 
     private fun assertAllValues(
-        kotlin: com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar,
+        kotlin: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar,
         java: com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
     ) {
         assertEquals(java.chalakimSinceMoladTohu, kotlin.chalakimSinceMoladTohu)
@@ -341,8 +341,8 @@ class RegressionTest {
 
         assertEquals(javaCalc.solarMidnight, calc.solarMidnight)
         assertEquals(
-            javaCalc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
-            calc.getUTCSunrise(AstronomicalCalendar.GEOMETRIC_ZENITH),
+            javaCalc.getUTCSunrise(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.GEOMETRIC_ZENITH),
+            calc.getUTCSunrise(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.GEOMETRIC_ZENITH),
             0.0
         )
         assertEquals(
@@ -359,11 +359,11 @@ class RegressionTest {
         assertEquals(javaCalc.tzais90Zmanis, calc.tzais90Zmanis)
         assertEquals(
             com.kosherjava.zmanim.hebrewcalendar.JewishCalendar().moladAsDate.time,
-            com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar().moladAsInstant.toDate()!!.time
+            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar().moladAsInstant.toDate()!!.time
         )
         assertEquals(
             com.kosherjava.zmanim.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.time,
-            com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time
+            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar().sofZmanKidushLevana15Days.toDate()!!.time
         )
         assertEquals(
             javaCalc.sofZmanKidushLevanaBetweenMoldos,
@@ -977,7 +977,7 @@ class RegressionTest {
 
     @Test
     fun testAstronomicalCalendar() {
-        val kotlinAstroCal = AstronomicalCalendar(kotlinLocation).apply {
+        val kotlinAstroCal = io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar(kotlinLocation).apply {
             localDateTime = LocalDateTime(localDateTime.date, LocalTime(1, 0, 0))
         }
         val javaAstroCal = com.kosherjava.zmanim.AstronomicalCalendar(
@@ -1296,7 +1296,7 @@ class RegressionTest {
 
     private fun assertYomTovOrParshaMatches(
         jewishDate: JewishDate,
-        jewishCalendar: com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar,
+        jewishCalendar: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar,
         fields: List<String>,
         quote: String
     ) {
@@ -1309,12 +1309,12 @@ class RegressionTest {
         )
     }
 
-    private fun getParshaOrYomTov(jewishCalendar: com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar) =
+    private fun getParshaOrYomTov(jewishCalendar: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar) =
         hdf
             .transliteratedParshiosList[jewishCalendar.parshah]
             ?.let {
                 val specialShabbos = jewishCalendar.specialShabbos
-                if (specialShabbos != com.kdroid.kosherkotlin.hebrewcalendar.JewishCalendar.Parsha.NONE) "$it, ${hdf.transliteratedParshiosList[specialShabbos]}" else it
+                if (specialShabbos != io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar.Parsha.NONE) "$it, ${hdf.transliteratedParshiosList[specialShabbos]}" else it
             }
             ?.ifBlank {
                 jewishCalendar

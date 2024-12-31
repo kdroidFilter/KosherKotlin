@@ -7,7 +7,7 @@ import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import com.kdroid.kosherkotlin.hebrewcalendar.JewishDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate
 
 /**
  * Validate the days in a Hebrew month (in various types of years) are correct.

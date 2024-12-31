@@ -57,28 +57,31 @@ publishing {
     publications.withType<MavenPublication> {
         // Stub javadoc.jar artifact
         artifact(javadocJar.get())
-
+        groupId = "io.github.kdroidfilter"
+        artifactId = "kosherkotlin"
+        version = "2.5.0"
         // Provide artifacts information requited by Maven Central
         pom {
-            name.set("KosherKotlin")
-            description.set("Kotlin Multiplatform library")
-            //url.set("") todo
+            name.set("Kosher Kotlin")
+            description.set("KosherJava Zmanim API / Library port to Kotlin. KosherJava is a library for calculating astronomical and religious dates and times based on location.")
+            url.set("https://github.com/kdroidFilter/KosherKotlin/")
+
 
             licenses {
                 license {
-                    name.set("MIT")
-                    url.set("https://opensource.org/licenses/MIT")
+                    name.set("LGPL-2.1")
+                    url.set("https://github.com/kdroidFilter/KosherKotlin/blob/master/LICENSE")
                 }
             }
             developers {
                 developer {
-                    //id.set("") todo
-                    //name.set("") todo
-                    //email.set("") todo
+                    id.set("kdroidfilter")
+                    name.set("Elyahou Hadass")
+                    email.set("elyahou.hadass@gmail.com")
                 }
             }
             scm {
-                //url.set("") todo
+                url.set("https://github.com/kdroidFilter/KosherKotlin")
             }
         }
     }

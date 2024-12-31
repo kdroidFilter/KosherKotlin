@@ -7,11 +7,11 @@ import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toLocalDateTime
 import org.junit.Assert
 import org.junit.Test
-import com.kdroid.kosherkotlin.ComplexZmanimCalendar
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewLocalDate
-import com.kdroid.kosherkotlin.hebrewcalendar.HebrewMonth
-import com.kdroid.kosherkotlin.metadata.ZmanType
-import com.kdroid.kosherkotlin.util.GeoLocation.Companion.rawOffset
+import io.github.kdroidfilter.kosherkotlin.ComplexZmanimCalendar
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewLocalDate
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth
+import io.github.kdroidfilter.kosherkotlin.metadata.ZmanType
+import io.github.kdroidfilter.kosherkotlin.util.GeoLocation.Companion.rawOffset
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -82,7 +82,7 @@ class UnitTest {
     @Test
     fun alosIsNeverAfterSunrise() {
         fun kotlinx.datetime.TimeZone.toJava() = java.util.TimeZone.getTimeZone(id)
-        fun com.kdroid.kosherkotlin.util.GeoLocation.toJava() =
+        fun io.github.kdroidfilter.kosherkotlin.util.GeoLocation.toJava() =
             com.kosherjava.zmanim.util.GeoLocation(
                 locationName,
                 latitude,
@@ -100,7 +100,7 @@ class UnitTest {
 
 
             var date = java.time.LocalDate.of(1, 9, 8)
-            val year6000 = HebrewLocalDate(6000, HebrewMonth.TISHREI, 1).toLocalDateGregorian().toJavaLocalDate()
+            val year6000 = HebrewLocalDate(6000, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 1).toLocalDateGregorian().toJavaLocalDate()
             val midnight = java.time.LocalTime.of(0, 0, 0)
 
             val dateTime = java.time.LocalDateTime.of(date, midnight)
