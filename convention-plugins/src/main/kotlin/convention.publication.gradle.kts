@@ -57,9 +57,7 @@ publishing {
     publications.withType<MavenPublication> {
         // Stub javadoc.jar artifact
         artifact(javadocJar.get())
-        groupId = "io.github.kdroidfilter"
-        artifactId = "kosherkotlin"
-        version = "2.5.0"
+
         // Provide artifacts information requited by Maven Central
         pom {
             name.set("Kosher Kotlin")
