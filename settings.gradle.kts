@@ -1,19 +1,35 @@
 rootProject.name = "KosherKotlin"
-include(":composeApp")
 
 pluginManagement {
     repositories {
-        google()
+        google {
+            content { 
+              	includeGroupByRegex("com\\.android.*")
+              	includeGroupByRegex("com\\.google.*")
+              	includeGroupByRegex("androidx.*")
+              	includeGroupByRegex("android.*")
+            }
+        }
         gradlePluginPortal()
         mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 
 dependencyResolutionManagement {
     repositories {
-        google()
+        google {
+            content { 
+              	includeGroupByRegex("com\\.android.*")
+              	includeGroupByRegex("com\\.google.*")
+              	includeGroupByRegex("androidx.*")
+              	includeGroupByRegex("android.*")
+            }
+        }
         mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
+includeBuild("convention-plugins")
+include(":zmanim")
+include(":sample:composeApp")
+include(":sample:terminalApp")
+
