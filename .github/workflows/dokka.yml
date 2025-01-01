@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dokka-html
-          path: build/dokka/html
+          path: zmanim/build/dokka/html
 
   deploy-docs:
     runs-on: ubuntu-latest
@@ -47,9 +47,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dokka-html
-          path: build/dokka/html
+          path: zmanim/build/dokka/html
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
-          build_dir: build/dokka/html
+          build_dir: zmanim/build/dokka/html
