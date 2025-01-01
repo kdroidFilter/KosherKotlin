@@ -4,8 +4,8 @@ plugins {
 
 kotlin {
     listOf(
-        macosX64(),
-        macosArm64(),
+//        macosX64(),
+//        macosArm64(),
         linuxX64(),
         mingwX64(),
     ).forEach {

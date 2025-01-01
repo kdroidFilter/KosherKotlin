@@ -116,7 +116,7 @@ open class AstronomicalCalendar(
      * @see AstronomicalCalendar.getUTCSunrise
      */
     val sunrise: Instant?
-        get() = getUTCSunrise(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.GEOMETRIC_ZENITH)
+        get() = getUTCSunrise(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, true) }
 
@@ -136,7 +136,7 @@ open class AstronomicalCalendar(
      * @see .seaLevelSunset
      */
     val seaLevelSunrise: Instant?
-        get() = getUTCSeaLevelSunrise(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.GEOMETRIC_ZENITH)
+        get() = getUTCSeaLevelSunrise(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, true) }
 
@@ -149,7 +149,7 @@ open class AstronomicalCalendar(
      * @see .CIVIL_ZENITH
      */
     val beginCivilTwilight: Instant?
-        get() = getSunriseOffsetByDegrees(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.CIVIL_ZENITH)
+        get() = getSunriseOffsetByDegrees(CIVIL_ZENITH)
 
     /**
      * A method that returns the beginning of [nautical twilight](https://en.wikipedia.org/wiki/Twilight#Nautical_twilight) using a zenith of [NAUTICAL_ZENITH].
@@ -193,7 +193,7 @@ open class AstronomicalCalendar(
      * @see AstronomicalCalendar.getUTCSunset
      */
     val sunset: Instant?
-        get() = getUTCSunset(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.GEOMETRIC_ZENITH)
+        get() = getUTCSunset(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
 
@@ -211,7 +211,7 @@ open class AstronomicalCalendar(
      * @see sunset
      */
     val seaLevelSunset: Instant?
-        get() = getUTCSeaLevelSunset(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.GEOMETRIC_ZENITH)
+        get() = getUTCSeaLevelSunset(GEOMETRIC_ZENITH)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
 
@@ -224,7 +224,7 @@ open class AstronomicalCalendar(
      * @see CIVIL_ZENITH
      */
     val endCivilTwilight: Instant?
-        get() = getSunsetOffsetByDegrees(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.CIVIL_ZENITH)
+        get() = getSunsetOffsetByDegrees(CIVIL_ZENITH)
 
     /**
      * A method that returns the end of nautical twilight using a zenith of [102˚][.NAUTICAL_ZENITH].
@@ -520,7 +520,7 @@ open class AstronomicalCalendar(
                     )
         ) {
             degrees = if (minutes > 0.0) degrees + incrementor else degrees - incrementor
-            offsetByDegrees = getSunriseOffsetByDegrees(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.GEOMETRIC_ZENITH + degrees)
+            offsetByDegrees = getSunriseOffsetByDegrees(GEOMETRIC_ZENITH + degrees)
         }
         return degrees
     }
@@ -549,7 +549,7 @@ open class AstronomicalCalendar(
             minutes < 0.0 && offsetByDegrees > offsetByTime!!
         ) {
             degrees = if (minutes > 0.0) degrees + incrementor else degrees - incrementor
-            offsetByDegrees = getSunsetOffsetByDegrees(io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.Companion.GEOMETRIC_ZENITH + degrees)
+            offsetByDegrees = getSunsetOffsetByDegrees(GEOMETRIC_ZENITH + degrees)
         }
         return degrees
     }
