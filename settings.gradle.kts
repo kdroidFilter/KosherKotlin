@@ -28,7 +28,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-includeBuild("convention-plugins")
+//includeBuild("convention-plugins")
 include(":zmanim")
 include(":sample:composeApp")
 include(":sample:terminalApp")
