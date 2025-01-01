@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.github.kdroidfilter.kosherkotlin"
-version = "2.5.0"
+version = "2.5.1"
 
 
 kotlin {
