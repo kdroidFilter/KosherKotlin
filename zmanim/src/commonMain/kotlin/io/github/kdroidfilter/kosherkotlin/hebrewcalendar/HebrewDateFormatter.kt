@@ -15,6 +15,7 @@
  */
 package io.github.kdroidfilter.kosherkotlin.hebrewcalendar
 
+import com.kdroid.gematria.converter.toHebrewNumeral
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.*
 import io.github.kdroidfilter.kosherkotlin.util.WeekFormat
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar.Companion.toJewishDayOfWeek
@@ -620,27 +621,42 @@ class HebrewDateFormatter {
      * (2011).
      */
     fun getFormattedKviah(jewishYear: Int): String = getFormattedKviah(jewishYear.toLong())
+
     fun getFormattedKviah(jewishYear: Long): String {
-        val jewishDate = JewishDate(jewishYear, TISHREI, 1) // set date to Rosh Hashana
+        // Set the date to Rosh Hashana of the given Jewish year
+        val jewishDate = JewishDate(jewishYear, TISHREI, 1)
+
+        // Determine the kviah (calendar type: Chaserim, Shelaimim, or Kesidrah)
         val kviah = jewishDate.cheshvanKislevKviah
+
+        // Get the day of the week for Rosh Hashana
         val roshHashanaDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
+
+        // Build the formatted kviah string
         val returnValue = StringBuilder(formatHebrewNumber(roshHashanaDayOfweek.toLong()))
         returnValue.append(
             when (kviah) {
-                JewishDate.CHASERIM -> "\u05D7"
-                JewishDate.SHELAIMIM -> "\u05E9"
-                else -> "\u05DB"
+                JewishDate.CHASERIM -> "ח" // Chaserim (deficient year)
+                JewishDate.SHELAIMIM -> "ש" // Shelaimim (complete year)
+                else -> "כ" // Kesidrah (regular year)
             }
         )
-        jewishDate.setJewishDate(jewishYear, NISSAN, 15) // set to Pesach of the given year
+
+        // Set the date to Pesach of the given Jewish year
+        jewishDate.setJewishDate(jewishYear, NISSAN, 15)
+
+        // Get the day of the week for Pesach
         val pesachDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
         returnValue.append(formatHebrewNumber(pesachDayOfweek.toLong()))
-        return returnValue.replace(GERESH.toRegex(), "") // geresh is never used in the kviah format
+
+        // Remove the Geresh character from the formatted kviah string
+        return returnValue.replace(GERESH.toRegex(), "")
         // boolean isLeapYear = JewishDate.isJewishLeapYear(jewishYear);
         // for efficiency we can avoid the expensive recalculation of the pesach day of week by adding 1 day to Rosh
         // Hashana for a 353 day year, 2 for a 354 day year, 3 for a 355 or 383 day year, 4 for a 384 day year and 5 for
         // a 385 day year
     }
+
 
     /**
      * Formats the [Daf Yomi](https://en.wikipedia.org/wiki/Daf_Yomi) Bavli in the format of
@@ -691,74 +707,9 @@ class HebrewDateFormatter {
      * @see isHebrewFormat
      */
     fun formatHebrewNumber(number: Int): String = formatHebrewNumber(number.toLong())
+
     fun formatHebrewNumber(number: Long): String {
-        var num = number
-        val range = 0..9999
-        require(num in range) { "${if (num < range.first) "negative numbers" else "numbers > ${range.last}"} can't be formatted" }
-        val ALAFIM = "\u05D0\u05DC\u05E4\u05D9\u05DD"
-        val EFES = "\u05D0\u05E4\u05E1"
-        val jHundreds: Array<String> = arrayOf(
-            "", "\u05E7", "\u05E8", "\u05E9", "\u05EA", "\u05EA\u05E7", "\u05EA\u05E8",
-            "\u05EA\u05E9", "\u05EA\u05EA", "\u05EA\u05EA\u05E7"
-        )
-        val jTens: Array<String> = arrayOf(
-            "", "\u05D9", "\u05DB", "\u05DC", "\u05DE", "\u05E0", "\u05E1", "\u05E2",
-            "\u05E4", "\u05E6"
-        )
-        val jTenEnds: Array<String> = arrayOf(
-            "", "\u05D9", "\u05DA", "\u05DC", "\u05DD", "\u05DF", "\u05E1", "\u05E2",
-            "\u05E3", "\u05E5"
-        )
-        val tavTaz: Array<String> = arrayOf("\u05D8\u05D5", "\u05D8\u05D6")
-        val jOnes: Array<String> = arrayOf(
-            "", "\u05D0", "\u05D1", "\u05D2", "\u05D3", "\u05D4", "\u05D5", "\u05D6",
-            "\u05D7", "\u05D8"
-        )
-        if (num == 0L) return EFES // do we really need this? Should it be applicable to a date?
-        val shortNumber = num % 1000 // discard thousands
-        // next check for all possible single Hebrew digit years
-        val singleDigitNumber =
-            shortNumber < 11 ||
-                    (shortNumber < 100L && shortNumber % 10L == 0L) ||
-                    (shortNumber <= 400L && shortNumber % 100L == 0L)
-        val thousands = num / 1000 // get # thousands
-        val sb = StringBuilder()
-        // append thousands to String
-        if (num % 1000L == 0L) { // in year is 5000, 4000 etc
-            sb.append(jOnes[thousands.toInt()])
-            if (isUseGershGershayim) sb.append(GERESH)
-            sb.append(" ")
-            sb.append(ALAFIM) // add # of thousands plus word thousand (overide alafim boolean)
-            return sb.toString()
-        } else if (isUseLongHebrewYears && num >= 1000) { // if alafim boolean display thousands
-            sb.append(jOnes[thousands.toInt()])
-            if (isUseGershGershayim) sb.append(GERESH) // append thousands quote
-            sb.append(" ")
-        }
-        num %= 1000 // remove 1000s
-        val hundreds = num / 100 // # of hundreds
-        sb.append(jHundreds[hundreds.toInt()]) // add hundreds to String
-        num %= 100 // remove 100s
-        if (num == 15L) sb.append(tavTaz[0])  // special case 15
-        else if (num == 16L) sb.append(tavTaz[1]) // special case 16
-        else {
-            val tens = num / 10
-            if (num % 10 == 0L) { // if evenly divisable by 10
-                if (!singleDigitNumber) {
-                    if (isUseFinalFormLetters) sb.append(jTenEnds[tens.toInt()])  // years like 5780 will end with a final form &#x05E3;
-                    else sb.append(jTens[tens.toInt()]) // years like 5780 will end with a regular &#x05E4;
-                } else sb.append(jTens[tens.toInt()]) // standard letters so years like 5050 will end with a regular nun
-            } else {
-                sb.append(jTens[tens.toInt()])
-                num %= 10
-                sb.append(jOnes[num.toInt()])
-            }
-        }
-        if (isUseGershGershayim) {
-            if (singleDigitNumber) sb.append(GERESH) // append single quote
-            else sb.insert(sb.length - 1, GERSHAYIM) // append double quote before last digit
-        }
-        return sb.toString()
+       return number.toInt().toHebrewNumeral( includeGeresh = isUseGershGershayim)
     }
 
     /**
@@ -803,48 +754,34 @@ class HebrewDateFormatter {
         else transliteratedParshiosList[jewishCalendar.specialShabbos]
 
     companion object {
-        /**
-         * The [gersh](https://en.wikipedia.org/wiki/Geresh#Punctuation_mark) character is the &#x05F3; char
-         * that is similar to a single quote and is used in formatting Hebrew numbers.
-         */
-        private const val GERESH: String = "\u05F3"
+
+        private const val GERESH: String = "׳"
 
         /**
-         * The [gershyim](https://en.wikipedia.org/wiki/Gershayim#Punctuation_mark) character is the &#x05F4; char
-         * that is similar to a double quote and is used in formatting Hebrew numbers.
+         * The Gershayim character ("״") is similar to a double quote and is used in formatting Hebrew numbers.
          */
-        private const val GERSHAYIM: String = "\u05F4"
+        private const val GERSHAYIM: String = "״"
 
         /**
-         * Unicode list of Hebrew months in the following format `["\u05E0\u05D9\u05E1\u05DF","\u05D0\u05D9\u05D9\u05E8",
-         * "\u05E1\u05D9\u05D5\u05DF","\u05EA\u05DE\u05D5\u05D6","\u05D0\u05D1","\u05D0\u05DC\u05D5\u05DC",
-         * "\u05EA\u05E9\u05E8\u05D9","\u05D7\u05E9\u05D5\u05DF","\u05DB\u05E1\u05DC\u05D5","\u05D8\u05D1\u05EA",
-         * "\u05E9\u05D1\u05D8","\u05D0\u05D3\u05E8","\u05D0\u05D3\u05E8 \u05D1","\u05D0\u05D3\u05E8 \u05D0"]`
-         *
-         * @see .formatMonth
+         * List of Hebrew months in their standard format using Hebrew characters.
          */
         private val hebrewMonths: Array<String> = arrayOf(
-            "\u05E0\u05D9\u05E1\u05DF", "\u05D0\u05D9\u05D9\u05E8",
-            "\u05E1\u05D9\u05D5\u05DF", "\u05EA\u05DE\u05D5\u05D6", "\u05D0\u05D1", "\u05D0\u05DC\u05D5\u05DC",
-            "\u05EA\u05E9\u05E8\u05D9", "\u05D7\u05E9\u05D5\u05DF", "\u05DB\u05E1\u05DC\u05D5",
-            "\u05D8\u05D1\u05EA", "\u05E9\u05D1\u05D8", "\u05D0\u05D3\u05E8", "\u05D0\u05D3\u05E8 \u05D1",
-            "\u05D0\u05D3\u05E8 \u05D0"
+            "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול",
+            "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב", "אדר א"
         )
 
         /**
-         * Unicode list of Hebrew days of week in the format of `["&#x05E8;&#x05D0;&#x05E9;&#x05D5;&#x05DF;",
-         * "&#x05E9;&#x05E0;&#x05D9;","&#x05E9;&#x05DC;&#x05D9;&#x05E9;&#x05D9;","&#x05E8;&#x05D1;&#x05D9;&#x05E2;&#x05D9;",
-         * "&#x05D7;&#x05DE;&#x05D9;&#x05E9;&#x05D9;","&#x05E9;&#x05E9;&#x05D9;","&#x05E9;&#x05D1;&#x05EA;"]`
+         * List of Hebrew days of the week using Hebrew characters.
+         * The days are ordered starting from Sunday (first day) to Shabbat (seventh day).
          */
         private val hebrewDaysOfWeek: Array<String> = arrayOf(
-            "\u05E8\u05D0\u05E9\u05D5\u05DF", "\u05E9\u05E0\u05D9",
-            "\u05E9\u05DC\u05D9\u05E9\u05D9", "\u05E8\u05D1\u05D9\u05E2\u05D9", "\u05D7\u05DE\u05D9\u05E9\u05D9",
-            "\u05E9\u05E9\u05D9", "\u05E9\u05D1\u05EA"
+            "ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"
         )
 
-        const val MINUTE_CHALAKIM = 18
-        const val HOUR_CHALAKIM = 1080
-        const val DAY_CHALAKIM = 24 * HOUR_CHALAKIM
+
+        private const val MINUTE_CHALAKIM = 18
+        private const val HOUR_CHALAKIM = 1080
+        private const val DAY_CHALAKIM = 24 * HOUR_CHALAKIM
 
         /**
          * Formats a molad.
