@@ -444,23 +444,23 @@ class JewishCalendar : JewishDate {
      */
     constructor(jewishYear: Int, jewishMonth: Int, jewishDayOfMonth: Int) : super(
         jewishYear,
-        io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(jewishMonth),
+        HebrewMonth.getMonthForValue(jewishMonth),
         jewishDayOfMonth
     )
 
     constructor(jewishYear: Long, jewishMonth: Int, jewishDayOfMonth: Int) : super(
         jewishYear,
-        io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(jewishMonth),
+        HebrewMonth.getMonthForValue(jewishMonth),
         jewishDayOfMonth
     )
 
-    constructor(hebrewYear: Int, hebrewMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, hebrewDayOfMonth: Int) : super(
+    constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(
         hebrewYear,
         hebrewMonth,
         hebrewDayOfMonth
     )
 
-    constructor(hebrewYear: Long, hebrewMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, hebrewDayOfMonth: Int) : super(
+    constructor(hebrewYear: Long, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : super(
         hebrewYear,
         hebrewMonth,
         hebrewDayOfMonth
@@ -496,7 +496,7 @@ class JewishCalendar : JewishDate {
         inIsrael: Boolean,
     ) : super(
         jewishYear,
-        io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(jewishMonth),
+        HebrewMonth.getMonthForValue(jewishMonth),
         jewishDayOfMonth
     ) {
         this.inIsrael = inIsrael
@@ -520,14 +520,14 @@ class JewishCalendar : JewishDate {
      */
     constructor(
         jewishYear: Int,
-        jewishMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth,
+        jewishMonth: HebrewMonth,
         jewishDayOfMonth: Int,
         inIsrael: Boolean,
     ) : this(jewishYear.toLong(), jewishMonth, jewishDayOfMonth, inIsrael)
 
     constructor(
         jewishYear: Long,
-        jewishMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth,
+        jewishMonth: HebrewMonth,
         jewishDayOfMonth: Int,
         inIsrael: Boolean,
     ) : super(
@@ -688,12 +688,12 @@ class JewishCalendar : JewishDate {
     val specialShabbos: Parsha
         get() {
             if (gregorianLocalDate.dayOfWeek == DayOfWeek.SATURDAY) {
-                if ((hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SHEVAT && !isJewishLeapYear) || (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR && isJewishLeapYear)) {
+                if ((hebrewLocalDate.month == HebrewMonth.SHEVAT && !isJewishLeapYear) || (hebrewLocalDate.month == HebrewMonth.ADAR && isJewishLeapYear)) {
                     if ((jewishDayOfMonth == 25) || (jewishDayOfMonth == 27) || (jewishDayOfMonth == 29)) {
                         return Parsha.SHKALIM
                     }
                 }
-                if ((hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR && !isJewishLeapYear) || hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR_II) {
+                if ((hebrewLocalDate.month == HebrewMonth.ADAR && !isJewishLeapYear) || hebrewLocalDate.month == HebrewMonth.ADAR_II) {
                     if (jewishDayOfMonth == 1) {
                         return Parsha.SHKALIM
                     }
@@ -707,24 +707,24 @@ class JewishCalendar : JewishDate {
                         return Parsha.HACHODESH
                     }
                 }
-                if (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN) {
+                if (hebrewLocalDate.month == HebrewMonth.NISSAN) {
                     if (jewishDayOfMonth == 1) {
                         return Parsha.HACHODESH
                     }
-                    if (jewishDayOfMonth >= 8 && jewishDayOfMonth <= 14) {
+                    if (jewishDayOfMonth in 8..14) {
                         return Parsha.HAGADOL
                     }
                 }
-                if (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.AV) {
-                    if (jewishDayOfMonth >= 4 && jewishDayOfMonth <= 9) {
+                if (hebrewLocalDate.month == HebrewMonth.AV) {
+                    if (jewishDayOfMonth in 4..9) {
                         return Parsha.CHAZON
                     }
-                    if (jewishDayOfMonth >= 10 && jewishDayOfMonth <= 16) {
+                    if (jewishDayOfMonth in 10..16) {
                         return Parsha.NACHAMU
                     }
                 }
-                if (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI) {
-                    if (jewishDayOfMonth >= 3 && jewishDayOfMonth <= 8) {
+                if (hebrewLocalDate.month == HebrewMonth.TISHREI) {
+                    if (jewishDayOfMonth in 3..8) {
                         return Parsha.SHUVA
                     }
                 }
@@ -756,7 +756,7 @@ class JewishCalendar : JewishDate {
             val day = jewishDayOfMonth
             val dayOfWeek = gregorianLocalDate.dayOfWeek
             return when (hebrewLocalDate.month) {
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN -> {
+                HebrewMonth.NISSAN -> {
                     when {
                         day == 14 -> EREV_PESACH
                         day == 15 || day == 21 || !inIsrael && (day == 16 || day == 22) -> PESACH
@@ -775,7 +775,7 @@ class JewishCalendar : JewishDate {
 
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.IYAR -> {
+                HebrewMonth.IYAR -> {
 
                     if (day == 14) PESACH_SHENI
                     else if (day == 18) LAG_BAOMER
@@ -792,7 +792,7 @@ class JewishCalendar : JewishDate {
                     else NO_HOLIDAY
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SIVAN -> {
+                HebrewMonth.SIVAN -> {
                     when {
                         day == 5 -> EREV_SHAVUOS
                         day == 6 || day == 7 && !inIsrael -> SHAVUOS
@@ -801,7 +801,7 @@ class JewishCalendar : JewishDate {
                     }
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TAMMUZ ->            // push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                HebrewMonth.TAMMUZ ->            // push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
                     // return EREV_CHANUKAH;
                     // } else
 // push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday
@@ -816,7 +816,7 @@ class JewishCalendar : JewishDate {
                     else NO_HOLIDAY
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.AV -> {
+                HebrewMonth.AV -> {
                     // if Tisha B'av falls on Shabbos, push off until Sunday
                     when {
                         day == 10 && dayOfWeek == DayOfWeek.SUNDAY || day == 9 && dayOfWeek != DayOfWeek.SATURDAY -> TISHA_BEAV
@@ -825,7 +825,7 @@ class JewishCalendar : JewishDate {
                     }
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                HebrewMonth.ELUL ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
                     // return EREV_CHANUKAH;
                     // } else
 // push off Tzom Gedalia if it falls on Shabbos// if Tisha B'av falls on Shabbos, push off until Sunday// push off the fast day if it falls on Shabbos// push off the fast day if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
@@ -841,7 +841,7 @@ class JewishCalendar : JewishDate {
                     else NO_HOLIDAY
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI -> {
+                HebrewMonth.TISHREI -> {
                     return when (day) {
                         1 -> ROSH_HASHANA
                         2 -> ROSH_HASHANA
@@ -863,8 +863,8 @@ class JewishCalendar : JewishDate {
                         }
                     }
                 }
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.CHESHVAN -> NO_HOLIDAY // :(
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.KISLEV ->            // if (day == 24) {
+                HebrewMonth.CHESHVAN -> NO_HOLIDAY // :(
+                HebrewMonth.KISLEV ->            // if (day == 24) {
                     // return EREV_CHANUKAH;
                     // } else// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// push off Tzom Gedalia if it falls on Shabbos// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
                     // return EREV_CHANUKAH;
@@ -893,7 +893,7 @@ class JewishCalendar : JewishDate {
                     else NO_HOLIDAY
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TEVES -> {
+                HebrewMonth.TEVES -> {
                     when (day) {
                         in 1..(if (isKislevShort) 3 else 2) -> CHANUKAH
 //TODO use constant comparison
@@ -902,7 +902,7 @@ class JewishCalendar : JewishDate {
                     }
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SHEVAT ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                HebrewMonth.SHEVAT ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
                     // return EREV_CHANUKAH;
                     // } else
 // if (day == 24) {
@@ -950,7 +950,7 @@ class JewishCalendar : JewishDate {
                     else NO_HOLIDAY
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
+                HebrewMonth.ADAR ->// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if 13th Adar falls on Friday or Shabbos, push back to Thursday// else if a leap year// if 13th Adar falls on Friday or Shabbos, push back to Thursday// if (day == 24) {
                     // return EREV_CHANUKAH;
                     // } else
 // if (day == 24) {
@@ -1055,7 +1055,7 @@ class JewishCalendar : JewishDate {
                     }
                 }
 
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR_II -> {
+                HebrewMonth.ADAR_II -> {
                     // if 13th Adar falls on Friday or Shabbos, push back to Thursday
                     when (day) {
                         11, 12 -> if (dayOfWeek == DayOfWeek.THURSDAY) FAST_OF_ESTHER else NO_HOLIDAY
@@ -1157,13 +1157,13 @@ class JewishCalendar : JewishDate {
      * @return  if the day is the second day of *Yom Tov*.
      */
     val isErevYomTovSheni: Boolean
-        get() = (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI && jewishDayOfMonth == 1) ||
+        get() = (hebrewLocalDate.month == HebrewMonth.TISHREI && jewishDayOfMonth == 1) ||
                 (
                         !inIsrael && (
                                 (
-                                        (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN && (jewishDayOfMonth == 15 || jewishDayOfMonth == 21)) ||
-                                                (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI && (jewishDayOfMonth == 15 || jewishDayOfMonth == 22)) ||
-                                                (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SIVAN && jewishDayOfMonth == 6)
+                                        (hebrewLocalDate.month == HebrewMonth.NISSAN && (jewishDayOfMonth == 15 || jewishDayOfMonth == 21)) ||
+                                                (hebrewLocalDate.month == HebrewMonth.TISHREI && (jewishDayOfMonth == 15 || jewishDayOfMonth == 22)) ||
+                                                (hebrewLocalDate.month == HebrewMonth.SIVAN && jewishDayOfMonth == 6)
                                         )
                                 )
                         )
@@ -1175,7 +1175,7 @@ class JewishCalendar : JewishDate {
      * @return if the current day is *Aseres Yemei Teshuvah*
      */
     val isAseresYemeiTeshuva: Boolean
-        get() = hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI && jewishDayOfMonth <= 10
+        get() = hebrewLocalDate.month == HebrewMonth.TISHREI && jewishDayOfMonth <= 10
 
     /**
      * Returns true if the current day is *Pesach* (either  the *Yom Tov* of *Pesach* or*Chol Hamoed Pesach*).
@@ -1328,12 +1328,12 @@ class JewishCalendar : JewishDate {
                     it == HOSHANA_RABBA ||
                     it == CHOL_HAMOED_PESACH && jewishDayOfMonth == 20
         }// Erev Rosh Hashana is not Erev Rosh Chodesh.
-    val isErevPesach: Boolean get() = jewishMonth == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN && yomTovIndex == EREV_PESACH //include "2nd days"? (i.e. holiday == CHOL_HAMOED_PESACH and jewishDayOfMonth == 20). Not sure people call that "erev pesach", but thye might call it "erev yom tov" because it is assur bemelacha
-    val isErevSuccos: Boolean get() = jewishMonth == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI && yomTovIndex == EREV_SUCCOS
-    val isErevSheminiAtzeres: Boolean get() = jewishMonth == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI && yomTovIndex == HOSHANA_RABBA
-    val isErevShavuos: Boolean get() = jewishMonth == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SIVAN && yomTovIndex == EREV_SHAVUOS
-    val isErevRoshHashana: Boolean get() = jewishMonth == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL && yomTovIndex == EREV_ROSH_HASHANA
-    val isErevYomKippur: Boolean get() = jewishMonth == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI && yomTovIndex == EREV_YOM_KIPPUR
+    val isErevPesach: Boolean get() = jewishMonth == HebrewMonth.NISSAN && yomTovIndex == EREV_PESACH //include "2nd days"? (i.e. holiday == CHOL_HAMOED_PESACH and jewishDayOfMonth == 20). Not sure people call that "erev pesach", but thye might call it "erev yom tov" because it is assur bemelacha
+    val isErevSuccos: Boolean get() = jewishMonth == HebrewMonth.TISHREI && yomTovIndex == EREV_SUCCOS
+    val isErevSheminiAtzeres: Boolean get() = jewishMonth == HebrewMonth.TISHREI && yomTovIndex == HOSHANA_RABBA
+    val isErevShavuos: Boolean get() = jewishMonth == HebrewMonth.SIVAN && yomTovIndex == EREV_SHAVUOS
+    val isErevRoshHashana: Boolean get() = jewishMonth == HebrewMonth.ELUL && yomTovIndex == EREV_ROSH_HASHANA
+    val isErevYomKippur: Boolean get() = jewishMonth == HebrewMonth.TISHREI && yomTovIndex == EREV_YOM_KIPPUR
 
     /**
      * Returns true if the current day is *Erev Rosh Chodesh*. Returns false for *Erev Rosh Hashana*.
@@ -1343,7 +1343,7 @@ class JewishCalendar : JewishDate {
      */
     val isErevRoshChodesh: Boolean
         get() = // Erev Rosh Hashana is not Erev Rosh Chodesh.
-            jewishDayOfMonth == 29 && hebrewLocalDate.month != io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL
+            jewishDayOfMonth == 29 && hebrewLocalDate.month != HebrewMonth.ELUL
 
     /**
      * Returns true if the current day is *Yom Kippur Katan*. Returns false for *Erev Rosh Hashana*,
@@ -1359,7 +1359,7 @@ class JewishCalendar : JewishDate {
             val month = hebrewLocalDate.month
             val day = jewishDayOfMonth
             return when {
-                month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL || month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI || month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.KISLEV || month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN -> false
+                month == HebrewMonth.ELUL || month == HebrewMonth.TISHREI || month == HebrewMonth.KISLEV || month == HebrewMonth.NISSAN -> false
                 day == 29 && dayOfWeek != DayOfWeek.FRIDAY && dayOfWeek != DayOfWeek.SATURDAY -> true
                 day in 27..28 && dayOfWeek == DayOfWeek.THURSDAY -> true
                 else -> false
@@ -1379,7 +1379,7 @@ class JewishCalendar : JewishDate {
             val dayOfWeek = gregorianLocalDate.dayOfWeek
             val month = hebrewLocalDate.month
             val day = jewishDayOfMonth
-            return (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.CHESHVAN || month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.IYAR) &&
+            return (month == HebrewMonth.CHESHVAN || month == HebrewMonth.IYAR) &&
                     (
                             dayOfWeek == DayOfWeek.MONDAY && day in 5..17/*4 < day < 18*/ ||
                                     dayOfWeek == DayOfWeek.THURSDAY && day in 8..13/*7 < day < 14*/
@@ -1414,7 +1414,7 @@ class JewishCalendar : JewishDate {
             val day = jewishDayOfMonth
             val dayOfWeek = gregorianLocalDate.dayOfWeek
             // on 14 Nissan unless that is Shabbos where the fast is moved back to Thursday
-            return hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN && (
+            return hebrewLocalDate.month == HebrewMonth.NISSAN && (
                     (day == 14 && dayOfWeek != DayOfWeek.SATURDAY) ||
                             (day == 12 && dayOfWeek == DayOfWeek.THURSDAY)
                     )
@@ -1429,7 +1429,7 @@ class JewishCalendar : JewishDate {
     val dayOfChanukah: Int
         get() =
             if (isChanukah)
-                if (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.KISLEV) jewishDayOfMonth - 24
+                if (hebrewLocalDate.month == HebrewMonth.KISLEV) jewishDayOfMonth - 24
                 else /*teves*/ if (isKislevShort) jewishDayOfMonth + 5 else jewishDayOfMonth + 6
             else -1
 
@@ -1463,7 +1463,7 @@ class JewishCalendar : JewishDate {
      */
     val isRoshChodesh: Boolean
         get() = // Rosh Hashana is not rosh chodesh. Elul never has 30 days
-            (jewishDayOfMonth == 1 && hebrewLocalDate.month != io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI) || jewishDayOfMonth == 30
+            (jewishDayOfMonth == 1 && hebrewLocalDate.month != HebrewMonth.TISHREI) || jewishDayOfMonth == 30
 
     /**
      * Returns if the day is *Shabbos* and Sunday is *Rosh Chodesh* and the *haftorah* of Machar Chodesh is read.
@@ -1483,7 +1483,7 @@ class JewishCalendar : JewishDate {
         get() = gregorianLocalDate.dayOfWeek == DayOfWeek.SATURDAY &&
                 jewishDayOfMonth >= 23 &&
                 jewishDayOfMonth <= 29 &&
-                hebrewLocalDate.month != io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL
+                hebrewLocalDate.month != HebrewMonth.ELUL
     // if Sivan and before Shavuos// if Iyar// not a day of the Omer
 
     // if Nissan and second day of Pesach and on
@@ -1498,9 +1498,9 @@ class JewishCalendar : JewishDate {
             val day = jewishDayOfMonth
 
             // if Nissan and second day of Pesach and on
-            return if (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN && day >= 16) day - 15
-            else if (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.IYAR) day + 15             // if Iyar
-            else if (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SIVAN && day < 6) day + 44 // if Sivan and before Shavuos
+            return if (month == HebrewMonth.NISSAN && day >= 16) day - 15
+            else if (month == HebrewMonth.IYAR) day + 15             // if Iyar
+            else if (month == HebrewMonth.SIVAN && day < 6) day + 44 // if Sivan and before Shavuos
             else -1 // not a day of the Omer
         }
 
@@ -1712,7 +1712,7 @@ class JewishCalendar : JewishDate {
 
     fun copy(
         jewishYear: Long = this.hebrewLocalDate.year,
-        jewishMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth = this.hebrewLocalDate.month,
+        jewishMonth: HebrewMonth = this.hebrewLocalDate.month,
         jewishDayOfMonth: Int = this.jewishDayOfMonth,
         inIsrael: Boolean = this.inIsrael,
     ): JewishCalendar = JewishCalendar(jewishYear, jewishMonth, jewishDayOfMonth, inIsrael)

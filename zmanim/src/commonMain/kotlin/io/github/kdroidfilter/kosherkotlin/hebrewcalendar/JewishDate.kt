@@ -89,11 +89,11 @@ open class JewishDate : Comparable<JewishDate> {
      * @throws IllegalArgumentException
      * if the day of month is < 1 or > 30, or a year of < 0 is passed in.
      */
-    constructor(hebrewYear: Int, hebrewMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, hebrewDayOfMonth: Int) : this(hebrewYear.toLong(), hebrewMonth, hebrewDayOfMonth)
-    constructor(hebrewYear: Long, hebrewMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, hebrewDayOfMonth: Int) {
+    constructor(hebrewYear: Int, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) : this(hebrewYear.toLong(), hebrewMonth, hebrewDayOfMonth)
+    constructor(hebrewYear: Long, hebrewMonth: HebrewMonth, hebrewDayOfMonth: Int) {
         setJewishDate(hebrewYear, hebrewMonth, hebrewDayOfMonth)
     }
-    constructor(hebrewYear: Int, hebrewMonth: Int, hebrewDayOfMonth: Int) : this(hebrewYear, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(hebrewMonth), hebrewDayOfMonth)
+    constructor(hebrewYear: Int, hebrewMonth: Int, hebrewDayOfMonth: Int) : this(hebrewYear, HebrewMonth.getMonthForValue(hebrewMonth), hebrewDayOfMonth)
     constructor(localDate: LocalDate) {
         setDate(localDate)
     }
@@ -326,7 +326,7 @@ open class JewishDate : Comparable<JewishDate> {
         hebrewLocalDate.month,
         hebrewLocalDate.dayOfMonth
     )
-    fun setJewishDate(year: Long, month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, dayOfMonth: Int): JewishDate {
+    fun setJewishDate(year: Long, month: HebrewMonth, dayOfMonth: Int): JewishDate {
         setJewishDate(year, month, dayOfMonth, 0, 0, 0)
         return this
     }
@@ -358,7 +358,7 @@ open class JewishDate : Comparable<JewishDate> {
      * 17. For larger a larger number of chalakim such as 793 (TaShTzaG) break the chalakim into minutes (18
      * chalakim per minutes, so it would be 44 minutes and 1 chelek in the case of 793 (TaShTzaG).
      */
-    fun setJewishDate(year: Long, month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int): JewishDate {
+    fun setJewishDate(year: Long, month: HebrewMonth, dayOfMonth: Int, hours: Int, minutes: Int, chalakim: Int): JewishDate {
         validateJewishDate(hours, minutes, chalakim)
         val date = HebrewLocalDate(
             year,
@@ -439,8 +439,8 @@ open class JewishDate : Comparable<JewishDate> {
                     hebrewLocalDate = if (hebrewLocalDate.dayOfMonth == daysInJewishMonth) {
                         // if it last day of elul (i.e. last day of Jewish year)
                         when (hebrewLocalDate.month) {
-                            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL -> HebrewLocalDate(hebrewLocalDate.year + 1, hebrewLocalDate.month.nextMonth/*wraps*/, 1)
-                            getLastMonthOfJewishYear(hebrewLocalDate.year) -> HebrewLocalDate(hebrewLocalDate.year, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN, 1)
+                            HebrewMonth.ELUL -> HebrewLocalDate(hebrewLocalDate.year + 1, hebrewLocalDate.month.nextMonth/*wraps*/, 1)
+                            getLastMonthOfJewishYear(hebrewLocalDate.year) -> HebrewLocalDate(hebrewLocalDate.year, HebrewMonth.NISSAN, 1)
                             else -> HebrewLocalDate(hebrewLocalDate.year, hebrewLocalDate.month.nextMonth, 1)
                         }
                     } else { // if not last date of month
@@ -468,13 +468,13 @@ open class JewishDate : Comparable<JewishDate> {
     private fun forwardJewishMonth(amount: Int) {
         require(amount >= 1) { "the amount of months to forward has to be greater than zero." }
         for (i in 0 until amount) {
-            if (hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL) {
-                setJewishMonth(io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI)
+            if (hebrewLocalDate.month == HebrewMonth.ELUL) {
+                setJewishMonth(HebrewMonth.TISHREI)
                 jewishYear = hebrewLocalDate.year + 1
             } else if (
-                (!isJewishLeapYear && hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR) ||
-                (isJewishLeapYear && hebrewLocalDate.month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR_II)
-            ) setJewishMonth(io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN)
+                (!isJewishLeapYear && hebrewLocalDate.month == HebrewMonth.ADAR) ||
+                (isJewishLeapYear && hebrewLocalDate.month == HebrewMonth.ADAR_II)
+            ) setJewishMonth(HebrewMonth.NISSAN)
             else setJewishMonth(hebrewLocalDate.month.nextMonth)
         }
     }
@@ -503,8 +503,8 @@ open class JewishDate : Comparable<JewishDate> {
         // change Jewish date
         hebrewLocalDate = if (hebrewLocalDate.dayOfMonth == 1) { // if first day of the Jewish month
             when (hebrewLocalDate.month) {
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN -> HebrewLocalDate(hebrewLocalDate.year, getLastMonthOfJewishYear(hebrewLocalDate.year), daysInJewishMonth)
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI -> { // if Rosh Hashana
+                HebrewMonth.NISSAN -> HebrewLocalDate(hebrewLocalDate.year, getLastMonthOfJewishYear(hebrewLocalDate.year), daysInJewishMonth)
+                HebrewMonth.TISHREI -> { // if Rosh Hashana
                     HebrewLocalDate(hebrewLocalDate.year - 1, hebrewLocalDate.month.previousMonth, daysInJewishMonth)
                 }
                 else -> HebrewLocalDate(hebrewLocalDate.year, hebrewLocalDate.month.previousMonth, daysInJewishMonth)
@@ -548,7 +548,7 @@ open class JewishDate : Comparable<JewishDate> {
          */
         set(value) { setJewishDate(value, hebrewLocalDate.month, hebrewLocalDate.dayOfMonth) }
 
-    var jewishMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth
+    var jewishMonth: HebrewMonth
         set(value) { setJewishDate(hebrewLocalDate.year, value, hebrewLocalDate.dayOfMonth) }
         get() = hebrewLocalDate.month
     /**
@@ -625,7 +625,7 @@ open class JewishDate : Comparable<JewishDate> {
      * @throws IllegalArgumentException
      * if a month < 1 or > 12 (or 13 on a leap year) is passed in
      */
-    fun setJewishMonth(month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
+    fun setJewishMonth(month: HebrewMonth): JewishDate { //can't make this a setter because it has side effects and would cause a recursive StackOverflow
         setJewishDate(hebrewLocalDate.year, month, hebrewLocalDate.dayOfMonth)
         return this
     }
@@ -649,7 +649,7 @@ open class JewishDate : Comparable<JewishDate> {
     }*/
     fun copy(
         hebrewYear: Long = hebrewLocalDate.year,
-        month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth = hebrewLocalDate.month,
+        month: HebrewMonth = hebrewLocalDate.month,
         hebrewDayOfMonth: Int = hebrewLocalDate.dayOfMonth
     ): JewishDate = JewishDate(hebrewYear, month, hebrewDayOfMonth)
 
@@ -771,7 +771,7 @@ open class JewishDate : Comparable<JewishDate> {
          * @return 12 on a non leap year or 13 on a leap year
          * @see isJewishLeapYear
          */
-        private fun getLastMonthOfJewishYear(year: Long): io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth = if (year.isJewishLeapYear) io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR_II else io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR
+        private fun getLastMonthOfJewishYear(year: Long): HebrewMonth = if (year.isJewishLeapYear) HebrewMonth.ADAR_II else HebrewMonth.ADAR
 
         /**
          * Returns the number of days elapsed from the Sunday prior to the start of the Jewish Calendar to the mean
@@ -786,7 +786,7 @@ open class JewishDate : Comparable<JewishDate> {
          */
         fun getJewishCalendarElapsedDays(year: Int): Int = getJewishCalendarElapsedDays(year.toLong()).toInt()
         fun getJewishCalendarElapsedDays(year: Long): Long {
-            val chalakimSince = getChalakimSinceMoladTohu(year, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI)
+            val chalakimSince = getChalakimSinceMoladTohu(year, HebrewMonth.TISHREI)
             val moladDay = (chalakimSince / CHALAKIM_PER_DAY.toLong()).toInt()
             val moladParts = (chalakimSince - moladDay * CHALAKIM_PER_DAY.toLong()).toInt()
             // delay Rosh Hashana for the 4 dechiyos
@@ -866,7 +866,7 @@ open class JewishDate : Comparable<JewishDate> {
          * constants such as [HebrewMonth.TISHREI].
          * @return the number of chalakim (parts - 1080 to the hour) from the original hypothetical Molad Tohu
          */
-        private fun getChalakimSinceMoladTohu(year: Long, month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth): Long {
+        private fun getChalakimSinceMoladTohu(year: Long, month: HebrewMonth): Long {
             // Jewish lunar month = 29 days, 12 hours and 793 chalakim
             // chalakim since Molad Tohu BeHaRaD - 1 day, 5 hours and 204 chalakim
             val monthNumberOfYear = month.getTishreiBasedValueInYear(year)
@@ -965,17 +965,17 @@ open class JewishDate : Comparable<JewishDate> {
          * the Jewish Year
          * @return the number of days for a given Jewish month
          */
-        internal fun getDaysInJewishMonth(month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, year: Int): Int = getDaysInJewishMonth(month, year.toLong())
-        internal fun getDaysInJewishMonth(month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, year: Long): Int = if (
+        internal fun getDaysInJewishMonth(month: HebrewMonth, year: Int): Int = getDaysInJewishMonth(month, year.toLong())
+        internal fun getDaysInJewishMonth(month: HebrewMonth, year: Long): Int = if (
             (
-                    (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.IYAR) ||
-                            (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TAMMUZ) ||
-                            (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ELUL) ||
-                            (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TEVES) ||
-                            (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR_II) ||
-                            (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.CHESHVAN && !year.isCheshvanLong) ||
-                            (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.KISLEV && year.isKislevShort) ||
-                            (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR && !year.isJewishLeapYear)
+                    (month == HebrewMonth.IYAR) ||
+                            (month == HebrewMonth.TAMMUZ) ||
+                            (month == HebrewMonth.ELUL) ||
+                            (month == HebrewMonth.TEVES) ||
+                            (month == HebrewMonth.ADAR_II) ||
+                            (month == HebrewMonth.CHESHVAN && !year.isCheshvanLong) ||
+                            (month == HebrewMonth.KISLEV && year.isKislevShort) ||
+                            (month == HebrewMonth.ADAR && !year.isJewishLeapYear)
                     )
         ) 29 else 30
 
@@ -999,15 +999,15 @@ open class JewishDate : Comparable<JewishDate> {
          * the day in the Jewish month
          * @return the number of days
          */
-        fun getDaysSinceStartOfJewishYear(year: Long, month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, dayOfMonth: Int): Int {
+        fun getDaysSinceStartOfJewishYear(year: Long, month: HebrewMonth, dayOfMonth: Int): Int {
             var elapsedDays = dayOfMonth
             // Before Tishrei (from Nissan to Tishrei), add days in prior months
-            if (month < io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI) {
+            if (month < HebrewMonth.TISHREI) {
                 // this year before and after Nisan.
-                for (m in io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI..getLastMonthOfJewishYear(year)) elapsedDays += getDaysInJewishMonth(m, year)
-                for (m in io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN until month) elapsedDays += getDaysInJewishMonth(m, year)
+                for (m in HebrewMonth.TISHREI..getLastMonthOfJewishYear(year)) elapsedDays += getDaysInJewishMonth(m, year)
+                for (m in HebrewMonth.NISSAN until month) elapsedDays += getDaysInJewishMonth(m, year)
             } else { // Add days in prior months this year
-                for (m in io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI until month) elapsedDays += getDaysInJewishMonth(m, year)
+                for (m in HebrewMonth.TISHREI until month) elapsedDays += getDaysInJewishMonth(m, year)
             }
             return elapsedDays
         }

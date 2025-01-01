@@ -19,13 +19,11 @@ import kotlinx.datetime.until
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar
 import io.github.kdroidfilter.kosherkotlin.ComplexZmanimCalendar
 import io.github.kdroidfilter.kosherkotlin.Zman
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.Daf
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewLocalDate
-import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate
 import io.github.kdroidfilter.kosherkotlin.metadata.ZmanCalculationMethod
 import io.github.kdroidfilter.kosherkotlin.metadata.ZmanDefinition
@@ -40,9 +38,7 @@ import java.util.stream.LongStream
 
 class RegressionTest {
     companion object {
-        fun Instant.toDate(): java.util.Date = this.let { java.util.Date.from(it.toJavaInstant()) }
-        fun Zman.DateBased.toDate(): java.util.Date? =
-            this.momentOfOccurrence?.let { java.util.Date.from(it.toJavaInstant()) }
+        fun Instant.toDate(): Date = this.let { Date.from(it.toJavaInstant()) }
 
         val YEAR_6000 = HebrewLocalDate(6000, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 1).toLocalDateGregorian()
         val YEAR_6000_INSTANT = YEAR_6000.atStartOfDayIn(TimeZone.UTC)
@@ -314,7 +310,7 @@ class RegressionTest {
         /**
          * Only compare time. Allow second to be off by 1. Don't check millis.
          * */
-        fun assertEquals(date: java.util.Date?, instant: Zman.DateBased?) {
+        fun assertEquals(date: Date?, instant: Zman.DateBased?) {
             val (javaHr, javaMin, javaSec) = date?.toInstant()?.toKotlinInstant()
                 ?.toString()?.substringAfter('T')?.substringBefore('.')?.removeSuffix("Z")
                 ?.split(":") ?: listOf("0", "0", "0")
@@ -963,7 +959,7 @@ class RegressionTest {
     }
 
     private fun nullIfKotlinNull(
-        java: java.util.Date?,
+        java: Date?,
         kotlin: Zman.DateBased,
         label: String
     ): Triple<Date?, Zman.DateBased, String> {
