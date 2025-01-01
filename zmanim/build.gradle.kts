@@ -109,6 +109,8 @@ mavenPublishing {
 
         // Specify SCM information
         scm {
+            connection.set("scm:git:https://github.com/kdroidFilter/KosherKotlin.git")
+            developerConnection.set("scm:git:https://github.com/kdroidFilter/KosherKotlin.git")
             url.set("https://github.com/kdroidFilter/KosherKotlin")
          }
     }
