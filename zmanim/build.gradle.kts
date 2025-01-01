@@ -1,4 +1,5 @@
 import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     alias(libs.plugins.multiplatform)
@@ -10,6 +11,12 @@ plugins {
 
 group = "io.github.kdroidfilter.kosherkotlin"
 version = "2.5.2"
+
+tasks.withType<DokkaTask>().configureEach {
+    moduleName.set("Kosher Kotlin - K-droid Fork")
+    offlineMode.set(true)
+
+}
 
 kotlin {
     jvmToolchain(17)
