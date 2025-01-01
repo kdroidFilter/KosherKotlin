@@ -171,25 +171,16 @@ data class Daf(
         /**
          * See [masechta].
          */
-        val masechtosBavli: Array<String> = arrayOf(
-            "\u05D1\u05E8\u05DB\u05D5\u05EA", "\u05E9\u05D1\u05EA",
-            "\u05E2\u05D9\u05E8\u05D5\u05D1\u05D9\u05DF", "\u05E4\u05E1\u05D7\u05D9\u05DD",
-            "\u05E9\u05E7\u05DC\u05D9\u05DD", "\u05D9\u05D5\u05DE\u05D0", "\u05E1\u05D5\u05DB\u05D4",
-            "\u05D1\u05D9\u05E6\u05D4", "\u05E8\u05D0\u05E9 \u05D4\u05E9\u05E0\u05D4",
-            "\u05EA\u05E2\u05E0\u05D9\u05EA", "\u05DE\u05D2\u05D9\u05DC\u05D4",
-            "\u05DE\u05D5\u05E2\u05D3 \u05E7\u05D8\u05DF", "\u05D7\u05D2\u05D9\u05D2\u05D4",
-            "\u05D9\u05D1\u05DE\u05D5\u05EA", "\u05DB\u05EA\u05D5\u05D1\u05D5\u05EA", "\u05E0\u05D3\u05E8\u05D9\u05DD",
-            "\u05E0\u05D6\u05D9\u05E8", "\u05E1\u05D5\u05D8\u05D4", "\u05D2\u05D9\u05D8\u05D9\u05DF",
-            "\u05E7\u05D9\u05D3\u05D5\u05E9\u05D9\u05DF", "\u05D1\u05D1\u05D0 \u05E7\u05DE\u05D0",
-            "\u05D1\u05D1\u05D0 \u05DE\u05E6\u05D9\u05E2\u05D0", "\u05D1\u05D1\u05D0 \u05D1\u05EA\u05E8\u05D0",
-            "\u05E1\u05E0\u05D4\u05D3\u05E8\u05D9\u05DF", "\u05DE\u05DB\u05D5\u05EA",
-            "\u05E9\u05D1\u05D5\u05E2\u05D5\u05EA", "\u05E2\u05D1\u05D5\u05D3\u05D4 \u05D6\u05E8\u05D4",
-            "\u05D4\u05D5\u05E8\u05D9\u05D5\u05EA", "\u05D6\u05D1\u05D7\u05D9\u05DD", "\u05DE\u05E0\u05D7\u05D5\u05EA",
-            "\u05D7\u05D5\u05DC\u05D9\u05DF", "\u05D1\u05DB\u05D5\u05E8\u05D5\u05EA", "\u05E2\u05E8\u05DB\u05D9\u05DF",
-            "\u05EA\u05DE\u05D5\u05E8\u05D4", "\u05DB\u05E8\u05D9\u05EA\u05D5\u05EA", "\u05DE\u05E2\u05D9\u05DC\u05D4",
-            "\u05E7\u05D9\u05E0\u05D9\u05DD", "\u05EA\u05DE\u05D9\u05D3", "\u05DE\u05D9\u05D3\u05D5\u05EA",
-            "\u05E0\u05D3\u05D4"
+        val masechtosBavli = listOf(
+            "ברכות", "שבת", "עירובין", "פסחים", "שקלים", "יומא", "סוכה",
+            "ביצה", "ראש השנה", "תענית", "מגילה", "מועד קטן", "חגיגה",
+            "יבמות", "כתובות", "נדרים", "נזיר", "סוטה", "גיטין",
+            "קידושין", "בבא קמא", "בבא מציעא", "בבא בתרא", "סנהדרין",
+            "מכות", "שבועות", "עבודה זרה", "הוריות", "זבחים", "מנחות",
+            "חולין", "בכורות", "ערכין", "תמורה", "כריתות", "מעילה",
+            "קינים", "תמיד", "מידות", "נדה"
         )
+
         /**
          * Getter method to allow retrieving the list of Yerushalmi *masechtos* transliterated into into Latin chars.
          * The default uses Ashkenazi American English transliteration.
@@ -214,47 +205,14 @@ data class Daf(
         /**
          * See [.getYerushalmiMasechta].
          */
-        val yerushalmiMasechtos: Array<String> = arrayOf(
-            "\u05d1\u05e8\u05db\u05d5\u05ea",
-            "\u05e4\u05d9\u05d0\u05d4",
-            "\u05d3\u05de\u05d0\u05d9",
-            "\u05db\u05dc\u05d0\u05d9\u05dd",
-            "\u05e9\u05d1\u05d9\u05e2\u05d9\u05ea",
-            "\u05ea\u05e8\u05d5\u05de\u05d5\u05ea",
-            "\u05de\u05e2\u05e9\u05e8\u05d5\u05ea",
-            "\u05de\u05e2\u05e9\u05e8 \u05e9\u05e0\u05d9",
-            "\u05d7\u05dc\u05d4",
-            "\u05e2\u05d5\u05e8\u05dc\u05d4",
-            "\u05d1\u05d9\u05db\u05d5\u05e8\u05d9\u05dd",
-            "\u05e9\u05d1\u05ea",
-            "\u05e2\u05d9\u05e8\u05d5\u05d1\u05d9\u05df",
-            "\u05e4\u05e1\u05d7\u05d9\u05dd",
-            "\u05d1\u05d9\u05e6\u05d4",
-            "\u05e8\u05d0\u05e9 \u05d4\u05e9\u05e0\u05d4",
-            "\u05d9\u05d5\u05de\u05d0",
-            "\u05e1\u05d5\u05db\u05d4",
-            "\u05ea\u05e2\u05e0\u05d9\u05ea",
-            "\u05e9\u05e7\u05dc\u05d9\u05dd",
-            "\u05de\u05d2\u05d9\u05dc\u05d4",
-            "\u05d7\u05d2\u05d9\u05d2\u05d4",
-            "\u05de\u05d5\u05e2\u05d3 \u05e7\u05d8\u05df",
-            "\u05d9\u05d1\u05de\u05d5\u05ea",
-            "\u05db\u05ea\u05d5\u05d1\u05d5\u05ea",
-            "\u05e1\u05d5\u05d8\u05d4",
-            "\u05e0\u05d3\u05e8\u05d9\u05dd",
-            "\u05e0\u05d6\u05d9\u05e8",
-            "\u05d2\u05d9\u05d8\u05d9\u05df",
-            "\u05e7\u05d9\u05d3\u05d5\u05e9\u05d9\u05df",
-            "\u05d1\u05d1\u05d0 \u05e7\u05de\u05d0",
-            "\u05d1\u05d1\u05d0 \u05de\u05e6\u05d9\u05e2\u05d0",
-            "\u05d1\u05d1\u05d0 \u05d1\u05ea\u05e8\u05d0",
-            "\u05e9\u05d1\u05d5\u05e2\u05d5\u05ea",
-            "\u05de\u05db\u05d5\u05ea",
-            "\u05e1\u05e0\u05d4\u05d3\u05e8\u05d9\u05df",
-            "\u05e2\u05d1\u05d5\u05d3\u05d4 \u05d6\u05e8\u05d4",
-            "\u05d4\u05d5\u05e8\u05d9\u05d5\u05ea",
-            "\u05e0\u05d9\u05d3\u05d4",
-            "\u05d0\u05d9\u05df \u05d3\u05e3 \u05d4\u05d9\u05d5\u05dd"
+        val yerushalmiMasechtos = listOf(
+            "ברכות", "פיאה", "דמאי", "כלאים", "שביעית", "תרומות",
+            "מעשרות", "מעשר שני", "חלה", "ערלה", "ביכורים", "שבת",
+            "עירובין", "פסחים", "ביצה", "ראש השנה", "יומא", "סוכה",
+            "תענית", "שקלים", "מגילה", "חגיגה", "מועד קטן", "יבמות",
+            "כתובות", "סוטה", "נדרים", "נזיר", "גיטין", "קידושין",
+            "בבא קמא", "בבא מציעא", "בבא בתרא", "שבועות", "מכות",
+            "סנהדרין", "עבודה זרה", "הוריות", "נידה", "אין דף היום"
         )
     }
 }

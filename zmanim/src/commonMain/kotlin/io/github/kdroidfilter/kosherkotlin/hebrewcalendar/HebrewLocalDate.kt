@@ -17,19 +17,19 @@ import kotlin.time.Duration.Companion.days
  * */
 data class HebrewLocalDate(
     val year: Long,
-    val month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth,
+    val month: HebrewMonth,
     val dayOfMonth: Int
 ) : Comparable<HebrewLocalDate> {
     init {
         require(year != 0L) { "year must not be 0 - year was skipped" }
 //        require(year > 0) { "year must be positive: $year" } // leaving this out to make the calendar proleptic
         require(dayOfMonth in 1..30) { "dayOfMonth must be between 1 and 30: $dayOfMonth" }
-        if(month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR_II) require(year.isJewishLeapYear) { "$year was not leap year - month cannot be set to $month" }
+        if(month == HebrewMonth.ADAR_II) require(year.isJewishLeapYear) { "$year was not leap year - month cannot be set to $month" }
         val daysInJewishMonth = JewishDate.getDaysInJewishMonth(month, year)
         require(daysInJewishMonth >= dayOfMonth) { "Cannot set dayOfMonth to $dayOfMonth; $month only had $daysInJewishMonth in the year $year" }
     }
 
-    constructor(year: Int, month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, dayOfMonth: Int) : this(year.toLong(), month, dayOfMonth)
+    constructor(year: Int, month: HebrewMonth, dayOfMonth: Int) : this(year.toLong(), month, dayOfMonth)
 
 
     //-----------------------------------------------------------------------
@@ -48,11 +48,11 @@ data class HebrewLocalDate(
         var cmp = year - other.year
         if (cmp == 0L) {
             cmp = (
-                    io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getTishreiBasedValue(
+                    HebrewMonth.getTishreiBasedValue(
                         month.value,
                         year
                     ) -
-                            io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getTishreiBasedValue(other.month.value, other.year)
+                            HebrewMonth.getTishreiBasedValue(other.month.value, other.year)
                     ).toLong()
             if (cmp == 0L) {
                 cmp = (dayOfMonth - other.dayOfMonth).toLong()
@@ -73,7 +73,7 @@ data class HebrewLocalDate(
      *
      * **Note:** This method does not change the day or year (e.g. if the [dayOfMonth] is 30 and [newMonth] only has 29 days, [dayOfMonth] will remain 30).
      * */
-    fun withMonth(newMonth: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth) = copy(month = newMonth)
+    fun withMonth(newMonth: HebrewMonth) = copy(month = newMonth)
 
     /**
      *
@@ -136,7 +136,7 @@ data class HebrewLocalDate(
                 val nextMonthInYear = newMonth.getNextMonthInYear(newYear)
                 newMonth = if (nextMonthInYear == null) {
                     newYear++
-                    io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI
+                    HebrewMonth.TISHREI
                 } else {
                     nextMonthInYear
                 }
@@ -302,7 +302,7 @@ data class HebrewLocalDate(
                 val gregorianDateOfNextRoshChodesh = currentGregorianDateInstant + daysInMonth.days
                 val nextMonth = currentHebrewDate.month.getNextMonthInYear(currentHebrewDate.year)
                 val newHebrewDate =
-                    if (nextMonth == null/*cross year boundary*/) currentHebrewDate.withMonth(io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI)
+                    if (nextMonth == null/*cross year boundary*/) currentHebrewDate.withMonth(HebrewMonth.TISHREI)
                         .withYear(currentHebrewDate.year + 1)
                     else currentHebrewDate.withMonth(nextMonth)
 
@@ -346,7 +346,7 @@ data class HebrewLocalDate(
                 if (nextMonth == null) {
                     HebrewLocalDate(
                         currentHebrewDate.year + 1,
-                        io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI,
+                        HebrewMonth.TISHREI,
                         (numDaysLeftToAdd + 1/*started on day 1, so need to add that*/) - numDaysInHebrewMonth
                     )
                 } else currentHebrewDate
@@ -359,7 +359,7 @@ data class HebrewLocalDate(
         }
 
         fun getNumDaysInHebrewYear(year: Long): Int = year.daysInJewishYear
-        fun getNumDaysInHebrewMonth(month: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth, year: Long): Int = JewishDate.getDaysInJewishMonth(month, year)
+        fun getNumDaysInHebrewMonth(month: HebrewMonth, year: Long): Int = JewishDate.getDaysInJewishMonth(month, year)
 
         /**
          * the Jewish epoch using the RD (Rata Die/Fixed Date or Reingold Dershowitz) day used in Calendrical Calculations.
@@ -374,7 +374,7 @@ data class HebrewLocalDate(
          * Certain edge cases related to year zero were not handled correctly by the library.
          * TODO reimplement to handle those cases.
          * */
-        internal val STARTING_DATE_HEBREW = HebrewLocalDate(3762, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 1)
+        internal val STARTING_DATE_HEBREW = HebrewLocalDate(3762, HebrewMonth.TISHREI, 1)
 
         /**
          * @see STARTING_DATE_HEBREW; Does not account for The Gregorian Reformation.

@@ -15,6 +15,7 @@
  */
 package io.github.kdroidfilter.kosherkotlin.hebrewcalendar
 
+import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.*
 import io.github.kdroidfilter.kosherkotlin.util.WeekFormat
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar.Companion.toJewishDayOfWeek
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar.Parsha
@@ -255,78 +256,79 @@ class HebrewDateFormatter {
      * שובה,שירה,הגדול,
      * חזון,נחמו"`
      */
+
     private val hebrewParshaMap = mapOf(
         Parsha.NONE to "",
-        Parsha.BERESHIS to "\u05D1\u05E8\u05D0\u05E9\u05D9\u05EA",
-        Parsha.NOACH to "\u05E0\u05D7",
-        Parsha.LECH_LECHA to "\u05DC\u05DA \u05DC\u05DA",
-        Parsha.VAYERA to "\u05D5\u05D9\u05E8\u05D0",
-        Parsha.CHAYEI_SARA to "\u05D7\u05D9\u05D9 \u05E9\u05E8\u05D4",
-        Parsha.TOLDOS to "\u05EA\u05D5\u05DC\u05D3\u05D5\u05EA",
-        Parsha.VAYETZEI to "\u05D5\u05D9\u05E6\u05D0",
-        Parsha.VAYISHLACH to "\u05D5\u05D9\u05E9\u05DC\u05D7",
-        Parsha.VAYESHEV to "\u05D5\u05D9\u05E9\u05D1",
-        Parsha.MIKETZ to "\u05DE\u05E7\u05E5",
-        Parsha.VAYIGASH to "\u05D5\u05D9\u05D2\u05E9",
-        Parsha.VAYECHI to "\u05D5\u05D9\u05D7\u05D9",
-        Parsha.SHEMOS to "\u05E9\u05DE\u05D5\u05EA",
-        Parsha.VAERA to "\u05D5\u05D0\u05E8\u05D0",
-        Parsha.BO to "\u05D1\u05D0",
-        Parsha.BESHALACH to "\u05D1\u05E9\u05DC\u05D7",
-        Parsha.YISRO to "\u05D9\u05EA\u05E8\u05D5",
-        Parsha.MISHPATIM to "\u05DE\u05E9\u05E4\u05D8\u05D9\u05DD",
-        Parsha.TERUMAH to "\u05EA\u05E8\u05D5\u05DE\u05D4",
-        Parsha.TETZAVEH to "\u05EA\u05E6\u05D5\u05D4",
-        Parsha.KI_SISA to "\u05DB\u05D9 \u05EA\u05E9\u05D0",
-        Parsha.VAYAKHEL to "\u05D5\u05D9\u05E7\u05D4\u05DC",
-        Parsha.PEKUDEI to "\u05E4\u05E7\u05D5\u05D3\u05D9",
-        Parsha.VAYIKRA to "\u05D5\u05D9\u05E7\u05E8\u05D0",
-        Parsha.TZAV to "\u05E6\u05D5",
-        Parsha.SHMINI to "\u05E9\u05DE\u05D9\u05E0\u05D9",
-        Parsha.TAZRIA to "\u05EA\u05D6\u05E8\u05D9\u05E2",
-        Parsha.METZORA to "\u05DE\u05E6\u05E8\u05E2",
-        Parsha.ACHREI_MOS to "\u05D0\u05D7\u05E8\u05D9 \u05DE\u05D5\u05EA",
-        Parsha.KEDOSHIM to "\u05E7\u05D3\u05D5\u05E9\u05D9\u05DD",
-        Parsha.EMOR to "\u05D0\u05DE\u05D5\u05E8",
-        Parsha.BEHAR to "\u05D1\u05D4\u05E8",
-        Parsha.BECHUKOSAI to "\u05D1\u05D7\u05E7\u05EA\u05D9",
-        Parsha.BAMIDBAR to "\u05D1\u05DE\u05D3\u05D1\u05E8",
-        Parsha.NASSO to "\u05E0\u05E9\u05D0",
-        Parsha.BEHAALOSCHA to "\u05D1\u05D4\u05E2\u05DC\u05EA\u05DA",
-        Parsha.SHLACH to "\u05E9\u05DC\u05D7 \u05DC\u05DA",
-        Parsha.KORACH to "\u05E7\u05E8\u05D7",
-        Parsha.CHUKAS to "\u05D7\u05D5\u05E7\u05EA",
-        Parsha.BALAK to "\u05D1\u05DC\u05E7",
-        Parsha.PINCHAS to "\u05E4\u05D9\u05E0\u05D7\u05E1",
-        Parsha.MATOS to "\u05DE\u05D8\u05D5\u05EA",
-        Parsha.MASEI to "\u05DE\u05E1\u05E2\u05D9",
-        Parsha.DEVARIM to "\u05D3\u05D1\u05E8\u05D9\u05DD",
-        Parsha.VAESCHANAN to "\u05D5\u05D0\u05EA\u05D7\u05E0\u05DF",
-        Parsha.EIKEV to "\u05E2\u05E7\u05D1",
-        Parsha.REEH to "\u05E8\u05D0\u05D4",
-        Parsha.SHOFTIM to "\u05E9\u05D5\u05E4\u05D8\u05D9\u05DD",
-        Parsha.KI_SEITZEI to "\u05DB\u05D9 \u05EA\u05E6\u05D0",
-        Parsha.KI_SAVO to "\u05DB\u05D9 \u05EA\u05D1\u05D5\u05D0",
-        Parsha.NITZAVIM to "\u05E0\u05E6\u05D1\u05D9\u05DD",
-        Parsha.VAYEILECH to "\u05D5\u05D9\u05DC\u05DA",
-        Parsha.HAAZINU to "\u05D4\u05D0\u05D6\u05D9\u05E0\u05D5",
-        Parsha.VZOS_HABERACHA to "\u05D5\u05D6\u05D0\u05EA \u05D4\u05D1\u05E8\u05DB\u05D4 ",
-        Parsha.VAYAKHEL_PEKUDEI to "\u05D5\u05D9\u05E7\u05D4\u05DC \u05E4\u05E7\u05D5\u05D3\u05D9",
-        Parsha.TAZRIA_METZORA to "\u05EA\u05D6\u05E8\u05D9\u05E2 \u05DE\u05E6\u05E8\u05E2",
-        Parsha.ACHREI_MOS_KEDOSHIM to "\u05D0\u05D7\u05E8\u05D9 \u05DE\u05D5\u05EA \u05E7\u05D3\u05D5\u05E9\u05D9\u05DD",
-        Parsha.BEHAR_BECHUKOSAI to "\u05D1\u05D4\u05E8 \u05D1\u05D7\u05E7\u05EA\u05D9",
-        Parsha.CHUKAS_BALAK to "\u05D7\u05D5\u05E7\u05EA \u05D1\u05DC\u05E7",
-        Parsha.MATOS_MASEI to "\u05DE\u05D8\u05D5\u05EA \u05DE\u05E1\u05E2\u05D9",
-        Parsha.NITZAVIM_VAYEILECH to "\u05E0\u05E6\u05D1\u05D9\u05DD \u05D5\u05D9\u05DC\u05DA",
-        Parsha.SHKALIM to "\u05E9\u05E7\u05DC\u05D9\u05DD",
-        Parsha.ZACHOR to "\u05D6\u05DB\u05D5\u05E8",
-        Parsha.PARA to "\u05E4\u05E8\u05D4",
-        Parsha.HACHODESH to "\u05D4\u05D7\u05D3\u05E9",
-        Parsha.SHUVA to "\u05E9\u05D5\u05D1\u05D4",
-        Parsha.SHIRA to "\u05E9\u05D9\u05E8\u05D4",
-        Parsha.HAGADOL to "\u05D4\u05D2\u05D3\u05D5\u05DC",
-        Parsha.CHAZON to "\u05D7\u05D6\u05D5\u05DF",
-        Parsha.NACHAMU to "\u05E0\u05D7\u05DE\u05D5"
+        Parsha.BERESHIS to "בראשית",
+        Parsha.NOACH to "נח",
+        Parsha.LECH_LECHA to "לך לך",
+        Parsha.VAYERA to "וירא",
+        Parsha.CHAYEI_SARA to "חיי שרה",
+        Parsha.TOLDOS to "תולדות",
+        Parsha.VAYETZEI to "ויצא",
+        Parsha.VAYISHLACH to "וישלח",
+        Parsha.VAYESHEV to "וישב",
+        Parsha.MIKETZ to "מקץ",
+        Parsha.VAYIGASH to "ויגש",
+        Parsha.VAYECHI to "ויחי",
+        Parsha.SHEMOS to "שמות",
+        Parsha.VAERA to "וארא",
+        Parsha.BO to "בא",
+        Parsha.BESHALACH to "בשלח",
+        Parsha.YISRO to "יתרו",
+        Parsha.MISHPATIM to "משפטים",
+        Parsha.TERUMAH to "תרומה",
+        Parsha.TETZAVEH to "תצוה",
+        Parsha.KI_SISA to "כי תשא",
+        Parsha.VAYAKHEL to "ויקהל",
+        Parsha.PEKUDEI to "פקודי",
+        Parsha.VAYIKRA to "ויקרא",
+        Parsha.TZAV to "צו",
+        Parsha.SHMINI to "שמיני",
+        Parsha.TAZRIA to "תזריע",
+        Parsha.METZORA to "מצרע",
+        Parsha.ACHREI_MOS to "אחרי מות",
+        Parsha.KEDOSHIM to "קדושים",
+        Parsha.EMOR to "אמור",
+        Parsha.BEHAR to "בהר",
+        Parsha.BECHUKOSAI to "בחקותי",
+        Parsha.BAMIDBAR to "במדבר",
+        Parsha.NASSO to "נשא",
+        Parsha.BEHAALOSCHA to "בהעלותך",
+        Parsha.SHLACH to "שלח לך",
+        Parsha.KORACH to "קרח",
+        Parsha.CHUKAS to "חוקת",
+        Parsha.BALAK to "בלק",
+        Parsha.PINCHAS to "פנחס",
+        Parsha.MATOS to "מטות",
+        Parsha.MASEI to "מסעי",
+        Parsha.DEVARIM to "דברים",
+        Parsha.VAESCHANAN to "ואתחנן",
+        Parsha.EIKEV to "עקב",
+        Parsha.REEH to "ראה",
+        Parsha.SHOFTIM to "שופטים",
+        Parsha.KI_SEITZEI to "כי תצא",
+        Parsha.KI_SAVO to "כי תבוא",
+        Parsha.NITZAVIM to "נצבים",
+        Parsha.VAYEILECH to "וילך",
+        Parsha.HAAZINU to "האזינו",
+        Parsha.VZOS_HABERACHA to "וזאת הברכה",
+        Parsha.VAYAKHEL_PEKUDEI to "ויקהל פקודי",
+        Parsha.TAZRIA_METZORA to "תזריע מצרע",
+        Parsha.ACHREI_MOS_KEDOSHIM to "אחרי מות קדושים",
+        Parsha.BEHAR_BECHUKOSAI to "בהר בחקותי",
+        Parsha.CHUKAS_BALAK to "חוקת בלק",
+        Parsha.MATOS_MASEI to "מטות מסעי",
+        Parsha.NITZAVIM_VAYEILECH to "נצבים וילך",
+        Parsha.SHKALIM to "שקלים",
+        Parsha.ZACHOR to "זכור",
+        Parsha.PARA to "פרה",
+        Parsha.HACHODESH to "החדש",
+        Parsha.SHUVA to "שובה",
+        Parsha.SHIRA to "שירה",
+        Parsha.HAGADOL to "הגדול",
+        Parsha.CHAZON to "חזון",
+        Parsha.NACHAMU to "נחמו"
     )
 
     /**
@@ -439,34 +441,28 @@ class HebrewDateFormatter {
      * "ל״ג בעומר",
      * "פורים שושן קטן"]`
      */
-    private val hebrewHolidays: Array<String> = arrayOf(
-        "\u05E2\u05E8\u05D1 \u05E4\u05E1\u05D7", "\u05E4\u05E1\u05D7",
-        "\u05D7\u05D5\u05DC \u05D4\u05DE\u05D5\u05E2\u05D3 \u05E4\u05E1\u05D7",
-        "\u05E4\u05E1\u05D7 \u05E9\u05E0\u05D9", "\u05E2\u05E8\u05D1 \u05E9\u05D1\u05D5\u05E2\u05D5\u05EA",
-        "\u05E9\u05D1\u05D5\u05E2\u05D5\u05EA",
-        "\u05E9\u05D1\u05E2\u05D4 \u05E2\u05E9\u05E8 \u05D1\u05EA\u05DE\u05D5\u05D6",
-        "\u05EA\u05E9\u05E2\u05D4 \u05D1\u05D0\u05D1", "\u05D8\u05F4\u05D5 \u05D1\u05D0\u05D1",
-        "\u05E2\u05E8\u05D1 \u05E8\u05D0\u05E9 \u05D4\u05E9\u05E0\u05D4",
-        "\u05E8\u05D0\u05E9 \u05D4\u05E9\u05E0\u05D4", "\u05E6\u05D5\u05DD \u05D2\u05D3\u05DC\u05D9\u05D4",
-        "\u05E2\u05E8\u05D1 \u05D9\u05D5\u05DD \u05DB\u05D9\u05E4\u05D5\u05E8",
-        "\u05D9\u05D5\u05DD \u05DB\u05D9\u05E4\u05D5\u05E8", "\u05E2\u05E8\u05D1 \u05E1\u05D5\u05DB\u05D5\u05EA",
-        "\u05E1\u05D5\u05DB\u05D5\u05EA",
-        "\u05D7\u05D5\u05DC \u05D4\u05DE\u05D5\u05E2\u05D3 \u05E1\u05D5\u05DB\u05D5\u05EA",
-        "\u05D4\u05D5\u05E9\u05E2\u05E0\u05D0 \u05E8\u05D1\u05D4",
-        "\u05E9\u05DE\u05D9\u05E0\u05D9 \u05E2\u05E6\u05E8\u05EA",
-        "\u05E9\u05DE\u05D7\u05EA \u05EA\u05D5\u05E8\u05D4", "\u05E2\u05E8\u05D1 \u05D7\u05E0\u05D5\u05DB\u05D4",
-        "\u05D7\u05E0\u05D5\u05DB\u05D4", "\u05E2\u05E9\u05E8\u05D4 \u05D1\u05D8\u05D1\u05EA",
-        "\u05D8\u05F4\u05D5 \u05D1\u05E9\u05D1\u05D8", "\u05EA\u05E2\u05E0\u05D9\u05EA \u05D0\u05E1\u05EA\u05E8",
-        "\u05E4\u05D5\u05E8\u05D9\u05DD", "\u05E4\u05D5\u05E8\u05D9\u05DD \u05E9\u05D5\u05E9\u05DF",
-        "\u05E4\u05D5\u05E8\u05D9\u05DD \u05E7\u05D8\u05DF", "\u05E8\u05D0\u05E9 \u05D7\u05D5\u05D3\u05E9",
-        "\u05D9\u05D5\u05DD \u05D4\u05E9\u05D5\u05D0\u05D4",
-        "\u05D9\u05D5\u05DD \u05D4\u05D6\u05D9\u05DB\u05E8\u05D5\u05DF",
-        "\u05D9\u05D5\u05DD \u05D4\u05E2\u05E6\u05DE\u05D0\u05D5\u05EA",
-        "\u05D9\u05D5\u05DD \u05D9\u05E8\u05D5\u05E9\u05DC\u05D9\u05DD",
-        "\u05DC\u05F4\u05D2 \u05D1\u05E2\u05D5\u05DE\u05E8",
-        "\u05E4\u05D5\u05E8\u05D9\u05DD \u05E9\u05D5\u05E9\u05DF \u05E7\u05D8\u05DF",
-        "\u05D0\u05E1\u05E8\u05D5 \u05D7\u05D2"
+
+    private val hebrewHolidays = arrayOf(
+        "ערב פסח", "פסח",
+        "חול המועד פסח", "פסח שני", "ערב שבועות",
+        "שבועות", "שבעה עשר בתמוז",
+        "תשעה באב", "ט׳ באב",
+        "ערב ראש השנה", "ראש השנה",
+        "צום גדליה", "ערב יום כיפור",
+        "יום כיפור", "ערב סוכות",
+        "סוכות", "חול המועד סוכות",
+        "הושענא רבה", "שמיני עצרת",
+        "שמחת תורה", "ערב חנוכה",
+        "חנוכה", "עשרה בטבת",
+        "ט׳ בשבט", "תענית אסתר",
+        "פורים", "פורים שושן",
+        "פורים קטן", "ראש חודש",
+        "יום השואה", "יום הזיכרון",
+        "יום העצמאות", "יום ירושלים",
+        "ל״ג בעומר", "פורים שושן קטן",
+        "אסרו חג"
     )
+
 
     /**
      * Formats the Yom Tov (holiday) in Hebrew or transliterated Latin characters.
@@ -502,10 +498,10 @@ class HebrewDateFormatter {
         }
         var month = jewishCalendar.hebrewLocalDate.month
         if (jewishCalendar.jewishDayOfMonth == 30) {
-            month = if (month < io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR || (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR && jewishCalendar.isJewishLeapYear)) {
+            month = if (month < ADAR || (month == ADAR && jewishCalendar.isJewishLeapYear)) {
                 month.nextMonth
             } else { // roll to Nissan
-                io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN
+                NISSAN
             }
         }
 
@@ -576,11 +572,11 @@ class HebrewDateFormatter {
     fun formatMonth(jewishDate: JewishDate): String {
         val month = jewishDate.hebrewLocalDate.month
         return if (isHebrewFormat)
-            if (jewishDate.isJewishLeapYear && month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR) "${hebrewMonths[13]}${if (isUseGershGershayim) GERESH else ""}" // return Adar I, not Adar in a leap year
-            else if (jewishDate.isJewishLeapYear && month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR_II) "${hebrewMonths[12]}${if (isUseGershGershayim) GERESH else ""}"
+            if (jewishDate.isJewishLeapYear && month == ADAR) "${hebrewMonths[13]}${if (isUseGershGershayim) GERESH else ""}" // return Adar I, not Adar in a leap year
+            else if (jewishDate.isJewishLeapYear && month == ADAR_II) "${hebrewMonths[12]}${if (isUseGershGershayim) GERESH else ""}"
             else hebrewMonths[month.value - 1]
         else
-            if (jewishDate.isJewishLeapYear && month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.ADAR) transliteratedMonthList[13] // return Adar I, not Adar in a leap year
+            if (jewishDate.isJewishLeapYear && month == ADAR) transliteratedMonthList[13] // return Adar I, not Adar in a leap year
             else transliteratedMonthList[month.value - 1]
     }
 
@@ -598,14 +594,18 @@ class HebrewDateFormatter {
      * @see isHebrewFormat
      * @see hebrewOmerPrefix
      */
+
     fun formatOmer(jewishCalendar: JewishCalendar): String {
         val omer = jewishCalendar.dayOfOmer
         if (omer == -1) return ""
-        return if (isHebrewFormat)
-            "${formatHebrewNumber(omer.toLong())} $hebrewOmerPrefix\u05E2\u05D5\u05DE\u05E8"
-        else if (omer == 33) transliteratedHolidayList[33] // if Lag B'Omer
-        else "Omer $omer"
+
+        return when {
+            isHebrewFormat -> "${formatHebrewNumber(omer.toLong())} $hebrewOmerPrefix עומר"
+            omer == 33 -> transliteratedHolidayList[33] // Lag B'Omer
+            else -> "Omer $omer"
+        }
     }
+
 
     /**
      * Returns the kviah in the traditional 3 letter Hebrew format where the first letter represents the day of week of
@@ -621,7 +621,7 @@ class HebrewDateFormatter {
      */
     fun getFormattedKviah(jewishYear: Int): String = getFormattedKviah(jewishYear.toLong())
     fun getFormattedKviah(jewishYear: Long): String {
-        val jewishDate = JewishDate(jewishYear, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 1) // set date to Rosh Hashana
+        val jewishDate = JewishDate(jewishYear, TISHREI, 1) // set date to Rosh Hashana
         val kviah = jewishDate.cheshvanKislevKviah
         val roshHashanaDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
         val returnValue = StringBuilder(formatHebrewNumber(roshHashanaDayOfweek.toLong()))
@@ -632,7 +632,7 @@ class HebrewDateFormatter {
                 else -> "\u05DB"
             }
         )
-        jewishDate.setJewishDate(jewishYear, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN, 15) // set to Pesach of the given year
+        jewishDate.setJewishDate(jewishYear, NISSAN, 15) // set to Pesach of the given year
         val pesachDayOfweek = jewishDate.gregorianLocalDate.dayOfWeek.toJewishDayOfWeek()
         returnValue.append(formatHebrewNumber(pesachDayOfweek.toLong()))
         return returnValue.replace(GERESH.toRegex(), "") // geresh is never used in the kviah format
