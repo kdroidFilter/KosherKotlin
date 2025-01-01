@@ -11,6 +11,28 @@ plugins {
 group = "io.github.kdroidfilter.kosherkotlin"
 version = "2.5.1"
 
+publishing {
+    publications {
+        // Publication pour la bibliothèque multiplateforme
+        create<MavenPublication>("maven") {
+            // Configuration des coordonnées du projet
+            groupId = project.group.toString()
+            artifactId = "kosherkotlin"
+            version = project.version.toString()
+
+            from(components["kotlin"])
+
+            pom {
+                name.set("Kosher Kotlin")
+                description.set("KosherJava Zmanim API / Library port to Kotlin. KosherJava is a library for calculating astronomical and religious dates and times based on location.")
+                url.set("https://github.com/kdroidFilter/KosherKotlin/")
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
 
 kotlin {
     jvmToolchain(17)
@@ -88,7 +110,7 @@ mavenPublishing {
     pom {
         name.set("Kosher Kotlin")
         description.set("KosherJava Zmanim API / Library port to Kotlin. KosherJava is a library for calculating astronomical and religious dates and times based on location.")
-        inceptionYear.set("2024")
+        inceptionYear.set("2025")
         url.set("https://github.com/kdroidFilter/KosherKotlin/")
 
         licenses {
