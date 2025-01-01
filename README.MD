@@ -1,55 +1,69 @@
-KosherKotlin Zmanim API
-=====================
+# KosherKotlin Zmanim API ✨
 
-The KosherKotlin Zmanim library is a Kotlin Multiplatform API for a specialized calendar that can calculate different astronomical
-times including sunrise and sunset (default uses NOAA's algorithm) and Jewish _zmanim_ or religious times for prayers and other
-Jewish religious duties.
+KosherKotlin Zmanim is a Kotlin Multiplatform library for calculating various astronomical and Jewish religious times (_zmanim_), such as sunrise, sunset, and prayer times. This library is a fork of [Sternbach-Software/KosherKotlin](https://github.com/Sternbach-Software/KosherKotlin), which itself is a fork of Eliyahu Hershfeld's [KosherJava Zmanim API](https://github.com/KosherJava/zmanim). It is tailored to work on modern platforms and adapted to meet evolving needs.
 
-It is based on Eliyahu Hershfeld's [KosherJava](https://github.com/KosherJava/zmanim).
+## Status 🚀
+This fork is actively maintained and has already undergone significant updates, including:
 
-The `ZmanimCalendar` class contains the most common zmanim or religious time calculations. 
-For a much more extensive list of _zmanim_ use the `ComplexZmanimCalendar`.
-This class contains the main functionality of the Zmanim library.
+- Published to Maven for easier integration.
+- Enhanced compatibility with Kotlin/JS and Kotlin/WASM.
+- Reorganized code to ensure it functions as a fully Kotlin Multiplatform (KMP) library.
+- Initial steps toward refactoring the code for improved readability and maintainability.
+- Efforts underway to refactor and streamline documentation.
 
-For a basic set of instructions on the use of the API, see [How to Use the Zmanim API](https://kosherjava.com/zmanim-project/how-to-use-the-zmanim-api/), [zmanim code samples](https://kosherjava.com/tag/code-sample/) and the [KosherJava FAQ](https://kosherjava.com/tag/faq/). See the <a href="https://kosherjava.com">KosherJava Zmanim site</a> for additional information.
+The library can be imported into your project using:
+```kotlin
+implementation("io.github.kdroidfilter:kosherkotlin:2.5.2")
+```
+It is compatible with all platforms supported by Kotlin Multiplatform.
 
-## Usage
+Generated documentation is available at: [KosherKotlin Documentation](https://kdroidfilter.github.io/KosherKotlin/) 📄
 
-The library was designed to be as idiomatic as possible, both in its implementation and its API surface. Every client-facing zero-argument function is accessible as a computed property (e.g. `ComplexZmanimCalender().alos72`).
+An example of the library in use with Kotlin/WASM and Compose can be found here: [WASM Sample](https://kdroidfilter.github.io/KosherKotlin/sample/) 🚀
 
-Every zman has a lazily computed generic property called `value`.
+While most features are functional, **not all tests pass at the moment**. Please report any issues or contribute fixes where possible.
 
-`Zman.DateBased` objects have a `momentOfOccurrence` property which lazily computes the `Instant` of the zman's occurrence. 
+## Philosophy 🌍
+Unlike the official KosherJava Zmanim library, this fork may not always stay synchronized with upstream updates. While I aim to track significant new features and improvements, this fork will be adapted to suit specific requirements and priorities.
 
-`Zman.ValueBased` objects have a `duration` property which lazily computes the `Duration` of how long the zman lasts.
-
-A lazy list of all zmanim can be accessed using the `allZmanim` property of `ComplexZmanimCalendar` or `ZmanimCalendar`.
-
-Every `Zman` object has a `definition` property which contains the metadata of the rules used to calculate the zman.
+## Usage ⚖️
+The API retains much of the idiomatic design found in KosherJava while introducing modern Kotlin features. Examples of usage are provided below:
 
 ```kotlin
 val location = GeoLocation("New York", 40.7, -74.0, 0.0, TimeZone.of("America/New_York"))
 val calendar = ComplexZmanimCalendar(location)
+
 println(calendar.allZmanim.filter { it.definition.type == ZmanType.ALOS }.map { it.value })
 println(calendar.sunrise)
 println(calendar.alos72.momentOfOccurrence)
 println(calendar.shaahZmanis72Minutes.duration)
 ```
 
+## Roadmap 🔄
+Key goals for this fork include:
 
-Hosted documentation coming soon!
+1. **Documentation Overhaul**
+    - Consolidate and simplify documentation.
+    - Update examples to reflect modern Kotlin idioms.
 
-# Future
-- [x] ~~There are plans to port the library to `kotlinx-datetime` so that it is multi-platform friendly. This is a major overhaul - PRs are welcomed.~~
-    - [ ] ZmanimFormatter needs to be re-written once kotlinx-datetime implements formatting
-- [ ] Library distribution needs to be improved (e.g. publishing to mavenCentral, etc.), especially in light of the kotlinx-datetime port (not sure it builds properly)
-    - [ ] May need to implement multi-project gradle - not sure how to do that yet.
-- [ ] There are still a significant amount of javadocs/kdocs that were written for specific Java getters, setters, or properties, which were combined into a public property, and all of the javadocs/kdocs were copied to the property. They must be combined. There is often overlap or complete duplication between doc strings, but sometimes there are notes only relevant to the setter or getter.
-- [ ] Unit tests need to be ported from upstream. They are (slowly) being translated into Java from the Python port.
+2. **Testing and Stability**
+    - Port and adapt upstream unit tests.
+    - Ensure stability across supported platforms.
 
-# License & Attribution
-The library is released under the [LGPL 2.1 license](https://kosherjava.com/2011/05/09/kosherjava-zmanim-api-released-under-the-lgpl-license/).
-If you made a publicly-available program that uses this library, I want to know! Just send me a heads-up email at "software at sternbach.org".
+3. **Feature Enhancements**
+    - Integrate with `kotlinx-datetime` for improved multiplatform support.
+    - Explore publishing improvements (e.g., Maven Central).
 
-# Disclaimer
-While I did my best to get accurate results, please double check before relying on these zmanim for *halacha lemaaseh*.
+4. **Refactoring**
+    - Streamline and modernize the codebase.
+    - Address legacy Java documentation inherited from the upstream project.
+
+## Contributing 📚
+Contributions are welcome! Whether through code, documentation, or testing, your help will make this library more robust and versatile. Open a PR or reach out with your ideas.
+
+## License & Attribution ✉️
+This fork is released under the [LGPL 2.1 license](https://kosherjava.com/2011/05/09/kosherjava-zmanim-api-released-under-the-lgpl-license/). If you use this library in a public project, feel free to share it with me by email at "software at sternbach.org".
+
+## Disclaimer ⚠️
+While I strive for accuracy, please double-check zmanim for _halachic_ decisions. This library is provided "as-is" without warranty of correctness for religious purposes.
+
