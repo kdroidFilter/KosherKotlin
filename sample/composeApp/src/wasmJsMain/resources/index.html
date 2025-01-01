@@ -1,20 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>sample</title>
-        <style>
-            html,
-            body {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-            }
-        </style>
-    </head>
-    <body></body>
-    <script src="sampleApp.js"></script>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Zmanim Calendar</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div id="app"></div>
+<div id="loader">
+    <div class="spinner"></div>
+</div>
+
+</body>
+
+<script>
+    // Function to hide the loader and show the app
+    function appLoaded() {
+        const loader = document.getElementById("loader");
+        const app = document.getElementById("app");
+        if (loader) loader.style.display = "none"; // Hide the loader
+        if (app) app.style.display = "block";     // Show the app
+        console.log("App is fully loaded!");
+    }
+</script>
+<footer>
+    <!-- The composeApp.js script is placed in the footer to ensure the loader displays as quickly as possible. -->
+    <script type="application/javascript" src="composeApp.js"></script>
+</footer>
 </html>

@@ -7,6 +7,9 @@ import sample.app.App
 fun main() {
     val body = document.body ?: return
     ComposeViewport(body) {
+        appLoaded()
         App()
     }
 }
+
+external fun appLoaded()
