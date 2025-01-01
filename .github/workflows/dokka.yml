@@ -1,37 +1,55 @@
-name: Génération de la documentation
+name: Génération et déploiement Dokka
 
 on:
   push:
     branches:
+      - main
       - master
   pull_request:
 
-jobs:
-  build-and-deploy-dokka:
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
+jobs:
+  build-and-generate-docs:
+    runs-on: ubuntu-latest
     steps:
-      # 1. Récupère le code de votre dépôt
       - name: Checkout
         uses: actions/checkout@v3
 
-      # 2. Installe une version de Java
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-      # 3. Compile le projet et génère la documentation Dokka (format HTML)
       - name: Generate Dokka
         run: ./gradlew dokkaHtml
 
-      # 4. Déploie la documentation sur GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # (Optionnel) : on peut créer et sauvegarder l’artefact de la doc
+      - name: Archive Dokka HTML
+        uses: actions/upload-artifact@v3
         with:
-          personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/dokka/html
-          # Vous pouvez changer 'build/dokka/html' si vous générez la doc
-          # dans un dossier différent (par exemple, '$rootDir/docs' ou autre).
-          publish_branch: gh-pages
+          name: dokka-html
+          path: build/dokka/html
+
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: build-and-generate-docs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # On restaure l’artefact Dokka généré à l’étape précédente
+      - name: Download Dokka HTML
+        uses: actions/download-artifact@v3
+        with:
+          name: dokka-html
+          path: build/dokka/html
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          build_dir: build/dokka/html
