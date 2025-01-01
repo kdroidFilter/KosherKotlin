@@ -6,7 +6,7 @@ import kotlinx.datetime.*
 import kotlin.time.Duration.Companion.days
 
 /**
- * A class representing a Hebrew local date. Hebrew analog to [java.time.LocalDate] or [kotlinx.datetime.LocalDate]
+ * A class representing a Hebrew local date. Hebrew analog to [kotlinx.datetime.LocalDate]
  * Although the Hebrew year actually starts in [HebrewMonth.TISHREI], the choice was made to assign [HebrewMonth.NISSAN]
  * with a value of 1. This may be because the year is colloquially said to start in Nissan (in accordance with the
  * opinion Maseches Rosh Hashana (TODO include source) that the world was created in Nissan).
@@ -85,17 +85,6 @@ data class HebrewLocalDate(
     fun withYear(newYear: Int) = copy(year = newYear.toLong())
 
     /**
-     * Returns the absolute date of Jewish date. ND+ER
-     *
-     * @param year
-     * the Jewish year. The year can't be negative
-     * @param month
-     * the Jewish month starting with Nisan. Nisan expects a value of 1 etc till Adar with a value of 12. For
-     * a leap year, 13 will be the expected value for Adar II. Use the constants [HebrewMonth.NISSAN]
-     * etc.
-     * @param dayOfMonth
-     * the Jewish day of month. valid values are 1-30. If the day of month is set to 30 for a month that only
-     * has 29 days, the day will be set as 29.
      * @return the absolute date of the Jewish date.
      */
     fun toJewishEpochDays(): Long =
@@ -120,7 +109,7 @@ data class HebrewLocalDate(
      *
      * This instance is immutable and unaffected by this method call.
      *
-     * @param daysToAdd  the days to add, may be negative
+     * @param daysLeft  the days to add, may be negative
      * @return a [HebrewLocalDate] based on this date with the days added, not null
      * @throws DateTimeException if the result exceeds the supported date range //TODO
      */
