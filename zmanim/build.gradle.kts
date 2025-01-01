@@ -1,9 +1,11 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlinx.serialization)
-    id("convention.publication")
     id("org.jetbrains.dokka")  version "2.0.0"
+    id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 group = "io.github.kdroidfilter.kosherkotlin"
@@ -17,11 +19,11 @@ kotlin {
     jvm()
     js { browser() }
     wasmJs { browser() }
-//    iosX64()
-//    iosArm64()
-//    iosSimulatorArm64()
-//    macosX64()
-//    macosArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    macosX64()
+    macosArm64()
     linuxX64()
     mingwX64()
 
@@ -31,7 +33,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.hebrewnumerals) //TODO Compile this library for macos/ios
+            implementation(libs.hebrewnumerals)
 
         }
 
@@ -73,4 +75,48 @@ android {
     defaultConfig {
         minSdk = 21
     }
+}
+
+mavenPublishing {
+    coordinates(
+        groupId = "io.github.kdroidfilter",
+        artifactId = "kosherkotlin",
+        version = version.toString()
+    )
+
+    // Configure POM metadata for the published artifact
+    pom {
+        name.set("Kosher Kotlin")
+        description.set("KosherJava Zmanim API / Library port to Kotlin. KosherJava is a library for calculating astronomical and religious dates and times based on location.")
+        inceptionYear.set("2024")
+        url.set("https://github.com/kdroidFilter/KosherKotlin/")
+
+        licenses {
+            license {
+                name.set("LGPL-2.1")
+                url.set("https://github.com/kdroidFilter/KosherKotlin/blob/master/LICENSE")
+            }
+        }
+
+        // Specify developers information
+        developers {
+            developer {
+                id.set("kdroidfilter")
+                name.set("Elyahou Hadass")
+                email.set("elyahou.hadass@gmail.com")
+            }
+        }
+
+        // Specify SCM information
+        scm {
+            url.set("https://github.com/kdroidFilter/KosherKotlin")
+         }
+    }
+
+    // Configure publishing to Maven Central
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+
+    // Enable GPG signing for all publications
+    signAllPublications()
 }
