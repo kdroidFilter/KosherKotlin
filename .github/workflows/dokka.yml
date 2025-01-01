@@ -23,8 +23,8 @@ jobs:
           java-version: 17
 
       # 3. Compile le projet et génère la documentation Dokka (format HTML)
-      - name: Build and generate Dokka
-        run: ./gradlew clean build dokkaHtml
+      - name: Generate Dokka
+        run: ./gradlew dokkaHtml
 
       # 4. Déploie la documentation sur GitHub Pages
       - name: Deploy to GitHub Pages
