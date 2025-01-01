@@ -17,7 +17,7 @@ publishing {
         create<MavenPublication>("maven") {
             // Configuration des coordonnées du projet
             groupId = project.group.toString()
-            artifactId = "kosherkotlin"
+            artifactId = "zmanim"
             version = project.version.toString()
 
             from(components["kotlin"])
