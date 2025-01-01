@@ -66,7 +66,8 @@ fun ZmanimCalendarApp() {
                         text = "לוח זמנים",
                         style = MaterialTheme.typography.displayLarge,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        fontFamily = hebrewFont
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = Color.White)
