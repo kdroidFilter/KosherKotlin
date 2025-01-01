@@ -229,33 +229,7 @@ class HebrewDateFormatter {
     )
 
     /**
-     * Unicode [EnumMap] of Hebrew *parshiyos*.  The list includes double and special *parshiyos* and
-     * contains `"בראשית, נח, לך לך,
-     * וירא, חיי שרה,
-     * תולדות, ויצא, וישלח,
-     * וישב, מקץ, ויגש, ויחי,
-     * שמות, וארא, בא, בשלח,
-     * יתרו, משפטים, תרומה,
-     * תצוה, כי תשא, ויקהל,
-     * פקודי, ויקרא, צו,
-     * שמיני, תזריע, מצרע,
-     * אחרי מות, קדושים,
-     * אמור, בהר, בחקתי,
-     * במדבר, נשא, בהעלתך,
-     * שלח לך, קרח, חוקת, בלק,
-     * פינחס, מטות, מסעי,
-     * דברים, ואתחנן, עקב,
-     * ראה, שופטים, כי תצא,
-     * כי תבוא, נצבים, וילך,
-     * האזינו, וזאת הברכה,
-     * ויקהל פקודי, תזריע
-     * מצרע, אחרי מות
-     * קדושים, בהר בחקתי,
-     * חוקת בלק, מטות מסעי,
-     * נצבים וילך, שקלים,
-     * זכור, פרה, החדש,
-     * שובה,שירה,הגדול,
-     * חזון,נחמו"`
+     * Unicode of Hebrew *parshiyos* names.
      */
 
     private val hebrewParshaMap = mapOf(
@@ -610,7 +584,7 @@ class HebrewDateFormatter {
 
     /**
      * Returns the kviah in the traditional 3 letter Hebrew format where the first letter represents the day of week of
-     * Rosh Hashana, the second letter represents the lengths of Cheshvan and Kislev ([Shelaimim][JewishDate.SHELAIMIM] , [Kesidran][JewishDate.KESIDRAN] or [Chaserim][JewishDate.CHASEIRIM]) and the 3rd letter
+     * Rosh Hashana, the second letter represents the lengths of Cheshvan and Kislev ([Shelaimim][JewishDate.SHELAIMIM] , [Kesidran][JewishDate.KESIDRAN] or [Chaserim][JewishDate.CHASERIM]) and the 3rd letter
      * represents the day of week of Pesach. For example 5729 (1969) would return בשה (Rosh Hashana on
      * Monday, Shelaimim, and Pesach on Thursday), while 5771 (2011) would return השג (Rosh Hashana on
      * Thursday, Shelaimim, and Pesach on Tuesday).

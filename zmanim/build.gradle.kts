@@ -8,7 +8,7 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
-group = "io.github.kdroidfilter.zmanim"
+group = "io.github.kdroidfilter.kosherkotlin"
 version = "2.5.1"
 
 kotlin {
@@ -68,7 +68,7 @@ kotlin {
 }
 
 android {
-    namespace = "io.github.kdroidfilter.zmanim"
+    namespace = "io.github.kdroidfilter.kosherkotlin"
     compileSdk = 35
 
     defaultConfig {
@@ -79,7 +79,7 @@ android {
 mavenPublishing {
     coordinates(
         groupId = "io.github.kdroidfilter",
-        artifactId = "zmanim",
+        artifactId = "kosherkotlin",
         version = version.toString()
     )
 
