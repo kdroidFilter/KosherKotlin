@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.github.kdroidfilter.kosherkotlin"
-version = "2.5.1"
+version = "2.5.2"
 
 kotlin {
     jvmToolchain(17)
@@ -31,7 +31,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.datetime)
+            api(libs.kotlinx.datetime)
             implementation(libs.hebrewnumerals)
 
         }
@@ -51,7 +51,10 @@ kotlin {
             implementation(libs.zmanim)
         }
         jsMain.dependencies {
-            implementation(npm("@js-joda/timezone", "2.3.0"))
+            api(npm("@js-joda/timezone", "2.3.0"))
+        }
+        wasmJsMain.dependencies {
+            api(npm("@js-joda/timezone", "2.3.0"))
         }
 
     }
