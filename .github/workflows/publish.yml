@@ -1,4 +1,4 @@
-name: Publish example to GitHub Pages
+name: "Déploiement automatique de la doc Dokka et de l'exemple Compose"
 
 on:
   push:
@@ -11,13 +11,13 @@ permissions:
   pages: write
   id-token: write
 
-# Ensures only one deployment is running at a time
+# Empêche plusieurs déploiements simultanés
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  # 1) Build the Kotlin/Compose example and upload to a GitHub artifact
+  # 1) Construction de la doc Dokka et de l'exemple Compose
   build:
     runs-on: ubuntu-latest
 
@@ -31,26 +31,45 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Build the Kotlin/Compose example
+      # Génération de la documentation Dokka
+      - name: Génération de la doc Dokka
+        run: |
+          ./gradlew dokkaHtml
+
+      # Construction de l’exemple Kotlin/Compose
+      - name: Construction de l’exemple Kotlin/Compose
         run: |
           ./gradlew :sample:composeApp:wasmJsBrowserDistribution
 
-      - name: Upload artifact
+      # Préparer une arborescence commune pour le déploiement
+      # On place la doc à la racine et l’exemple dans /sample
+      - name: Préparation des fichiers pour le déploiement
+        run: |
+          mkdir -p build/final
+          # On copie la doc dans build/final (racine du site)
+          cp -r zmanim/build/dokka/html/* build/final
+
+          # On crée le dossier /sample dans build/final
+          mkdir -p build/final/sample
+          cp -r sample/composeApp/build/dist/wasmJs/productionExecutable/* build/final/sample
+
+      # Upload vers l’artefact "pages" pour qu’il soit disponible au job suivant
+      - name: Upload artifact pour GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: sample/composeApp/build/dist/wasmJs/productionExecutable
+          path: build/final
 
-  # 2) Deploy the artifact to GitHub Pages
+  # 2) Déploiement GitHub Pages
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}/sample
-
+      # L’URL finale sera mise dans la sortie page_url
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Déploiement sur GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          path: sample/composeApp/build/dist/wasmJs/productionExecutable
+          path: build/final
