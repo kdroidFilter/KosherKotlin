@@ -3,7 +3,7 @@ name: Déploiement automatique de la documentation Dokka
 on:
   push:
     branches:
-      - main  # Ou la branche de ton choix
+      - master
   workflow_dispatch:
 
 permissions:
