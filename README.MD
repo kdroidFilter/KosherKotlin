@@ -62,7 +62,7 @@ Key goals for this fork include:
 Contributions are welcome! Whether through code, documentation, or testing, your help will make this library more robust and versatile. Open a PR or reach out with your ideas.
 
 ## License & Attribution ✉️
-This fork is released under the [LGPL 2.1 license](https://kosherjava.com/2011/05/09/kosherjava-zmanim-api-released-under-the-lgpl-license/). If you use this library in a public project, feel free to share it with me by email at "software at sternbach.org".
+This fork is released under the [LGPL 2.1 license](https://kosherjava.com/2011/05/09/kosherjava-zmanim-api-released-under-the-lgpl-license/).
 
 ## Disclaimer ⚠️
 While I strive for accuracy, please double-check zmanim for _halachic_ decisions. This library is provided "as-is" without warranty of correctness for religious purposes.
