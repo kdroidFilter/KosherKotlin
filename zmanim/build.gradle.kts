@@ -13,6 +13,7 @@ group = "io.github.kdroidfilter.kosherkotlin"
 version = "2.5.2"
 
 tasks.withType<DokkaTask>().configureEach {
+    moduleName.set("Kosher Kotlin - K-droid Fork")
     offlineMode.set(true)
 }
 
