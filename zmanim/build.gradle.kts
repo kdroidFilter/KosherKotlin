@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.kdroidfilter.kosherkotlin"
-version = "2.5.2"
+version = "2.5.3"
 
 tasks.withType<DokkaTask>().configureEach {
     moduleName.set("Kosher Kotlin - K-droid Fork")
