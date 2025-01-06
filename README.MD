@@ -13,7 +13,7 @@ This fork is actively maintained and has already undergone significant updates, 
 
 The library can be imported into your project using:
 ```kotlin
-implementation("io.github.kdroidfilter:kosherkotlin:2.5.2")
+implementation("io.github.kdroidfilter:kosherkotlin:2.5.3")
 ```
 It is compatible with all platforms supported by Kotlin Multiplatform.
 
