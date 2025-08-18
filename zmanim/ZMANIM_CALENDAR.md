@@ -10,6 +10,8 @@ This guide complements the lower-level AstronomicalCalendar and the extended Com
 If you only need a quick start, jump to Quick start and Common recipes.
 
 
+Note: Many of the code examples in this guide have equivalents in sample/terminalApp/src/commonMain/kotlin/Main.kt.
+
 ## Installation
 
 Gradle (Kotlin Multiplatform):
