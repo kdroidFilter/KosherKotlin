@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
@@ -6,11 +5,16 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlinx.serialization)
     id("org.jetbrains.dokka")  version "2.0.0"
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
 group = "io.github.kdroidfilter.kosherkotlin"
-version = "2.5.3"
+val ref = System.getenv("GITHUB_REF") ?: ""
+val version = if (ref.startsWith("refs/tags/")) {
+    val tag = ref.removePrefix("refs/tags/")
+    if (tag.startsWith("v")) tag.substring(1) else tag
+} else "dev"
+
 
 tasks.withType<DokkaTask>().configureEach {
     moduleName.set("Kosher Kotlin - K-droid Fork")
@@ -127,7 +131,7 @@ mavenPublishing {
     }
 
     // Configure publishing to Maven Central
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
 
     // Enable GPG signing for all publications
