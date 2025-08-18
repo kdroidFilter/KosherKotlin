@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import io.github.kdroidfilter.kosherkotlin.ComplexZmanimCalendar
 import io.github.kdroidfilter.kosherkotlin.ZmanDescriptionFormatter
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
-import kosherkotlin.sample.composeapp.generated.resources.`NotoSansHebrew_VariableFont_wdth,wght`
+import kosherkotlin.sample.composeapp.generated.resources.NotoSansHebrew_VariableFont_wdth_wght
 import kosherkotlin.sample.composeapp.generated.resources.Res
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -52,7 +52,7 @@ fun ZmanimCalendarApp() {
     val descriptionFormatter = remember { ZmanDescriptionFormatter() }
 
     // Police pour l’affichage en hébreu
-    val hebrewFont = FontFamily(Font(Res.font.`NotoSansHebrew_VariableFont_wdth,wght`))
+    val hebrewFont = FontFamily(Font(Res.font.NotoSansHebrew_VariableFont_wdth_wght))
 
     // Scaffolding principal
     Scaffold(

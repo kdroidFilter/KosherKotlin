@@ -33,6 +33,9 @@ kotlin {
     mingwX64()
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.time.ExperimentalTime")
+        }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)

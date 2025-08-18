@@ -9,6 +9,7 @@ import io.github.kdroidfilter.kosherkotlin.util.DateUtils.now
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
+import kotlinx.datetime.number
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
@@ -143,7 +144,7 @@ class ConvertBetweenGregorianAndHebrewTest {
             JewishDate(
                 java.time.LocalDate.of(
                     newGregorianDate.year,
-                    newGregorianDate.month,
+                    newGregorianDate.monthNumber,
                     newGregorianDate.dayOfMonth
                 )
             ) //java.time.LocalDate.of(2239, Month.SEPTEMBER, 30) == 6000-1-1 hebrew, but takes too long to complete
@@ -160,9 +161,9 @@ class ConvertBetweenGregorianAndHebrewTest {
             ) //start of hillel hakatan's calender
 
         while (
-            javaCurrentJewishDate.jewishYear != distantFutureJewishDate.jewishYear ||
-            javaCurrentJewishDate.jewishMonth != distantFutureJewishDate.jewishMonth ||
-            javaCurrentJewishDate.jewishDayOfMonth != distantFutureJewishDate.jewishDayOfMonth
+            javaCurrentJewishDate.jewishYear != distantFutureJewishDate.getJewishYear() ||
+            javaCurrentJewishDate.jewishMonth != distantFutureJewishDate.getJewishMonth() ||
+            javaCurrentJewishDate.jewishDayOfMonth != distantFutureJewishDate.getJewishDayOfMonth()
         ) {
 //            println(javaCurrentJewishDate.toString() + " " + kotlinCurrentJewishDate.toString())
             assertEquals(javaCurrentJewishDate.jewishYear, kotlinCurrentJewishDate.year.toInt())
@@ -171,10 +172,10 @@ class ConvertBetweenGregorianAndHebrewTest {
 
             val kotlinGregorian = kotlinCurrentJewishDate.toLocalDateGregorian()
             assertEquals(javaCurrentJewishDate.gregorianYear, kotlinGregorian.year)
-            assertEquals(javaCurrentJewishDate.gregorianMonth + 1, kotlinGregorian.month.value)
+            assertEquals(javaCurrentJewishDate.gregorianMonth + 1, kotlinGregorian.month.number)
             assertEquals(javaCurrentJewishDate.gregorianDayOfMonth, kotlinGregorian.dayOfMonth)
 
-            javaCurrentJewishDate.forward(Calendar.DATE, 1);
+            javaCurrentJewishDate.forward(Calendar.DATE, 1)
             kotlinCurrentJewishDate = kotlinCurrentJewishDate.plusDays(1)
         }
     }

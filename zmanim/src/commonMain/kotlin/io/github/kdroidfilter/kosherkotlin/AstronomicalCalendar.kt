@@ -86,7 +86,7 @@ open class AstronomicalCalendar(
     /**
      * The Java Calendar encapsulated by this class to track the current date used by the class
      */
-    open var localDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(geoLocation.timeZone)
+    open var localDateTime: LocalDateTime = kotlin.time.Clock.System.now().toLocalDateTime(geoLocation.timeZone)
     /**
      * The internal [AstronomicalCalculator] used for calculating solar based times.
      * A method to set the [AstronomicalCalculator] used for astronomical calculations. The Zmanim package ships

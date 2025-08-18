@@ -1,13 +1,13 @@
 [versions]
 
-hebrewnumerals = "0.2.4"
-kotlin = "2.1.0"
-agp = "8.6.1"
-kotlinx-coroutines = "1.10.1"
-kotlinx-serialization = "1.8.0"
-kotlinx-datetime = "0.6.1"
-compose = "1.7.3"
-androidx-activityCompose = "1.9.3"
+hebrewnumerals = "0.2.6"
+kotlin = "2.2.10"
+agp = "8.11.0"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.9.0"
+kotlinx-datetime = "0.7.1"
+compose = "1.8.2"
+androidx-activityCompose = "1.10.1"
 zmanim = "2.5.0"
 
 [libraries]

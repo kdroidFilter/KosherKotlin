@@ -15,7 +15,7 @@
  */
 package io.github.kdroidfilter.kosherkotlin.hebrewcalendar
 
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -91,7 +91,7 @@ object YerushalmiYomiCalculator {
 
         // Start to calculate current cycle. init the start day
         var nextCycle = DAF_YOMI_START_DAY
-        var prevCycle = Clock.System.now()
+        var prevCycle = kotlin.time.Clock.System.now()
 
         // Go cycle by cycle, until we get the next cycle
         while (requested > nextCycle) {

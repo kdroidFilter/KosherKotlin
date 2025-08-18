@@ -135,7 +135,7 @@ class ComplexZmanimCalendar(
 
     constructor(
         location: GeoLocation = GeoLocation(),
-        date: LocalDate = Clock.System.todayIn(location.timeZone),
+        date: LocalDate = kotlin.time.Clock.System.todayIn(location.timeZone),
         useElevation: Boolean = false,
         ateretTorahSunsetOffset: Double = ATERET_TORAH_DEFAULT_OFFSET,
         candleLightingOffset: Double = 18.0,
@@ -147,7 +147,7 @@ class ComplexZmanimCalendar(
     }
 
     override var localDateTime: LocalDateTime =
-        Clock.System.now().toLocalDateTime(geoLocation.timeZone)
+        kotlin.time.Clock.System.now().toLocalDateTime(geoLocation.timeZone)
         set(value) {
             field = value
             if (value.date != jewishCalendar.gregorianLocalDate) {
