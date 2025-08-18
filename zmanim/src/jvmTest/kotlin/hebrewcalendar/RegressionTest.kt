@@ -1,24 +1,5 @@
 package hebrewcalendar
 
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.Month
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.plus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toJavaInstant
-import kotlinx.datetime.toJavaZoneId
-import kotlinx.datetime.toKotlinInstant
-import kotlinx.datetime.toKotlinLocalDate
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.until
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import io.github.kdroidfilter.kosherkotlin.ComplexZmanimCalendar
 import io.github.kdroidfilter.kosherkotlin.Zman
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.Daf
@@ -30,15 +11,18 @@ import io.github.kdroidfilter.kosherkotlin.metadata.ZmanDefinition
 import io.github.kdroidfilter.kosherkotlin.metadata.ZmanType
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation.Companion.rawOffset
+import kotlinx.datetime.*
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Test
 import java.time.temporal.ChronoUnit
-import java.util.Calendar
-import java.util.Date
-import java.util.stream.Collectors
-import java.util.stream.LongStream
+import java.util.*
 
 class RegressionTest {
     companion object {
-        fun Instant.toDate(): Date = this.let { Date.from(it.toJavaInstant()) }
+        fun Instant.toDate(): Date = this.let { Date.from(java.time.Instant.ofEpochSecond(it.epochSeconds, it.nanosecondsOfSecond.toLong())) }
 
         val YEAR_6000 = HebrewLocalDate(6000, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 1).toLocalDateGregorian()
         val YEAR_6000_INSTANT = YEAR_6000.atStartOfDayIn(TimeZone.UTC)
@@ -73,21 +57,20 @@ class RegressionTest {
         val kotlinDate = startingDateGregorian.atStartOfDayIn(TimeZone.UTC)
         val javaDate = java.time.LocalDate.of(
             startingDateGregorian.year,
-            startingDateGregorian.month,
+            (startingDateGregorian.month.ordinal + 1),
             startingDateGregorian.dayOfMonth
         )
-        val allDays = LongStream
-            .range(0, kotlinDate.until(YEAR_6000_INSTANT, DateTimeUnit.DAY, TimeZone.UTC))
-            .parallel()
-            .mapToObj {
-                javaDate.plusDays(it) to kotlinDate.plus(it, DateTimeUnit.DAY, TimeZone.UTC)
-                    .toLocalDateTime(TimeZone.UTC)
-            }
-            .collect(Collectors.toList())
+        val totalDays = kotlinDate.until(YEAR_6000_INSTANT, DateTimeUnit.DAY, TimeZone.UTC)
+        val allDays = ArrayList<Pair<java.time.LocalDate, kotlinx.datetime.LocalDateTime>>(totalDays.toInt())
+        var i = 0L
+        while (i < totalDays) {
+            allDays += javaDate.plusDays(i) to kotlinDate.plus(i, DateTimeUnit.DAY, TimeZone.UTC).toLocalDateTime(TimeZone.UTC)
+            i++
+        }
         for ((kotlin, javaLoc) in TestHelper.allLocations.zip(TestHelper.allJavaLocations)) {
             println("Testing ${kotlin.locationName}")
-            allDays.parallelStream().forEach { (javaDate, kotlinDate) ->
-                testComplexZmanimCalendar(kotlin, javaLoc, javaDate, kotlinDate.date)
+            for ((jDate, kDateTime) in allDays) {
+                testComplexZmanimCalendar(kotlin, javaLoc, jDate, kDateTime.date)
             }
         }
     }
@@ -311,7 +294,7 @@ class RegressionTest {
          * Only compare time. Allow second to be off by 1. Don't check millis.
          * */
         fun assertEquals(date: Date?, instant: Zman.DateBased?) {
-            val (javaHr, javaMin, javaSec) = date?.toInstant()?.toKotlinInstant()
+            val (javaHr, javaMin, javaSec) = date?.toInstant()
                 ?.toString()?.substringAfter('T')?.substringBefore('.')?.removeSuffix("Z")
                 ?.split(":") ?: listOf("0", "0", "0")
             val (kotlinHour, kotlinMin, kotlinSec) =
@@ -950,7 +933,7 @@ class RegressionTest {
                 .toKotlinLocalDate()
         val molad = if (moladAsKotlinLocalDate < HebrewLocalDate.STARTING_DATE_GREGORIAN
         ) null else moladAsKotlinLocalDate
-        val moladAsKotlinLocalDateTime = java.moladAsDate.toInstant().toKotlinInstant()
+        val moladAsKotlinLocalDateTime = kotlinx.datetime.Instant.fromEpochMilliseconds(java.moladAsDate.time)
             .toLocalDateTime(kotlinLocation.timeZone)
         val moladAsDate =
             if (moladAsKotlinLocalDateTime.date < HebrewLocalDate.STARTING_DATE_GREGORIAN
@@ -1021,7 +1004,7 @@ class RegressionTest {
             //            getSunriseSolarDipFromOffset()
             //            getSunsetSolarDipFromOffset()
             assertEquals(
-                calendar.toInstant().toKotlinInstant()
+                kotlinx.datetime.Instant.fromEpochMilliseconds(calendar.timeInMillis)
                     .toLocalDateTime(kotlinAstroCal.geoLocation.timeZone).date,
                 kotlinAstroCal.localDateTime.toInstant(kotlinAstroCal.geoLocation.timeZone)
                     .toLocalDateTime(kotlinAstroCal.geoLocation.timeZone).date

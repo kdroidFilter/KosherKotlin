@@ -14,7 +14,7 @@ kotlin {
     androidTarget()
     jvm()
     js  {
-        moduleName = "composeApp"
+        outputModuleName = "composeApp"
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
@@ -32,7 +32,7 @@ kotlin {
         binaries.executable()
     }
     wasmJs {
-        moduleName = "composeApp"
+        outputModuleName = "composeApp"
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
@@ -61,6 +61,7 @@ kotlin {
     }
 
     sourceSets {
+        all { languageSettings.optIn("kotlin.time.ExperimentalTime") }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)

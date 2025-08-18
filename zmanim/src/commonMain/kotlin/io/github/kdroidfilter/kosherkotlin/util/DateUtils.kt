@@ -1,6 +1,8 @@
 package io.github.kdroidfilter.kosherkotlin.util
 
 import kotlinx.datetime.*
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.number
 import kotlin.math.floor
 
 /**
@@ -18,8 +20,8 @@ object DateUtils {
      */
     fun getJulianDay(date: LocalDate): Double {
         var year = date.year
-        var month = date.monthNumber
-        val day = date.dayOfMonth
+        var month = date.month.number
+        val day = date.day
 //        println("kyear: $year, kmonth: $month, kday: $day")
         if (month <= 2) {
             year -= 1
@@ -31,5 +33,5 @@ object DateUtils {
         return floor(365.25 * (year + 4716)) + floor(30.6001 * (month + 1)) + day + b - 1524.5
     }
     fun LocalDate.Companion.now() =
-        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 }
