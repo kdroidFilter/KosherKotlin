@@ -30,13 +30,15 @@ val geo = io.github.kdroidfilter.kosherkotlin.util.GeoLocation(
     timeZone = tz
 )
 
-val zc = io.github.kdroidfilter.kosherkotlin.ZmanimCalendar(geo)
-val today = kotlinx.datetime.Clock.System.todayIn(tz)
-zc.localDateTime = kotlinx.datetime.LocalDateTime(today, kotlinx.datetime.LocalTime(12, 0))
+val ac = io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar(geo)
+val date = kotlinx.datetime.LocalDate(2025, 8, 18)
+ac.localDateTime = kotlinx.datetime.LocalDateTime(date, kotlinx.datetime.LocalTime(12, 0))
 
-val sunrise = zc.sunrise.momentOfOccurrence
+val sunrise = ac.sunrise
 println(sunrise?.toLocalDateTime(tz)?.time)
 ```
+
+Note: All code examples in this README are available as a runnable sample in sample/terminalApp/src/commonMain/kotlin/Main.kt.
 
 What you see is a local time. Behind the scenes it’s computed from an Instant so it is safe on all platforms.
 
@@ -88,11 +90,10 @@ Learn more: the high‑level guide for ZmanimCalendar, Zman, and ZmanDescription
 
 ## Hebrew calendar in one minute
 
-Get Hebrew date, parsha, yom tov, and omer for a Gregorian date.
+Get Hebrew date, parsha, yom tov, and omer for a specific date (same date used in the terminal sample).
 ```kotlin
-val tzIL = kotlinx.datetime.TimeZone.of("Asia/Jerusalem")
-val dateIL = kotlinx.datetime.Clock.System.now().toLocalDateTime(tzIL).date
-val jc = io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar(dateIL, isInIsrael = true)
+val date = kotlinx.datetime.LocalDate(2025, 8, 18)
+val jc = io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar(date, isInIsrael = true)
 val hdf = io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter()
 
 println(hdf.format(jc))        // Hebrew date

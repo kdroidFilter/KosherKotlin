@@ -5,6 +5,8 @@ A practical, user-friendly guide to the Hebrew calendar utilities bundled with t
 If you only need a quick start, jump to Quick start and Common recipes.
 
 
+Note: All code examples in this guide are available (or have equivalents) in sample/terminalApp/src/commonMain/kotlin/Main.kt.
+
 ## Installation
 
 Gradle (Kotlin Multiplatform):
@@ -49,13 +51,11 @@ Basic examples are multiplatform and use kotlinx.datetime.
 - Hebrew date for today, print formatted date and parsha:
 
 ```kotlin
-val tz = kotlinx.datetime.TimeZone.of("Asia/Jerusalem")
-val todayIL = Clock.System.now().toLocalDateTime(tz).date
+val today = kotlinx.datetime.LocalDate(2025, 8, 18)
+val jc = io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar(today, isInIsrael = true)
+val formatter = io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter()
 
-val jc = JewishCalendar(todayIL, isInIsrael = true)
-val formatter = HebrewDateFormatter()
-
-println(formatter.format(jc))       // e.g., "י" טבת תשפ"ה" (or your locale’s Hebrew numerals)
+println(formatter.format(jc))       // Hebrew date
 println(formatter.formatParsha(jc)) // Weekly parsha if applicable
 println(formatter.formatYomTov(jc)) // Yom Tov name if applicable
 ```

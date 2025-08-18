@@ -5,6 +5,8 @@ A practical, user-friendly guide to the utility types used throughout the Kosher
 If you only need a quick start, jump to Quick start and Common recipes.
 
 
+Note: All code examples in this guide are available (or have equivalents) in sample/terminalApp/src/commonMain/kotlin/Main.kt.
+
 ## Installation
 
 Gradle (Kotlin Multiplatform):
