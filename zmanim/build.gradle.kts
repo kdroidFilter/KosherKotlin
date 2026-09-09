@@ -1,11 +1,9 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
     alias(libs.plugins.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.kotlinx.serialization)
-    id("org.jetbrains.dokka")  version "2.0.0"
-    id("com.vanniktech.maven.publish") version "0.34.0"
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.vanniktech.maven.publish)
 }
 
 group = "io.github.kdroidfilter.kosherkotlin"
@@ -15,38 +13,41 @@ val version = if (ref.startsWith("refs/tags/")) {
     if (tag.startsWith("v")) tag.substring(1) else tag
 } else "dev"
 
-
-tasks.withType<DokkaTask>().configureEach {
+dokka {
     moduleName.set("Kosher Kotlin - K-droid Fork")
-    offlineMode.set(true)
+    dokkaPublications.html {
+        offlineMode.set(true)
+    }
 }
 
 kotlin {
     jvmToolchain(17)
 
-    androidTarget { publishLibraryVariants("release") }
+    android {
+        namespace = "io.github.kdroidfilter.kosherkotlin"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
     jvm()
     js { browser() }
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs { browser() }
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
-    macosX64()
     macosArm64()
     linuxX64()
     mingwX64()
 
     sourceSets {
-        all {
-            languageSettings.optIn("kotlin.time.ExperimentalTime")
-        }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.serialization.json)
             api(libs.kotlinx.datetime)
             implementation(libs.hebrewnumerals)
-
         }
 
         commonTest.dependencies {
@@ -64,12 +65,11 @@ kotlin {
             implementation(libs.zmanim)
         }
         jsMain.dependencies {
-            api(npm("@js-joda/timezone", "2.3.0"))
+            api(npm("@js-joda/timezone", libs.versions.js.joda.timezone.get()))
         }
         wasmJsMain.dependencies {
-            api(npm("@js-joda/timezone", "2.3.0"))
+            api(npm("@js-joda/timezone", libs.versions.js.joda.timezone.get()))
         }
-
     }
 
     //https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers
@@ -80,16 +80,6 @@ kotlin {
             }
         }
     }
-
-}
-
-android {
-    namespace = "io.github.kdroidfilter.kosherkotlin"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 21
-    }
 }
 
 mavenPublishing {
@@ -99,7 +89,6 @@ mavenPublishing {
         version = version.toString()
     )
 
-    // Configure POM metadata for the published artifact
     pom {
         name.set("Kosher Kotlin")
         description.set("KosherJava Zmanim API / Library port to Kotlin. KosherJava is a library for calculating astronomical and religious dates and times based on location.")
@@ -113,7 +102,6 @@ mavenPublishing {
             }
         }
 
-        // Specify developers information
         developers {
             developer {
                 id.set("kdroidfilter")
@@ -122,18 +110,13 @@ mavenPublishing {
             }
         }
 
-        // Specify SCM information
         scm {
             connection.set("scm:git:https://github.com/kdroidFilter/KosherKotlin.git")
             developerConnection.set("scm:git:https://github.com/kdroidFilter/KosherKotlin.git")
             url.set("https://github.com/kdroidFilter/KosherKotlin")
-         }
+        }
     }
 
-    // Configure publishing to Maven Central
     publishToMavenCentral()
-
-
-    // Enable GPG signing for all publications
     signAllPublications()
 }

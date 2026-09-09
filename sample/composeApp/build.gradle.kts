@@ -1,20 +1,32 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.kmp.library)
 }
 
 kotlin {
     jvmToolchain(17)
 
-    androidTarget()
+    android {
+        namespace = "sample.app.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+        androidResources {
+            enable = true
+        }
+    }
     jvm()
-    js  {
-        outputModuleName = "composeApp"
+    js {
+        outputModuleName.set("composeApp")
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
@@ -22,7 +34,6 @@ kotlin {
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
                         add(rootDirPath)
                         add(projectDirPath)
                     }
@@ -31,8 +42,9 @@ kotlin {
         }
         binaries.executable()
     }
+    @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        outputModuleName = "composeApp"
+        outputModuleName.set("composeApp")
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
@@ -40,7 +52,6 @@ kotlin {
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
                         add(rootDirPath)
                         add(projectDirPath)
                     }
@@ -50,7 +61,6 @@ kotlin {
         binaries.executable()
     }
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
@@ -61,7 +71,6 @@ kotlin {
     }
 
     sourceSets {
-        all { languageSettings.optIn("kotlin.time.ExperimentalTime") }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -72,32 +81,9 @@ kotlin {
             implementation(project(":zmanim"))
         }
 
-        androidMain.dependencies {
-            implementation(libs.androidx.activityCompose)
-        }
-
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
-
-        wasmJsMain.dependencies {  }
-        jsMain.dependencies {
-        }
-
-    }
-}
-
-android {
-    namespace = "sample.app"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 21
-        targetSdk = 35
-
-        applicationId = "sample.app.androidApp"
-        versionCode = 1
-        versionName = "1.0.0"
     }
 }
 

@@ -19,6 +19,7 @@ package io.github.kdroidfilter.kosherkotlin.hebrewcalendar
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewLocalDate.Companion.toHebrewDate
 import io.github.kdroidfilter.kosherkotlin.util.DateUtils.now
 import kotlinx.datetime.*
+import kotlinx.datetime.number
 
 /**
  * The JewishDate is the base calendar class, that supports maintenance of a [LocalDateTime]
@@ -580,7 +581,7 @@ open class JewishDate : Comparable<JewishDate> {
          * **Note:** This setter will correct the [dayOfMonth] if passed in an invalid number given the [year] and [month]
          * (e.g. February 29 in a leap year)
          */
-        set(value) { setGregorianDate(value, gregorianLocalDate.monthNumber, gregorianLocalDate.dayOfMonth) }
+        set(value) { setGregorianDate(value, gregorianLocalDate.month.number, gregorianLocalDate.day) }
         get() = gregorianLocalDate.year
 
     var gregorianMonth
@@ -596,8 +597,8 @@ open class JewishDate : Comparable<JewishDate> {
          * **Note:** This setter will correct the [value] if passed in an invalid number given the [gregorianYear] and [gregorianMonth]
          * (e.g. February 29 in a leap year)
          */
-        set(value) { setGregorianDate(gregorianLocalDate.year, value, gregorianLocalDate.dayOfMonth) }
-        get() = gregorianLocalDate.monthNumber
+        set(value) { setGregorianDate(gregorianLocalDate.year, value, gregorianLocalDate.day) }
+        get() = gregorianLocalDate.month.number
 
     var gregorianDayOfMonth
         /**
@@ -612,8 +613,8 @@ open class JewishDate : Comparable<JewishDate> {
          * **Note:** This setter will correct the [value] if passed in an invalid number given the [gregorianYear] and [gregorianMonth]
          * (e.g. February 29 in a leap year)
          */
-        set(value) { setGregorianDate(gregorianLocalDate.year, gregorianLocalDate.monthNumber, value) }
-        get() = gregorianLocalDate.dayOfMonth
+        set(value) { setGregorianDate(gregorianLocalDate.year, gregorianLocalDate.month.number, value) }
+        get() = gregorianLocalDate.day
 
 
     /**
@@ -738,8 +739,8 @@ open class JewishDate : Comparable<JewishDate> {
          */
         private fun gregorianDateToAbsDate(date: LocalDate): Int {
             val year: Int = date.year
-            val month: Int = date.monthNumber
-            val dayOfMonth: Int = date.dayOfMonth
+            val month: Int = date.month.number
+            val dayOfMonth: Int = date.day
             var absDate = dayOfMonth
             for (m in month - 1 downTo 1) {
                 absDate += getLastDayOfGregorianMonth(m, year) // days in prior months of the year

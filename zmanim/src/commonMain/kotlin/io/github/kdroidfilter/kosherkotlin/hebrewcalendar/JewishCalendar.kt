@@ -21,7 +21,7 @@ import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar.Parsha.
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

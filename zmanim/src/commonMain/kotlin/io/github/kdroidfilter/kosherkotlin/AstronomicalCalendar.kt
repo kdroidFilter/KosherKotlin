@@ -19,6 +19,7 @@ import io.github.kdroidfilter.kosherkotlin.util.AstronomicalCalculator
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
 import kotlinx.datetime.*
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 /**
  * A Java calendar that calculates astronomical times such as [sunrise], [sunset] and twilight times. This class contains a [Calendar][calendar] and can therefore use the standard

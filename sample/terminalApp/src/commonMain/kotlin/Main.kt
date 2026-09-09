@@ -16,7 +16,6 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-@OptIn(kotlin.time.ExperimentalTime::class)
 fun main() {
     println("KosherKotlin terminal samples")
     println("------------------------------")

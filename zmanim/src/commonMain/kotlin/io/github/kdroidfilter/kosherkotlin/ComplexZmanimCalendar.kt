@@ -16,6 +16,7 @@
 package io.github.kdroidfilter.kosherkotlin
 
 import kotlinx.datetime.*
+import kotlin.time.Instant
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar
 import io.github.kdroidfilter.kosherkotlin.metadata.UsesElevation
 import io.github.kdroidfilter.kosherkotlin.metadata.ZmanAuthority

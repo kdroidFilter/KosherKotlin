@@ -144,8 +144,8 @@ class ConvertBetweenGregorianAndHebrewTest {
             JewishDate(
                 java.time.LocalDate.of(
                     newGregorianDate.year,
-                    newGregorianDate.monthNumber,
-                    newGregorianDate.dayOfMonth
+                    newGregorianDate.month.number,
+                    newGregorianDate.day
                 )
             ) //java.time.LocalDate.of(2239, Month.SEPTEMBER, 30) == 6000-1-1 hebrew, but takes too long to complete
         var kotlinCurrentJewishDate = HebrewLocalDate(
@@ -173,7 +173,7 @@ class ConvertBetweenGregorianAndHebrewTest {
             val kotlinGregorian = kotlinCurrentJewishDate.toLocalDateGregorian()
             assertEquals(javaCurrentJewishDate.gregorianYear, kotlinGregorian.year)
             assertEquals(javaCurrentJewishDate.gregorianMonth + 1, kotlinGregorian.month.number)
-            assertEquals(javaCurrentJewishDate.gregorianDayOfMonth, kotlinGregorian.dayOfMonth)
+            assertEquals(javaCurrentJewishDate.gregorianDayOfMonth, kotlinGregorian.day)
 
             javaCurrentJewishDate.forward(Calendar.DATE, 1)
             kotlinCurrentJewishDate = kotlinCurrentJewishDate.plusDays(1)

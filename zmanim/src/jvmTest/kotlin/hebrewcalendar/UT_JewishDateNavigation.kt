@@ -7,6 +7,7 @@ import org.junit.Assert
 import org.junit.Test
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishDate
+import kotlinx.datetime.number
 
 /**
  *
@@ -16,8 +17,8 @@ class UT_JewishDateNavigation {
     @Test
     fun jewishForwardMonthToMonth() {
         val jewishDate = JewishDate(5771, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(1), 1)
-        Assert.assertEquals(5, jewishDate.gregorianLocalDate.dayOfMonth)
-        Assert.assertEquals(3, jewishDate.gregorianLocalDate.monthNumber - 1)
+        Assert.assertEquals(5, jewishDate.gregorianLocalDate.day)
+        Assert.assertEquals(3, jewishDate.gregorianLocalDate.month.number - 1)
         Assert.assertEquals(2011, jewishDate.gregorianLocalDate.year)
     }
 
@@ -26,8 +27,8 @@ class UT_JewishDateNavigation {
 
         // At one point, this test was failing as the JewishDate class spun through a never-ending loop...
         val jewishDate = JewishDate(5771, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.getMonthForValue(7), 1)
-        Assert.assertEquals(9, jewishDate.gregorianLocalDate.dayOfMonth)
-        Assert.assertEquals(8, jewishDate.gregorianLocalDate.monthNumber - 1)
+        Assert.assertEquals(9, jewishDate.gregorianLocalDate.day)
+        Assert.assertEquals(8, jewishDate.gregorianLocalDate.month.number - 1)
         Assert.assertEquals(2010, jewishDate.gregorianLocalDate.year)
     }
 } // End of UT_JewishDateNavigation class

@@ -34,7 +34,7 @@ jobs:
       # Génération de la documentation Dokka
       - name: Génération de la doc Dokka
         run: |
-          ./gradlew dokkaHtml
+          ./gradlew :zmanim:dokkaGenerate
 
       # Construction de l’exemple Kotlin/Compose
       - name: Construction de l’exemple Kotlin/Compose

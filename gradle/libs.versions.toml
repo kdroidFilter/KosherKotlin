@@ -1,14 +1,20 @@
 [versions]
 
 hebrewnumerals = "0.2.6"
-kotlin = "2.2.20"
-agp = "8.11.0"
-kotlinx-coroutines = "1.10.2"
-kotlinx-serialization = "1.9.0"
-kotlinx-datetime = "0.7.1"
-compose = "1.9.1"
-androidx-activityCompose = "1.10.1"
+kotlin = "2.4.20"
+agp = "9.4.0"
+kotlinx-coroutines = "1.11.0"
+kotlinx-serialization = "1.11.0"
+kotlinx-datetime = "0.8.0"
+compose = "1.12.0"
+androidx-activityCompose = "1.13.0"
 zmanim = "2.5.0"
+dokka = "2.2.0"
+vanniktech-maven-publish = "0.37.0"
+android-compileSdk = "37"
+android-minSdk = "21"
+android-targetSdk = "37"
+js-joda-timezone = "2.25.2"
 
 [libraries]
 
@@ -25,8 +31,10 @@ zmanim = { module = "com.kosherjava:zmanim", version.ref = "zmanim" }
 [plugins]
 
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-maven-publish" }

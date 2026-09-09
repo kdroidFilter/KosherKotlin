@@ -21,7 +21,7 @@ import io.github.kdroidfilter.kosherkotlin.metadata.ZmanCalculationMethod
 import io.github.kdroidfilter.kosherkotlin.metadata.ZmanDefinition
 import io.github.kdroidfilter.kosherkotlin.metadata.ZmanType
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar
 import io.github.kdroidfilter.kosherkotlin.metadata.UsesElevation
 import io.github.kdroidfilter.kosherkotlin.metadata.ZmanCalculationMethod.Companion.degrees
