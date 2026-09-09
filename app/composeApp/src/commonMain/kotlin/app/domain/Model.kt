@@ -81,7 +81,6 @@ data class ZmanEntry(
 @Immutable
 data class ZmanGroup(
     val label: String,
-    val ordinal: String,
     val rows: ImmutableList<ZmanEntry>,
 )
 
@@ -109,6 +108,9 @@ data class DaySnapshot(
     val sunriseLabel: String,
     val chatzosLabel: String,
     val sunsetLabel: String,
+    val midnightLabel: String,
+    /** Position in the lunar cycle: 0 is the molad, 0.5 the full moon. */
+    val moonPhase: Float,
     val next: NextZman?,
     val pillars: ImmutableList<Pillar>,
     val groups: ImmutableList<ZmanGroup>,

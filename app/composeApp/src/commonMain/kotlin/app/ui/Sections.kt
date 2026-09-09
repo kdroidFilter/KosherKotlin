@@ -1,14 +1,12 @@
 package app.ui
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,11 +15,11 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,10 +28,11 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,10 +42,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.domain.City
@@ -69,7 +68,6 @@ fun LazyListScope.daySection(state: LuachUiState, horizontal: Dp) {
     state.day.groups.forEach { group ->
         item(key = "head-${group.label}") {
             SectionHeader(
-                ordinal = group.ordinal,
                 label = group.label,
                 trailing = "${group.rows.size} זמנים",
                 horizontal = horizontal,
@@ -88,6 +86,7 @@ fun LazyListScope.daySection(state: LuachUiState, horizontal: Dp) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ZmanRow(
     row: ZmanEntry,
@@ -98,10 +97,6 @@ private fun ZmanRow(
 ) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
-    val interaction = remember { MutableInteractionSource() }
-    val hovered by interaction.collectIsHoveredAsState()
-    val shift by animateDpAsState(if (hovered) (-4).dp else 0.dp, label = "rowShift")
-
     val foreground = when {
         isNext -> colors.gold
         past -> colors.muted
@@ -117,8 +112,6 @@ private fun ZmanRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = horizontal, vertical = 2.dp)
-            // Layout-phase read: hovering shifts the row without recomposing it.
-            .offset { IntOffset(shift.roundToPx(), 0) }
             .clip(RoundedCornerShape(12.dp))
             .background(if (isNext) colors.goldSoft else Color.Transparent)
             .border(
@@ -126,7 +119,6 @@ private fun ZmanRow(
                 color = if (isNext) colors.gold else colors.line,
                 shape = RoundedCornerShape(12.dp),
             )
-            .hoverable(interaction)
             .drawBehind {
                 if (isNext) {
                     drawRect(
@@ -148,10 +140,13 @@ private fun ZmanRow(
             color = foreground,
             modifier = Modifier.width(110.dp),
         )
-        Row(
+        // FlowRow: the name is measured first and used to leave the opinion a couple of pixels,
+        // which it then spent one glyph per line. Narrow enough, the opinion drops below instead.
+        FlowRow(
             modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            itemVerticalAlignment = Alignment.Bottom,
         ) {
             Text(row.name, fontFamily = fonts.body, fontSize = 16.5.sp, color = foreground)
             if (row.opinion.isNotBlank()) {
@@ -255,26 +250,12 @@ private fun CityRow(city: City, selected: Boolean, onClick: () -> Unit, horizont
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(
-                text = city.hebrewName,
-                fontFamily = fonts.display,
-                fontSize = 24.sp,
-                color = if (selected) colors.gold else colors.ink,
-            )
-            Text(
-                text = city.latinName,
-                fontFamily = fonts.body,
-                fontSize = 12.sp,
-                letterSpacing = 1.4.sp,
-                color = colors.muted,
-            )
-        }
         Text(
-            text = city.coordinates(),
-            fontFamily = fonts.body,
-            fontSize = 12.sp,
-            color = colors.muted,
+            text = city.hebrewName,
+            fontFamily = fonts.display,
+            fontSize = 24.sp,
+            color = if (selected) colors.gold else colors.ink,
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = "${city.elevationMeters.toInt()} מ׳",
@@ -302,7 +283,7 @@ fun LazyListScope.monthSection(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             itemVerticalAlignment = Alignment.CenterVertically,
         ) {
-            StepButton("›") { onIntent(LuachIntent.PreviousMonth) }
+            StepButton(pointsRight = true) { onIntent(LuachIntent.PreviousMonth) }
             Text(
                 text = state.month.title,
                 fontFamily = fonts.display,
@@ -310,7 +291,7 @@ fun LazyListScope.monthSection(
                 color = colors.ink,
                 modifier = Modifier.widthIn(min = if (compact) 0.dp else 230.dp),
             )
-            StepButton("‹") { onIntent(LuachIntent.NextMonth) }
+            StepButton(pointsRight = false) { onIntent(LuachIntent.NextMonth) }
             Text(
                 text = state.month.subtitle,
                 fontFamily = fonts.body,
@@ -328,8 +309,13 @@ fun LazyListScope.monthSection(
 /** Below this the seven columns stop being readable, so the table scrolls instead of squeezing. */
 private val MinMonthCellWidth = 96.dp
 
+/**
+ * One month step. The arrow is drawn, not typeset: the chevron characters it replaces are
+ * Bidi_Mirrored (they flipped inside the RTL tree) and neither app font is guaranteed to carry
+ * a real arrow glyph. [pointsRight] is the direction on screen — the caller owns the meaning.
+ */
 @Composable
-private fun StepButton(glyph: String, onClick: () -> Unit) {
+private fun StepButton(pointsRight: Boolean, onClick: () -> Unit) {
     val colors = LuachTheme.colors
     Box(
         modifier = Modifier
@@ -339,7 +325,18 @@ private fun StepButton(glyph: String, onClick: () -> Unit) {
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Text(glyph, fontFamily = LuachTheme.fonts.body, fontSize = 16.sp, color = colors.muted)
+        Canvas(Modifier.size(15.dp)) {
+            val dir = if (pointsRight) 1f else -1f
+            val middle = size.height / 2f
+            val tip = Offset(size.width / 2f + dir * size.width * 0.4f, middle)
+            val tail = Offset(size.width / 2f - dir * size.width * 0.4f, middle)
+            val head = size.width * 0.28f
+            val weight = 1.6.dp.toPx()
+
+            drawLine(colors.muted, tail, tip, weight, StrokeCap.Round)
+            drawLine(colors.muted, tip, Offset(tip.x - dir * head, middle - head), weight, StrokeCap.Round)
+            drawLine(colors.muted, tip, Offset(tip.x - dir * head, middle + head), weight, StrokeCap.Round)
+        }
     }
 }
 
@@ -669,34 +666,38 @@ private fun SettingRow(
     }
 }
 
+/**
+ * A single option in a [SettingRow]. Material 3 Expressive's [ToggleButton]: the shape morphs
+ * under the press and squares off once checked, which the design's static pill could not do.
+ * The colours stay the luach's.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Segment(label: String, selected: Boolean, onClick: () -> Unit) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
 
-    Text(
-        text = label,
-        fontFamily = fonts.body,
-        fontSize = 13.sp,
-        color = if (selected) colors.gold else colors.muted,
-        modifier = Modifier
-            .clip(RoundedCornerShape(9.dp))
-            .background(if (selected) colors.goldSoft else Color.Transparent)
-            .border(
-                width = 1.dp,
-                color = if (selected) colors.gold else colors.line,
-                shape = RoundedCornerShape(9.dp),
-            )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 15.dp, vertical = 9.dp),
-    )
+    ToggleButton(
+        checked = selected,
+        onCheckedChange = { onClick() },
+        colors = ToggleButtonDefaults.toggleButtonColors(
+            containerColor = Color.Transparent,
+            contentColor = colors.muted,
+            checkedContainerColor = colors.goldSoft,
+            checkedContentColor = colors.gold,
+        ),
+        elevation = null,
+        border = BorderStroke(1.dp, if (selected) colors.gold else colors.line),
+        contentPadding = PaddingValues(horizontal = 15.dp, vertical = 9.dp),
+    ) {
+        Text(label, fontFamily = fonts.body, fontSize = 13.sp)
+    }
 }
 
 // --- shared ------------------------------------------------------------------------------
 
 @Composable
 internal fun SectionHeader(
-    ordinal: String,
     label: String,
     trailing: String,
     horizontal: Dp,
@@ -713,7 +714,6 @@ internal fun SectionHeader(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(ordinal, fontFamily = fonts.display, fontSize = 13.sp, letterSpacing = 2.sp, color = colors.gold)
         Text(label, fontFamily = fonts.display, fontSize = 26.sp, color = colors.ink)
         Box(
             Modifier

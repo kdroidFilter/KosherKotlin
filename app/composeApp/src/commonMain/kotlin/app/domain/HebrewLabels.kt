@@ -49,10 +49,12 @@ private fun ZmanAuthority.hebrewName(): String = when (this) {
     ZmanAuthority.FEINSTEIN -> "ר׳ משה פיינשטיין"
     ZmanAuthority.YEREIM -> "יראים"
     ZmanAuthority.EIDOT_HAMIZRACH -> "עדות המזרח"
+    ZmanAuthority.MACHATZIS_HASHEKEL -> "מחצית השקל"
     is ZmanAuthority.AteretTorah -> "עטרת תורה"
     is ZmanAuthority.AccordingTo -> accordingTo.hebrewName()
-    // Long tail: the library only carries an English name for these.
-    else -> name
+    // Long tail: the library only carries an English name for these, and English in a Hebrew
+    // luach reads as a bug. Drop the attribution and let the calculation speak for itself.
+    else -> ""
 }
 
 private fun Duration.hebrewMinutes(): String {

@@ -7,6 +7,8 @@ kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
 kotlinx-datetime = "0.8.0"
 compose = "1.12.0"
+# Material 3 ships on its own line; pinned to the build Nucleus links against.
+compose-material3 = "1.12.0-alpha03"
 androidx-activityCompose = "1.13.0"
 zmanim = "2.5.0"
 dokka = "2.2.0"
@@ -21,6 +23,7 @@ metro = "1.4.3"
 lifecycle = "2.11.0"
 kotlinx-collections-immutable = "0.5.2"
 multiplatform-settings = "1.3.0"
+nucleus = "2.5.15"
 
 [libraries]
 
@@ -38,6 +41,10 @@ lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifec
 lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
 multiplatform-settings-test = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "multiplatform-settings" }
+nucleus-application = { module = "dev.nucleusframework:nucleus.nucleus-application", version.ref = "nucleus" }
+nucleus-decorated-window-tao = { module = "dev.nucleusframework:nucleus.decorated-window-tao", version.ref = "nucleus" }
+nucleus-decorated-window-material3 = { module = "dev.nucleusframework:nucleus.decorated-window-material3", version.ref = "nucleus" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
 
 [plugins]
 

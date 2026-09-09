@@ -46,6 +46,7 @@ class ZmanimRepository {
         val alos = calendar.alos16Point1Degrees
         val chatzos = calendar.chatzos
         val tzais = calendar.tzaisGeonim3Point7Degrees
+        val solarMidnight = calendar.solarMidnight
         // `elevationAdjustedSunrise/Sunset` are protected in ZmanimCalendar, so make the same
         // choice here: bare `sunrise`/`sunset` are always elevation-adjusted.
         val sunrise = calendar.horizonSunrise(settings)
@@ -54,7 +55,7 @@ class ZmanimRepository {
             if (settings.useElevation) "גובה ${city.elevationMeters.trimNumber()} מ׳" else "גובה פני הים"
 
         val plan = listOf(
-            row(NIGHT, calendar.solarMidnight),
+            row(NIGHT, solarMidnight),
             // alos120 is deprecated in the library as lechumra-only; MGA 72 is the standard pair
             // with the 16.1 degree opinion below.
             row(MORNING, calendar.alos72),
@@ -89,13 +90,9 @@ class ZmanimRepository {
         val byTime = resolved.map { it.second }.sortedBy { it.minuteOfDay }
         val next = byTime.firstOrNull { it.minuteOfDay > nowMinute } ?: byTime.firstOrNull()
 
-        val groups = listOf(NIGHT, MORNING, NOON, EVENING).mapIndexedNotNull { index, label ->
+        val groups = listOf(NIGHT, MORNING, NOON, EVENING).mapNotNull { label ->
             val rows = resolved.filter { it.first == label }.map { it.second }.sortedBy { it.minuteOfDay }
-            if (rows.isEmpty()) null else ZmanGroup(
-                label = label,
-                ordinal = (index + 1).toString().padStart(2, '0'),
-                rows = rows.toImmutableList(),
-            )
+            if (rows.isEmpty()) null else ZmanGroup(label, rows.toImmutableList())
         }
 
         return DaySnapshot(
@@ -109,6 +106,10 @@ class ZmanimRepository {
             sunriseLabel = "הנץ ${sunrise.clockOr(zone)}",
             chatzosLabel = "חצות ${chatzos.clockOr(zone)}",
             sunsetLabel = "שקיעה ${sunset.clockOr(zone)}",
+            midnightLabel = "חצות הלילה ${solarMidnight.clockOr(zone)}",
+            // The Hebrew month *is* the lunar cycle, so the day of the month is the phase.
+            // ponytail: within a few hours of the real molad, which no drawn moon can show.
+            moonPhase = (jewishCalendar.jewishDayOfMonth - 1) / SYNODIC_DAYS,
             next = next?.let {
                 NextZman(it.name, it.opinion, it.time, countdown(nowMinute, it.minuteOfDay))
             },
@@ -300,6 +301,9 @@ class ZmanimRepository {
         }
 
     private companion object {
+        /** Mean length of a lunar month, in days. */
+        const val SYNODIC_DAYS = 29.530588f
+
         const val NIGHT = "לילה"
         const val MORNING = "בוקר"
         const val NOON = "צהריים"

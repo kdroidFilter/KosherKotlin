@@ -27,7 +27,6 @@ class ZmanimRepositoryTest {
         val day = repository.day(jerusalem, date, afternoon, LuachSettings())
 
         assertEquals(listOf("לילה", "בוקר", "צהריים", "ערב"), day.groups.map { it.label })
-        assertEquals(listOf("01", "02", "03", "04"), day.groups.map { it.ordinal })
         day.groups.forEach { group ->
             assertTrue(group.rows.isNotEmpty(), "group ${group.label} is empty")
             assertEquals(
@@ -188,6 +187,17 @@ class ZmanimRepositoryTest {
         assertEquals("צום גדליה", gedaliah.name)
         assertEquals("תחילת הצום", start.label)
         assertTrue(start.value < "08:00", "expected a dawn start, got ${start.value}")
+    }
+
+    @Test
+    fun theMoonPhaseFollowsTheHebrewDayOfTheMonth() {
+        // 26 September 2026 is 15 Tishrei: the first night of Succos, and a full moon.
+        val full = repository.day(jerusalem, LocalDate(2026, 9, 26), afternoon, LuachSettings())
+        assertTrue(full.moonPhase in 0.44f..0.52f, "expected a full moon, got ${full.moonPhase}")
+
+        // 12 September 2026 is 1 Tishrei, the molad: no lit limb at all.
+        val molad = repository.day(jerusalem, LocalDate(2026, 9, 12), afternoon, LuachSettings())
+        assertEquals(0f, molad.moonPhase)
     }
 
     private companion object {
