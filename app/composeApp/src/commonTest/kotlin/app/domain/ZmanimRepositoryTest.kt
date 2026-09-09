@@ -157,6 +157,39 @@ class ZmanimRepositoryTest {
         assertEquals("מולד תשרי", molad.kicker)
     }
 
+    @Test
+    fun theTwentyFiveHourFastsBeginAtSunsetTheEveningBefore() {
+        val events = repository.events(jerusalem, LocalDate(2026, 9, 20), LuachSettings(), horizonDays = 2)
+        val erev = events.first { it.name.contains("ערב יום כיפור") }
+        val kippur = events.first { it.name == "יום כיפור" }
+
+        // The fast starts exactly when the sun sets on erev Yom Kippur, not at dawn.
+        assertEquals(
+            erev.times.first { it.label == "שקיעה" }.value,
+            kippur.times.first { it.label == "כניסת הצום" }.value,
+        )
+    }
+
+    @Test
+    fun tishaBavAlsoBeginsInTheEvening() {
+        val fast = repository.events(jerusalem, LocalDate(2026, 7, 21), LuachSettings(), horizonDays = 4)
+            .first { it.name.contains("באב") }
+        val start = fast.times.first { it.label == "כניסת הצום" }.value
+
+        assertTrue(start > "17:00", "expected an evening start, got $start")
+    }
+
+    @Test
+    fun minorFastsStillBeginAtDawn() {
+        val gedaliah = repository.events(jerusalem, LocalDate(2026, 9, 14), LuachSettings(), horizonDays = 0)
+            .first()
+        val start = gedaliah.times.first()
+
+        assertEquals("צום גדליה", gedaliah.name)
+        assertEquals("תחילת הצום", start.label)
+        assertTrue(start.value < "08:00", "expected a dawn start, got ${start.value}")
+    }
+
     private companion object {
         const val CANDLE_LIGHTING = "הדלקת נרות"
     }
