@@ -218,8 +218,16 @@ class ZmanimRepository {
 
     fun limud(today: LocalDate, city: City): ImmutableList<LimudCard> {
         val day = JewishCalendar(today).apply { inIsrael = city.inIsrael }
-        val molad = day.molad
         val bavli = day.dafYomiBavli
+
+        // The interesting molad is the one that announces the *coming* month. Name the card
+        // after that month rather than after `molad`'s own date, which lands in the month before.
+        val comingMonth = JewishCalendar(today).apply {
+            inIsrael = city.inIsrael
+            setJewishDate(jewishYear, jewishMonth, 1)
+            forward(DateTimeUnit.MONTH, 1)
+        }
+        val molad = comingMonth.molad
 
         return persistentListOf(
             LimudCard(
@@ -238,23 +246,31 @@ class ZmanimRepository {
                 note = "מחזור הדף היומי · תלמוד ירושלמי",
             ),
             LimudCard(
-                kicker = "מולד ${hebrew.formatMonth(molad)}",
-                value = "${molad.moladHours}:${molad.moladMinutes.pad()} · ${molad.moladChalakim} חלקים",
-                note = "שעות, דקות וחלקים מתחילת החודש",
+                kicker = "מולד ${hebrew.formatMonth(comingMonth)}",
+                value = "${molad.moladHours}:${molad.moladMinutes.pad()} · ${molad.moladChalakim.chalakim()}",
+                note = "רגע כניסת החודש הבא",
             ),
         )
     }
 
     /**
-     * `parshah` is only set on Shabbat, so on a weekday walk forward to the coming Shabbat
-     * rather than re-deriving the Hebrew parsha names the formatter already owns.
+     * `parshah` is only set on a Shabbos that actually has one, so ask the library which parsha
+     * is coming (it skips Shabbosos swallowed by Yom Tov) and then walk to the Shabbos that
+     * carries it, because `formatParsha` only ever reads a calendar's own `parshah`.
+     *
+     * The walk needs real headroom: in Tishrei, Rosh Hashana, Yom Kippur and Succos can take
+     * three Shabbosos in a row before a parsha is read again.
      */
     private fun parshaLabel(date: LocalDate, city: City): String {
-        for (offset in 0..7) {
+        val upcoming = JewishCalendar(date).apply { inIsrael = city.inIsrael }.upcomingParshah
+        if (upcoming == JewishCalendar.Parsha.NONE) return "—"
+
+        for (offset in 0..PARSHA_SEARCH_DAYS) {
             val day = JewishCalendar(date.plus(offset, DateTimeUnit.DAY))
                 .apply { inIsrael = city.inIsrael }
-            val name = hebrew.formatParsha(day)
-            if (!name.isNullOrBlank()) return "פרשת $name"
+            if (day.parshah == upcoming) {
+                return hebrew.formatParsha(day)?.takeIf { it.isNotBlank() }?.let { "פרשת $it" } ?: "—"
+            }
         }
         return "—"
     }
@@ -280,6 +296,9 @@ class ZmanimRepository {
         }
 
     private companion object {
+        /** Tishrei can hide three parsha-less Shabbosos in a row. */
+        const val PARSHA_SEARCH_DAYS = 40
+
         const val NIGHT = "לילה"
         const val MORNING = "בוקר"
         const val NOON = "צהריים"
@@ -328,6 +347,8 @@ private fun Instant.clock(zone: TimeZone): String =
     toLocalDateTime(zone).time.let { "${it.hour.pad()}:${it.minute.pad()}" }
 
 private fun Int.pad(): String = toString().padStart(2, '0')
+
+private fun Int.chalakim(): String = if (this == 1) "חלק אחד" else "$this חלקים"
 
 private const val MINUTES_PER_DAY = 24 * 60
 
