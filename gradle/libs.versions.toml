@@ -13,8 +13,14 @@ dokka = "2.2.0"
 vanniktech-maven-publish = "0.37.0"
 android-compileSdk = "37"
 android-minSdk = "21"
+# compose-resources 1.12 requires 23; the published :zmanim library stays at 21.
+android-appMinSdk = "23"
 android-targetSdk = "37"
 js-joda-timezone = "2.25.2"
+metro = "1.4.3"
+lifecycle = "2.11.0"
+kotlinx-collections-immutable = "0.5.2"
+multiplatform-settings = "1.3.0"
 
 [libraries]
 
@@ -27,6 +33,11 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 zmanim = { module = "com.kosherjava:zmanim", version.ref = "zmanim" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
+lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
+multiplatform-settings-test = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "multiplatform-settings" }
 
 [plugins]
 
@@ -38,3 +49,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 android-application = { id = "com.android.application", version.ref = "agp" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-maven-publish" }
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }

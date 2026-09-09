@@ -3,7 +3,7 @@
 A small, cross‑platform library to calculate sunrise, sunset, halachic times (zmanim), and Hebrew calendar information.
 
 API docs: https://kdroidfilter.github.io/KosherKotlin/
-Live WASM demo: https://kdroidfilter.github.io/KosherKotlin/sample/
+Live WASM demo: https://kdroidfilter.github.io/KosherKotlin/app/
 
 Install (Gradle KMP):
 ```kotlin
@@ -38,7 +38,7 @@ val sunrise = ac.sunrise
 println(sunrise?.toLocalDateTime(tz)?.time)
 ```
 
-Note: All code examples in this README are available as a runnable sample in sample/terminalApp/src/commonMain/kotlin/Main.kt.
+Note: All code examples in this README are available as a runnable sample in app/terminalApp/src/commonMain/kotlin/Main.kt.
 
 What you see is a local time. Behind the scenes it’s computed from an Instant so it is safe on all platforms.
 
@@ -160,13 +160,13 @@ println(io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter()
 - Hebrew calendar utilities (JewishCalendar, HebrewDateFormatter, TefilaRules, Daf Yomi): zmanim/HEBREW_CALENDAR.md
 - Utilities (GeoLocation, NOAACalculator, SunTimesCalculator, DateUtils, Time): zmanim/UTIL.md
 - API docs (generated KDoc): https://kdroidfilter.github.io/KosherKotlin/
-- WASM demo: https://kdroidfilter.github.io/KosherKotlin/sample/
+- WASM demo: https://kdroidfilter.github.io/KosherKotlin/app/
 
 
-## Samples
+## Apps
 
-- sample/composeApp: Compose Multiplatform UI that lists zmanim for a chosen location.
-- sample/terminalApp: a simple CLI using the commonMain APIs.
+- app/composeApp: Luach, a Compose Multiplatform app (Metro DI, MVVM/MVI) showing zmanim, the Hebrew month, festivals and daf yomi for a chosen location.
+- app/terminalApp: a simple CLI using the commonMain APIs.
 
 
 ## Status and goals
