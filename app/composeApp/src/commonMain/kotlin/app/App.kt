@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -12,9 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.di.AppGraph
+import app.domain.LuachSection
 import app.ui.LuachScreen
 import app.domain.ThemeMode
 import app.ui.LuachViewModel
+import app.ui.rememberLuachBackStack
 import app.ui.theme.LuachTheme
 import dev.zacsweers.metro.createGraph
 
@@ -30,6 +33,11 @@ fun App(
      * inside them moves down. Zero everywhere the platform owns its own chrome.
      */
     topInset: Dp = 0.dp,
+    /**
+     * The Navigation 3 back stack. Hoisted so the web build can hand in the one it has bound to
+     * the browser's history; every other platform takes the default.
+     */
+    backStack: SnapshotStateList<LuachSection> = rememberLuachBackStack(),
 ) {
     val graph = remember { createGraph<AppGraph>() }
     val viewModel: LuachViewModel = viewModel { graph.luachViewModel }
@@ -46,7 +54,12 @@ fun App(
     LuachTheme(dark = dark) {
         // The whole luach is Hebrew, so the tree is RTL regardless of the host locale.
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            LuachScreen(state = state, onIntent = viewModel::onIntent, topInset = topInset)
+            LuachScreen(
+                state = state,
+                onIntent = viewModel::onIntent,
+                backStack = backStack,
+                topInset = topInset,
+            )
         }
     }
 }

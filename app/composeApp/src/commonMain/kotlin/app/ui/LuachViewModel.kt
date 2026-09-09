@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.domain.City
 import app.domain.DefaultCities
-import app.domain.LuachSection
 import app.domain.LuachSettings
 import app.domain.SettingsStore
 import app.domain.ZmanimRepository
@@ -61,7 +60,6 @@ class LuachViewModel(
 
     private fun reduce(current: Inputs, intent: LuachIntent): Inputs =
         when (intent) {
-            is LuachIntent.SelectSection -> current.copy(section = intent.section)
             is LuachIntent.SelectCity -> current.copy(city = intent.city)
             is LuachIntent.Search -> current.copy(query = intent.query)
             LuachIntent.PreviousMonth -> current.copy(monthOffset = current.monthOffset - 1)
@@ -75,7 +73,6 @@ class LuachViewModel(
     private fun render(inputs: Inputs, now: Instant): LuachUiState {
         val today = now.toLocalDateTime(TimeZone.of(inputs.city.timeZoneId)).date
         return LuachUiState(
-            section = inputs.section,
             city = inputs.city,
             visibleCities = DefaultCities.matching(inputs.query),
             settings = inputs.settings,
@@ -89,7 +86,6 @@ class LuachViewModel(
     }
 
     private data class Inputs(
-        val section: LuachSection = LuachSection.NOW,
         val city: City = DefaultCities.first(),
         val query: String = "",
         val monthOffset: Int = 0,

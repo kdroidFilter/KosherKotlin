@@ -1,4 +1,4 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import dev.nucleusframework.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.metro)
+    alias(libs.plugins.nucleus)
 }
 
 kotlin {
@@ -74,8 +75,21 @@ kotlin {
     sourceSets {
         // Every Skiko backend (desktop, web, iOS) ships Compose scrollbars; Android does not.
         val skikoMain by creating { dependsOn(commonMain.get()) }
-        listOf(jvmMain, jsMain, wasmJsMain, iosArm64Main, iosSimulatorArm64Main)
-            .forEach { it.get().dependsOn(skikoMain) }
+        listOf(jvmMain, jsMain, wasmJsMain).forEach { it.get().dependsOn(skikoMain) }
+
+        // Both iOS targets share one source set: CoreMotion is written once, not twice.
+        val iosMain = maybeCreate("iosMain").apply { dependsOn(skikoMain) }
+        listOf(iosArm64Main, iosSimulatorArm64Main).forEach { it.get().dependsOn(iosMain) }
+
+        // Everything that has no motion sensor. iOS is a Skiko target too, but it does have
+        // one, so this cannot simply hang off skikoMain.
+        val sensorlessMain by creating { dependsOn(commonMain.get()) }
+        listOf(jvmMain, jsMain, wasmJsMain).forEach { it.get().dependsOn(sensorlessMain) }
+
+        // Browser history integration is the only web-only code; both web targets share it.
+        val webMain = maybeCreate("webMain").apply { dependsOn(commonMain.get()) }
+        listOf(jsMain, wasmJsMain).forEach { it.get().dependsOn(webMain) }
+        webMain.dependencies { implementation(libs.nav3.browser) }
 
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -87,6 +101,8 @@ kotlin {
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.lifecycle.runtime.compose)
+            implementation(libs.nav3.runtime)
+            implementation(libs.nav3.ui)
             implementation(libs.multiplatform.settings)
             implementation(project(":zmanim"))
         }
@@ -122,14 +138,14 @@ if (providers.gradleProperty("composeReports").orNull == "true") {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "app.MainKt"
+// Nucleus packages the desktop app: compose.desktop.application must stay unconfigured,
+// the plugin fails the build if both are set.
+nucleus.application {
+    mainClass = "app.MainKt"
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "Luach"
-            packageVersion = "1.0.0"
-        }
+    nativeDistributions {
+        targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+        packageName = "Luach"
+        packageVersion = "1.0.0"
     }
 }

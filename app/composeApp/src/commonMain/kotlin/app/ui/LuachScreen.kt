@@ -1,5 +1,12 @@
 package app.ui
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,9 +32,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,13 +47,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.scene.Scene
+import androidx.navigation3.ui.NavDisplay
+import app.domain.City
 import app.domain.LuachSection
 import app.domain.Pillar
 import kotlinx.collections.immutable.ImmutableList
 import app.ui.theme.LuachTheme
 
 private val RailWidth = 244.dp
-private val CompactBreakpoint = 900.dp
+
+/** Below this the rail folds into a top bar. Desktop pins its minimum window width to it. */
+internal val CompactBreakpoint = 900.dp
+
+/**
+ * A cross-fade with a few pixels of lift, the same in both directions.
+ *
+ * Deliberately slighter than the Navigation 3 default slide: the sections are peers off a rail,
+ * not a drill-down, so a page that slid in from the side would imply a depth that is not there.
+ */
+private val SectionTransition:
+    AnimatedContentTransitionScope<Scene<LuachSection>>.() -> ContentTransform = {
+    fadeIn(tween(220)) + slideInVertically(tween(220)) { it / 28 } togetherWith fadeOut(tween(160))
+}
 
 /**
  * Pure rendering: immutable state in, intents out. No app dependencies, so it previews and
@@ -55,12 +80,20 @@ private val CompactBreakpoint = 900.dp
 fun LuachScreen(
     state: LuachUiState,
     onIntent: (LuachIntent) -> Unit,
+    backStack: SnapshotStateList<LuachSection>,
     modifier: Modifier = Modifier,
     topInset: Dp = 0.dp,
 ) {
     val colors = LuachTheme.colors
+    // The rail reflects the back stack rather than owning a selection of its own.
+    val section = backStack.last()
+    val onSelect: (LuachSection) -> Unit = { backStack.goTo(it) }
 
-    BoxWithConstraints(modifier.fillMaxSize().background(colors.background)) {
+    val page = remember(colors) {
+        Brush.verticalGradient(listOf(colors.background, colors.backgroundEnd))
+    }
+
+    BoxWithConstraints(modifier.fillMaxSize().background(page)) {
         // ponytail: one breakpoint. The design is a desktop rail; below 900dp the rail
         // becomes a scrolling strip so phones stay usable.
         val compact = maxWidth < CompactBreakpoint
@@ -68,36 +101,72 @@ fun LuachScreen(
         if (compact) {
             // The nav strip is the only thing under the chrome here, so it absorbs the inset.
             Column(Modifier.fillMaxSize()) {
-                CompactNav(state, onIntent, topInset)
-                MainContent(state, onIntent, compact = true, modifier = Modifier.weight(1f))
+                CompactNav(section, onSelect, topInset)
+                MainContent(state, onIntent, backStack, compact = true, modifier = Modifier.weight(1f))
             }
         } else {
-            Row(Modifier.fillMaxSize()) {
-                NavRail(state, onIntent, topInset)
-                MainContent(state, onIntent, compact = false, topInset, Modifier.weight(1f))
+            // The rail floats on the hero's sky rather than standing beside it: the content runs
+            // the full width and only its text is inset, so the glow and the stars reach the edge.
+            Box(Modifier.fillMaxSize()) {
+                MainContent(state, onIntent, backStack, compact = false, topInset, RailWidth)
+                NavRail(section, state.city, onSelect, topInset)
             }
         }
     }
 }
 
+/** One Navigation 3 entry per section, so each page owns its scroll state and transitions. */
 @Composable
 private fun MainContent(
     state: LuachUiState,
     onIntent: (LuachIntent) -> Unit,
+    backStack: SnapshotStateList<LuachSection>,
     compact: Boolean,
     topInset: Dp = 0.dp,
+    /** Width the floating rail covers, kept clear of text but not of the hero's sky. */
+    railInset: Dp = 0.dp,
     modifier: Modifier = Modifier,
+) {
+    // Navigation 3 remembers the NavEntry list until the back stack itself changes, so whatever
+    // an entry's content lambda captured is frozen at the last navigation. Read the arguments
+    // through State instead, or a setting toggled on the page it lives on never repaints.
+    val latestState by rememberUpdatedState(state)
+    val latestCompact by rememberUpdatedState(compact)
+    val latestTopInset by rememberUpdatedState(topInset)
+    val latestRailInset by rememberUpdatedState(railInset)
+
+    NavDisplay(
+        backStack = backStack,
+        modifier = modifier.fillMaxSize(),
+        onBack = { backStack.goTo(LuachSection.NOW) },
+        transitionSpec = SectionTransition,
+        popTransitionSpec = SectionTransition,
+    ) { key ->
+        NavEntry(key) { section ->
+            SectionPage(
+                section, latestState, onIntent, latestCompact, latestTopInset, latestRailInset,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SectionPage(
+    section: LuachSection,
+    state: LuachUiState,
+    onIntent: (LuachIntent) -> Unit,
+    compact: Boolean,
+    topInset: Dp,
+    railInset: Dp,
 ) {
     val horizontal = if (compact) 20.dp else 46.dp
     val listState = rememberLazyListState()
 
-    // Switching sections replaces everything below the hero, so start the new one at the top
-    // instead of stranding the reader past the end of a shorter section.
-    LaunchedEffect(state.section) { listState.animateScrollToItem(0) }
-
-    Box(modifier.fillMaxSize()) {
-        LazyColumn(Modifier.fillMaxSize(), state = listState) {
-            if (state.section == LuachSection.NOW) {
+    Box(Modifier.fillMaxSize()) {
+        // Only the hero draws under the rail; every other page starts where the rail ends.
+        val start = if (section == LuachSection.NOW) 0.dp else railInset
+        LazyColumn(Modifier.fillMaxSize().padding(start = start), state = listState) {
+            if (section == LuachSection.NOW) {
                 // The landing page is the hero and nothing else: it takes the whole window,
                 // and only scrolls when the window is too short to hold it.
                 item(key = "hero") {
@@ -105,15 +174,16 @@ private fun MainContent(
                         day = state.day,
                         compact = compact,
                         topInset = topInset,
+                        startInset = railInset,
                         modifier = Modifier.fillParentMaxSize(),
                     )
                 }
             } else {
                 item(key = "page-header") {
-                    PageHeader(state, horizontal, compact, topInset)
+                    PageHeader(section, state, horizontal, compact, topInset)
                 }
 
-                when (state.section) {
+                when (section) {
                     LuachSection.NOW -> Unit
                     LuachSection.DAY -> {
                         item(key = "pillars") { PillarRow(state.day.pillars, compact) }
@@ -140,7 +210,13 @@ private fun MainContent(
 
 /** Section identity for the pages that do not carry the hero. */
 @Composable
-private fun PageHeader(state: LuachUiState, horizontal: Dp, compact: Boolean, topInset: Dp) {
+private fun PageHeader(
+    section: LuachSection,
+    state: LuachUiState,
+    horizontal: Dp,
+    compact: Boolean,
+    topInset: Dp,
+) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
 
@@ -153,7 +229,7 @@ private fun PageHeader(state: LuachUiState, horizontal: Dp, compact: Boolean, to
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
-            text = state.section.hebrewLabel,
+            text = section.hebrewLabel,
             fontFamily = fonts.display,
             fontSize = if (compact) 34.sp else 46.sp,
             letterSpacing = (-1).sp,
@@ -220,7 +296,12 @@ private fun PillarRow(pillars: ImmutableList<Pillar>, compact: Boolean) {
 }
 
 @Composable
-private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit, topInset: Dp) {
+private fun NavRail(
+    section: LuachSection,
+    city: City,
+    onSelect: (LuachSection) -> Unit,
+    topInset: Dp,
+) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
 
@@ -228,7 +309,12 @@ private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit, topIns
         modifier = Modifier
             .width(RailWidth)
             .fillMaxHeight()
-            .background(Brush.verticalGradient(listOf(colors.railTop, colors.railBottom)))
+            // A veil, not a wall: the sky keeps showing through the rail.
+            .background(
+                Brush.verticalGradient(
+                    listOf(colors.railTop.copy(alpha = 0.10f), colors.railBottom.copy(alpha = 0.22f))
+                )
+            )
             .padding(horizontal = 20.dp, vertical = 30.dp)
             .padding(top = topInset),
         verticalArrangement = Arrangement.spacedBy(30.dp),
@@ -252,11 +338,11 @@ private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit, topIns
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
-            LuachSection.entries.forEach { section ->
+            LuachSection.entries.forEach { entry ->
                 NavItem(
-                    label = section.hebrewLabel,
-                    selected = section == state.section,
-                    onClick = { onIntent(LuachIntent.SelectSection(section)) },
+                    label = entry.hebrewLabel,
+                    selected = entry == section,
+                    onClick = { onSelect(entry) },
                 )
             }
         }
@@ -274,7 +360,7 @@ private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit, topIns
                     color = colors.railDim,
                 )
                 Text(
-                    text = state.city.hebrewName,
+                    text = city.hebrewName,
                     fontFamily = fonts.display,
                     fontSize = 21.sp,
                     color = colors.railInk,
@@ -325,7 +411,7 @@ private fun NavItem(label: String, selected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit, topInset: Dp) {
+private fun CompactNav(section: LuachSection, onSelect: (LuachSection) -> Unit, topInset: Dp) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
 
@@ -348,12 +434,12 @@ private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit, top
             modifier = Modifier.horizontalScroll(navScroll),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            LuachSection.entries.forEach { section ->
-                val selected = section == state.section
+            LuachSection.entries.forEach { entry ->
+                val selected = entry == section
                 val interaction = remember { MutableInteractionSource() }
                 val hovered by interaction.collectIsHoveredAsState()
                 Text(
-                    text = section.hebrewLabel,
+                    text = entry.hebrewLabel,
                     fontFamily = fonts.body,
                     fontSize = 14.sp,
                     color = if (selected) colors.railInk else colors.railMuted,
@@ -361,7 +447,7 @@ private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit, top
                         .clip(RoundedCornerShape(9.dp))
                         .background(navFill(selected, hovered))
                         .clickable(interactionSource = interaction, indication = null) {
-                            onIntent(LuachIntent.SelectSection(section))
+                            onSelect(entry)
                         }
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                 )
