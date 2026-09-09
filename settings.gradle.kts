@@ -30,7 +30,7 @@ dependencyResolutionManagement {
 }
 //includeBuild("convention-plugins")
 include(":zmanim")
-include(":sample:composeApp")
-include(":sample:androidApp")
-include(":sample:terminalApp")
+include(":app:composeApp")
+include(":app:androidApp")
+include(":app:terminalApp")
 

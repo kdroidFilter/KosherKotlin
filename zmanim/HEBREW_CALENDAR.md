@@ -5,7 +5,7 @@ A practical, user-friendly guide to the Hebrew calendar utilities bundled with t
 If you only need a quick start, jump to Quick start and Common recipes.
 
 
-Note: All code examples in this guide are available (or have equivalents) in sample/terminalApp/src/commonMain/kotlin/Main.kt.
+Note: All code examples in this guide are available (or have equivalents) in app/terminalApp/src/commonMain/kotlin/Main.kt.
 
 ## Installation
 
@@ -293,5 +293,5 @@ fun tefilaInsertsFor(jc: JewishCalendar): List<String> {
 ## Where to go next
 
 - Explore the API docs for io.github.kdroidfilter.kosherkotlin.hebrewcalendar.*
-- Review sample code in the repository’s README and sample/ compose app.
+- Review sample code in the repository’s README and app/ compose app.
 - Combine hebrewcalendar with ZmanimCalendar or ComplexZmanimCalendar to present complete daily Jewish information in your app.
