@@ -29,6 +29,7 @@ import dev.nucleusframework.application.NucleusWindow
 import dev.nucleusframework.application.nucleusApplication
 import dev.nucleusframework.autolaunch.AutoLaunch
 import dev.nucleusframework.core.runtime.ExecutableRuntime
+import dev.nucleusframework.energymanager.EnergyManager
 import dev.nucleusframework.window.DecoratedWindowScope
 import dev.nucleusframework.window.TitleBarPlacement
 import dev.nucleusframework.window.WindowScaffold
@@ -71,6 +72,24 @@ fun main(args: Array<String>) = nucleusApplication(
         syncAutoLaunch(enabled = state.settings.desktopWidget)
     }
 
+    val mainState = rememberWindowState(
+        position = WindowPosition.Aligned(Alignment.Center),
+        width = 1280.dp,
+        height = 900.dp,
+    )
+
+    // Widget-only or minimized: drop the process into Nucleus efficiency mode
+    // (EcoQoS / Darwin BG / nice+ioprio). Restore when the main window is
+    // shown again, and on dispose so a quit does not leave it set.
+    val saveEnergy = !appVisible || mainState.isMinimized
+    LaunchedEffect(saveEnergy) {
+        if (saveEnergy) EnergyManager.enableEfficiencyMode()
+        else EnergyManager.disableEfficiencyMode()
+    }
+    DisposableEffect(Unit) {
+        onDispose { EnergyManager.disableEfficiencyMode() }
+    }
+
     fun revealApp() {
         appVisible = true
         mainWindow?.apply {
@@ -98,7 +117,7 @@ fun main(args: Array<String>) = nucleusApplication(
             onCloseRequest = {
                 if (state.settings.desktopWidget) appVisible = false else exitApplication()
             },
-            state = rememberWindowState(width = 1280.dp, height = 900.dp),
+            state = mainState,
             visible = appVisible,
             title = "Luach",
             // Never narrow enough to fold the rail away: the desktop window stops at the

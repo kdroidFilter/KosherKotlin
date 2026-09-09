@@ -118,6 +118,7 @@ kotlin {
             implementation(libs.nucleus.application)
             implementation(libs.nucleus.autolaunch)
             implementation(libs.nucleus.core.runtime)
+            implementation(libs.nucleus.energy.manager)
             implementation(libs.nucleus.decorated.window.tao)
             implementation(libs.nucleus.decorated.window.material3)
         }
