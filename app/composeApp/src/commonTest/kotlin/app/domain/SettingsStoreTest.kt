@@ -19,6 +19,9 @@ class SettingsStoreTest {
             candleLightingOffset = 40,
             calculator = SunCalculator.SUN_TIMES,
             themeMode = ThemeMode.LIGHT,
+            desktopWidget = true,
+            desktopWidgetX = 120.5f,
+            desktopWidgetY = 80f,
         )
 
         SettingsStore(backing).save(changed)
@@ -42,5 +45,14 @@ class SettingsStoreTest {
     @Test
     fun theDefaultThemeFollowsTheSystem() {
         assertEquals(ThemeMode.SYSTEM, LuachSettings().themeMode)
+    }
+
+    @Test
+    fun aMissingWidgetPositionStaysUnset() {
+        assertEquals(null, LuachSettings().desktopWidgetX)
+        assertEquals(null, LuachSettings().desktopWidgetY)
+        val loaded = SettingsStore(MapSettings()).load()
+        assertEquals(null, loaded.desktopWidgetX)
+        assertEquals(null, loaded.desktopWidgetY)
     }
 }

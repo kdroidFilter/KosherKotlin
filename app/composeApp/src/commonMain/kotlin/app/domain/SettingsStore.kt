@@ -27,6 +27,9 @@ class SettingsStore(private val settings: Settings) {
             themeMode = settings.getStringOrNull(THEME_MODE)
                 ?.let { name -> ThemeMode.entries.firstOrNull { it.name == name } }
                 ?: defaults.themeMode,
+            desktopWidget = settings.getBoolean(DESKTOP_WIDGET, defaults.desktopWidget),
+            desktopWidgetX = settings.getFloatOrNull(DESKTOP_WIDGET_X),
+            desktopWidgetY = settings.getFloatOrNull(DESKTOP_WIDGET_Y),
         )
     }
 
@@ -35,6 +38,11 @@ class SettingsStore(private val settings: Settings) {
         settings.putInt(CANDLE_OFFSET, value.candleLightingOffset)
         settings.putString(CALCULATOR, value.calculator.name)
         settings.putString(THEME_MODE, value.themeMode.name)
+        settings.putBoolean(DESKTOP_WIDGET, value.desktopWidget)
+        value.desktopWidgetX?.let { settings.putFloat(DESKTOP_WIDGET_X, it) }
+            ?: settings.remove(DESKTOP_WIDGET_X)
+        value.desktopWidgetY?.let { settings.putFloat(DESKTOP_WIDGET_Y, it) }
+            ?: settings.remove(DESKTOP_WIDGET_Y)
     }
 
     private companion object {
@@ -42,5 +50,8 @@ class SettingsStore(private val settings: Settings) {
         const val CANDLE_OFFSET = "luach.candleLightingOffset"
         const val CALCULATOR = "luach.calculator"
         const val THEME_MODE = "luach.themeMode"
+        const val DESKTOP_WIDGET = "luach.desktopWidget"
+        const val DESKTOP_WIDGET_X = "luach.desktopWidgetX"
+        const val DESKTOP_WIDGET_Y = "luach.desktopWidgetY"
     }
 }

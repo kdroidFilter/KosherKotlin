@@ -68,6 +68,9 @@ class LuachViewModel(
             is LuachIntent.SetElevation -> current.withSettings { copy(useElevation = intent.enabled) }
             is LuachIntent.SetCandleOffset -> current.withSettings { copy(candleLightingOffset = intent.minutes) }
             is LuachIntent.SetCalculator -> current.withSettings { copy(calculator = intent.calculator) }
+            is LuachIntent.SetDesktopWidget -> current.withSettings { copy(desktopWidget = intent.enabled) }
+            is LuachIntent.SetDesktopWidgetPosition ->
+                current.withSettings { copy(desktopWidgetX = intent.x, desktopWidgetY = intent.y) }
         }
 
     private fun render(inputs: Inputs, now: Instant): LuachUiState {

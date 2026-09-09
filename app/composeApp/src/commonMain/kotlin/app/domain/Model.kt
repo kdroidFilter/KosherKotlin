@@ -67,6 +67,11 @@ data class LuachSettings(
     val candleLightingOffset: Int = 18,
     val calculator: SunCalculator = SunCalculator.NOAA,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    /** JVM desktop only: pin the hero to the desktop as a below-stacking widget. */
+    val desktopWidget: Boolean = false,
+    /** Last Absolute position of the widget, in dp. Null until the user has moved it. */
+    val desktopWidgetX: Float? = null,
+    val desktopWidgetY: Float? = null,
 )
 
 /** One row of the זמני היום list. */

@@ -635,6 +635,22 @@ fun LazyListScope.settingsSection(
             }
         }
     }
+    if (DesktopWidgetSupported) {
+        item(key = "settings-desktop-widget") {
+            SettingRow(
+                label = "יישומון שולחן עבודה",
+                hint = "השעון על שולחן העבודה, כולל בפתיחת המערכת. לחיצה פותחת את האפליקציה",
+                horizontal = horizontal,
+            ) {
+                Segment("פעיל", settings.desktopWidget) {
+                    onIntent(LuachIntent.SetDesktopWidget(true))
+                }
+                Segment("כבוי", !settings.desktopWidget) {
+                    onIntent(LuachIntent.SetDesktopWidget(false))
+                }
+            }
+        }
+    }
 }
 
 @Composable
