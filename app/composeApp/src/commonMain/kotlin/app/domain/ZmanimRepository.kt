@@ -17,6 +17,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
@@ -188,6 +189,16 @@ class ZmanimRepository {
 
             val calendar = calendarFor(city, date, settings)
             val times = when {
+                // Yom Kippur and Tisha B'Av are the two 25-hour fasts: they begin at sunset the
+                // evening before, not at dawn, and Yom Kippur can itself fall on Shabbos.
+                day.isYomKippur || day.isTishaBav -> {
+                    val eve = calendarFor(city, date.minus(1, DateTimeUnit.DAY), settings)
+                    persistentListOf(
+                        LabeledTime("כניסת הצום", eve.horizonSunset(settings).clockOr(zone), accent = true),
+                        LabeledTime("צאת הצום · ר״ת", calendar.tzais72.clockOr(zone), accent = false),
+                    )
+                }
+
                 day.isTaanis && !isShabbat -> persistentListOf(
                     LabeledTime("תחילת הצום", calendar.alos16Point1Degrees.clockOr(zone), accent = false),
                     LabeledTime("סיום הצום", calendar.tzaisGeonim3Point7Degrees.clockOr(zone), accent = false),
