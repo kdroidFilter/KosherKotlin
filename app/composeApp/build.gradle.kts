@@ -83,7 +83,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(compose.material3)
+            implementation(libs.compose.material3)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.lifecycle.runtime.compose)
@@ -98,6 +98,10 @@ kotlin {
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
+            // Nucleus picks its backend off the classpath; tao is the only one shipped here.
+            implementation(libs.nucleus.application)
+            implementation(libs.nucleus.decorated.window.tao)
+            implementation(libs.nucleus.decorated.window.material3)
         }
     }
 }

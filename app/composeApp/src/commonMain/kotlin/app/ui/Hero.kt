@@ -12,6 +12,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,26 +30,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.domain.DaySnapshot
 import app.ui.theme.LuachTheme
 import kotlin.math.abs
+import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
 /**
- * The sky panel: gradient, star field, clock, next-zman pill and the sun arc.
+ * The sky panel: gradient, star field, clock, next-zman pill and the sun (or moon) arc.
  *
  * Every frame-rate value (the star twinkle, the sun halo) is read inside a draw lambda rather
  * than in composition, so the pulse redraws without recomposing anything.
@@ -55,13 +63,16 @@ import kotlin.math.sin
 @Composable
 fun Hero(
     day: DaySnapshot,
-    cityName: String,
-    sectionLabel: String,
     compact: Boolean,
+    topInset: Dp = 0.dp,
     modifier: Modifier = Modifier,
 ) {
     val colors = LuachTheme.colors
     val pulse = rememberPulse()
+
+    // A Canvas has no layout direction of its own, so the sky ran left to right inside an
+    // otherwise RTL app. Mirrored, the day reads like the text: sunrise right, sunset left.
+    val mirrored = LocalLayoutDirection.current == LayoutDirection.Rtl
 
     Box(
         modifier = modifier
@@ -73,7 +84,8 @@ fun Hero(
                 drawRect(
                     Brush.radialGradient(
                         colors = colors.skyStops,
-                        center = Offset(size.width * 0.78f, size.height * 1.18f),
+                        // The warm end of the sky belongs over the horizon the sun sets on.
+                        center = Offset(size.width * if (mirrored) 0.22f else 0.78f, size.height * 1.18f),
                         radius = max(size.width, size.height) * 1.35f,
                     )
                 )
@@ -96,77 +108,65 @@ fun Hero(
                 .padding(
                     start = if (compact) 20.dp else 46.dp,
                     end = if (compact) 20.dp else 46.dp,
-                    top = if (compact) 24.dp else 40.dp,
+                    top = topInset + if (compact) 24.dp else 40.dp,
                     bottom = 16.dp,
                 ),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            HeroHeader(day, cityName, sectionLabel, compact, pulse)
-            SunArc(
+            HeroHeader(day, compact, pulse)
+            SkyArc(
                 day = day,
                 pulse = pulse,
+                mirrored = mirrored,
                 modifier = Modifier.fillMaxWidth().height(if (compact) 150.dp else 212.dp),
             )
         }
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun HeroHeader(
-    day: DaySnapshot,
-    cityName: String,
-    sectionLabel: String,
-    compact: Boolean,
-    pulse: () -> Float,
-) {
+private fun HeroHeader(day: DaySnapshot, compact: Boolean, pulse: () -> Float) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
 
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
-        ) {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    // FlowRow, not Row: beside a 130sp clock the pill was squeezed down to a couple of glyphs
+    // per line. Now it drops onto its own line as soon as the two no longer fit side by side.
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        itemVerticalAlignment = Alignment.Top,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(
+                text = day.clock,
+                fontFamily = fonts.display,
+                fontSize = if (compact) 76.sp else 130.sp,
+                lineHeight = if (compact) 68.sp else 112.sp,
+                letterSpacing = (-4).sp,
+                color = colors.heroInk,
+            )
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
                 Text(
-                    text = "$sectionLabel · $cityName",
-                    fontFamily = fonts.body,
-                    fontSize = 10.5.sp,
-                    letterSpacing = 3.sp,
-                    color = colors.heroKicker,
-                )
-                Text(
-                    text = day.clock,
+                    text = day.hebrewDate,
                     fontFamily = fonts.display,
-                    fontSize = if (compact) 76.sp else 130.sp,
-                    lineHeight = if (compact) 68.sp else 112.sp,
-                    letterSpacing = (-4).sp,
-                    color = colors.heroInk,
+                    fontSize = if (compact) 22.sp else 30.sp,
+                    color = colors.heroGold,
                 )
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp),
-                ) {
-                    Text(
-                        text = day.hebrewDate,
-                        fontFamily = fonts.display,
-                        fontSize = if (compact) 22.sp else 30.sp,
-                        color = colors.heroGold,
-                    )
-                    Text(
-                        text = "${day.gregorianDate} · ${day.parsha}",
-                        fontFamily = fonts.body,
-                        fontSize = 13.sp,
-                        color = colors.heroSub,
-                    )
-                }
+                Text(
+                    text = "${day.gregorianDate} · ${day.parsha}",
+                    fontFamily = fonts.body,
+                    fontSize = 13.sp,
+                    color = colors.heroSub,
+                )
             }
-
-            if (!compact) day.next?.let { NextZmanPill(it, pulse) }
         }
 
-        if (compact) day.next?.let { NextZmanPill(it, pulse) }
+        day.next?.let { NextZmanPill(it, pulse) }
     }
 }
 
@@ -190,8 +190,20 @@ private fun NextZmanPill(next: app.domain.NextZman, pulse: () -> Float) {
                     .drawBehind { drawCircle(colors.heroGold, alpha = 0.35f + 0.65f * pulse()) }
             )
             Text("הזמן הבא", fontFamily = fonts.body, fontSize = 13.sp, color = colors.heroSub)
-            Text(next.name, fontFamily = fonts.display, fontSize = 22.sp, color = colors.heroInk)
-            Text(next.time, fontFamily = fonts.display, fontSize = 22.sp, color = colors.heroGold)
+            Text(
+                text = next.name,
+                fontFamily = fonts.display,
+                fontSize = 22.sp,
+                color = colors.heroInk,
+                maxLines = 1,
+            )
+            Text(
+                text = next.time,
+                fontFamily = fonts.display,
+                fontSize = 22.sp,
+                color = colors.heroGold,
+                maxLines = 1,
+            )
         }
         Text(
             text = "בעוד ${next.inLabel} · ${next.opinion}",
@@ -243,7 +255,7 @@ private fun Stars(alpha: Float, pulse: () -> Float, modifier: Modifier = Modifie
     }
 }
 
-// --- Sun arc ----------------------------------------------------------------------------
+// --- Sky arc ----------------------------------------------------------------------------
 
 private const val PI_F = 3.1415927f
 private const val ArcViewWidth = 900f
@@ -264,16 +276,18 @@ private fun bezierAt(t: Float): Offset {
 }
 
 @Composable
-private fun SunArc(day: DaySnapshot, pulse: () -> Float, modifier: Modifier = Modifier) {
+private fun SkyArc(
+    day: DaySnapshot,
+    pulse: () -> Float,
+    mirrored: Boolean,
+    modifier: Modifier = Modifier,
+) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
     val measurer = rememberTextMeasurer()
 
-    val progress = remember(day.nowMinuteOfDay, day.sunriseMinuteOfDay, day.sunsetMinuteOfDay) {
-        val sunrise = day.sunriseMinuteOfDay
-        val sunset = day.sunsetMinuteOfDay
-        if (sunrise == null || sunset == null || sunset <= sunrise) 0f
-        else ((day.nowMinuteOfDay - sunrise).toFloat() / (sunset - sunrise)).coerceIn(0f, 1f)
+    val travel = remember(day.nowMinuteOfDay, day.sunriseMinuteOfDay, day.sunsetMinuteOfDay) {
+        travel(day)
     }
 
     val labelStyle = remember(fonts, colors) {
@@ -284,14 +298,16 @@ private fun SunArc(day: DaySnapshot, pulse: () -> Float, modifier: Modifier = Mo
             textAlign = TextAlign.Center,
         )
     }
-    val marks = remember(day.sunriseLabel, day.chatzosLabel, day.sunsetLabel) {
-        listOf(0f to day.sunriseLabel, 0.5f to day.chatzosLabel, 1f to day.sunsetLabel)
+    val marks = remember(day, travel.night) {
+        if (travel.night) listOf(0f to day.sunsetLabel, 0.5f to day.midnightLabel, 1f to day.sunriseLabel)
+        else listOf(0f to day.sunriseLabel, 0.5f to day.chatzosLabel, 1f to day.sunsetLabel)
     }
 
     Canvas(modifier) {
         val scaleX = size.width / ArcViewWidth
         val scaleY = size.height / ArcViewHeight
-        fun project(point: Offset) = Offset(point.x * scaleX, point.y * scaleY)
+        fun x(value: Float) = if (mirrored) size.width - value * scaleX else value * scaleX
+        fun project(point: Offset) = Offset(x(point.x), point.y * scaleY)
 
         val (p0, p1, p2, p3) = ArcPoints
         val path = Path().apply {
@@ -306,26 +322,34 @@ private fun SunArc(day: DaySnapshot, pulse: () -> Float, modifier: Modifier = Mo
         val baseline = 178f * scaleY
         drawLine(
             color = colors.arcBase,
-            start = Offset(10f * scaleX, baseline),
-            end = Offset(890f * scaleX, baseline),
+            start = Offset(x(10f), baseline),
+            end = Offset(x(890f), baseline),
             strokeWidth = 1.dp.toPx(),
         )
         drawPath(path, colors.arcBase, style = Stroke(width = 1.dp.toPx()))
 
         // Only the elapsed part of the arc, matching the design's strokeDashoffset reveal.
-        if (progress > 0f) {
+        if (travel.progress > 0f) {
             val travelled = Path()
             PathMeasure().apply {
                 setPath(path, false)
-                getSegment(0f, length * progress, travelled, true)
+                getSegment(0f, length * travel.progress, travelled, true)
             }
             drawPath(
                 path = travelled,
-                brush = Brush.horizontalGradient(
-                    0f to colors.arcStart,
-                    0.55f to colors.arcMid,
-                    1f to colors.arcEnd,
-                ),
+                brush = if (mirrored) {
+                    Brush.horizontalGradient(
+                        0f to colors.arcEnd,
+                        0.45f to colors.arcMid,
+                        1f to colors.arcStart,
+                    )
+                } else {
+                    Brush.horizontalGradient(
+                        0f to colors.arcStart,
+                        0.55f to colors.arcMid,
+                        1f to colors.arcEnd,
+                    )
+                },
                 style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round),
             )
         }
@@ -342,28 +366,96 @@ private fun SunArc(day: DaySnapshot, pulse: () -> Float, modifier: Modifier = Mo
             drawText(measured, topLeft = Offset(x - measured.size.width / 2f, 192f * scaleY))
         }
 
-        val sun = project(bezierAt(progress))
-        val halo = 62f * scaleY
+        val body = project(bezierAt(travel.progress))
+        val glow = if (travel.night) colors.sunHalo.copy(alpha = 0.3f) else colors.sunHalo
+        val halo = (if (travel.night) 42f else 62f) * scaleY
         drawCircle(
             brush = Brush.radialGradient(
-                0f to colors.sunHalo,
-                0.45f to colors.sunHalo.copy(alpha = 0.28f),
+                0f to glow,
+                0.45f to glow.copy(alpha = glow.alpha * 0.33f),
                 1f to Color.Transparent,
-                center = sun,
+                center = body,
                 radius = halo,
             ),
             radius = halo,
-            center = sun,
+            center = body,
         )
-        drawCircle(colors.sunCore, radius = 9f * scaleY, center = sun)
-        drawCircle(
-            color = colors.sunHalo,
-            radius = 9f * scaleY,
-            center = sun,
-            alpha = 0.35f + 0.65f * pulse(),
-            style = Stroke(width = 10f * scaleY),
-        )
+        if (travel.night) {
+            drawMoon(
+                center = body,
+                radius = 11f * scaleY,
+                phase = day.moonPhase,
+                lit = colors.sunCore,
+                dark = colors.sunCore.copy(alpha = 0.14f),
+            )
+        } else {
+            drawCircle(colors.sunCore, radius = 9f * scaleY, center = body)
+            drawCircle(
+                color = colors.sunHalo,
+                radius = 9f * scaleY,
+                center = body,
+                alpha = 0.35f + 0.65f * pulse(),
+                style = Stroke(width = 10f * scaleY),
+            )
+        }
     }
+}
+
+// --- Moon ------------------------------------------------------------------------------
+
+@Immutable
+private class SkyTravel(val night: Boolean, val progress: Float)
+
+private const val MinutesPerDay = 24 * 60
+
+/** Where the sun is between sunrise and sunset, or the moon between sunset and sunrise. */
+private fun travel(day: DaySnapshot): SkyTravel {
+    val sunrise = day.sunriseMinuteOfDay
+    val sunset = day.sunsetMinuteOfDay
+    if (sunrise == null || sunset == null || sunset <= sunrise) return SkyTravel(false, 0f)
+
+    val now = day.nowMinuteOfDay
+    if (now in sunrise until sunset) {
+        return SkyTravel(false, (now - sunrise).toFloat() / (sunset - sunrise))
+    }
+    // ponytail: today's sunrise stands in for tomorrow's, a minute or two out on this arc.
+    val elapsed = if (now >= sunset) now - sunset else MinutesPerDay - sunset + now
+    val length = MinutesPerDay - sunset + sunrise
+    return SkyTravel(true, (elapsed.toFloat() / length).coerceIn(0f, 1f))
+}
+
+/**
+ * The moon at [phase] of the lunar cycle. The lit limb is half the disc; the terminator is the
+ * half-ellipse that narrows to a straight line at the quarters and reopens the other way, so
+ * one shape covers crescent, quarter and gibbous without special cases.
+ */
+private fun DrawScope.drawMoon(center: Offset, radius: Float, phase: Float, lit: Color, dark: Color) {
+    drawCircle(dark, radius, center)
+
+    val waxing = phase < 0.5f
+    // Distance of the terminator from the centre, signed towards the lit limb.
+    val terminator = radius * cos(2f * PI_F * phase)
+    val disc = Rect(center.x - radius, center.y - radius, center.x + radius, center.y + radius)
+
+    val path = Path().apply {
+        // The lit limb: the right half of the disc while waxing, the left half while waning.
+        arcTo(disc, if (waxing) -90f else 90f, 180f, true)
+        if (abs(terminator) < 0.5f) {
+            lineTo(center.x, if (waxing) center.y - radius else center.y + radius)
+        } else {
+            arcTo(
+                rect = Rect(
+                    center.x - abs(terminator), center.y - radius,
+                    center.x + abs(terminator), center.y + radius,
+                ),
+                startAngleDegrees = if (waxing) 90f else -90f,
+                sweepAngleDegrees = if (terminator >= 0f) -180f else 180f,
+                forceMoveTo = false,
+            )
+        }
+        close()
+    }
+    drawPath(path, lit)
 }
 
 /**

@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -24,8 +26,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -34,7 +39,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.domain.City
 import app.domain.LuachSection
 import app.domain.Pillar
 import kotlinx.collections.immutable.ImmutableList
@@ -52,6 +56,7 @@ fun LuachScreen(
     state: LuachUiState,
     onIntent: (LuachIntent) -> Unit,
     modifier: Modifier = Modifier,
+    topInset: Dp = 0.dp,
 ) {
     val colors = LuachTheme.colors
 
@@ -61,14 +66,15 @@ fun LuachScreen(
         val compact = maxWidth < CompactBreakpoint
 
         if (compact) {
+            // The nav strip is the only thing under the chrome here, so it absorbs the inset.
             Column(Modifier.fillMaxSize()) {
-                CompactNav(state, onIntent)
+                CompactNav(state, onIntent, topInset)
                 MainContent(state, onIntent, compact = true, modifier = Modifier.weight(1f))
             }
         } else {
             Row(Modifier.fillMaxSize()) {
-                NavRail(state, onIntent)
-                MainContent(state, onIntent, compact = false, modifier = Modifier.weight(1f))
+                NavRail(state, onIntent, topInset)
+                MainContent(state, onIntent, compact = false, topInset, Modifier.weight(1f))
             }
         }
     }
@@ -79,6 +85,7 @@ private fun MainContent(
     state: LuachUiState,
     onIntent: (LuachIntent) -> Unit,
     compact: Boolean,
+    topInset: Dp = 0.dp,
     modifier: Modifier = Modifier,
 ) {
     val horizontal = if (compact) 20.dp else 46.dp
@@ -96,15 +103,14 @@ private fun MainContent(
                 item(key = "hero") {
                     Hero(
                         day = state.day,
-                        cityName = state.city.hebrewName,
-                        sectionLabel = state.section.hebrewLabel,
                         compact = compact,
+                        topInset = topInset,
                         modifier = Modifier.fillParentMaxSize(),
                     )
                 }
             } else {
                 item(key = "page-header") {
-                    PageHeader(state = state, horizontal = horizontal, compact = compact)
+                    PageHeader(state, horizontal, compact, topInset)
                 }
 
                 when (state.section) {
@@ -134,26 +140,18 @@ private fun MainContent(
 
 /** Section identity for the pages that do not carry the hero. */
 @Composable
-private fun PageHeader(state: LuachUiState, horizontal: Dp, compact: Boolean) {
+private fun PageHeader(state: LuachUiState, horizontal: Dp, compact: Boolean, topInset: Dp) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
-    val ordinal = (state.section.ordinal + 1).toString().padStart(2, '0')
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(colors.surface)
             .padding(horizontal = horizontal)
-            .padding(top = if (compact) 24.dp else 40.dp),
+            .padding(top = topInset + if (compact) 24.dp else 40.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Text(
-            text = "$ordinal · ${state.city.hebrewName}",
-            fontFamily = fonts.body,
-            fontSize = 10.5.sp,
-            letterSpacing = 3.sp,
-            color = colors.gold,
-        )
         Text(
             text = state.section.hebrewLabel,
             fontFamily = fonts.display,
@@ -222,7 +220,7 @@ private fun PillarRow(pillars: ImmutableList<Pillar>, compact: Boolean) {
 }
 
 @Composable
-private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
+private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit, topInset: Dp) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
 
@@ -231,7 +229,8 @@ private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
             .width(RailWidth)
             .fillMaxHeight()
             .background(Brush.verticalGradient(listOf(colors.railTop, colors.railBottom)))
-            .padding(horizontal = 20.dp, vertical = 30.dp),
+            .padding(horizontal = 20.dp, vertical = 30.dp)
+            .padding(top = topInset),
         verticalArrangement = Arrangement.spacedBy(30.dp),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -250,20 +249,12 @@ private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
                         Brush.horizontalGradient(listOf(colors.gold, Color.Transparent))
                     )
             )
-            Text(
-                text = "KOSHERKOTLIN · KMP",
-                fontFamily = fonts.body,
-                fontSize = 10.sp,
-                letterSpacing = 2.4.sp,
-                color = colors.railDim,
-            )
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
-            LuachSection.entries.forEachIndexed { index, section ->
+            LuachSection.entries.forEach { section ->
                 NavItem(
                     label = section.hebrewLabel,
-                    ordinal = (index + 1).toString().padStart(2, '0'),
                     selected = section == state.section,
                     onClick = { onIntent(LuachIntent.SelectSection(section)) },
                 )
@@ -288,30 +279,40 @@ private fun NavRail(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
                     fontSize = 21.sp,
                     color = colors.railInk,
                 )
-                Text(
-                    text = state.city.coordinates(),
-                    fontFamily = fonts.body,
-                    fontSize = 11.5.sp,
-                    color = colors.railMuted,
-                )
             }
         }
     }
 }
 
+/** Selection wins over hover, so a selected item does not dim when the pointer is on it. */
 @Composable
-private fun NavItem(label: String, ordinal: String, selected: Boolean, onClick: () -> Unit) {
+private fun navFill(selected: Boolean, hovered: Boolean): Color {
+    val colors = LuachTheme.colors
+    return when {
+        selected -> colors.railActive
+        hovered -> colors.railHover
+        else -> Color.Transparent
+    }
+}
+
+@Composable
+private fun NavItem(label: String, selected: Boolean, onClick: () -> Unit) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
     val shape = RoundedCornerShape(9.dp)
+    val interaction = remember { MutableInteractionSource() }
+    val hovered by interaction.collectIsHoveredAsState()
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(if (selected) colors.railActive else Color.Transparent, shape)
-            .clickable(onClick = onClick)
+            // Clip first, then fill: Material's own indication is a rectangle, so it drew hover
+            // to the row's square bounds while selection used the rounded shape. Own the hover
+            // instead — same shape as selection, and visible in both themes.
+            .clip(shape)
+            .background(navFill(selected, hovered))
+            .clickable(interactionSource = interaction, indication = null, onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -320,18 +321,11 @@ private fun NavItem(label: String, ordinal: String, selected: Boolean, onClick: 
             fontSize = 15.sp,
             color = if (selected) colors.railInk else colors.railMuted,
         )
-        Text(
-            text = ordinal,
-            fontFamily = fonts.display,
-            fontSize = 11.sp,
-            letterSpacing = 1.sp,
-            color = if (selected) colors.gold else colors.railDim,
-        )
     }
 }
 
 @Composable
-private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
+private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit, topInset: Dp) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
 
@@ -339,7 +333,8 @@ private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
         Modifier
             .fillMaxWidth()
             .background(Brush.verticalGradient(listOf(colors.railTop, colors.railBottom)))
-            .padding(horizontal = 20.dp, vertical = 16.dp),
+            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .padding(top = topInset),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
@@ -355,17 +350,19 @@ private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
         ) {
             LuachSection.entries.forEach { section ->
                 val selected = section == state.section
+                val interaction = remember { MutableInteractionSource() }
+                val hovered by interaction.collectIsHoveredAsState()
                 Text(
                     text = section.hebrewLabel,
                     fontFamily = fonts.body,
                     fontSize = 14.sp,
                     color = if (selected) colors.railInk else colors.railMuted,
                     modifier = Modifier
-                        .background(
-                            if (selected) colors.railActive else Color.Transparent,
-                            RoundedCornerShape(9.dp),
-                        )
-                        .clickable { onIntent(LuachIntent.SelectSection(section)) }
+                        .clip(RoundedCornerShape(9.dp))
+                        .background(navFill(selected, hovered))
+                        .clickable(interactionSource = interaction, indication = null) {
+                            onIntent(LuachIntent.SelectSection(section))
+                        }
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                 )
             }
@@ -378,13 +375,3 @@ private fun CompactNav(state: LuachUiState, onIntent: (LuachIntent) -> Unit) {
     }
 }
 
-internal fun City.coordinates(): String =
-    "${latitude.round4()} / ${longitude.round4()}"
-
-private fun Double.round4(): String {
-    val scaled = kotlin.math.round(this * 10_000) / 10_000
-    val text = scaled.toString()
-    val dot = text.indexOf('.')
-    if (dot < 0) return "$text.0000"
-    return text.padEnd(dot + 5, '0').take(dot + 5)
-}

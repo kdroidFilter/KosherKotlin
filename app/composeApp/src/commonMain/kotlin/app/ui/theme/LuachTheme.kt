@@ -1,5 +1,9 @@
 package app.ui.theme
 
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -42,6 +46,7 @@ data class LuachColors(
     val railDim: Color,
     val railLine: Color,
     val railActive: Color,
+    val railHover: Color,
     val skyStops: ImmutableList<Color>,
     val skyVeil: Color,
     val heroInk: Color,
@@ -80,6 +85,7 @@ private val DarkColors = LuachColors(
     railDim = Color(0xFF9096A6),
     railLine = Color(0xFFFFFFFF).copy(alpha = 0.14f),
     railActive = Color(0xFFFFFFFF).copy(alpha = 0.07f),
+    railHover = Color(0xFFFFFFFF).copy(alpha = 0.04f),
     skyStops = persistentListOf(
         Color(0xFFD98F3A), Color(0xFFA05A3C), Color(0xFF4C3A58),
         Color(0xFF1D2340), Color(0xFF0B0E1C), Color(0xFF070810),
@@ -121,6 +127,7 @@ private val LightColors = LuachColors(
     railDim = Color(0xFF767A86),
     railLine = Color(0xFF181612).copy(alpha = 0.16f),
     railActive = Color(0xFF181612).copy(alpha = 0.06f),
+    railHover = Color(0xFF181612).copy(alpha = 0.04f),
     skyStops = persistentListOf(
         Color(0xFFFFD79C), Color(0xFFF3C48C), Color(0xFFDFC4B2),
         Color(0xFFC2D2EC), Color(0xFFA8C0E4), Color(0xFF98B3DE),
@@ -160,6 +167,32 @@ object LuachTheme {
         @Composable @ReadOnlyComposable get() = LocalLuachFonts.current
 }
 
+/**
+ * The Material 3 scheme the design's own palette maps onto, so any Material component — and
+ * Nucleus's title bar, which reads [androidx.compose.material3.MaterialTheme] at the call
+ * site — lands in the luach's colours instead of Material's purple defaults.
+ */
+private fun LuachColors.materialScheme(dark: Boolean) = with(
+    if (dark) darkColorScheme() else lightColorScheme()
+) {
+    copy(
+        primary = gold,
+        onPrimary = background,
+        primaryContainer = goldSoft,
+        onPrimaryContainer = gold,
+        background = this@materialScheme.background,
+        onBackground = ink,
+        surface = this@materialScheme.surface,
+        onSurface = ink,
+        surfaceContainer = surfaceRaised,
+        surfaceContainerHigh = surfaceRaised,
+        onSurfaceVariant = muted,
+        outline = lineStrong,
+        outlineVariant = line,
+    )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LuachTheme(dark: Boolean, content: @Composable () -> Unit) {
     // ponytail: one face per family. Compose Resources' Font() cannot pass variation axes, so
@@ -170,10 +203,14 @@ fun LuachTheme(dark: Boolean, content: @Composable () -> Unit) {
         body = FontFamily(Font(Res.font.NotoSansHebrew_VariableFont_wdth_wght)),
     )
     val colors = remember(dark) { if (dark) DarkColors else LightColors }
+    val scheme = remember(colors, dark) { colors.materialScheme(dark) }
 
-    CompositionLocalProvider(
-        LocalLuachColors provides colors,
-        LocalLuachFonts provides fonts,
-        content = content,
-    )
+    // Expressive brings the shape-morph and spatial motion the controls below rely on.
+    MaterialExpressiveTheme(colorScheme = scheme) {
+        CompositionLocalProvider(
+            LocalLuachColors provides colors,
+            LocalLuachFonts provides fonts,
+            content = content,
+        )
+    }
 }
