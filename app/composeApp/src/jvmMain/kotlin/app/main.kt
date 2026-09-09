@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberWindowState
+import app.ui.CompactBreakpoint
 import app.ui.theme.LuachTheme
 import dev.nucleusframework.application.NucleusBackend
 import dev.nucleusframework.application.nucleusApplication
@@ -32,7 +33,9 @@ fun main(args: Array<String>) = nucleusApplication(args, backend = NucleusBacken
             onCloseRequest = ::exitApplication,
             state = rememberWindowState(width = 1280.dp, height = 900.dp),
             title = "Luach",
-            minimumSize = DpSize(420.dp, 640.dp),
+            // Never narrow enough to fold the rail away: the desktop window stops at the
+            // compact breakpoint, so the side menu is always there.
+            minimumSize = DpSize(CompactBreakpoint, 640.dp),
         ) {
             LuachTheme(dark = dark) {
                 WindowScaffold(

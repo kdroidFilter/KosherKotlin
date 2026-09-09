@@ -5,7 +5,6 @@ import app.domain.City
 import app.domain.DaySnapshot
 import app.domain.HolidayEvent
 import app.domain.LimudCard
-import app.domain.LuachSection
 import app.domain.LuachSettings
 import app.domain.MonthGrid
 import app.domain.SunCalculator
@@ -21,7 +20,6 @@ import kotlinx.collections.immutable.ImmutableList
  */
 @Immutable
 data class LuachUiState(
-    val section: LuachSection,
     val city: City,
     val visibleCities: ImmutableList<City>,
     val settings: LuachSettings,
@@ -35,7 +33,6 @@ data class LuachUiState(
 
 /** Everything the user can do. The UI sends these; it never mutates state directly. */
 sealed interface LuachIntent {
-    data class SelectSection(val section: LuachSection) : LuachIntent
     data class SelectCity(val city: City) : LuachIntent
     data class Search(val query: String) : LuachIntent
     data object PreviousMonth : LuachIntent

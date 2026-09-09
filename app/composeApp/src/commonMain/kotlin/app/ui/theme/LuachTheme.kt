@@ -29,6 +29,8 @@ import org.jetbrains.compose.resources.Font
 @Immutable
 data class LuachColors(
     val background: Color,
+    /** Bottom stop of the page gradient; equal to [background] for a flat fill. */
+    val backgroundEnd: Color,
     val surface: Color,
     val surfaceRaised: Color,
     val line: Color,
@@ -68,6 +70,7 @@ data class LuachColors(
 
 private val DarkColors = LuachColors(
     background = Color(0xFF0A0B10),
+    backgroundEnd = Color(0xFF0A0B10),
     surface = Color(0xFF12141C),
     surfaceRaised = Color(0xFF191D27),
     line = Color(0xFFFFFFFF).copy(alpha = 0.09f),
@@ -109,25 +112,28 @@ private val DarkColors = LuachColors(
 )
 
 private val LightColors = LuachColors(
-    background = Color(0xFFF4F1EA),
+    background = Color(0xFFEDF2FA),
+    backgroundEnd = Color(0xFFFAF4E6),
     surface = Color(0xFFFFFFFF),
-    surfaceRaised = Color(0xFFEBE6DC),
-    line = Color(0xFF181612).copy(alpha = 0.10f),
-    lineStrong = Color(0xFF181612).copy(alpha = 0.18f),
-    ink = Color(0xFF14161C),
-    muted = Color(0xFF5F636F),
-    dim = Color(0xFF767A86),
-    gold = Color(0xFF8A5F1C),
-    goldBright = Color(0xFF6D4A12),
-    goldSoft = Color(0xFF8A5F1C).copy(alpha = 0.10f),
-    railTop = Color(0xFFFFFDF8),
-    railBottom = Color(0xFFF2EDE2),
-    railInk = Color(0xFF14161C),
-    railMuted = Color(0xFF5F636F),
-    railDim = Color(0xFF767A86),
-    railLine = Color(0xFF181612).copy(alpha = 0.16f),
-    railActive = Color(0xFF181612).copy(alpha = 0.06f),
-    railHover = Color(0xFF181612).copy(alpha = 0.04f),
+    surfaceRaised = Color(0xFFEEEEF0),
+    line = Color(0xFF1C1C1E).copy(alpha = 0.10f),
+    lineStrong = Color(0xFF1C1C1E).copy(alpha = 0.18f),
+    ink = Color(0xFF16171A),
+    muted = Color(0xFF61636B),
+    dim = Color(0xFF7A7C84),
+    // ponytail: neutral greys everywhere, the accent is the only cool note — a quiet navy. The
+    // `gold*` names stay so the dark palette and every call site keep working.
+    gold = Color(0xFF33556F),
+    goldBright = Color(0xFF234056),
+    goldSoft = Color(0xFF33556F).copy(alpha = 0.09f),
+    railTop = Color(0xFFFCFCFD),
+    railBottom = Color(0xFFF1F1F3),
+    railInk = Color(0xFF16171A),
+    railMuted = Color(0xFF61636B),
+    railDim = Color(0xFF7A7C84),
+    railLine = Color(0xFF1C1C1E).copy(alpha = 0.16f),
+    railActive = Color(0xFF1C1C1E).copy(alpha = 0.06f),
+    railHover = Color(0xFF1C1C1E).copy(alpha = 0.04f),
     skyStops = persistentListOf(
         Color(0xFFFFD79C), Color(0xFFF3C48C), Color(0xFFDFC4B2),
         Color(0xFFC2D2EC), Color(0xFFA8C0E4), Color(0xFF98B3DE),
