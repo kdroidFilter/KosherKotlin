@@ -503,12 +503,23 @@ open class JewishDate : Comparable<JewishDate> {
         gregorianLocalDate = gregorianLocalDate.minus(1, DateTimeUnit.DAY)
         // change Jewish date
         hebrewLocalDate = if (hebrewLocalDate.dayOfMonth == 1) { // if first day of the Jewish month
+            // The day landed on is the last of the *previous* month, so its length has to be
+            // looked up for that month. `daysInJewishMonth` describes the month being left, and
+            // using it put a 30th on a 29-day month whenever a short month followed a long one.
             when (hebrewLocalDate.month) {
-                HebrewMonth.NISSAN -> HebrewLocalDate(hebrewLocalDate.year, getLastMonthOfJewishYear(hebrewLocalDate.year), daysInJewishMonth)
-                HebrewMonth.TISHREI -> { // if Rosh Hashana
-                    HebrewLocalDate(hebrewLocalDate.year - 1, hebrewLocalDate.month.previousMonth, daysInJewishMonth)
+                HebrewMonth.NISSAN -> {
+                    val month = getLastMonthOfJewishYear(hebrewLocalDate.year)
+                    HebrewLocalDate(hebrewLocalDate.year, month, getDaysInJewishMonth(month, hebrewLocalDate.year))
                 }
-                else -> HebrewLocalDate(hebrewLocalDate.year, hebrewLocalDate.month.previousMonth, daysInJewishMonth)
+                HebrewMonth.TISHREI -> { // if Rosh Hashana
+                    val year = hebrewLocalDate.year - 1
+                    val month = hebrewLocalDate.month.previousMonth
+                    HebrewLocalDate(year, month, getDaysInJewishMonth(month, year))
+                }
+                else -> {
+                    val month = hebrewLocalDate.month.previousMonth
+                    HebrewLocalDate(hebrewLocalDate.year, month, getDaysInJewishMonth(month, hebrewLocalDate.year))
+                }
             }
         } else {
             hebrewLocalDate.withDayOfMonth(hebrewLocalDate.dayOfMonth - 1)
