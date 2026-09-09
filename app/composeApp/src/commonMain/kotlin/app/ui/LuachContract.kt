@@ -41,4 +41,6 @@ sealed interface LuachIntent {
     data class SetElevation(val enabled: Boolean) : LuachIntent
     data class SetCandleOffset(val minutes: Int) : LuachIntent
     data class SetCalculator(val calculator: SunCalculator) : LuachIntent
+    data class SetDesktopWidget(val enabled: Boolean) : LuachIntent
+    data class SetDesktopWidgetPosition(val x: Float, val y: Float) : LuachIntent
 }

@@ -14,8 +14,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.di.AppGraph
 import app.domain.LuachSection
-import app.ui.LuachScreen
 import app.domain.ThemeMode
+import app.ui.LuachIntent
+import app.ui.LuachScreen
+import app.ui.LuachUiState
 import app.ui.LuachViewModel
 import app.ui.rememberLuachBackStack
 import app.ui.theme.LuachTheme
@@ -23,7 +25,7 @@ import dev.zacsweers.metro.createGraph
 
 /**
  * The one composable that knows about app wiring: it builds the Metro graph, gets the
- * ViewModel, collects state and hands plain state + callbacks to [LuachScreen].
+ * ViewModel, collects state and hands plain state + callbacks to [LuachApp].
  */
 @Composable
 fun App(
@@ -43,6 +45,25 @@ fun App(
     val viewModel: LuachViewModel = viewModel { graph.luachViewModel }
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LuachApp(
+        state = state,
+        onIntent = viewModel::onIntent,
+        backStack = backStack,
+        topInset = topInset,
+    )
+}
+
+/**
+ * The themed screen with no wiring of its own. Desktop hosts this next to the widget window
+ * so both share one [LuachViewModel]; every other platform goes through [App].
+ */
+@Composable
+fun LuachApp(
+    state: LuachUiState,
+    onIntent: (LuachIntent) -> Unit,
+    topInset: Dp = 0.dp,
+    backStack: SnapshotStateList<LuachSection> = rememberLuachBackStack(),
+) {
     // SYSTEM is resolved here rather than in the ViewModel: the host theme is a Compose
     // ambient, and the ViewModel has no business reading it.
     val dark = when (state.settings.themeMode) {
@@ -56,7 +77,7 @@ fun App(
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
             LuachScreen(
                 state = state,
-                onIntent = viewModel::onIntent,
+                onIntent = onIntent,
                 backStack = backStack,
                 topInset = topInset,
             )

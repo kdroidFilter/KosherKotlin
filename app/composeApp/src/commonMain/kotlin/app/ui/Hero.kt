@@ -92,6 +92,8 @@ fun Hero(
     topInset: Dp = 0.dp,
     /** Width of the rail floating over the hero: the sky runs under it, the text does not. */
     startInset: Dp = 0.dp,
+    /** Desktop widget: fill the overlay window and skip pointer-tilt, so a click can open the app. */
+    widget: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val colors = LuachTheme.colors
@@ -123,8 +125,13 @@ fun Hero(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = if (compact) 400.dp else 470.dp)
-            .then(if (motion == null) Modifier.pointerTiltSource(pointer, scope) else Modifier)
+            .then(
+                if (widget) Modifier.fillMaxSize()
+                else Modifier.heightIn(min = if (compact) 400.dp else 470.dp),
+            )
+            .then(
+                if (motion == null && !widget) Modifier.pointerTiltSource(pointer, scope) else Modifier,
+            )
             .drawBehind {
                 // CSS: radial-gradient(120% 150% at 78% 118%, …). Compose only has circular
                 // radial gradients, so match the centre and reach instead of the ellipse.
@@ -148,7 +155,7 @@ fun Hero(
             Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .height(200.dp)
+                .height(if (widget) 72.dp else 200.dp)
                 .background(Brush.verticalGradient(listOf(Color.Transparent, colors.skyVeil)))
         )
 
@@ -156,22 +163,41 @@ fun Hero(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    start = startInset + if (compact) 20.dp else 46.dp,
-                    end = if (compact) 20.dp else 46.dp,
-                    top = topInset + if (compact) 24.dp else 40.dp,
-                    bottom = 16.dp,
+                    start = startInset + when {
+                        widget -> 14.dp
+                        compact -> 20.dp
+                        else -> 46.dp
+                    },
+                    end = when {
+                        widget -> 14.dp
+                        compact -> 20.dp
+                        else -> 46.dp
+                    },
+                    top = topInset + when {
+                        widget -> 12.dp
+                        compact -> 24.dp
+                        else -> 40.dp
+                    },
+                    bottom = if (widget) 8.dp else 16.dp,
                 ),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            HeroHeader(day, compact, pulse)
+            HeroHeader(day, compact, widget, pulse)
             SkyArc(
                 day = day,
                 sky = sky,
                 pulse = pulse,
                 mirrored = mirrored,
+                widget = widget,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(if (compact) 150.dp else 212.dp)
+                    .height(
+                        when {
+                            widget -> 88.dp
+                            compact -> 150.dp
+                            else -> 212.dp
+                        },
+                    )
                     // Nearest layer, so it leans most. A layer-phase read: no recomposition.
                     .graphicsLayer {
                         translationX = -lean().x * 16.dp.toPx()
@@ -184,19 +210,34 @@ fun Hero(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun HeroHeader(day: DaySnapshot, compact: Boolean, pulse: () -> Float) {
+private fun HeroHeader(day: DaySnapshot, compact: Boolean, widget: Boolean, pulse: () -> Float) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
+    val clockSize = when {
+        widget -> 40.sp
+        compact -> 76.sp
+        else -> 130.sp
+    }
+    val clockLine = when {
+        widget -> 38.sp
+        compact -> 68.sp
+        else -> 112.sp
+    }
+    val dateSize = when {
+        widget -> 15.sp
+        compact -> 22.sp
+        else -> 30.sp
+    }
 
     // FlowRow, not Row: beside a 130sp clock the pill was squeezed down to a couple of glyphs
     // per line. Now it drops onto its own line as soon as the two no longer fit side by side.
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        itemVerticalAlignment = Alignment.Top,
+        verticalArrangement = Arrangement.spacedBy(if (widget) 6.dp else 16.dp),
+        itemVerticalAlignment = if (widget) Alignment.CenterVertically else Alignment.Top,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(if (widget) 2.dp else 12.dp)) {
             // A content swap, not a value animation: the minute rolls up and out of the way.
             AnimatedContent(
                 targetState = day.clock,
@@ -209,76 +250,87 @@ private fun HeroHeader(day: DaySnapshot, compact: Boolean, pulse: () -> Float) {
                 Text(
                     text = clock,
                     fontFamily = fonts.display,
-                    fontSize = if (compact) 76.sp else 130.sp,
-                    lineHeight = if (compact) 68.sp else 112.sp,
-                    letterSpacing = (-4).sp,
+                    fontSize = clockSize,
+                    lineHeight = clockLine,
+                    letterSpacing = if (widget) (-1.5).sp else (-4).sp,
                     color = colors.heroInk,
                 )
             }
             Row(
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                horizontalArrangement = Arrangement.spacedBy(if (widget) 8.dp else 14.dp),
             ) {
                 Text(
                     text = day.hebrewDate,
                     fontFamily = fonts.display,
-                    fontSize = if (compact) 22.sp else 30.sp,
+                    fontSize = dateSize,
                     color = colors.heroGold,
                 )
                 Text(
-                    text = "${day.gregorianDate} · ${day.parsha}",
+                    text = if (widget) day.gregorianDate else "${day.gregorianDate} · ${day.parsha}",
                     fontFamily = fonts.body,
-                    fontSize = 13.sp,
+                    fontSize = if (widget) 11.sp else 13.sp,
                     color = colors.heroSub,
                 )
             }
         }
 
-        day.next?.let { NextZmanPill(it, pulse) }
+        day.next?.let { NextZmanPill(it, pulse, widget) }
     }
 }
 
 @Composable
-private fun NextZmanPill(next: app.domain.NextZman, pulse: () -> Float) {
+private fun NextZmanPill(next: app.domain.NextZman, pulse: () -> Float, widget: Boolean) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
+    val nameSize = if (widget) 14.sp else 22.sp
 
-    Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.spacedBy(if (widget) 0.dp else 8.dp),
+    ) {
         Row(
             modifier = Modifier
                 .background(colors.glassFill, CircleShape)
                 .border(1.dp, colors.glassLine, CircleShape)
-                .padding(horizontal = 18.dp, vertical = 12.dp),
+                .padding(
+                    horizontal = if (widget) 10.dp else 18.dp,
+                    vertical = if (widget) 6.dp else 12.dp,
+                ),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            horizontalArrangement = Arrangement.spacedBy(if (widget) 8.dp else 14.dp),
         ) {
             Box(
                 Modifier
-                    .size(7.dp)
+                    .size(if (widget) 5.dp else 7.dp)
                     .drawBehind { drawCircle(colors.heroGold, alpha = 0.35f + 0.65f * pulse()) }
             )
-            Text("הזמן הבא", fontFamily = fonts.body, fontSize = 13.sp, color = colors.heroSub)
+            if (!widget) {
+                Text("הזמן הבא", fontFamily = fonts.body, fontSize = 13.sp, color = colors.heroSub)
+            }
             Text(
                 text = next.name,
                 fontFamily = fonts.display,
-                fontSize = 22.sp,
+                fontSize = nameSize,
                 color = colors.heroInk,
                 maxLines = 1,
             )
             Text(
                 text = next.time,
                 fontFamily = fonts.display,
-                fontSize = 22.sp,
+                fontSize = nameSize,
                 color = colors.heroGold,
                 maxLines = 1,
             )
         }
-        Text(
-            text = "בעוד ${next.inLabel} · ${next.opinion}",
-            fontFamily = fonts.body,
-            fontSize = 12.5.sp,
-            color = colors.heroSub,
-        )
+        if (!widget) {
+            Text(
+                text = "בעוד ${next.inLabel} · ${next.opinion}",
+                fontFamily = fonts.body,
+                fontSize = 12.5.sp,
+                color = colors.heroSub,
+            )
+        }
     }
 }
 
@@ -439,12 +491,12 @@ private fun SkyArc(
     sky: SkyTravel,
     pulse: () -> Float,
     mirrored: Boolean,
+    widget: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
     val measurer = rememberTextMeasurer()
-
 
     val labelStyle = remember(fonts, colors) {
         TextStyle(
@@ -510,25 +562,29 @@ private fun SkyArc(
             )
         }
 
-        marks.forEach { (u, label) ->
-            val x = project(bezierAt(u)).x
-            drawLine(
-                color = colors.arcTick,
-                start = Offset(x, baseline),
-                end = Offset(x, 187f * scaleY),
-                strokeWidth = 1.dp.toPx(),
-            )
-            val measured = measurer.measure(label, labelStyle)
-            drawText(measured, topLeft = Offset(x - measured.size.width / 2f, 192f * scaleY))
+        if (!widget) {
+            marks.forEach { (u, label) ->
+                val x = project(bezierAt(u)).x
+                drawLine(
+                    color = colors.arcTick,
+                    start = Offset(x, baseline),
+                    end = Offset(x, 187f * scaleY),
+                    strokeWidth = 1.dp.toPx(),
+                )
+                val measured = measurer.measure(label, labelStyle)
+                drawText(measured, topLeft = Offset(x - measured.size.width / 2f, 192f * scaleY))
+            }
         }
 
         val body = project(bezierAt(sky.progress))
+        // The arc canvas is shorter in the widget, so the body is scaled up or it reads as a speck.
+        val bodyScale = if (widget) 1.7f else 1f
         if (sky.night) {
-            drawMoon(body, 11f * scaleY, day.moonPhase)
+            drawMoon(body, 11f * scaleY * bodyScale, day.moonPhase)
         } else {
             // A low sun reddens. The bezier stands in for altitude: highest at mid-travel.
             val low = 1f - sin(sky.progress * PI_F)
-            drawSun(body, 9f * scaleY, low * low, pulse(), colors.sunCore, colors.sunHalo)
+            drawSun(body, 9f * scaleY * bodyScale, low * low, pulse(), colors.sunCore, colors.sunHalo)
         }
     }
 }

@@ -116,6 +116,8 @@ kotlin {
             implementation(compose.desktop.currentOs)
             // Nucleus picks its backend off the classpath; tao is the only one shipped here.
             implementation(libs.nucleus.application)
+            implementation(libs.nucleus.autolaunch)
+            implementation(libs.nucleus.core.runtime)
             implementation(libs.nucleus.decorated.window.tao)
             implementation(libs.nucleus.decorated.window.material3)
         }
@@ -142,6 +144,10 @@ if (providers.gradleProperty("composeReports").orNull == "true") {
 // the plugin fails the build if both are set.
 nucleus.application {
     mainClass = "app.MainKt"
+
+    graalvm {
+        isEnabled.set(true)
+    }
 
     nativeDistributions {
         targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
