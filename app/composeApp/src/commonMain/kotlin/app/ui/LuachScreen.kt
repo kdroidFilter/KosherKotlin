@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,9 +42,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -340,7 +346,7 @@ private fun NavRail(
         Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
             LuachSection.entries.forEach { entry ->
                 NavItem(
-                    label = entry.hebrewLabel,
+                    section = entry,
                     selected = entry == section,
                     onClick = { onSelect(entry) },
                 )
@@ -382,7 +388,7 @@ private fun navFill(selected: Boolean, hovered: Boolean): Color {
 }
 
 @Composable
-private fun NavItem(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun NavItem(section: LuachSection, selected: Boolean, onClick: () -> Unit) {
     val colors = LuachTheme.colors
     val fonts = LuachTheme.fonts
     val shape = RoundedCornerShape(9.dp)
@@ -401,14 +407,98 @@ private fun NavItem(label: String, selected: Boolean, onClick: () -> Unit) {
             .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        SectionIcon(section, if (selected) colors.gold else colors.railMuted)
+        Spacer(Modifier.width(10.dp))
         Text(
-            text = label,
+            text = section.hebrewLabel,
             fontFamily = fonts.body,
             fontSize = 15.sp,
             color = if (selected) colors.railInk else colors.railMuted,
         )
     }
 }
+/**
+ * Hairline glyphs for the rail, drawn rather than imported.
+ *
+ * ponytail: seven shapes in a `when` instead of a Material icons artifact in every bundle —
+ * and drawn, they match the hero's hand-made sky rather than fighting it.
+ */
+@Composable
+private fun SectionIcon(section: LuachSection, tint: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier.size(17.dp)) {
+        val u = size.minDimension
+        val sw = u * 0.085f
+        val pen = Stroke(width = sw)
+        fun at(x: Float, y: Float) = Offset(x * u, y * u)
+        fun line(x1: Float, y1: Float, x2: Float, y2: Float) =
+            drawLine(tint, at(x1, y1), at(x2, y2), sw, StrokeCap.Round)
+        fun ring(x: Float, y: Float, r: Float) = drawCircle(tint, r * u, at(x, y), style = pen)
+        fun dot(x: Float, y: Float, r: Float) = drawCircle(tint, r * u, at(x, y))
+
+        when (section) {
+            // A clock, for the hour that is now.
+            LuachSection.NOW -> {
+                ring(0.5f, 0.5f, 0.40f)
+                line(0.5f, 0.5f, 0.5f, 0.28f)
+                line(0.5f, 0.5f, 0.68f, 0.58f)
+            }
+            // A sun, for the zmanim of the day.
+            LuachSection.DAY -> {
+                ring(0.5f, 0.5f, 0.22f)
+                line(0.5f, 0.06f, 0.5f, 0.16f)
+                line(0.5f, 0.84f, 0.5f, 0.94f)
+                line(0.06f, 0.5f, 0.16f, 0.5f)
+                line(0.84f, 0.5f, 0.94f, 0.5f)
+            }
+            // A pin, for the place the luach is computed for.
+            LuachSection.PLACE -> {
+                ring(0.5f, 0.38f, 0.30f)
+                line(0.28f, 0.58f, 0.5f, 0.94f)
+                line(0.72f, 0.58f, 0.5f, 0.94f)
+            }
+            // A calendar leaf, for the month.
+            LuachSection.MONTH -> {
+                drawRoundRect(
+                    tint,
+                    topLeft = at(0.08f, 0.18f),
+                    size = Size(0.84f * u, 0.74f * u),
+                    cornerRadius = CornerRadius(0.14f * u),
+                    style = pen,
+                )
+                line(0.08f, 0.40f, 0.92f, 0.40f)
+                line(0.32f, 0.08f, 0.32f, 0.26f)
+                line(0.68f, 0.08f, 0.68f, 0.26f)
+            }
+            // Two candles, for Shabbat and the festivals.
+            LuachSection.SHABBAT -> {
+                line(0.33f, 0.94f, 0.33f, 0.44f)
+                line(0.67f, 0.94f, 0.67f, 0.44f)
+                dot(0.33f, 0.24f, 0.10f)
+                dot(0.67f, 0.24f, 0.10f)
+            }
+            // An open book, for the parsha and the daf.
+            LuachSection.LIMUD -> {
+                line(0.5f, 0.30f, 0.5f, 0.92f)
+                line(0.08f, 0.20f, 0.08f, 0.82f)
+                line(0.92f, 0.20f, 0.92f, 0.82f)
+                line(0.08f, 0.20f, 0.5f, 0.30f)
+                line(0.92f, 0.20f, 0.5f, 0.30f)
+                line(0.08f, 0.82f, 0.5f, 0.92f)
+                line(0.92f, 0.82f, 0.5f, 0.92f)
+            }
+            // Sliders, for the settings.
+            LuachSection.SETTINGS -> {
+                line(0.08f, 0.26f, 0.92f, 0.26f)
+                line(0.08f, 0.5f, 0.92f, 0.5f)
+                line(0.08f, 0.74f, 0.92f, 0.74f)
+                dot(0.66f, 0.26f, 0.12f)
+                dot(0.34f, 0.5f, 0.12f)
+                dot(0.58f, 0.74f, 0.12f)
+            }
+        }
+    }
+}
+
 
 @Composable
 private fun CompactNav(section: LuachSection, onSelect: (LuachSection) -> Unit, topInset: Dp) {
@@ -438,11 +528,7 @@ private fun CompactNav(section: LuachSection, onSelect: (LuachSection) -> Unit, 
                 val selected = entry == section
                 val interaction = remember { MutableInteractionSource() }
                 val hovered by interaction.collectIsHoveredAsState()
-                Text(
-                    text = entry.hebrewLabel,
-                    fontFamily = fonts.body,
-                    fontSize = 14.sp,
-                    color = if (selected) colors.railInk else colors.railMuted,
+                Row(
                     modifier = Modifier
                         .clip(RoundedCornerShape(9.dp))
                         .background(navFill(selected, hovered))
@@ -450,7 +536,17 @@ private fun CompactNav(section: LuachSection, onSelect: (LuachSection) -> Unit, 
                             onSelect(entry)
                         }
                         .padding(horizontal = 12.dp, vertical = 8.dp),
-                )
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    SectionIcon(entry, if (selected) colors.gold else colors.railMuted)
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = entry.hebrewLabel,
+                        fontFamily = fonts.body,
+                        fontSize = 14.sp,
+                        color = if (selected) colors.railInk else colors.railMuted,
+                    )
+                }
             }
         }
         LuachHorizontalScrollbar(
