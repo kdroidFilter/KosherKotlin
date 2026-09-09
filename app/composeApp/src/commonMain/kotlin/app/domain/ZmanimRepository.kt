@@ -254,25 +254,18 @@ class ZmanimRepository {
     }
 
     /**
-     * `parshah` is only set on a Shabbos that actually has one, so ask the library which parsha
-     * is coming (it skips Shabbosos swallowed by Yom Tov) and then walk to the Shabbos that
-     * carries it, because `formatParsha` only ever reads a calendar's own `parshah`.
+     * This week's parsha, i.e. the one read on the coming Shabbos (today, if today is Shabbos).
      *
-     * The walk needs real headroom: in Tishrei, Rosh Hashana, Yom Kippur and Succos can take
-     * three Shabbosos in a row before a parsha is read again.
+     * When that Shabbos is a Yom Tov the Torah reading is the festival's, not a parsha, and the
+     * honest answer is that there is none — deliberately *not* the next Shabbos that has one,
+     * which can be three weeks away in Tishrei and would be a lie under this heading.
      */
     private fun parshaLabel(date: LocalDate, city: City): String {
-        val upcoming = JewishCalendar(date).apply { inIsrael = city.inIsrael }.upcomingParshah
-        if (upcoming == JewishCalendar.Parsha.NONE) return "—"
-
-        for (offset in 0..PARSHA_SEARCH_DAYS) {
-            val day = JewishCalendar(date.plus(offset, DateTimeUnit.DAY))
-                .apply { inIsrael = city.inIsrael }
-            if (day.parshah == upcoming) {
-                return hebrew.formatParsha(day)?.takeIf { it.isNotBlank() }?.let { "פרשת $it" } ?: "—"
-            }
-        }
-        return "—"
+        val daysToShabbos = (DayOfWeek.SATURDAY.ordinal - date.dayOfWeek.ordinal + 7) % 7
+        val shabbos = JewishCalendar(date.plus(daysToShabbos, DateTimeUnit.DAY))
+            .apply { inIsrael = city.inIsrael }
+        val name = hebrew.formatParsha(shabbos)
+        return if (name.isNullOrBlank()) "אין פרשה השבוע" else "פרשת $name"
     }
 
     private fun calendarFor(city: City, date: LocalDate, settings: LuachSettings) =
@@ -296,9 +289,6 @@ class ZmanimRepository {
         }
 
     private companion object {
-        /** Tishrei can hide three parsha-less Shabbosos in a row. */
-        const val PARSHA_SEARCH_DAYS = 40
-
         const val NIGHT = "לילה"
         const val MORNING = "בוקר"
         const val NOON = "צהריים"

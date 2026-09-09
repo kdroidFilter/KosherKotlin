@@ -135,18 +135,19 @@ class ZmanimRepositoryTest {
     }
 
     @Test
-    fun everyLimudCardIsFilledInEvenAcrossTishrei() {
-        // Rosh Hashana, Yom Kippur and Succos can swallow three Shabbosos in a row, which is
-        // exactly where a short forward-scan for the parsha used to come back empty.
-        for (offset in 0..120) {
-            val day = LocalDate(2026, 8, 20).plus(offset, DateTimeUnit.DAY)
-            repository.limud(day, jerusalem).forEach { card ->
-                assertTrue(
-                    card.value.isNotBlank() && card.value != "\u2014",
-                    "$day left '${card.kicker}' empty",
-                )
-            }
-        }
+    fun theParshaCardShowsTheComingShabbosAndAdmitsWhenThereIsNone() {
+        fun parsha(on: LocalDate) =
+            repository.limud(on, jerusalem).first { it.kicker == "פרשת השבוע" }.value
+
+        // 2026-09-12 is Rosh Hashana on Shabbos: the reading is the festival's, not a parsha.
+        assertEquals("אין פרשה השבוע", parsha(LocalDate(2026, 9, 12)))
+        // Standing midweek before it, the answer is still "none" — not a parsha ten days out.
+        assertEquals("אין פרשה השבוע", parsha(date))
+
+        // A normal week resolves to the coming Shabbos, from any day of that week.
+        val shabbosShuva = LocalDate(2026, 9, 19)
+        assertEquals("פרשת האזינו", parsha(shabbosShuva))
+        assertEquals(parsha(shabbosShuva), parsha(LocalDate(2026, 9, 16)))
     }
 
     @Test
