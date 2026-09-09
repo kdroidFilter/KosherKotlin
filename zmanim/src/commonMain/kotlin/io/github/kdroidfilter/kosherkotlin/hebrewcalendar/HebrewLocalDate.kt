@@ -147,9 +147,9 @@ data class HebrewLocalDate(
          * Computes the [HebrewLocalDate] of a given Gregorian date.
          * @param this the gregorian date to convert to a [HebrewLocalDate]
          */
-        fun LocalDate.withYear(year: Int): LocalDate = LocalDate(year, month, dayOfMonth)
-        fun LocalDate.withMonth(month: Month): LocalDate = LocalDate(year, month, dayOfMonth)
-        fun LocalDate.withDayOfMonth(dayOfMonth: Int): LocalDate = LocalDate(year, month, dayOfMonth)
+        fun LocalDate.withYear(year: Int): LocalDate = LocalDate(year, month, day)
+        fun LocalDate.withMonth(month: Month): LocalDate = LocalDate(year, month, day)
+        fun LocalDate.withDayOfMonth(dayOfMonth: Int): LocalDate = LocalDate(year, month, day = dayOfMonth)
         fun LocalDate.toHebrewDate(): HebrewLocalDate =
             toPairOfHebrewAndGregorianLocalDate(targetGregorianDate = this).first
 
@@ -233,7 +233,7 @@ data class HebrewLocalDate(
                         LocalDate(
                             currentGregorianDateTime.date.year + 1,
                             currentGregorianDateTime.date.month,
-                            currentGregorianDateTime.date.dayOfMonth
+                            currentGregorianDateTime.date.day
                         ), currentGregorianDateTime.time
                     )
                     if (

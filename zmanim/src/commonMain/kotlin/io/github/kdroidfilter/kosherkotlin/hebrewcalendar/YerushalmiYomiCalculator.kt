@@ -16,7 +16,7 @@
 package io.github.kdroidfilter.kosherkotlin.hebrewcalendar
 
 import kotlin.time.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
