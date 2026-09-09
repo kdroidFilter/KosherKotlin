@@ -1,6 +1,8 @@
 package app.domain
 
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -130,6 +132,28 @@ class ZmanimRepositoryTest {
             names(jerusalem) != names(diaspora),
             "expected Israel and ${diaspora.latinName} to differ: ${names(jerusalem)} vs ${names(diaspora)}",
         )
+    }
+
+    @Test
+    fun everyLimudCardIsFilledInEvenAcrossTishrei() {
+        // Rosh Hashana, Yom Kippur and Succos can swallow three Shabbosos in a row, which is
+        // exactly where a short forward-scan for the parsha used to come back empty.
+        for (offset in 0..120) {
+            val day = LocalDate(2026, 8, 20).plus(offset, DateTimeUnit.DAY)
+            repository.limud(day, jerusalem).forEach { card ->
+                assertTrue(
+                    card.value.isNotBlank() && card.value != "\u2014",
+                    "$day left '${card.kicker}' empty",
+                )
+            }
+        }
+    }
+
+    @Test
+    fun theMoladCardNamesTheComingMonth() {
+        // 9 September 2026 is in Elul, so the molad being announced is Tishrei's.
+        val molad = repository.limud(date, jerusalem).first { it.kicker.startsWith("מולד") }
+        assertEquals("מולד תשרי", molad.kicker)
     }
 
     private companion object {
