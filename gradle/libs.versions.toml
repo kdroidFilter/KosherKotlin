@@ -6,7 +6,7 @@ agp = "9.1.0"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
 kotlinx-datetime = "0.8.0"
-compose = "1.12.0"
+compose = "1.12.1"
 # Material 3 ships on its own line; pinned to the build Nucleus links against.
 compose-material3 = "1.12.0-alpha03"
 androidx-activityCompose = "1.13.0"
