@@ -59,6 +59,9 @@ enum class ThemeMode(val hebrewLabel: String) {
 enum class SunCalculator(val label: String) {
     NOAA("NOAA"),
     SUN_TIMES("SunTimes"),
+
+
+
 }
 
 @Immutable

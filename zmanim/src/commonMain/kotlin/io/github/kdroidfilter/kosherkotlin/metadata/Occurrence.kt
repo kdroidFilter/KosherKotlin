@@ -34,6 +34,7 @@ data class Occurrence(val subject: ZmanType, val calculationMethod: ZmanCalculat
     private operator fun ZmanCalculationMethod.unaryMinus(): ZmanCalculationMethod =
         when (this) {
             is ZmanCalculationMethod.Degrees -> ZmanCalculationMethod.Degrees(-(degrees.absoluteValue))
+            is ZmanCalculationMethod.DegreesBelowHorizon -> ZmanCalculationMethod.DegreesBelowHorizon(-(degrees.absoluteValue))
             is ZmanCalculationMethod.FixedDuration -> ZmanCalculationMethod.FixedDuration(-(duration.absoluteValue))
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(-(duration.absoluteValue))
             is ZmanCalculationMethod.FixedDuration.AteretTorah -> ZmanCalculationMethod.FixedDuration.AteretTorah(-(minutes.absoluteValue))
@@ -47,6 +48,7 @@ data class Occurrence(val subject: ZmanType, val calculationMethod: ZmanCalculat
     private operator fun ZmanCalculationMethod.unaryPlus(): ZmanCalculationMethod =
         when (this) {
             is ZmanCalculationMethod.Degrees -> ZmanCalculationMethod.Degrees(degrees.absoluteValue)
+            is ZmanCalculationMethod.DegreesBelowHorizon -> ZmanCalculationMethod.DegreesBelowHorizon(degrees.absoluteValue)
             is ZmanCalculationMethod.FixedDuration -> ZmanCalculationMethod.FixedDuration(duration.absoluteValue)
             is ZmanCalculationMethod.ZmaniyosDuration -> ZmanCalculationMethod.ZmaniyosDuration(duration.absoluteValue)
             is ZmanCalculationMethod.FixedDuration.AteretTorah -> ZmanCalculationMethod.FixedDuration.AteretTorah(

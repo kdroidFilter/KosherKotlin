@@ -618,7 +618,7 @@ fun LazyListScope.settingsSection(
         }
     }
     item(key = "settings-calculator") {
-        SettingRow("מחשבון אסטרונומי", "שיטת החישוב של מיקום השמש", horizontal) {
+
             SunCalculator.entries.forEach { calculator ->
                 Segment(calculator.label, settings.calculator == calculator) {
                     onIntent(LuachIntent.SetCalculator(calculator))

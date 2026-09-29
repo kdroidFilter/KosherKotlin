@@ -8,6 +8,7 @@ import io.github.kdroidfilter.kosherkotlin.Zman
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
+
 import io.github.kdroidfilter.kosherkotlin.util.NOAACalculator
 import io.github.kdroidfilter.kosherkotlin.util.SunTimesCalculator
 import kotlinx.collections.immutable.ImmutableList
@@ -296,6 +297,7 @@ class ZmanimRepository {
             astronomicalCalculator = when (settings.calculator) {
                 SunCalculator.NOAA -> NOAACalculator()
                 SunCalculator.SUN_TIMES -> SunTimesCalculator()
+
             }
             jewishCalendar.inIsrael = city.inIsrael
         }

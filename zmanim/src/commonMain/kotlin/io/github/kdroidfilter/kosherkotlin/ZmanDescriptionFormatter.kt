@@ -162,6 +162,8 @@ class ZmanDescriptionFormatter {
         when (method.calculationMethod) {
             is ZmanCalculationMethod.Degrees -> dayStartEndString(method.calculationMethod.degrees, method.type in hashSetOf(
                 ZmanType.ALOS, ZmanType.HANAITZ, ZmanType.SHAA_ZMANIS), method.type in hashSetOf(ZmanType.TZAIS, ZmanType.SHKIAH, ZmanType.SHAA_ZMANIS))
+            is ZmanCalculationMethod.DegreesBelowHorizon -> dayStartEndString(method.calculationMethod.degrees, method.type in hashSetOf(
+                ZmanType.ALOS, ZmanType.HANAITZ, ZmanType.SHAA_ZMANIS), method.type in hashSetOf(ZmanType.TZAIS, ZmanType.SHKIAH, ZmanType.SHAA_ZMANIS), "apparent")
             is ZmanAuthority -> "${method.type.friendlyNameEnglish} as calculated according to ${method.calculationMethod.name}."
             is ZmanCalculationMethod.DayDefinition -> {
                 val shaosZmaniyos = ZmanType.shaosZmaniyosIntoDay[method.type]
@@ -191,16 +193,17 @@ class ZmanDescriptionFormatter {
             is ZmanCalculationMethod.FixedDuration.AteretTorah -> method.calculationMethod.shortDescription()
         }
 
-    private fun dayStartEndString(degrees: Float, mentionStart: Boolean = false, mentionEnd: Boolean = false) =
+    private fun dayStartEndString(degrees: Float, mentionStart: Boolean = false, mentionEnd: Boolean = false, horizon: String = "geometric") =
         when {
-            mentionStart && mentionEnd -> "Day starts when the sun is $degrees˚ below the eastern geometric horizon and ends when it is $degrees˚ below the western geometric horizon."
-            mentionStart && !mentionEnd -> "Day starts when the sun is $degrees˚ below the eastern geometric horizon."
-            else -> "Day ends when it is $degrees˚ below the western geometric horizon."
+            mentionStart && mentionEnd -> "Day starts when the sun is $degrees˚ below the eastern $horizon horizon and ends when it is $degrees˚ below the western $horizon horizon."
+            mentionStart && !mentionEnd -> "Day starts when the sun is $degrees˚ below the eastern $horizon horizon."
+            else -> "Day ends when it is $degrees˚ below the western $horizon horizon."
         }
 
     private fun getShortCalculationDescription(method: ZmanDefinition): String =
         when (method.calculationMethod) {
             is ZmanCalculationMethod.Degrees -> method.calculationMethod.valueToString()
+            is ZmanCalculationMethod.DegreesBelowHorizon -> method.calculationMethod.valueToString()
             is ZmanAuthority -> method.calculationMethod.valueToString()
             is ZmanCalculationMethod.DayDefinition -> {
                 if(method.calculationMethod.dayStart.calculationMethod != method.calculationMethod.dayEnd.calculationMethod) {
