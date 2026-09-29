@@ -60,7 +60,7 @@ enum class SunCalculator(val label: String) {
     NOAA("NOAA"),
     SUN_TIMES("SunTimes"),
 
-    /** Not only the sun: the whole day as the עתים לבינה luach computes it. */
+    /** The sun and horizon of the עתים לבינה luach. */
     ITIM_LABINA("עתים לבינה"),
 }
 

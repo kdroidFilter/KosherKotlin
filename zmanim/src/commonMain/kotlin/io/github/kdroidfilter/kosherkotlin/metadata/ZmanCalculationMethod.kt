@@ -252,6 +252,17 @@ sealed interface ZmanCalculationMethod {
         override fun valueToString(): String = "$degrees˚"
     }
     /**
+     * Dawn is when the sun is x degrees below the eastern apparent horizon of the day, the one sunrise is seen over,
+     * rather than the geometric one: the [AstronomicalCalculator][io.github.kdroidfilter.kosherkotlin.util.AstronomicalCalculator.horizonZenith]'s
+     * refraction, solar radius and (if used) elevation are included. Dusk likewise, below the western apparent horizon.
+     * */
+    data class DegreesBelowHorizon(val degrees: Float) :
+        ZmanCalculationMethod {
+        override fun format(): String = "Day is ${degrees}˚ below the horizon of sunrise / sunset"
+        override fun format(subjectZman: String, zmanRelativeTo: String): String = "$subjectZman is $degrees˚ ${if (degrees < 0) "before" else "after"} $zmanRelativeTo"
+        override fun valueToString(): String = "$degrees˚ below the horizon"
+    }
+    /**
      * Dawn for this calculation is 60 minutes before sunrise.
      * Dusk is 60 minutes after sunset.
      *

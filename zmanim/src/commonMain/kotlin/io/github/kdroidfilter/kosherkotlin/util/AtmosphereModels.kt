@@ -1,4 +1,4 @@
-package io.github.kdroidfilter.kosherkotlin.itimlabina
+package io.github.kdroidfilter.kosherkotlin.util
 
 /** Layered model atmospheres: bottom height (km), T (K) and P (mbar) at the bottom, lapse (K/km), pressure exponent. */
 internal object AtmosphereModels {

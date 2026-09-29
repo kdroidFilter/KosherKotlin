@@ -1,6 +1,6 @@
 // Generated from the NREL Solar Position Algorithm tables (Reda & Andreas, 2004): VSOP87 Earth terms
 // [A, B, C] as A·cos(B + C·τ), and the IAU 1980 nutation terms. Do not edit by hand.
-package io.github.kdroidfilter.kosherkotlin.itimlabina
+package io.github.kdroidfilter.kosherkotlin.util
 
 internal object SpaTables {
     val L0 = arrayOf(

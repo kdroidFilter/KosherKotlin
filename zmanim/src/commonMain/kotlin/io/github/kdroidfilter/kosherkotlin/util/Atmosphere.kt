@@ -1,4 +1,4 @@
-package io.github.kdroidfilter.kosherkotlin.itimlabina
+package io.github.kdroidfilter.kosherkotlin.util
 
 import kotlin.math.PI
 import kotlin.math.exp
