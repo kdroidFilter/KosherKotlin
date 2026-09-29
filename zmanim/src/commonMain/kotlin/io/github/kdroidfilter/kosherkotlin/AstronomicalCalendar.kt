@@ -285,6 +285,21 @@ open class AstronomicalCalendar(
         getUTCSunset(offsetZenith)
             .takeUnless { it.isNaN() }
             ?.let { getDateFromTime(it, false) }
+
+    /**
+     * The time the sun is [degrees] below (negative: above) the apparent horizon of [sea level sunrise][seaLevelSunrise],
+     * rather than the geometric one that [getSunriseOffsetByDegrees] measures from: the
+     * [calculator's horizon][AstronomicalCalculator.horizonZenith], with its refraction and solar radius, is the zero.
+     * Some luchot give their degree-based zmanim this way, e.g. עתים לבינה's "72 במעלות".
+     *
+     * @return null where the sun never gets there. See detailed explanation on top of the page.
+     */
+    fun getSunriseOffsetByDegreesBelowHorizon(degrees: Double): Instant? =
+        getSunriseOffsetByDegrees(astronomicalCalculator.horizonZenith(adjustedLocalDate.date, geoLocation, true, false) + degrees)
+
+    /** Evening counterpart of [getSunriseOffsetByDegreesBelowHorizon], below the apparent horizon of [seaLevelSunset]. */
+    fun getSunsetOffsetByDegreesBelowHorizon(degrees: Double): Instant? =
+        getSunsetOffsetByDegrees(astronomicalCalculator.horizonZenith(adjustedLocalDate.date, geoLocation, false, false) + degrees)
     /**
      * A constructor that takes in [geolocation](https://en.wikipedia.org/wiki/Geolocation) information as a
      * parameter. The default [AstronomicalCalculator][AstronomicalCalculator.default] used for solar

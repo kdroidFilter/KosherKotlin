@@ -26,6 +26,7 @@ private fun ZmanCalculationMethod.hebrewValue(): String = when (this) {
     is ZmanAuthority.AccordingTo -> accordingTo.hebrewName()
     is ZmanAuthority -> hebrewName()
     is ZmanCalculationMethod.Degrees -> "${degrees.trimNumber()}°"
+    is ZmanCalculationMethod.DegreesBelowHorizon -> "${degrees.trimNumber()}° במעלות"
     is ZmanCalculationMethod.FixedDuration -> duration.hebrewMinutes()
     is ZmanCalculationMethod.ZmaniyosDuration -> duration.hebrewZmaniyos()
     is ZmanCalculationMethod.Relationship -> relationship.calculation.hebrewValue()
@@ -41,6 +42,7 @@ private fun ZmanAuthority.hebrewName(): String = when (this) {
     ZmanAuthority.GRA -> "גר״א"
     ZmanAuthority.MGA -> "מג״א"
     ZmanAuthority.GEONIM -> "גאונים"
+    ZmanAuthority.ITIM_LABINA -> "עתים לבינה"
     ZmanAuthority.RABEINU_TAM -> "רבנו תם"
     ZmanAuthority.BAAL_HATANYA -> "בעל התניא"
     ZmanAuthority.ARUCH_HASHULCHAN -> "ערוך השולחן"

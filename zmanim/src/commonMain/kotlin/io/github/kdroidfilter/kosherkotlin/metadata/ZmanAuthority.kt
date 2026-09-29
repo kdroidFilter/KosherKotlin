@@ -38,6 +38,7 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod {
     object GRA: ZmanAuthority(Strings.GRA)
     object GREENWALD: ZmanAuthority(Strings.GREENWALD)
     object HISACHDUS_HARABONIM: ZmanAuthority(Strings.HISACHDUS_HARABONIM)
+    object ITIM_LABINA: ZmanAuthority(Strings.ITIM_LABINA)
     object KAMENETSKY: ZmanAuthority(Strings.KAMENETSKY)
     object KOMARNO: ZmanAuthority(Strings.KOMARNO)
     object KRONGLASS: ZmanAuthority(Strings.KRONGLASS)
@@ -78,6 +79,7 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod {
         const val ATERET_TORAH = "Ateret Torah"
         const val BAAL_HATANYA = "Ba'al HaTanya"
         const val BICK = "Rabbi Avraham Yehoshua Bick"
+        const val ITIM_LABINA = "Luach Itim Labina (Rabbi Daniel Aharon Gloyberman)"
         const val CHASSAN_SOFER = "Chassan Sofer"
         const val CHAVAS_YAIR = "Chavas Yair"
         const val DIVREI_YOSEF = "Divrei Yosef"

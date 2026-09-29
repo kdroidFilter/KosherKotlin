@@ -59,6 +59,9 @@ enum class ThemeMode(val hebrewLabel: String) {
 enum class SunCalculator(val label: String) {
     NOAA("NOAA"),
     SUN_TIMES("SunTimes"),
+
+    /** The sun and horizon of the עתים לבינה luach. */
+    ITIM_LABINA("עתים לבינה"),
 }
 
 @Immutable
