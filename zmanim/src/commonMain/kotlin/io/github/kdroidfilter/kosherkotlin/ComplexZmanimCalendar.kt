@@ -4285,7 +4285,12 @@ class ComplexZmanimCalendar(
      */
     val solarMidnight: Zman.DateBased
         get() {
+            val calculatorMidnight = astronomicalCalculator.getUTCMidnight(adjustedLocalDate.date, geoLocation)
+            if (!calculatorMidnight.isNaN()) return Zman.DateBased(
+                ZmanDefinition(ZmanType.CHATZOS_HALAYLAH, ZmanAuthority.Unanimous)
+            ) { getDateFromTime(calculatorMidnight, false) }
             val clonedCal = ComplexZmanimCalendar(geoLocation)
+            clonedCal.astronomicalCalculator = astronomicalCalculator.copy()
             val tz = geoLocation.timeZone
             clonedCal.localDateTime =
                 this.localDateTime.toInstant(tz).plus(DatePeriod(days = 1), tz).toLocalDateTime(tz)
@@ -4308,6 +4313,54 @@ class ComplexZmanimCalendar(
                 }
             }
         }
+
+
+
+    // the luach's refraction, and stay meaningful with any calculator.
+
+
+        Zman.DateBased(
+            ZmanDefinition(
+                type,
+                ZmanCalculationMethod.DegreesBelowHorizon(degrees),
+                UsesElevation.NEVER,
+
+            )
+        ) {
+            if (isSunrise) getSunriseOffsetByDegreesBelowHorizon(degrees.toDouble())
+            else getSunsetOffsetByDegreesBelowHorizon(degrees.toDouble())
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * A method that returns the [Baal Hatanya](https://en.wikipedia.org/wiki/Shneur_Zalman_of_Liadi) 's
@@ -5251,6 +5304,16 @@ class ComplexZmanimCalendar(
             sofZmanBiurChametzMGA72Minutes,
             sofZmanBiurChametzMGA16Point1Degrees,
             solarMidnight,
+
+
+
+
+
+
+
+
+
+
             alosBaalHatanya,
             sofZmanShmaBaalHatanya,
             sofZmanTfilaBaalHatanya,

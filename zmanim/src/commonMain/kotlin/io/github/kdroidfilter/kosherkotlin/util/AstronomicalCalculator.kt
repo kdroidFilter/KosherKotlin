@@ -245,6 +245,24 @@ abstract class AstronomicalCalculator {
     (zenith + (solarRadius + refraction + getElevationAdjustment(elevation)))
 
 
+    /**
+     * The zenith of the apparent horizon of sunrise ([isSunrise]) or sunset on [date]: where the sun's center is when
+     * its upper limb touches the horizon. This is what [adjustZenith] adds to the geometric zenith, and what
+     * [AstronomicalCalendar.getSunriseOffsetByDegreesBelowHorizon][io.github.kdroidfilter.kosherkotlin.AstronomicalCalendar.getSunriseOffsetByDegreesBelowHorizon]
+     * measures from. The default is the fixed 90° + [solarRadius] + [refraction], plus the
+     * [elevation adjustment][getElevationAdjustment] if [adjustForElevation]; calculators with a finer model of the
+     * horizon override it.
+     */
+    open fun horizonZenith(date: LocalDate, geoLocation: GeoLocation, isSunrise: Boolean, adjustForElevation: Boolean): Double =
+        GEOMETRIC_ZENITH + solarRadius + refraction +
+            if (adjustForElevation) getElevationAdjustment(geoLocation.elevation) else 0.0
+
+    /**
+     * Solar midnight (UTC, 24-hour format like [getUTCNoon]) following the solar noon of [date], or [Double.NaN] to
+     * let the calendar take it as halfway between two solar noons, which is the default.
+     */
+    open fun getUTCMidnight(date: LocalDate, geoLocation: GeoLocation): Double = Double.NaN
+
     abstract fun copy(): AstronomicalCalculator
 
     companion object {
