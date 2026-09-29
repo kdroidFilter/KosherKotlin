@@ -200,6 +200,21 @@ class ZmanimRepositoryTest {
         assertEquals(0f, molad.moonPhase)
     }
 
+    @Test
+    fun aRowIsIdentifiedByItsNameAndOpinionAlone() {
+        // The list keys these two fields. Two opinions of one zman routinely share a minute —
+        // 72 minutes and 16.1 degrees before sunrise do it several times a year — so a key that
+        // leant on the clock collided and took the whole screen down with it.
+        for (offset in 0..370) {
+            val on = date.plus(offset, DateTimeUnit.DAY)
+            val day = repository.day(jerusalem, on, afternoon, LuachSettings())
+            day.groups.forEach { group ->
+                val keys = group.rows.map { "${it.name}-${it.opinion}" }
+                assertEquals(keys.size, keys.distinct().size, "$on duplicated a row in ${group.label}")
+            }
+        }
+    }
+
     private companion object {
         const val CANDLE_LIGHTING = "הדלקת נרות"
     }

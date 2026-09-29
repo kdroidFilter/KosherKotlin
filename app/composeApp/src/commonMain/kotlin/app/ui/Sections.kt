@@ -74,7 +74,9 @@ fun LazyListScope.daySection(state: LuachUiState, horizontal: Dp) {
                 topPadding = 34.dp,
             )
         }
-        items(group.rows, key = { "${group.label}-${it.name}-${it.time}" }) { row ->
+        // Keyed on what the row *is*, not on its clock: two opinions of the same zman can land
+        // on the same minute, and a key that changes every tick is not an identity anyway.
+        items(group.rows, key = { "${group.label}-${it.name}-${it.opinion}" }) { row ->
             ZmanRow(
                 row = row,
                 isNext = next != null && row.name == next.name && row.time == next.time,
