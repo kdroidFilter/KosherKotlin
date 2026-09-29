@@ -7,6 +7,7 @@ import io.github.kdroidfilter.kosherkotlin.ComplexZmanimCalendar
 import io.github.kdroidfilter.kosherkotlin.Zman
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewDateFormatter
 import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar
+import io.github.kdroidfilter.kosherkotlin.itimlabina.ItimLabinaCalendar
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
 import io.github.kdroidfilter.kosherkotlin.util.NOAACalculator
 import io.github.kdroidfilter.kosherkotlin.util.SunTimesCalculator
@@ -20,6 +21,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
 /**
@@ -42,38 +44,14 @@ class ZmanimRepository {
         val calendar = calendarFor(city, date, settings)
         val jewishCalendar = calendar.jewishCalendar
 
-        // `Zman` properties rebuild on every access, so read each one exactly once.
-        val alos = calendar.alos16Point1Degrees
-        val chatzos = calendar.chatzos
-        val tzais = calendar.tzaisGeonim3Point7Degrees
-        val solarMidnight = calendar.solarMidnight
-        // `elevationAdjustedSunrise/Sunset` are protected in ZmanimCalendar, so make the same
-        // choice here: bare `sunrise`/`sunset` are always elevation-adjusted.
-        val sunrise = calendar.horizonSunrise(settings)
-        val sunset = calendar.horizonSunset(settings)
         val elevationNote =
             if (settings.useElevation) "גובה ${city.elevationMeters.trimNumber()} מ׳" else "גובה פני הים"
-
-        val plan = listOf(
-            row(NIGHT, solarMidnight),
-            // alos120 is deprecated in the library as lechumra-only; MGA 72 is the standard pair
-            // with the 16.1 degree opinion below.
-            row(MORNING, calendar.alos72),
-            row(MORNING, alos),
-            row(MORNING, calendar.misheyakir11Point5Degrees),
-            PlanRow(MORNING, "הנץ החמה", elevationNote, sunrise),
-            row(MORNING, calendar.sofZmanShmaMGA72Minutes),
-            row(MORNING, calendar.sofZmanShmaGRA),
-            row(MORNING, calendar.sofZmanTfilaGRA),
-            row(NOON, chatzos),
-            row(NOON, calendar.minchaGedola),
-            row(NOON, calendar.minchaKetana),
-            row(EVENING, calendar.plagHamincha),
-            row(EVENING, calendar.candleLighting, appliesToday = jewishCalendar.hasCandleLighting),
-            PlanRow(EVENING, "שקיעה", elevationNote, sunset),
-            row(EVENING, tzais),
-            row(EVENING, calendar.tzais72),
-        )
+        val dayPlan = if (settings.calculator == SunCalculator.ITIM_LABINA) {
+            itimLabinaPlan(calendar, date, settings, elevationNote)
+        } else {
+            kosherJavaPlan(calendar, settings, elevationNote)
+        }
+        val (plan, alos, sunrise, chatzos, sunset, tzais, solarMidnight) = dayPlan
 
         val resolved = plan.mapNotNull { planRow ->
             if (!planRow.appliesToday) return@mapNotNull null
@@ -294,11 +272,88 @@ class ZmanimRepository {
             candleLightingOffset = settings.candleLightingOffset.toDouble(),
         ).apply {
             astronomicalCalculator = when (settings.calculator) {
-                SunCalculator.NOAA -> NOAACalculator()
+                SunCalculator.NOAA, SunCalculator.ITIM_LABINA -> NOAACalculator()
                 SunCalculator.SUN_TIMES -> SunTimesCalculator()
             }
             jewishCalendar.inIsrael = city.inIsrael
         }
+
+    private fun kosherJavaPlan(calendar: ComplexZmanimCalendar, settings: LuachSettings, elevationNote: String): DayPlan {
+        // `Zman` properties rebuild on every access, so read each one exactly once.
+        val alos = calendar.alos16Point1Degrees
+        val chatzos = calendar.chatzos
+        val tzais = calendar.tzaisGeonim3Point7Degrees
+        val solarMidnight = calendar.solarMidnight
+        // `elevationAdjustedSunrise/Sunset` are protected in ZmanimCalendar, so make the same
+        // choice here: bare `sunrise`/`sunset` are always elevation-adjusted.
+        val sunrise = calendar.horizonSunrise(settings)
+        val sunset = calendar.horizonSunset(settings)
+        val rows = listOf(
+            row(NIGHT, solarMidnight),
+            // alos120 is deprecated in the library as lechumra-only; MGA 72 is the standard pair
+            // with the 16.1 degree opinion below.
+            row(MORNING, calendar.alos72),
+            row(MORNING, alos),
+            row(MORNING, calendar.misheyakir11Point5Degrees),
+            PlanRow(MORNING, "הנץ החמה", elevationNote, sunrise),
+            row(MORNING, calendar.sofZmanShmaMGA72Minutes),
+            row(MORNING, calendar.sofZmanShmaGRA),
+            row(MORNING, calendar.sofZmanTfilaGRA),
+            row(NOON, chatzos),
+            row(NOON, calendar.minchaGedola),
+            row(NOON, calendar.minchaKetana),
+            row(EVENING, calendar.plagHamincha),
+            row(EVENING, calendar.candleLighting, appliesToday = calendar.jewishCalendar.hasCandleLighting),
+            PlanRow(EVENING, "שקיעה", elevationNote, sunset),
+            row(EVENING, tzais),
+            row(EVENING, calendar.tzais72),
+        )
+        return DayPlan(
+            rows, alos.momentOfOccurrence, sunrise, chatzos.momentOfOccurrence, sunset,
+            tzais.momentOfOccurrence, solarMidnight.momentOfOccurrence,
+        )
+    }
+
+    /** The day as the עתים לבינה luach computes it: see [ItimLabinaCalendar]. */
+    private fun itimLabinaPlan(
+        calendar: ComplexZmanimCalendar,
+        date: LocalDate,
+        settings: LuachSettings,
+        elevationNote: String,
+    ): DayPlan {
+        val location = calendar.geoLocation
+        val itim = ItimLabinaCalendar(location, date)
+        val sunrise = if (settings.useElevation) itim.sunriseFromElevation else itim.sunriseMishor
+        val sunset = if (settings.useElevation) itim.sunsetFromElevation else itim.sunsetMishor
+        val midnight = ItimLabinaCalendar(location, date.plus(1, DateTimeUnit.DAY)).chatzosLayla
+        val rows = listOf(
+            PlanRow(NIGHT, "חצות הלילה", "האמיתי", midnight),
+            PlanRow(MORNING, "עלות השחר", "90 במעלות", itim.alos90Degrees),
+            PlanRow(MORNING, "עלות השחר", "72 במעלות", itim.alos72Degrees),
+            PlanRow(MORNING, "משיכיר", "11.5 מעלות", itim.misheyakir11Point5Degrees),
+            PlanRow(MORNING, "הנץ החמה", if (settings.useElevation) elevationNote else "במישור", sunrise),
+            PlanRow(
+                MORNING, "סוף זמן ק״ש", "מג״א 90 במעלות",
+                itim.zmanis(itim.alos90Degrees, itim.tzeis90Degrees, 3.0),
+            ),
+            PlanRow(MORNING, "סוף זמן ק״ש", "גר״א", itim.sofZmanShmaGra),
+            PlanRow(MORNING, "סוף זמן תפילה", "גר״א", itim.sofZmanTfilaGra),
+            PlanRow(NOON, "חצות היום", "האמיתי", itim.chatzos),
+            PlanRow(NOON, "מנחה גדולה", "המאוחר", itim.minchaGedola),
+            PlanRow(NOON, "מנחה קטנה", "גר״א", itim.minchaKetana),
+            PlanRow(EVENING, "פלג המנחה", "גר״א", itim.plagHamincha),
+            PlanRow(
+                EVENING, "הדלקת נרות", "${settings.candleLightingOffset} דק׳ לפני השקיעה",
+                sunset - settings.candleLightingOffset.minutes,
+                appliesToday = calendar.jewishCalendar.hasCandleLighting,
+            ),
+            PlanRow(EVENING, "שקיעה", if (settings.useElevation) elevationNote else "במישור", sunset),
+            PlanRow(EVENING, "צאת הכוכבים", "גאונים, 18 דק׳ במעלות", itim.tzeisGeonim18Minutes),
+            PlanRow(EVENING, "צאת הכוכבים", "6.45 מעלות", itim.tzeis6Point45Degrees),
+            PlanRow(EVENING, "צאת הכוכבים", "ר״ת, 72 במעלות", itim.tzeis72Degrees),
+        )
+        return DayPlan(rows, itim.alos90Degrees, sunrise, itim.chatzos, sunset, itim.tzeisGeonim18Minutes, midnight)
+    }
 
     private companion object {
         /** Mean length of a lunar month, in days. */
@@ -310,6 +365,17 @@ class ZmanimRepository {
         const val EVENING = "ערב"
     }
 }
+
+/** The day list plus the moments the hero draws, from whichever calculation the settings pick. */
+private data class DayPlan(
+    val rows: List<PlanRow>,
+    val alos: Instant?,
+    val sunrise: Instant?,
+    val chatzos: Instant?,
+    val sunset: Instant?,
+    val tzais: Instant?,
+    val solarMidnight: Instant?,
+)
 
 /** One planned line of the day list, before it is known whether the zman occurs at all. */
 private class PlanRow(
