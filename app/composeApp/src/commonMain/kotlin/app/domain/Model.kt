@@ -56,19 +56,20 @@ enum class ThemeMode(val hebrewLabel: String) {
     DARK("כהה"),
 }
 
-enum class SunCalculator(val label: String) {
-    NOAA("NOAA"),
-    SUN_TIMES("SunTimes"),
-
-    /** The sun and horizon of the עתים לבינה luach. */
+/** The luach the day is read from: its sun, and which opinions it prints. */
+enum class Luach(val hebrewLabel: String) {
+    /** Degree-based zmanim off the luach's own refracted horizon. */
     ITIM_LABINA("עתים לבינה"),
+
+    /** The luach Rabbi Ovadia Yosef used: zmaniyos minutes off an ordinary sun. */
+    OHR_HACHAIM("אור החיים"),
 }
 
 @Immutable
 data class LuachSettings(
     val useElevation: Boolean = false,
     val candleLightingOffset: Int = 18,
-    val calculator: SunCalculator = SunCalculator.NOAA,
+    val luach: Luach = Luach.ITIM_LABINA,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     /** JVM desktop only: pin the hero to the desktop as a below-stacking widget. */
     val desktopWidget: Boolean = false,

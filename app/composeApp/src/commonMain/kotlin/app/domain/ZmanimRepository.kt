@@ -10,7 +10,6 @@ import io.github.kdroidfilter.kosherkotlin.hebrewcalendar.JewishCalendar
 import io.github.kdroidfilter.kosherkotlin.util.GeoLocation
 import io.github.kdroidfilter.kosherkotlin.util.ItimLabinaCalculator
 import io.github.kdroidfilter.kosherkotlin.util.NOAACalculator
-import io.github.kdroidfilter.kosherkotlin.util.SunTimesCalculator
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -44,9 +43,9 @@ class ZmanimRepository {
         val jewishCalendar = calendar.jewishCalendar
 
         // `Zman` properties rebuild on every access, so read each one exactly once.
-        val alos = calendar.alos16Point1Degrees
+        val alos = calendar.luachAlos(settings)
         val chatzos = calendar.chatzos
-        val tzais = calendar.tzaisGeonim3Point7Degrees
+        val tzais = calendar.luachTzais(settings)
         val solarMidnight = calendar.solarMidnight
         // `elevationAdjustedSunrise/Sunset` are protected in ZmanimCalendar, so make the same
         // choice here: bare `sunrise`/`sunset` are always elevation-adjusted.
@@ -55,26 +54,47 @@ class ZmanimRepository {
         val elevationNote =
             if (settings.useElevation) "גובה ${city.elevationMeters.trimNumber()} מ׳" else "גובה פני הים"
 
-        val plan = listOf(
-            row(NIGHT, solarMidnight),
-            // alos120 is deprecated in the library as lechumra-only; MGA 72 is the standard pair
-            // with the 16.1 degree opinion below.
-            row(MORNING, calendar.alos72),
-            row(MORNING, alos),
-            row(MORNING, calendar.misheyakir11Point5Degrees),
-            PlanRow(MORNING, "הנץ החמה", elevationNote, sunrise),
-            row(MORNING, calendar.sofZmanShmaMGA72Minutes),
-            row(MORNING, calendar.sofZmanShmaGRA),
-            row(MORNING, calendar.sofZmanTfilaGRA),
-            row(NOON, chatzos),
-            row(NOON, calendar.minchaGedola),
-            row(NOON, calendar.minchaKetana),
-            row(EVENING, calendar.plagHamincha),
-            row(EVENING, calendar.candleLighting, appliesToday = jewishCalendar.hasCandleLighting),
-            PlanRow(EVENING, "שקיעה", elevationNote, sunset),
-            row(EVENING, tzais),
-            row(EVENING, calendar.tzais72),
-        )
+        val plan = when (settings.luach) {
+            Luach.ITIM_LABINA -> listOf(
+                row(NIGHT, solarMidnight),
+                row(MORNING, calendar.alos90ItimLabina),
+                row(MORNING, alos),
+                row(MORNING, calendar.misheyakir11Point5Degrees),
+                PlanRow(MORNING, "הנץ החמה", elevationNote, sunrise),
+                row(MORNING, calendar.sofZmanShmaMGA72Minutes),
+                row(MORNING, calendar.sofZmanShmaGRA),
+                row(MORNING, calendar.sofZmanTfilaGRA),
+                row(NOON, chatzos),
+                row(NOON, calendar.minchaGedola),
+                row(NOON, calendar.minchaKetana),
+                row(EVENING, calendar.plagHamincha),
+                row(EVENING, calendar.candleLighting, appliesToday = jewishCalendar.hasCandleLighting),
+                PlanRow(EVENING, "שקיעה", elevationNote, sunset),
+                row(EVENING, tzais),
+                row(EVENING, calendar.tzais72ItimLabina),
+            )
+
+            // The order the אור החיים prints, all of it zmaniyos minutes off the GRA day.
+            Luach.OHR_HACHAIM -> listOf(
+                row(NIGHT, solarMidnight),
+                row(MORNING, alos),
+                row(MORNING, calendar.misheyakir66MinutesZmanis),
+                PlanRow(MORNING, "הנץ החמה", elevationNote, sunrise),
+                row(MORNING, calendar.sofZmanShmaMGA72MinutesZmanis),
+                row(MORNING, calendar.sofZmanShmaGRA),
+                row(MORNING, calendar.sofZmanTfilaMGA72MinutesZmanis),
+                row(MORNING, calendar.sofZmanTfilaGRA),
+                row(NOON, chatzos),
+                row(NOON, calendar.minchaGedolaOhrHaChaim),
+                row(NOON, calendar.minchaKetana),
+                row(EVENING, calendar.plagHaminchaYalkutYosef),
+                row(EVENING, calendar.candleLighting, appliesToday = jewishCalendar.hasCandleLighting),
+                PlanRow(EVENING, "שקיעה", elevationNote, sunset),
+                row(EVENING, tzais),
+                row(EVENING, calendar.tzais20),
+                row(EVENING, calendar.tzais72Zmanis),
+            )
+        }
 
         val resolved = plan.mapNotNull { planRow ->
             if (!planRow.appliesToday) return@mapNotNull null
@@ -197,13 +217,13 @@ class ZmanimRepository {
                     val eve = calendarFor(city, date.minus(1, DateTimeUnit.DAY), settings)
                     persistentListOf(
                         LabeledTime("כניסת הצום", eve.horizonSunset(settings).clockOr(zone), accent = true),
-                        LabeledTime("צאת הצום · ר״ת", calendar.tzais72.clockOr(zone), accent = false),
+                        LabeledTime("צאת הצום · ר״ת", calendar.luachTzaisRabeinuTam(settings).clockOr(zone), accent = false),
                     )
                 }
 
                 day.isTaanis && !isShabbat -> persistentListOf(
-                    LabeledTime("תחילת הצום", calendar.alos16Point1Degrees.clockOr(zone), accent = false),
-                    LabeledTime("סיום הצום", calendar.tzaisGeonim3Point7Degrees.clockOr(zone), accent = false),
+                    LabeledTime("תחילת הצום", calendar.luachAlos(settings).clockOr(zone), accent = false),
+                    LabeledTime("סיום הצום", calendar.luachTzais(settings).clockOr(zone), accent = false),
                 )
 
                 day.hasCandleLighting -> persistentListOf(
@@ -212,8 +232,8 @@ class ZmanimRepository {
                 )
 
                 else -> persistentListOf(
-                    LabeledTime("צאת הכוכבים", calendar.tzaisGeonim3Point7Degrees.clockOr(zone), accent = false),
-                    LabeledTime("רבנו תם", calendar.tzais72.clockOr(zone), accent = false),
+                    LabeledTime("צאת הכוכבים", calendar.luachTzais(settings).clockOr(zone), accent = false),
+                    LabeledTime("רבנו תם", calendar.luachTzaisRabeinuTam(settings).clockOr(zone), accent = false),
                 )
             }
 
@@ -294,10 +314,9 @@ class ZmanimRepository {
             useElevation = settings.useElevation,
             candleLightingOffset = settings.candleLightingOffset.toDouble(),
         ).apply {
-            astronomicalCalculator = when (settings.calculator) {
-                SunCalculator.NOAA -> NOAACalculator()
-                SunCalculator.SUN_TIMES -> SunTimesCalculator()
-                SunCalculator.ITIM_LABINA -> ItimLabinaCalculator()
+            astronomicalCalculator = when (settings.luach) {
+                Luach.ITIM_LABINA -> ItimLabinaCalculator()
+                Luach.OHR_HACHAIM -> NOAACalculator()
             }
             jewishCalendar.inIsrael = city.inIsrael
         }
@@ -334,6 +353,24 @@ private fun row(group: String, zman: Zman.DateBased, appliesToday: Boolean = tru
     moment = zman.momentOfOccurrence,
     appliesToday = appliesToday,
 )
+
+/** *Alos* as the chosen luach prints it. */
+private fun ComplexZmanimCalendar.luachAlos(settings: LuachSettings) = when (settings.luach) {
+    Luach.ITIM_LABINA -> alos72ItimLabina
+    Luach.OHR_HACHAIM -> alos72Zmanis
+}
+
+/** *Tzais* as the chosen luach prints it. */
+private fun ComplexZmanimCalendar.luachTzais(settings: LuachSettings) = when (settings.luach) {
+    Luach.ITIM_LABINA -> tzaisGeonim18MinutesItimLabina
+    Luach.OHR_HACHAIM -> tzais13Point5MinutesZmanis
+}
+
+/** *Tzais* of Rabbeinu Tam as the chosen luach prints it. */
+private fun ComplexZmanimCalendar.luachTzaisRabeinuTam(settings: LuachSettings) = when (settings.luach) {
+    Luach.ITIM_LABINA -> tzais72ItimLabina
+    Luach.OHR_HACHAIM -> tzais72Zmanis
+}
 
 /** Mirrors the library's protected `elevationAdjustedSunrise`. */
 private fun ComplexZmanimCalendar.horizonSunrise(settings: LuachSettings) =

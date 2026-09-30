@@ -54,7 +54,7 @@ import app.domain.HolidayEvent
 import app.domain.LimudCard
 import app.domain.MonthCell
 import kotlinx.collections.immutable.ImmutableList
-import app.domain.SunCalculator
+import app.domain.Luach
 import app.domain.ThemeMode
 import app.domain.ZmanEntry
 import app.ui.theme.LuachTheme
@@ -619,11 +619,11 @@ fun LazyListScope.settingsSection(
             }
         }
     }
-    item(key = "settings-calculator") {
-        SettingRow("שיטת חישוב", "מחשבון מיקום השמש, או לוח עתים לבינה", horizontal) {
-            SunCalculator.entries.forEach { calculator ->
-                Segment(calculator.label, settings.calculator == calculator) {
-                    onIntent(LuachIntent.SetCalculator(calculator))
+    item(key = "settings-luach") {
+        SettingRow("נוסח הלוח", "לפי איזה לוח נקבעים הזמנים", horizontal) {
+            Luach.entries.forEach { luach ->
+                Segment(luach.hebrewLabel, settings.luach == luach) {
+                    onIntent(LuachIntent.SetLuach(luach))
                 }
             }
         }
