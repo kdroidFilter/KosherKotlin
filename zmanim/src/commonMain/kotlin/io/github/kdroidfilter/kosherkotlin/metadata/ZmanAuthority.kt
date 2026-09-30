@@ -50,6 +50,7 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod {
     object MGA: ZmanAuthority(Strings.MGA)
     object MINCHAS_COHEN: ZmanAuthority(Strings.MINCHAS_COHEN)
     object NEIMAN: ZmanAuthority(Strings.NEIMAN)
+    object OHR_HACHAIM: ZmanAuthority(Strings.OHR_HACHAIM)
     object POSEN: ZmanAuthority(Strings.POSEN)
     object PRI_MEGADIM: ZmanAuthority(Strings.PRI_MEGADIM)
     object RAAVAN: ZmanAuthority(Strings.RAAVAN)
@@ -80,6 +81,7 @@ open class ZmanAuthority(val name: String): ZmanCalculationMethod {
         const val BAAL_HATANYA = "Ba'al HaTanya"
         const val BICK = "Rabbi Avraham Yehoshua Bick"
         const val ITIM_LABINA = "Luach Itim Labina (Rabbi Daniel Aharon Gloyberman)"
+        const val OHR_HACHAIM = "Luach HaMaor Ohr HaChaim (Rabbi Ovadia Yosef)"
         const val CHASSAN_SOFER = "Chassan Sofer"
         const val CHAVAS_YAIR = "Chavas Yair"
         const val DIVREI_YOSEF = "Divrei Yosef"

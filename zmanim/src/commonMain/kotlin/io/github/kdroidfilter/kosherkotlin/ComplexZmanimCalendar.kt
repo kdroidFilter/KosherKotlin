@@ -4363,6 +4363,181 @@ class ComplexZmanimCalendar(
         get() = itimLabina(ZmanType.BAIN_HASHMASHOS, -2.86674F, false, ZmanAuthority.YEREIM)
 
     /**
+     * *Misheyakir* of the לוח המאור אור החיים, in great need: 66 minutes *zmaniyos*, or 1.1
+     * [*shaos zmaniyos*][shaahZmanisGra], before [sunrise]. This is the *Pri Chadash*'s *misheyakir*, as published by
+     * the אור החיים calendar that Rabbi Ovadia Yosef used.
+     *
+     * @see misheyakir60MinutesZmanis
+     */
+    val misheyakir66MinutesZmanis: Zman.DateBased
+        get() = Zman.DateBased(
+            ZmanDefinition(
+                ZmanType.MISHEYAKIR,
+                ZmanCalculationMethod.Relationship(ZmanType.MISHEYAKIR occurs 66.minutes.zmaniyos before ZmanType.HANAITZ),
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.OHR_HACHAIM),
+            )
+        ) {
+            getZmanisBasedOffset(-1.1)
+        }
+
+    /**
+     * *Misheyakir* of the לוח המאור אור החיים, *lechatchila*: 60 minutes *zmaniyos*, or one
+     * [*shaah zmanis*][shaahZmanisGra], before [sunrise].
+     *
+     * @see misheyakir66MinutesZmanis
+     */
+    val misheyakir60MinutesZmanis: Zman.DateBased
+        get() = Zman.DateBased(
+            ZmanDefinition(
+                ZmanType.MISHEYAKIR,
+                ZmanCalculationMethod.Relationship(ZmanType.MISHEYAKIR occurs 60.minutes.zmaniyos before ZmanType.HANAITZ),
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.OHR_HACHAIM),
+            )
+        ) {
+            getZmanisBasedOffset(-1.0)
+        }
+
+    /**
+     * *Tzais* of the לוח המאור אור החיים: 13.5 minutes *zmaniyos*, or 0.225 of a
+     * [*shaah zmanis*][shaahZmanisGra], after [sunset]. This is the *tzais* the calendar prints all year round.
+     *
+     * Note that this is a very early *tzais*, especially in the winter and far from the equator. It should not be
+     * relied on for the end of *Shabbos* or anything else of consequence without asking a *Rav*.
+     *
+     * @see tzais20
+     */
+    val tzais13Point5MinutesZmanis: Zman.DateBased
+        get() = Zman.DateBased(
+            ZmanDefinition(
+                ZmanType.TZAIS,
+                ZmanCalculationMethod.Relationship(ZmanType.TZAIS occurs 13.5.minutes.zmaniyos after ZmanType.SHKIAH),
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.OHR_HACHAIM),
+            )
+        ) {
+            getZmanisBasedOffset(0.225)
+        }
+
+    /**
+     * *Tzais lechumra* of the לוח המאור אור החיים: 20 fixed minutes after [sunset]. The calendar prints it as the end
+     * of a fast, and it is also used to decide which day a child was born on.
+     *
+     * @see tzais13Point5MinutesZmanis
+     */
+    val tzais20: Zman.DateBased
+        get() = Zman.DateBased(
+            ZmanDefinition(
+                ZmanType.TZAIS,
+                ZmanCalculationMethod.Relationship(ZmanType.TZAIS occurs 20.minutes.fixed after ZmanType.SHKIAH),
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.OHR_HACHAIM),
+            )
+        ) {
+            getTimeOffset(elevationAdjustedSunset, 20 * MINUTE_MILLIS)
+        }
+
+    /**
+     * *Mincha gedola* of the לוח המאור אור החיים: 30 minutes after [*chatzos*][chatzos], or 30 minutes *zmaniyos*
+     * when those are longer. Unlike [minchaGedolaGreaterThan30] the seasonal half hour is measured from *chatzos*
+     * rather than 6.5 [*shaos zmaniyos*][shaahZmanisGra] after sunrise, which puts it a few seconds apart when the
+     * equation of time is moving quickly.
+     *
+     * @see minchaGedolaGreaterThan30
+     */
+    val minchaGedolaOhrHaChaim: Zman.DateBased
+        get() = Zman.DateBased(
+            ZmanDefinition(
+                ZmanType.MINCHA_GEDOLAH,
+                ZmanCalculationMethod.LaterOf(
+                    minchaGedola30Minutes.definition,
+                    ZmanDefinition(
+                        ZmanType.MINCHA_GEDOLAH,
+                        ZmanCalculationMethod.Relationship(
+                            ZmanType.MINCHA_GEDOLAH occurs 30.minutes.zmaniyos after ZmanType.CHATZOS_HAYOM
+                        ),
+                        UsesElevation.IF_SET,
+                    ),
+                ),
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.OHR_HACHAIM),
+            )
+        ) {
+            val halfShaahZmanis = shaahZmanisGra.duration.inWholeMilliseconds / 2
+            getTimeOffset(
+                chatzos.momentOfOccurrence,
+                if (halfShaahZmanis > 30 * MINUTE_MILLIS) halfShaahZmanis else 30 * MINUTE_MILLIS,
+            )
+        }
+
+    /**
+     * *Plag hamincha* of the *Yalkut Yosef*, as printed by the לוח המאור אור החיים: one
+     * [*shaah zmanis*][shaahZmanisGra] and 15 minutes *zmaniyos* before [*tzais*][tzais13Point5MinutesZmanis],
+     * rather than 10.75 *shaos zmaniyos* after sunrise.
+     *
+     * @see tzais13Point5MinutesZmanis
+     */
+    val plagHaminchaYalkutYosef: Zman.DateBased
+        get() = Zman.DateBased(
+            ZmanDefinition(
+                ZmanType.PLAG_HAMINCHA,
+                ZmanCalculationMethod.Relationship(
+                    ZmanType.PLAG_HAMINCHA occurs 75.minutes.zmaniyos before tzais13Point5MinutesZmanis
+                ),
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.OHR_HACHAIM),
+            )
+        ) {
+            val shaahZmanis = shaahZmanisGra.duration.inWholeMilliseconds
+            getTimeOffset(
+                tzais13Point5MinutesZmanis.momentOfOccurrence,
+                -(shaahZmanis + 15 * (shaahZmanis / 60))
+            )
+        }
+
+    /**
+     * This method returns the latest time one is allowed eating *chametz* on *Erev Pesach* according to the opinion
+     * of the [Magen Avraham (MGA)](https://en.wikipedia.org/wiki/Avraham_Gombinern) based on *alos* being
+     * [72 minutes *zmaniyos*][alos72Zmanis] before [sunrise]. This is identical to
+     * [sofZmanTfilaMGA72MinutesZmanis] and is the time the לוח המאור אור החיים prints.
+     *
+     * @see sofZmanTfilaMGA72MinutesZmanis
+     * @see sofZmanBiurChametzMGA72MinutesZmanis
+     */
+    val sofZmanAchilasChametzMGA72MinutesZmanis: Zman.DateBased
+        get() = Zman.DateBased(
+            sofZmanTfilaMGA72MinutesZmanis.definition.copy(type = ZmanType.SOF_ZMAN_ACHILAS_CHAMETZ)
+        ) {
+            if (jewishCalendar.isErevPesach) sofZmanTfilaMGA72MinutesZmanis.momentOfOccurrence
+            else null
+        }
+
+    /**
+     * This method returns the latest time for burning *chametz* on *Erev Pesach* according to the opinion of the
+     * [Magen Avraham (MGA)](https://en.wikipedia.org/wiki/Avraham_Gombinern) based on *alos* being
+     * [72 minutes *zmaniyos*][alos72Zmanis] before [sunrise]: 5 [shaahZmanis72MinutesZmanis] after
+     * [*alos*][alos72Zmanis]. This is the time the לוח המאור אור החיים prints.
+     *
+     * @see shaahZmanis72MinutesZmanis
+     * @see sofZmanAchilasChametzMGA72MinutesZmanis
+     */
+    val sofZmanBiurChametzMGA72MinutesZmanis: Zman.DateBased
+        get() = Zman.DateBased(
+            ZmanDefinition(
+                ZmanType.SOF_ZMAN_BIUR_CHAMETZ,
+                ZmanCalculationMethod.DayDefinition.dawnToDusk(ZmanCalculationMethod.ZmaniyosDuration._72),
+                UsesElevation.IF_SET,
+                listOf(ZmanAuthority.MGA, ZmanAuthority.OHR_HACHAIM),
+            )
+        ) {
+            if (jewishCalendar.isErevPesach) getTimeOffset(
+                alos72Zmanis.momentOfOccurrence, (shaahZmanis72MinutesZmanis.duration * 5).inWholeMilliseconds
+            )
+            else null
+        }
+
+    /**
      * A method that returns the [Baal Hatanya](https://en.wikipedia.org/wiki/Shneur_Zalman_of_Liadi) 's
      * *netz amiti* (sunrise) without [elevation adjustment][AstronomicalCalculator.getElevationAdjustment]. This forms the base for the Baal Hatanya's dawn-based calculations that are
      * calculated as a dip below the horizon before sunrise.
@@ -5314,6 +5489,14 @@ class ComplexZmanimCalendar(
             tzais13Point5MinutesItimLabina,
             tzaisRambamItimLabina,
             bainHashmashosYereimItimLabina,
+            misheyakir66MinutesZmanis,
+            misheyakir60MinutesZmanis,
+            tzais13Point5MinutesZmanis,
+            tzais20,
+            minchaGedolaOhrHaChaim,
+            plagHaminchaYalkutYosef,
+            sofZmanAchilasChametzMGA72MinutesZmanis,
+            sofZmanBiurChametzMGA72MinutesZmanis,
             alosBaalHatanya,
             sofZmanShmaBaalHatanya,
             sofZmanTfilaBaalHatanya,
