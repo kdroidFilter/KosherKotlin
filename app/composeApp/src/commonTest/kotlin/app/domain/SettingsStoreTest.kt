@@ -17,7 +17,7 @@ class SettingsStoreTest {
         val changed = LuachSettings(
             useElevation = true,
             candleLightingOffset = 40,
-            calculator = SunCalculator.SUN_TIMES,
+            luach = Luach.OHR_HACHAIM,
             themeMode = ThemeMode.LIGHT,
             desktopWidget = true,
             desktopWidgetX = 120.5f,
@@ -33,12 +33,12 @@ class SettingsStoreTest {
     @Test
     fun anUnknownStoredEnumFallsBackInsteadOfCrashing() {
         val backing = MapSettings(
-            "luach.calculator" to "REMOVED_IN_A_LATER_VERSION",
+            "luach.luach" to "REMOVED_IN_A_LATER_VERSION",
             "luach.themeMode" to "SEPIA",
         )
         val loaded = SettingsStore(backing).load()
 
-        assertEquals(LuachSettings().calculator, loaded.calculator)
+        assertEquals(LuachSettings().luach, loaded.luach)
         assertEquals(LuachSettings().themeMode, loaded.themeMode)
     }
 
