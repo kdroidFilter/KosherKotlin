@@ -67,7 +67,7 @@ class LuachViewModel(
             is LuachIntent.SetThemeMode -> current.withSettings { copy(themeMode = intent.mode) }
             is LuachIntent.SetElevation -> current.withSettings { copy(useElevation = intent.enabled) }
             is LuachIntent.SetCandleOffset -> current.withSettings { copy(candleLightingOffset = intent.minutes) }
-            is LuachIntent.SetCalculator -> current.withSettings { copy(calculator = intent.calculator) }
+            is LuachIntent.SetLuach -> current.withSettings { copy(luach = intent.luach) }
             is LuachIntent.SetDesktopWidget -> current.withSettings { copy(desktopWidget = intent.enabled) }
             is LuachIntent.SetDesktopWidgetPosition ->
                 current.withSettings { copy(desktopWidgetX = intent.x, desktopWidgetY = intent.y) }

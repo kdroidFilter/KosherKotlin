@@ -7,7 +7,7 @@ import app.domain.HolidayEvent
 import app.domain.LimudCard
 import app.domain.LuachSettings
 import app.domain.MonthGrid
-import app.domain.SunCalculator
+import app.domain.Luach
 import app.domain.ThemeMode
 import kotlinx.collections.immutable.ImmutableList
 
@@ -40,7 +40,7 @@ sealed interface LuachIntent {
     data class SetThemeMode(val mode: ThemeMode) : LuachIntent
     data class SetElevation(val enabled: Boolean) : LuachIntent
     data class SetCandleOffset(val minutes: Int) : LuachIntent
-    data class SetCalculator(val calculator: SunCalculator) : LuachIntent
+    data class SetLuach(val luach: Luach) : LuachIntent
     data class SetDesktopWidget(val enabled: Boolean) : LuachIntent
     data class SetDesktopWidgetPosition(val x: Float, val y: Float) : LuachIntent
 }
