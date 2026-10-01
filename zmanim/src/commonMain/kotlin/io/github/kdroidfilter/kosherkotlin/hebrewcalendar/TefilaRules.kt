@@ -421,8 +421,8 @@ class TefilaRules {
      * @see .isMashivHaruachEndDate
      */
     fun isMashivHaruachRecited(jewishCalendar: JewishCalendar): Boolean = jewishCalendar.isBetween(
-        JewishDate(jewishCalendar.hebrewLocalDate.month.value, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 22),
-        JewishDate(jewishCalendar.hebrewLocalDate.month.value, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN, 15)
+        JewishDate(jewishCalendar.jewishYear, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI, 22),
+        JewishDate(jewishCalendar.jewishYear, io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.NISSAN, 15)
     )
 
     fun JewishCalendar.isBetween(
