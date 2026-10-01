@@ -258,21 +258,22 @@ class RegressionTest {
         assertEquals(java.moladMinutes, kotlin.moladMinutes)
         assertEquals(java.specialShabbos.name, kotlin.specialShabbos.name)
         assertEquals(java.yomTovIndex, kotlin.yomTovIndex)
+        // Wrong in Nissan until NISSAN until NISSAN stopped wrapping around to Iyar
+        assertEquals(java.daysSinceStartOfJewishYear, kotlin.daysSinceStartOfJewishYear)
+        assertEquals(java.parshah.name, kotlin.parshah.name)
+        assertEquals(java.upcomingParshah.name, kotlin.upcomingParshah.name)
 
         //failing tests:
 
         //        assertEquals(runCatching { java.dafYomiYerushalmi.let { Daf(it.masechtaNumber, it.daf) } }.getOrNull(),runCatching { kotlin.dafYomiYerushalmi }.getOrNull(),) //fails for 11 iyar, 5744
-        //assertEquals(java.daysSinceStartOfJewishYear,//kotlin.daysSinceStartOfJewishYear,)
 //        assertEquals(java.isBirkasHachamah,kotlin.isBirkasHachamah,)
         //assertEquals(molad,//runCatching { kotlin.molad.gregorianLocalDate.atStartOfDayIn(kotlinLocation.timeZone).toLocalDateTime(kotlinLocation.timeZone).date }.getOrNull(),)
         //assertEquals(moladAsDate,//runCatching { kotlin.moladAsInstant.toLocalDateTime(kotlinLocation.timeZone) }.getOrNull(),)
-        //assertEquals(java.parshah.name,//kotlin.parshah.name,)
         //assertEquals(if(molad == null) null else java.sofZmanKidushLevana15Days.toInstant().toKotlinInstant().toLocalDateTime(kotlinLocation.timeZone),//runCatching { kotlin.sofZmanKidushLevana15Days.toLocalDateTime(kotlinLocation.timeZone) }.getOrNull(),)
         //assertEquals(if(molad == null) null else java.sofZmanKidushLevanaBetweenMoldos.toInstant().toKotlinInstant().toLocalDateTime(kotlinLocation.timeZone),//runCatching { kotlin.sofZmanKidushLevanaBetweenMoldos.toLocalDateTime(kotlinLocation.timeZone) }.getOrNull(),)
         //assertEquals(if(molad == null) null else java.tchilasZmanKidushLevana3Days.toInstant().toKotlinInstant().toLocalDateTime(kotlinLocation.timeZone),//runCatching { kotlin.tchilasZmanKidushLevana3Days.toLocalDateTime(kotlinLocation.timeZone) }.getOrNull(),)
         //assertEquals(if(molad == null) null else java.tchilasZmanKidushLevana7Days.toInstant().toKotlinInstant().toLocalDateTime(kotlinLocation.timeZone),//runCatching { kotlin.tchilasZmanKidushLevana7Days.toLocalDateTime(kotlinLocation.timeZone) }.getOrNull(),)
         //assertEquals(java.tekufasTishreiElapsedDays,//kotlin.tekufasTishreiElapsedDays,)
-        //assertEquals(java.upcomingParshah.name,//kotlin.upcomingParshah.name,)
     }
 
     private fun skipsCalendarDay(date: LocalDate, tz: TimeZone): Boolean {
