@@ -158,7 +158,9 @@ enum class HebrewMonth(val value: Int) : Comparable<io.github.kdroidfilter.koshe
         else previousMonth
 
     infix fun until(other: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth): io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.HebrewMonthRange =
-        io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.HebrewMonthRange(this, other.previousMonth)
+        // NISSAN's previousMonth wraps around to IYAR: nothing comes before it, the range is empty
+        if (other == NISSAN) io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.HebrewMonthRange(IYAR, NISSAN)
+        else io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.HebrewMonthRange(this, other.previousMonth)
     operator fun rangeTo(other: io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth): io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.HebrewMonthRange =
         io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.HebrewMonthRange(this, other)
 
