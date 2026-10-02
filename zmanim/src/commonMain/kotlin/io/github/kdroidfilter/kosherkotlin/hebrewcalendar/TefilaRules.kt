@@ -255,7 +255,9 @@ class TefilaRules {
                         (
                                 !jewishCalendar.isTaanis ||
                                         !isTachanunRecitedPesachSheni && holidayIndex == JewishCalendar.PESACH_SHENI
-                                ) || // Erev YT is included in isYomTov
+                                ) ||
+                        // isYomTov is false on Erev Yom Tov; the other Erev days fall in months covered above
+                        jewishCalendar.isErevRoshHashana ||
                         !jewishCalendar.inIsrael &&
                         !isTachanunRecitedPesachSheni &&
                         !isTachanunRecited15IyarOutOfIsrael &&
@@ -464,7 +466,7 @@ class TefilaRules {
                         jewishCalendar.isUseModernHolidays &&
                         (holidayIndex == JewishCalendar.YOM_HAATZMAUT || holidayIndex == JewishCalendar.YOM_YERUSHALAYIM) ||
 
-                        (month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SIVAN && day == 6 || !inIsrael && day == 7) ||
+                        month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.SIVAN && (day == 6 || !inIsrael && day == 7) ||
                         month == io.github.kdroidfilter.kosherkotlin.hebrewcalendar.HebrewMonth.TISHREI && day >= 15 && (day <= 22 || !inIsrael && day <= 23)
 
     }
