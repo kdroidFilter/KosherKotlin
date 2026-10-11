@@ -480,13 +480,13 @@ class HebrewDateFormatter {
             }
         }
 
-        // This method is only about formatting, so we shouldn't make any changes to the params passed in...
-        val copy = jewishCalendar.copy(jewishMonth = jewishCalendar.hebrewLocalDate.month, inIsrael = jewishCalendar.inIsrael) //force JewishCalendar.copy, not JewishDate.copy
-        copy.setJewishMonth(month)
+        // Format a copy set to the 1st of the Rosh Chodesh month, so the 30th names the coming month
+        // (and the 30th never lands on a 29-day month); the params passed in stay untouched
+        val roshChodeshMonth = jewishCalendar.copy(jewishMonth = month, jewishDayOfMonth = 1)
         return "${
             if (isHebrewFormat) hebrewHolidays[JewishCalendar.ROSH_CHODESH]
             else transliteratedHolidayList[JewishCalendar.ROSH_CHODESH]
-        } ${formatMonth(jewishCalendar)}"
+        } ${formatMonth(roshChodeshMonth)}"
     }
 
     /**
