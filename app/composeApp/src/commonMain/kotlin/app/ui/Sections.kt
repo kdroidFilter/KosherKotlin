@@ -619,7 +619,8 @@ fun LazyListScope.settingsSection(
             }
         }
     }
-    item(key = "settings-luach") {
+    // A single luach leaves nothing to choose.
+    if (Luach.entries.size > 1) item(key = "settings-luach") {
         SettingRow("נוסח הלוח", "לפי איזה לוח נקבעים הזמנים", horizontal) {
             Luach.entries.forEach { luach ->
                 Segment(luach.hebrewLabel, settings.luach == luach) {
@@ -698,7 +699,7 @@ private fun Segment(label: String, selected: Boolean, onClick: () -> Unit) {
     ToggleButton(
         checked = selected,
         onCheckedChange = { onClick() },
-        colors = ToggleButtonDefaults.toggleButtonColors(
+        colors = ToggleButtonDefaults.colors(
             containerColor = Color.Transparent,
             contentColor = colors.muted,
             checkedContainerColor = colors.goldSoft,
