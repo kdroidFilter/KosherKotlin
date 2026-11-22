@@ -192,5 +192,5 @@ LGPL 2.1. Based on the KosherJava Zmanim API by Eliyahu Hershfeld; fork lineage 
 
 Double‑check all times before using for halachic decisions. Provided as‑is without warranty.
 
-
+KosherKotlin is an independent project. It is not affiliated with, endorsed by, or based on data from any printed or online luach, including the עתים לבינה luach. Times computed by this library are not the official times of any luach.
 
