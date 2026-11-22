@@ -58,9 +58,6 @@ enum class ThemeMode(val hebrewLabel: String) {
 
 /** The luach the day is read from: its sun, and which opinions it prints. */
 enum class Luach(val hebrewLabel: String) {
-    /** Degree-based zmanim off the luach's own refracted horizon. */
-
-
     /** The luach Rabbi Ovadia Yosef used: zmaniyos minutes off an ordinary sun. */
     OHR_HACHAIM("אור החיים"),
 }
@@ -69,7 +66,7 @@ enum class Luach(val hebrewLabel: String) {
 data class LuachSettings(
     val useElevation: Boolean = false,
     val candleLightingOffset: Int = 18,
-
+    val luach: Luach = Luach.OHR_HACHAIM,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     /** JVM desktop only: pin the hero to the desktop as a below-stacking widget. */
     val desktopWidget: Boolean = false,

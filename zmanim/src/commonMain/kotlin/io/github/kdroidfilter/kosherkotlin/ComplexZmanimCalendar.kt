@@ -2703,7 +2703,7 @@ class ComplexZmanimCalendar(
      * Note that *lechumra* (of about 14 seconds) a refraction value of 0.5166 as opposed to the traditional
      * 0.566 is used. This is more inline with the actual refraction in *Eretz Yisrael* and is brought down
      * by [Rabbi Yedidya Manet](http://beinenu.com/rabbis/%D7%94%D7%A8%D7%91-%D7%99%D7%93%D7%99%D7%93%D7%99%D7%94-%D7%9E%D7%A0%D7%AA) in his [Zmanei Halacha Lema’aseh](https://www.nli.org.il/en/books/NNL_ALEPH002542826/NLI) (p. 11). That is the first source that I am aware of that calculates degree-based Yereim
-
+     * *zmanim*. Calculating the Yereim's *bain hashmashos* using 18-minute based degrees is also suggested
      * in the upcoming 8th edition of the zmanim Kehilchasam. For more details, see the article [The Yereim’s *Bein Hashmashos*](https://kosherjava.com/2020/12/07/the-yereims-bein-hashmashos/).
      *
      * @todo recalculate based on equinox/equilux
@@ -3167,7 +3167,7 @@ class ComplexZmanimCalendar(
         }
 
     /**
-
+     * This method returns the *tzais* (nightfall) as a stringent time for *tzais*.  It is
      * calculated at the sun's position at [9.3˚][ZENITH_9_POINT_3] below the western horizon.
      *
      * @return the `Date` representing the time when the sun is 9.3 below sea level. If the calculation
@@ -4314,54 +4314,6 @@ class ComplexZmanimCalendar(
             }
         }
 
-
-
-    // the luach's refraction, and stay meaningful with any calculator.
-
-
-        Zman.DateBased(
-            ZmanDefinition(
-                type,
-                ZmanCalculationMethod.DegreesBelowHorizon(degrees),
-                UsesElevation.NEVER,
-
-            )
-        ) {
-            if (isSunrise) getSunriseOffsetByDegreesBelowHorizon(degrees.toDouble())
-            else getSunsetOffsetByDegreesBelowHorizon(degrees.toDouble())
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * *Misheyakir* of the לוח המאור אור החיים, in great need: 66 minutes *zmaniyos*, or 1.1
      * [*shaos zmaniyos*][shaahZmanisGra], before [sunrise]. This is the *Pri Chadash*'s *misheyakir*, as published by
@@ -5479,16 +5431,6 @@ class ComplexZmanimCalendar(
             sofZmanBiurChametzMGA72Minutes,
             sofZmanBiurChametzMGA16Point1Degrees,
             solarMidnight,
-
-
-
-
-
-
-
-
-
-
             misheyakir66MinutesZmanis,
             misheyakir60MinutesZmanis,
             tzais13Point5MinutesZmanis,

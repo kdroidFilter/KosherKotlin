@@ -192,3 +192,5 @@ LGPL 2.1. Based on the KosherJava Zmanim API by Eliyahu Hershfeld; fork lineage 
 
 Double‑check all times before using for halachic decisions. Provided as‑is without warranty.
 
+
+

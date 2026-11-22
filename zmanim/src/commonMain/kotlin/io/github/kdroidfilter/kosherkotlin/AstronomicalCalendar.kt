@@ -290,7 +290,7 @@ open class AstronomicalCalendar(
      * The time the sun is [degrees] below (negative: above) the apparent horizon of [sea level sunrise][seaLevelSunrise],
      * rather than the geometric one that [getSunriseOffsetByDegrees] measures from: the
      * [calculator's horizon][AstronomicalCalculator.horizonZenith], with its refraction and solar radius, is the zero.
-
+     * Some luchot give their degree-based zmanim this way.
      *
      * @return null where the sun never gets there. See detailed explanation on top of the page.
      */
