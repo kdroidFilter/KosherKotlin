@@ -14,6 +14,8 @@ commonMain {
 }
 ```
 
+> **Versions 3.0.0 to 3.0.5 are withdrawn. Do not use them: use 4.0.0 or later.**
+
 Note for JS/WASM: ensure IANA time zone data is available in your app (e.g., via `@js-joda/timezone`).
 
 
